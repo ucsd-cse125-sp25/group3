@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "ClientGame.h" 
 
 ClientGame::ClientGame(void)

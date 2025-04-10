@@ -1,4 +1,4 @@
-#include "stdafx.h" 
+
 #include "NetworkServices.h"
 
 int NetworkServices::sendMessage(SOCKET curSocket, char * message, int messageSize) {
