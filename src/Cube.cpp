@@ -1,8 +1,6 @@
 #include "Cube.h"
-#include <glm/gtx/string_cast.hpp>
-#include <iostream>
+
 Cube::Cube(glm::vec3 cubeMin, glm::vec3 cubeMax) {
-    // std::cout << glm::to_string(cubeMin) << glm::to_string(cubeMax) << std::endl;
     // Model matrix.
     model = glm::mat4(1.0f);
 
@@ -155,7 +153,7 @@ void Cube::draw(const glm::mat4& viewProjMtx, GLuint shader) {
 
 void Cube::update() {
     // Spin the cube
-    // spin(0.05f);
+    spin(0.05f);
 }
 
 void Cube::spin(float deg) {

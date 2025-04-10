@@ -1,11 +1,4 @@
-#include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
- 
-#include <stdlib.h>
-#include <stdio.h>
 #include "Window.h"
-#include "Skeleton.h"
 #include "core.h"
 
 void error_callback(int error, const char* description) {
@@ -50,17 +43,10 @@ void print_versions() {
 #endif
 }
 
-int main(int argc, char *argv[]) {
-
+int main(void) {
     // Create the GLFW window.
     GLFWwindow* window = Window::createWindow(800, 600);
     if (!window) exit(EXIT_FAILURE);
-
-    // Parse command line
-    if (argc <= 1) {
-        std::cout << "Usage: ./menv <.skel file> <.skin file> <.anim file>";
-        exit(EXIT_FAILURE);
-    }
 
     // Print OpenGL and GLSL versions.
     print_versions();
@@ -69,57 +55,11 @@ int main(int argc, char *argv[]) {
     // Setup OpenGL settings.
     setup_opengl_settings();
 
-    //skel, skin and anim
-    if (argc == 4){
-        Window::setRenderFlag(0b111);
-        // Initialize the shader program; exit if initialization fails.
-        if (!Window::initializeProgram()) exit(EXIT_FAILURE);
-        if (!Window::initializeObjects(argv[1], argv[2], argv[3])) exit(EXIT_FAILURE);
-    } else if (argc == 3){
-        //TODO: skel, anim
-        //skel, skin
-        Window::setRenderFlag(0b011);
-        // Initialize the shader program; exit if initialization fails.
-        if (!Window::initializeProgram()) exit(EXIT_FAILURE);
-        // Initialize objects/pointers for rendering; exit if initialization fails.
-        if (!Window::initializeObjectsSkelSkin(argv[1], argv[2])) exit(EXIT_FAILURE);
-    } else { //skel only, skin only
-        int j = 0;
-        while (argv[1][j] != '\0') {
-            j++;
-        }
-        
-        char skelFEx[6] = ".skel";
-        char skinFEx[6] = ".skin";
-        bool skelTrue = true;
-        bool skinTrue = true;
+    // Initialize the shader program; exit if initialization fails.
+    if (!Window::initializeProgram()) exit(EXIT_FAILURE);
+    // Initialize objects/pointers for rendering; exit if initialization fails.
+    if (!Window::initializeObjects()) exit(EXIT_FAILURE);
 
-        for(int i = 0; i < 6; i++){
-            if (skelFEx[5-i] != argv[1][j-i]){
-                skelTrue = false;
-            }
-            if (skinFEx[5-i] != argv[1][j-i]){
-                skinTrue = false;
-            }
-        }
-
-        if (skelTrue){
-            Window::setRenderFlag(0b001);
-            // Initialize the shader program; exit if initialization fails.
-            if (!Window::initializeProgram()) exit(EXIT_FAILURE);
-            // Initialize objects/pointers for rendering; exit if initialization fails.
-            if (!Window::initializeObjectsSkelOnly(argv[1])) exit(EXIT_FAILURE);
-        } else if (skinTrue) {
-            Window::setRenderFlag(0b010);
-            // Initialize the shader program; exit if initialization fails.
-            if (!Window::initializeProgram()) exit(EXIT_FAILURE);
-            // Initialize objects/pointers for rendering; exit if initialization fails.
-            if (!Window::initializeObjectsSkinOnly(argv[1])) exit(EXIT_FAILURE);
-        } else {
-            std::cout << "Usage: ./menv <.skel file> or <.skin file>";
-            exit(EXIT_FAILURE);
-        }
-    }
     // Loop while GLFW window should stay open.
     while (!glfwWindowShouldClose(window)) {
         // Main render display callback. Rendering of objects is done here.
