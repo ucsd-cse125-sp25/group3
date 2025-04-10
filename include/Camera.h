@@ -1,7 +1,15 @@
+////////////////////////////////////////
+// Camera.h
+////////////////////////////////////////
+
 #pragma once
 
 #include "core.h"
 #include "glm/gtx/euler_angles.hpp"
+
+// The Camera class provides a simple means to controlling the 3D camera. It could
+// be extended to support more interactive controls. Ultimately. the camera sets the
+// GL projection and viewing matrices.
 
 class Camera {
 public:

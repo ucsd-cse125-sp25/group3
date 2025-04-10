@@ -1,11 +1,7 @@
 #pragma once
 
 #include "Camera.h"
-// #include "Cube.h"
-#include "Skeleton.h"
-#include "Skin.h"
-#include "Animation.h"
-#include "Player.h"
+#include "Cube.h"
 #include "Shader.h"
 #include "core.h"
 
@@ -17,27 +13,15 @@ public:
     static const char* windowTitle;
 
     // Objects to render
-    static Skeleton* skel;
-    static Skin* skin;
-    static Animation* anim;
-    static Player* player;
-    //static Cube* cube;
-
-    static unsigned int fileRender;
-
+    static Cube* cube;
 
     // Shader Program
     static GLuint shaderProgram;
 
     // Act as Constructors and desctructors
     static bool initializeProgram();
-    static bool initializeObjects(const char *skelfile, const char *skinfile, const char *animfile);
-    static bool initializeObjectsSkelSkin(const char *skelfile, const char *skinfile);
-    static bool initializeObjectsSkelOnly(const char *file);
-    static bool initializeObjectsSkinOnly(const char *file);
+    static bool initializeObjects();
     static void cleanUp();
-
-    static void Window::setRenderFlag(unsigned int flag);
 
     // for the Window
     static GLFWwindow* createWindow(int width, int height);

@@ -24,5 +24,7 @@ public:
     void draw(const glm::mat4& viewProjMtx, GLuint shader);
     void update();
 
+    void userInput(int key);
+
     void spin(float deg);
 };
