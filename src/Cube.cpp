@@ -153,7 +153,38 @@ void Cube::draw(const glm::mat4& viewProjMtx, GLuint shader) {
 
 void Cube::update() {
     // Spin the cube
-    spin(0.05f);
+    // spin(0.05f);
+}
+
+void Cube::userInput(int key){
+    switch(key) {
+        case GLFW_KEY_W:
+            model = glm::translate(model, glm::vec3(0,0,-0.5f));
+            break;
+        case GLFW_KEY_A:
+            model = glm::translate(model, glm::vec3(-0.5f,0,0));
+            break;
+        case GLFW_KEY_S:
+            model = glm::translate(model, glm::vec3(0,0,0.5f));
+            break;
+        case GLFW_KEY_D:
+            model = glm::translate(model, glm::vec3(0.5f,0,0));
+            break;
+        case GLFW_KEY_T:
+            model = glm::translate(model, glm::vec3(0,0.5f,0));
+            break;
+        case GLFW_KEY_G:
+            model = glm::translate(model, glm::vec3(0,-0.5f,0));
+            break;
+        case GLFW_KEY_K:
+            model = glm::rotate(model, 0.1f, glm::vec3(0,1,0));
+            break;
+        case GLFW_KEY_L:
+            model = glm::rotate(model, -0.1f, glm::vec3(0,1,0));
+            break;
+        default:
+            break;
+    }
 }
 
 void Cube::spin(float deg) {

@@ -147,6 +147,9 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
                 break;
 
             default:
+                if (cube != nullptr) {
+                    cube->userInput(key);
+                }
                 break;
         }
     }
