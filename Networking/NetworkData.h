@@ -2,6 +2,9 @@
 
 #define MAX_PACKET_SIZE 1000000
 
+#ifndef NETWORKDATA_H
+#define NETWORKDATA_H
+
 enum PacketTypes {
 
     INIT_CONNECTION = 0,
@@ -22,3 +25,5 @@ struct Packet {
         memcpy(this, data, sizeof(Packet));
     }
 };
+
+#endif

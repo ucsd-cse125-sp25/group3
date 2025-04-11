@@ -1,5 +1,6 @@
 
 #include "ServerGame.h"
+#include <cstdio>
 
 unsigned int ServerGame::client_id; 
 
