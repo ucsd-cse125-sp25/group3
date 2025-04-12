@@ -13,7 +13,7 @@ public:
     void update();
     void receiveFromClients();
     void sendActionPackets();
-
+    void sendEchoPackets(std::string);
 
 private:
 

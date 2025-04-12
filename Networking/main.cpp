@@ -3,6 +3,8 @@
 #include "ClientGame.h"
 // used for multi-threading
 #include <process.h>
+#include <iostream>
+#include <string>
 
 void serverLoop(void *);
 void clientLoop(void);
@@ -37,6 +39,8 @@ void clientLoop()
     while(true)
     {
         //do game stuff
-        client->update();
+        std::string input;
+        std::getline(std::cin, input);
+        client->update(input);
     }
 }

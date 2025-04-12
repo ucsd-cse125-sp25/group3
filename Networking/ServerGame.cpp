@@ -47,6 +47,7 @@ void ServerGame::receiveFromClients()
         int i = 0;
         while (i < (unsigned int)data_length) 
         {
+            
             packet.deserialize(&(network_data[i]));
             i += sizeof(Packet);
 
@@ -56,7 +57,7 @@ void ServerGame::receiveFromClients()
 
                     printf("server received init packet from client\n");
 
-                    sendActionPackets();
+                    // sendActionPackets();
 
                     break;
 
@@ -68,6 +69,11 @@ void ServerGame::receiveFromClients()
 
                     break;
 
+                case ECHO_EVENT:
+                    printf("server recieved echo event packet from client\n");
+                    printf("Server recieved: %s\n", packet.message);
+                    sendEchoPackets(std::string(packet.message));
+                    break;
                 default:
 
                     printf("error in packet types\n");
@@ -89,5 +95,16 @@ void ServerGame::sendActionPackets()
 
     packet.serialize(packet_data);
 
+    network->sendToAll(packet_data,packet_size);
+}
+
+void ServerGame::sendEchoPackets(std::string response) {
+    const unsigned int packet_size = sizeof(Packet);
+    char packet_data[packet_size];
+
+    Packet packet;
+    packet.packet_type = ECHO_EVENT;
+    memcpy(packet.message, response.data(), sizeof response);
+    packet.serialize(packet_data);
     network->sendToAll(packet_data,packet_size);
 }
