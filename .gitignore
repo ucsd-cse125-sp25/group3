@@ -1,0 +1,5 @@
+.vscode
+network/client
+network/server
+*.o
+build
