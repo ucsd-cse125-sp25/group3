@@ -1,6 +1,11 @@
 
 #include "ServerGame.h"
+#include <iostream>
 #include <cstdio>
+#include <chrono>
+#include <thread>
+#include <cassert>
+#define TICK 30 //in ms
 
 unsigned int ServerGame::client_id; 
 
@@ -28,7 +33,7 @@ void ServerGame::update()
 
 void ServerGame::receiveFromClients()
 {
-
+    auto start = std::chrono::steady_clock::now();
     Packet packet;
 
     // go through all clients
@@ -82,6 +87,18 @@ void ServerGame::receiveFromClients()
             }
         }
     }
+    auto orig_diff = std::chrono::steady_clock::now() - start;
+    auto milli_diff = std::chrono::duration_cast<std::chrono::milliseconds>(orig_diff);
+    auto wait = std::chrono::milliseconds(TICK) - milli_diff;
+    assert(wait.count() >= 0);
+    std::this_thread::sleep_for(wait);
+    
+    // std::cout << "diff: " << milli_diff.count() << "\n";
+    
+    // printf("wait: %d\n", wait.count());
+    
+    // std::cout << "diff: " << d.count() << "\n";
+    //assert(std::chrono::system_clock::now() - std::chrono::milliseconds(TICK) == start && "Exceeded server tick");
 }
 
 void ServerGame::sendActionPackets()
