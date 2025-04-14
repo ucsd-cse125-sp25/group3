@@ -1,5 +1,6 @@
-#include "stdafx.h"
+
 #include "ClientGame.h" 
+
 
 ClientGame::ClientGame(void)
 {
@@ -32,16 +33,35 @@ void ClientGame::sendActionPackets()
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
-void ClientGame::update()
+void ClientGame::sendEchoPackets(std::string input) {
+    const unsigned int packet_size = sizeof(Packet);
+    char packet_data[packet_size];
+
+    Packet packet;
+    packet.packet_type = ECHO_EVENT;
+    memcpy(packet.message, input.data(), sizeof input);
+    // packet.message = input.data();
+    packet.serialize(packet_data);
+    // printf(packet_data);
+    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
+void ClientGame::update(std::string input)
 {
+    sendEchoPackets(input);
+
     Packet packet;
     int data_length = network->receivePackets(network_data);
 
-    if (data_length <= 0) 
-    {
-        //no data recieved
-        return;
+    while (data_length <= 0) {
+        data_length = network->receivePackets(network_data);
     }
+
+    // if (data_length <= 0) 
+    // {
+    //     //no data recieved
+    //     return;
+    // }
 
     int i = 0;
     while (i < (unsigned int)data_length) 
@@ -58,7 +78,10 @@ void ClientGame::update()
                 sendActionPackets();
 
                 break;
-
+            case ECHO_EVENT:
+                printf("client recieved echo event packet from server\n");
+                printf("Client recieved: %s\n", packet.message);
+                break;
             default:
 
                 printf("error in packet types\n");

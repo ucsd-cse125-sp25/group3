@@ -18,6 +18,13 @@ private:
     std::vector<unsigned int> indices;
 
 public:
+    bool isJumping = false;
+    float jumpVelocity = 0.0f;
+    float jumpHeight = 0.0f;
+    float gravity = -0.00002f;
+    float initialJumpVelocity = 0.015f;
+    glm::mat4 baseModel = glm::mat4(1.0f);
+
     Cube(glm::vec3 cubeMin = glm::vec3(-1, -1, -1), glm::vec3 cubeMax = glm::vec3(1, 1, 1));
     ~Cube();
 
@@ -25,6 +32,7 @@ public:
     void update();
 
     void userInput(int key);
+    void handleContinuousInput(GLFWwindow* window);
 
     void spin(float deg);
 };

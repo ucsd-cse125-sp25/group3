@@ -1,5 +1,6 @@
+#pragma once
 #include "ServerNetwork.h"
-#include "NetworkData.h"
+
 
 class ServerGame
 {
@@ -12,7 +13,7 @@ public:
     void update();
     void receiveFromClients();
     void sendActionPackets();
-
+    void sendEchoPackets(std::string);
 
 private:
 
@@ -24,4 +25,4 @@ private:
 
     // data buffer
     char network_data[MAX_PACKET_SIZE];
-}
+};

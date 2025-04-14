@@ -110,6 +110,10 @@ void Window::idleCallback() {
 }
 
 void Window::displayCallback(GLFWwindow* window) {
+
+    if (cube != nullptr) {
+        cube->handleContinuousInput(window);
+    }
     // Clear the color and depth buffers.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -146,9 +150,11 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
                 resetCamera();
                 break;
 
+
             default:
                 if (cube != nullptr) {
                     cube->userInput(key);
+                    //cube->handleContinuousInput(window);
                 }
                 break;
         }
