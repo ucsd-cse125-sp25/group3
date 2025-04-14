@@ -154,11 +154,26 @@ void Cube::draw(const glm::mat4& viewProjMtx, GLuint shader) {
 void Cube::update() {
     // Spin the cube
     // spin(0.05f);
+
+    if (isJumping) {
+        //update jump height
+        jumpVelocity += gravity; 
+        jumpHeight += jumpVelocity;
+
+        if (jumpHeight <= 0.0f) {
+            jumpHeight = 0.0f;
+            isJumping = false;
+            jumpVelocity = 0.0f;
+        }
+
+        //glm::mat4 baseModel = glm::translate(glm::mat4(1.0f), glm::vec3(0, jumpHeight, 0));
+        model = glm::translate(glm::mat4(1.0f), glm::vec3(0, jumpHeight, 0)) * baseModel;
+    }
 }
 
 void Cube::userInput(int key){
     switch(key) {
-        case GLFW_KEY_W:
+        /*case GLFW_KEY_W:
             model = glm::translate(model, glm::vec3(0,0,-0.5f));
             break;
         case GLFW_KEY_A:
@@ -181,10 +196,39 @@ void Cube::userInput(int key){
             break;
         case GLFW_KEY_L:
             model = glm::rotate(model, -0.1f, glm::vec3(0,1,0));
-            break;
+            break;*/
+        case GLFW_KEY_SPACE:
+            isJumping = true;
+            jumpVelocity = initialJumpVelocity;
         default:
             break;
     }
+
+
+}
+
+void Cube::handleContinuousInput(GLFWwindow* window) {
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        model = glm::translate(model, glm::vec3(0, 0, -0.005f));
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        model = glm::translate(model, glm::vec3(0, 0, 0.005f));
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        model = glm::translate(model, glm::vec3(-0.005f, 0, 0));
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        model = glm::translate(model, glm::vec3(0.005f, 0, 0));
+    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+        model = glm::translate(model, glm::vec3(0, 0.005f, 0));
+    if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
+        model = glm::translate(model, glm::vec3(0, -0.005f, 0));
+    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+        model = glm::rotate(model, 0.02f, glm::vec3(0, 1, 0));
+    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+        model = glm::rotate(model, -0.02f, glm::vec3(0, 1, 0));
+
+    /*if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !isJumping) {
+        isJumping = true;
+        jumpVelocity = initialJumpVelocity;
+    }*/
 }
 
 void Cube::spin(float deg) {
