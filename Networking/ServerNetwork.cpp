@@ -6,12 +6,13 @@ ServerNetwork::ServerNetwork(void)
 {
 
     // create WSADATA object
-    WSADATA wsaData;
+    // WSADATA wsaData;
 
     // our sockets for the server
-    ListenSocket = INVALID_SOCKET;
-    ClientSocket = INVALID_SOCKET;
-
+    // ListenSocket = INVALID_SOCKET;
+    // ClientSocket = INVALID_SOCKET;
+    ListenSocket = -1;
+    ClientSocket = -1;
 
 
     // address info for the server to listen to
@@ -19,14 +20,15 @@ ServerNetwork::ServerNetwork(void)
     struct addrinfo hints;
 
     // Initialize Winsock
-    iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
-    if (iResult != 0) {
-        printf("WSAStartup failed with error: %d\n", iResult);
-        exit(1);
-    }
+    // iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
+    // if (iResult != 0) {
+    //     printf("WSAStartup failed with error: %d\n", iResult);
+    //     exit(1);
+    // }
 
     // set address information
-    ZeroMemory(&hints, sizeof(hints));
+    // ZeroMemory(&hints, sizeof(hints));
+    memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;    // TCP connection!!!
@@ -37,39 +39,46 @@ ServerNetwork::ServerNetwork(void)
 
     if ( iResult != 0 ) {
         printf("getaddrinfo failed with error: %d\n", iResult);
-        WSACleanup();
+        // WSACleanup();
         exit(1);
     }
 
     // Create a SOCKET for connecting to server
     ListenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
 
-    if (ListenSocket == INVALID_SOCKET) {
-        printf("socket failed with error: %ld\n", WSAGetLastError());
+    // if (ListenSocket == INVALID_SOCKET) {
+    if (ListenSocket < 0) {
+        // printf("socket failed with error: %ld\n", WSAGetLastError());
+        printf("socket failed with error\n");
         freeaddrinfo(result);
-        WSACleanup();
+        // WSACleanup();
         exit(1);
     }
 
     // Set the mode of the socket to be nonblocking
     u_long iMode = 1;
-    iResult = ioctlsocket(ListenSocket, FIONBIO, &iMode);
-
-    if (iResult == SOCKET_ERROR) {
-        printf("ioctlsocket failed with error: %d\n", WSAGetLastError());
-        closesocket(ListenSocket);
-        WSACleanup();
+    // iResult = ioctlsocket(ListenSocket, FIONBIO, &iMode);
+    iResult = fcntl(ListenSocket, F_SETFL, fcntl(ListenSocket, F_GETFL, 0) | O_NONBLOCK);
+    
+    // if (iResult == SOCKET_ERROR) {
+    if (iResult < 0) {
+        // printf("ioctlsocket failed with error: %d\n", WSAGetLastError());
+        // closesocket(ListenSocket);
+        // WSACleanup();
+        close(ListenSocket);
         exit(1);
     }
 
     // Setup the TCP listening socket
-    iResult = bind( ListenSocket, result->ai_addr, (int)result->ai_addrlen);
+    iResult = ::bind( ListenSocket, result->ai_addr, (int)result->ai_addrlen);
 
-    if (iResult == SOCKET_ERROR) {
-        printf("bind failed with error: %d\n", WSAGetLastError());
+    // if (iResult == SOCKET_ERROR) {
+    if (iResult < 0) {
+        // printf("bind failed with error: %d\n", WSAGetLastError());
         freeaddrinfo(result);
-        closesocket(ListenSocket);
-        WSACleanup();
+        // closesocket(ListenSocket);
+        close(ListenSocket);
+        // WSACleanup();
         exit(1);
     }
 
@@ -79,10 +88,13 @@ ServerNetwork::ServerNetwork(void)
     // start listening for new clients attempting to connect
     iResult = listen(ListenSocket, SOMAXCONN);
 
-    if (iResult == SOCKET_ERROR) {
-        printf("listen failed with error: %d\n", WSAGetLastError());
-        closesocket(ListenSocket);
-        WSACleanup();
+    // if (iResult == SOCKET_ERROR) {
+    if (iResult < 0) {
+        // printf("listen failed with error: %d\n", WSAGetLastError());
+        // closesocket(ListenSocket);
+        // WSACleanup();
+        printf("Listen failed");
+        close(ListenSocket);
         exit(1);
     }
 }
@@ -93,15 +105,15 @@ bool ServerNetwork::acceptNewClient(unsigned int & id)
     // if client waiting, accept the connection and save the socket
     ClientSocket = accept(ListenSocket,NULL,NULL);
 
-    if (ClientSocket != INVALID_SOCKET) 
-    {
+    // if (ClientSocket != INVALID_SOCKET) {
+    if (ClientSocket > 0) {
         //disable nagle on the client's socket
         char value = 1;
         setsockopt( ClientSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof( value ) );
 
         // insert new client into session id table
-        sessions.insert( pair<unsigned int, SOCKET>(id, ClientSocket) );
-
+        // sessions.insert( pair<unsigned int, SOCKET>(id, ClientSocket) );
+        sessions.insert( pair<unsigned int, int>(id, ClientSocket) );
         return true;
     }
 
@@ -113,12 +125,14 @@ int ServerNetwork::receiveData(unsigned int client_id, char * recvbuf)
 {
     if( sessions.find(client_id) != sessions.end() )
     {
-        SOCKET currentSocket = sessions[client_id];
+        // SOCKET currentSocket = sessions[client_id];
+        int currentSocket = sessions[client_id];
         iResult = NetworkServices::receiveMessage(currentSocket, recvbuf, MAX_PACKET_SIZE);
         if (iResult == 0)
         {
             printf("Connection closed\n");
-            closesocket(currentSocket);
+            // closesocket(currentSocket);
+            close(currentSocket);
         }
         return iResult;
     }
@@ -128,8 +142,10 @@ int ServerNetwork::receiveData(unsigned int client_id, char * recvbuf)
 // send data to all clients
 void ServerNetwork::sendToAll(char * packets, int totalSize)
 {
-    SOCKET currentSocket;
-    std::map<unsigned int, SOCKET>::iterator iter;
+    // SOCKET currentSocket;
+    // std::map<unsigned int, SOCKET>::iterator iter;
+    int currentSocket;
+    std::map<unsigned int, int>::iterator iter;
     int iSendResult;
 
     for (iter = sessions.begin(); iter != sessions.end(); iter++)
@@ -137,10 +153,12 @@ void ServerNetwork::sendToAll(char * packets, int totalSize)
         currentSocket = iter->second;
         iSendResult = NetworkServices::sendMessage(currentSocket, packets, totalSize);
 
-        if (iSendResult == SOCKET_ERROR) 
-        {
-            printf("send failed with error: %d\n", WSAGetLastError());
-            closesocket(currentSocket);
+        if (iSendResult < 0) {
+        // if (iSendResult == SOCKET_ERROR) {
+            // printf("send failed with error: %d\n", WSAGetLastError());
+            // closesocket(currentSocket);
+            printf("sendToAll failed");
+            close(currentSocket);
         }
     }
 }

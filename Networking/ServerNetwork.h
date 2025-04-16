@@ -1,14 +1,23 @@
 #pragma once
-#include <winsock2.h>
-#include <Windows.h>
+// #include <winsock2.h>
+// #include <Windows.h>
 #include "NetworkServices.h"
 #include "NetworkData.h"
-#include <ws2tcpip.h>
+// #include <ws2tcpip.h>
 #include <map>
 using namespace std; 
-#pragma comment (lib, "Ws2_32.lib")
+// #pragma comment (lib, "Ws2_32.lib")
 #define DEFAULT_BUFLEN 512
-#define DEFAULT_PORT "6881" 
+#define DEFAULT_PORT "6882" 
+
+#include <iostream>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <netinet/tcp.h>
 
 class ServerNetwork
 {
@@ -19,16 +28,19 @@ public:
     ~ServerNetwork(void);
 
     // Socket to listen for new connections
-    SOCKET ListenSocket;
+    // SOCKET ListenSocket;
+    int ListenSocket;
 
     // Socket to give to the clients
-    SOCKET ClientSocket;
+    // SOCKET ClientSocket;
+    int ClientSocket;
 
     // for error checking return values
     int iResult;
 
     // table to keep track of each client's socket
-    std::map<unsigned int, SOCKET> sessions; 
+    // std::map<unsigned int, SOCKET> sessions; 
+    std::map<unsigned int, int> sessions; 
 
     // accept new connections
     bool acceptNewClient(unsigned int & id);
