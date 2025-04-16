@@ -37,9 +37,12 @@ void ServerGame::receiveFromClients()
     Packet packet;
 
     // go through all clients
-    // std::map<unsigned int, SOCKET>::iterator iter;
-    std::map<unsigned int, int>::iterator iter;
-
+    #ifdef _WIN32
+        std::map<unsigned int, SOCKET>::iterator iter;
+    #else
+        std::map<unsigned int, int>::iterator iter;
+    #endif
+    
     for(iter = network->sessions.begin(); iter != network->sessions.end(); iter++)
     {
         int data_length = network->receiveData(iter->first, network_data);
