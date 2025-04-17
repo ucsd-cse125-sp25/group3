@@ -1,5 +1,7 @@
-/* #include <winsock2.h>
-#include <Windows.h> */
+#ifdef _WIN32
+    #include <winsock2.h>
+    #include <Windows.h>
+#endif
 #include "ClientNetwork.h"
 #include <string>
 

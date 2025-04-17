@@ -1,5 +1,4 @@
 // may need #include "stdafx.h" in visual studio
-#include "ServerGame.h"
 #include "ClientGame.h"
 // used for multi-threading
 //#include <process.h>

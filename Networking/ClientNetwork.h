@@ -1,24 +1,27 @@
 // Networking libraries
-/* #include <winsock2.h>
-#include <Windows.h>
-#include <ws2tcpip.h> */
+#ifdef _WIN32
+    #include <winsock2.h>
+    #include <Windows.h>
+    #include <ws2tcpip.h>
+#else
+    #include <iostream>
+    #include <sys/types.h>
+    #include <sys/socket.h>
+    #include <netdb.h>
+    #include <arpa/inet.h>
+    #include <unistd.h>
+    #include <fcntl.h>
+    #include <netinet/tcp.h>
+#endif
+
 #include "NetworkServices.h"
 #include "NetworkData.h"
 #include <stdio.h>
 
-#include <iostream>
- #include <sys/types.h>
- #include <sys/socket.h>
- #include <netdb.h>
- #include <arpa/inet.h>
- #include <unistd.h>
- #include <fcntl.h>
- #include <netinet/tcp.h>
-
 // size of our buffer
 #define DEFAULT_BUFLEN 512
 // port to connect sockets through 
-#define DEFAULT_PORT "6882"
+#define DEFAULT_PORT "6881"
 // Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
 /* #pragma comment (lib, "Ws2_32.lib")
 #pragma comment (lib, "Mswsock.lib")
@@ -31,8 +34,11 @@ class ClientNetwork {
         int iResult;
 
         // socket for client to connect to server
-       //SOCKET ConnectSocket;
-        int ConnectSocket;
+        #ifdef _WIN32
+            SOCKET ConnectSocket;
+        #else
+            int ConnectSocket;
+        #endif
 
         // ctor/dtor
         ClientNetwork(void);
