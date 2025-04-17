@@ -1,7 +1,6 @@
 
 #include "ClientGame.h" 
 
-
 ClientGame::ClientGame(void)
 {
 
@@ -57,11 +56,11 @@ void ClientGame::update(std::string input)
         data_length = network->receivePackets(network_data);
     }
 
-    // if (data_length <= 0) 
-    // {
-    //     //no data recieved
-    //     return;
-    // }
+    if (data_length <= 0) 
+    {
+        //no data recieved
+        return;
+    }
 
     int i = 0;
     while (i < (unsigned int)data_length) 

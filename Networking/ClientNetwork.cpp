@@ -1,7 +1,8 @@
 
 #include "ClientNetwork.h"
 
-ClientNetwork::ClientNetwork(void) {
+//Windows
+/* ClientNetwork::ClientNetwork(void) {
 
     // create WSADATA object
     WSADATA wsaData;
@@ -21,8 +22,6 @@ ClientNetwork::ClientNetwork(void) {
         printf("WSAStartup failed with error: %d\n", iResult);
         exit(1);
     }
-
-
 
     // set address info
     ZeroMemory( &hints, sizeof(hints) );
@@ -100,6 +99,95 @@ int ClientNetwork::receivePackets(char * recvbuf)
         printf("Connection closed\n");
         closesocket(ConnectSocket);
         WSACleanup();
+        exit(1);
+    }
+
+    return iResult;
+} */
+
+//MacOS
+ClientNetwork::ClientNetwork(void) {
+    // socket
+    ConnectSocket = -1;
+
+    // holds address info for socket to connect to
+    struct addrinfo *result = NULL,
+                    *ptr = NULL,
+                    hints;
+
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;  //TCP connection!!!
+
+    iResult = getaddrinfo("127.0.0.1", DEFAULT_PORT, &hints, &result);
+
+    if( iResult != 0 )
+    {
+        printf("getaddrinfo failed with error: %d\n", iResult);
+        exit(1);
+    }
+
+    // Attempt to connect to an address until one succeeds
+    for(ptr=result; ptr != NULL ;ptr=ptr->ai_next) {
+
+        // Create a SOCKET for connecting to server
+        ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype,
+            ptr->ai_protocol);
+
+        if (ConnectSocket < 0) {
+            printf("socket failed with error\n");
+            freeaddrinfo(ptr);
+            freeaddrinfo(result);
+            exit(1);
+        }
+
+        // Connect to server.
+        iResult = connect( ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
+
+        if (iResult < 0)
+        {
+            printf ("The server is down... did not connect");
+            freeaddrinfo(result);
+            close(ConnectSocket);
+            exit(1);
+        }
+    }
+
+    // no longer need address info for server
+    freeaddrinfo(result);
+
+    // if connection failed
+    if (ConnectSocket < 0)
+    {
+        printf("Unable to connect to server!\n");
+        close(ConnectSocket);
+        exit(1);
+    }
+
+    // Set the mode of the socket to be nonblocking
+    u_long iMode = 1;
+
+    iResult = fcntl(ConnectSocket, F_SETFL, fcntl(ConnectSocket, F_GETFL, 0) | O_NONBLOCK);
+    if (iResult < 0)
+    {
+        printf("socket failed\n");
+        close(ConnectSocket);
+        exit(1);
+    }
+
+    //disable nagle
+    char value = 1;
+    setsockopt( ConnectSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof( value ) );
+}
+
+int ClientNetwork::receivePackets(char * recvbuf) 
+{
+    iResult = NetworkServices::receiveMessage(ConnectSocket, recvbuf, MAX_PACKET_SIZE);
+
+    if ( iResult == 0 )
+    {
+        printf("Connection closed\n");
+        close(ConnectSocket);
         exit(1);
     }
 
