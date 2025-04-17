@@ -1,4 +1,8 @@
 #include "Window.h"
+#include <assimp/cimport.h>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <string>
 
 // Window Properties
 int Window::width;
@@ -39,6 +43,15 @@ bool Window::initializeProgram() {
 bool Window::initializeObjects() {
     // Create a cube
     cube = new Cube();
+
+    // Assimp::Importer importer;
+    const aiScene* scene = aiImportFile("bunny.ply",
+        aiProcess_JoinIdenticalVertices
+    );
+
+    // if (scene = nullptr){
+    //     std::cerr << "loading failed" << std::endl;
+    // }
     // cube = new Cube(glm::vec3(-1, 0, -2), glm::vec3(1, 1, 1));
     floor = new Cube(glm::vec3(-4, -2.03, -4), glm::vec3(4, -2.01, 4));
 
