@@ -19,6 +19,10 @@ public:
     // Shader Program
     static GLuint shaderProgram;
 
+    //track the mouse
+    static bool altDown;
+    static bool firstMouse;
+
     // Act as Constructors and desctructors
     static bool initializeProgram();
     static bool initializeObjects();

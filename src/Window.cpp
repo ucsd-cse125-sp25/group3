@@ -19,6 +19,9 @@ int MouseX, MouseY;
 // The shader program id
 GLuint Window::shaderProgram;
 
+bool Window::altDown = false;
+bool Window::firstMouse = true;
+
 // Constructors and desctructors
 bool Window::initializeProgram() {
     // Create a shader program with a vertex shader and a fragment shader.
@@ -90,6 +93,7 @@ GLFWwindow* Window::createWindow(int width, int height) {
 
     // Call the resize callback to make sure things get drawn immediately.
     Window::resizeCallback(window, width, height);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     return window;
 }
@@ -143,7 +147,15 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
 
     // Check for a key press.
     if (action == GLFW_PRESS) {
-        switch (key) {
+
+        if (key == GLFW_KEY_LEFT_ALT || key == GLFW_KEY_RIGHT_ALT) 
+        {
+            altDown = true;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); // æ˜¾ç¤ºé¼ æ ‡
+        }
+
+        switch (key) 
+        {
             case GLFW_KEY_ESCAPE:
                 // Close the window. This causes the program to also terminate.
                 glfwSetWindowShouldClose(window, GL_TRUE);
@@ -162,6 +174,16 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
                 break;
         }
     }
+    else if (action == GLFW_RELEASE)
+    {
+        if (key == GLFW_KEY_LEFT_ALT || key == GLFW_KEY_RIGHT_ALT) 
+        {
+            altDown = false;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            firstMouse = true;
+        }
+    }
+
 }
 
 void Window::mouse_callback(GLFWwindow* window, int button, int action, int mods) {
@@ -174,26 +196,9 @@ void Window::mouse_callback(GLFWwindow* window, int button, int action, int mods
 }
 
 void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
-    //int maxDelta = 100;
-    //int dx = glm::clamp((int)currX - MouseX, -maxDelta, maxDelta);
-    //int dy = glm::clamp(-((int)currY - MouseY), -maxDelta, maxDelta);
+    if (altDown) return;
 
-    //MouseX = (int)currX;
-    //MouseY = (int)currY;
-
-    //// Move camera
-    //// NOTE: this should really be part of Camera::Update()
-    //if (LeftDown) {
-    //    const float rate = 1.0f;
-    //    Cam->SetAzimuth(Cam->GetAzimuth() + dx * rate);
-    //    Cam->SetIncline(glm::clamp(Cam->GetIncline() - dy * rate, -90.0f, 90.0f));
-    //}
-    //if (RightDown) {
-    //    const float rate = 0.005f;
-    //    float dist = glm::clamp(Cam->GetDistance() * (1.0f - dx * rate), 0.01f, 1000.0f);
-    //    Cam->SetDistance(dist);
-    //}
-    static bool firstMouse = true;
+    
     static float lastX = Window::width / 2.0f;
     static float lastY = Window::height / 2.0f;
 
@@ -206,7 +211,7 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     }
 
     float xoffset = currX - lastX;
-    float yoffset = currY - lastY; // ×¢ÒâÕâÀïÊÇ lastY - ypos£¬y ÊÇ·´µÄ
+    float yoffset = currY - lastY; // æ³¨æ„è¿™é‡Œæ˜¯ lastY - yposï¼Œy æ˜¯åçš„
 
     lastX = currX;
     lastY = currY;
@@ -216,7 +221,7 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
 
     
     float newAzimuth = Cam->GetAzimuth() + xoffset;
-    float newIncline = glm::clamp(Cam->GetIncline() + yoffset, -89.0f, 89.0f); // ·ÀÖ¹·­×ª
+    float newIncline = glm::clamp(Cam->GetIncline() + yoffset, -89.0f, 89.0f); // é˜²æ­¢ç¿»è½¬
 
     Cam->SetAzimuth(newAzimuth);
     Cam->SetIncline(newIncline);
