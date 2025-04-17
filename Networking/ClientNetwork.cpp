@@ -150,9 +150,12 @@ int ClientNetwork::receivePackets(char * recvbuf)
     if ( iResult == 0 )
     {
         printf("Connection closed\n");
-        close(ConnectSocket);
+        
         #ifdef _WIN32
+            closesocket(ConnectSocket);
             WSACleanup();
+        #else
+            close(ConnectSocket);
         #endif
         exit(1);
     }
