@@ -25,7 +25,7 @@ $(BINDIR)/server: $(OBJDIR)/server.o $(OBJDIR)/ServerNetwork.o $(OBJDIR)/Network
 	$(CXX) $^ -o $@ $(CXXFLAGS)
 
 # Client executable
-$(BINDIR)/client: $(OBJDIR)/client.o $(OBJDIR)/ClientGame.o $(OBJDIR)/ClientNetwork.o $(OBJDIR)/NetworkServices.o
+$(BINDIR)/client: $(OBJDIR)/client.o $(OBJDIR)/ClientGame.o $(OBJDIR)/ClientNetwork.o $(OBJDIR)/NetworkServices.o $(OBJDIR)/ServerNetwork.o
 	$(CXX) $^ -o $@ $(CXXFLAGS)
 
 # Rule for object files (with path adjustment)

@@ -1,6 +1,9 @@
 
 #include "ClientNetwork.h"
 
+//#define IP_ADDRESS "127.0.0.1"
+extern const char *ip;
+
 ClientNetwork::ClientNetwork(void) {
     #ifdef _WIN32
         // create WSADATA object
@@ -36,7 +39,8 @@ ClientNetwork::ClientNetwork(void) {
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;  //TCP connection!!!
 
-    iResult = getaddrinfo("127.0.0.1", DEFAULT_PORT, &hints, &result);
+    std::cout << ip << std::endl;
+    iResult = getaddrinfo(ip, DEFAULT_PORT, &hints, &result);
 
     if( iResult != 0 )
     {

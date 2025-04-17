@@ -2,6 +2,8 @@
 #include "ServerNetwork.h"
 #include <cstdio>
 
+const char *ip = nullptr;
+
 ServerNetwork::ServerNetwork(void)
 {
 
@@ -43,6 +45,11 @@ ServerNetwork::ServerNetwork(void)
 
     // Resolve the server address and port
     iResult = getaddrinfo(NULL, DEFAULT_PORT, &hints, &result);
+    // get ip address of server
+    sockaddr_in* resultIn = (struct sockaddr_in *) &(result->ai_addr);
+    ip = inet_ntoa(resultIn->sin_addr);
+
+    std::cout << ip << std::endl;
 
     if ( iResult != 0 ) {
         printf("getaddrinfo failed with error: %d\n", iResult);
