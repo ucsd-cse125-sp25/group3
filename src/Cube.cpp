@@ -167,8 +167,9 @@ void Cube::update() {
         }
 
         //glm::mat4 baseModel = glm::translate(glm::mat4(1.0f), glm::vec3(0, jumpHeight, 0));
-        model = glm::translate(glm::mat4(1.0f), glm::vec3(0, jumpHeight, 0)) * baseModel;
+        // model = glm::translate(glm::mat4(1.0f), glm::vec3(0, jumpHeight, 0)) * baseModel;
     }
+    model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
 }
 
 void Cube::userInput(int key){
@@ -206,24 +207,31 @@ void Cube::userInput(int key){
 
 
 }
-
 void Cube::handleContinuousInput(GLFWwindow* window) {
+
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        model = glm::translate(model, glm::vec3(0, 0, -0.005f));
+        baseModel = glm::translate(baseModel, glm::vec3(0, 0, -0.005f));
+
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        model = glm::translate(model, glm::vec3(0, 0, 0.005f));
+        baseModel = glm::translate(baseModel, glm::vec3(0, 0, 0.005f));
+
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        model = glm::translate(model, glm::vec3(-0.005f, 0, 0));
+        baseModel = glm::translate(baseModel, glm::vec3(-0.005f, 0, 0));
+
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        model = glm::translate(model, glm::vec3(0.005f, 0, 0));
+        baseModel = glm::translate(baseModel, glm::vec3(0.005f, 0, 0));
+
     if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
-        model = glm::translate(model, glm::vec3(0, 0.005f, 0));
+        baseModel = glm::translate(baseModel, glm::vec3(0, 0.005f, 0));
+
     if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
-        model = glm::translate(model, glm::vec3(0, -0.005f, 0));
+        baseModel = glm::translate(baseModel, glm::vec3(0, -0.005f, 0));
+
     if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
-        model = glm::rotate(model, 0.02f, glm::vec3(0, 1, 0));
+        baseModel = glm::rotate(baseModel, 0.02f, glm::vec3(0, 1, 0));
+
     if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
-        model = glm::rotate(model, -0.02f, glm::vec3(0, 1, 0));
+        baseModel = glm::rotate(baseModel, -0.02f, glm::vec3(0, 1, 0));
 
     /*if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !isJumping) {
         isJumping = true;

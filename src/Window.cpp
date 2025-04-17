@@ -7,6 +7,7 @@ const char* Window::windowTitle = "Model Environment";
 
 // Objects to render
 Cube* Window::cube;
+Cube* Window::floor;
 
 // Camera Properties
 Camera* Cam;
@@ -36,6 +37,7 @@ bool Window::initializeObjects() {
     // Create a cube
     cube = new Cube();
     // cube = new Cube(glm::vec3(-1, 0, -2), glm::vec3(1, 1, 1));
+    floor = new Cube(glm::vec3(-4, -2.03, -4), glm::vec3(4, -2.01, 4));
 
     return true;
 }
@@ -119,6 +121,7 @@ void Window::displayCallback(GLFWwindow* window) {
 
     // Render the object.
     cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
+    floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
 
     // Gets events, including input such as keyboard and mouse or window resizing.
     glfwPollEvents();
@@ -171,23 +174,50 @@ void Window::mouse_callback(GLFWwindow* window, int button, int action, int mods
 }
 
 void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
-    int maxDelta = 100;
-    int dx = glm::clamp((int)currX - MouseX, -maxDelta, maxDelta);
-    int dy = glm::clamp(-((int)currY - MouseY), -maxDelta, maxDelta);
+    //int maxDelta = 100;
+    //int dx = glm::clamp((int)currX - MouseX, -maxDelta, maxDelta);
+    //int dy = glm::clamp(-((int)currY - MouseY), -maxDelta, maxDelta);
 
-    MouseX = (int)currX;
-    MouseY = (int)currY;
+    //MouseX = (int)currX;
+    //MouseY = (int)currY;
 
-    // Move camera
-    // NOTE: this should really be part of Camera::Update()
-    if (LeftDown) {
-        const float rate = 1.0f;
-        Cam->SetAzimuth(Cam->GetAzimuth() + dx * rate);
-        Cam->SetIncline(glm::clamp(Cam->GetIncline() - dy * rate, -90.0f, 90.0f));
+    //// Move camera
+    //// NOTE: this should really be part of Camera::Update()
+    //if (LeftDown) {
+    //    const float rate = 1.0f;
+    //    Cam->SetAzimuth(Cam->GetAzimuth() + dx * rate);
+    //    Cam->SetIncline(glm::clamp(Cam->GetIncline() - dy * rate, -90.0f, 90.0f));
+    //}
+    //if (RightDown) {
+    //    const float rate = 0.005f;
+    //    float dist = glm::clamp(Cam->GetDistance() * (1.0f - dx * rate), 0.01f, 1000.0f);
+    //    Cam->SetDistance(dist);
+    //}
+    static bool firstMouse = true;
+    static float lastX = Window::width / 2.0f;
+    static float lastY = Window::height / 2.0f;
+
+    float sensitivity = 0.1f;
+
+    if (firstMouse) {
+        lastX = currX;
+        lastY = currY;
+        firstMouse = false;
     }
-    if (RightDown) {
-        const float rate = 0.005f;
-        float dist = glm::clamp(Cam->GetDistance() * (1.0f - dx * rate), 0.01f, 1000.0f);
-        Cam->SetDistance(dist);
-    }
+
+    float xoffset = currX - lastX;
+    float yoffset = currY - lastY; // 注意这里是 lastY - ypos，y 是反的
+
+    lastX = currX;
+    lastY = currY;
+
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    
+    float newAzimuth = Cam->GetAzimuth() + xoffset;
+    float newIncline = glm::clamp(Cam->GetIncline() + yoffset, -89.0f, 89.0f); // 防止翻转
+
+    Cam->SetAzimuth(newAzimuth);
+    Cam->SetIncline(newIncline);
 }
