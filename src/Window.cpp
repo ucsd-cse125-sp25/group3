@@ -110,7 +110,8 @@ void Window::resizeCallback(GLFWwindow* window, int width, int height) {
 // update and draw functions
 void Window::idleCallback() {
     // Perform any updates as necessary.
-    Cam->Update();
+    // Cam->Update();
+    Cam->Update(cube->getPosition());
 
     cube->update();
 }

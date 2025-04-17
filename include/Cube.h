@@ -33,6 +33,7 @@ public:
 
     void userInput(int key);
     void handleContinuousInput(GLFWwindow* window);
+    glm::vec3 getPosition() const;
 
     void spin(float deg);
 };

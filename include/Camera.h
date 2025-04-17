@@ -15,7 +15,8 @@ class Camera {
 public:
     Camera();
 
-    void Update();
+    // void Update();
+    void Update(const glm::vec3& targetPos);
     void Reset();
 
     // Access functions
