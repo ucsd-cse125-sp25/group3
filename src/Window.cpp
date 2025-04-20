@@ -40,7 +40,7 @@ bool Window::initializeObjects() {
     // Create a cube
     cube = new Cube();
     // cube = new Cube(glm::vec3(-1, 0, -2), glm::vec3(1, 1, 1));
-    floor = new Cube(glm::vec3(-4, -2.03, -4), glm::vec3(4, -2.01, 4));
+    floor = new Cube(glm::vec3(-8, -2.03, -8), glm::vec3(8, -2.01, 8));
 
     return true;
 }
@@ -119,14 +119,21 @@ void Window::idleCallback() {
 void Window::displayCallback(GLFWwindow* window) {
 
     if (cube != nullptr) {
-        cube->handleContinuousInput(window);
+        // cube->handleContinuousInput(window);
+        glm::vec3 forward = Cam->GetForwardVector();
+        forward.y = 0.0f;  
+        forward = glm::normalize(forward);
+
+        glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
+
+        cube->handleContinuousInput(window, forward, right);
     }
     // Clear the color and depth buffers.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Render the object.
-    cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
-    floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
+    cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
+    floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
 
     // Gets events, including input such as keyboard and mouse or window resizing.
     glfwPollEvents();

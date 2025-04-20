@@ -131,14 +131,22 @@ Cube::~Cube() {
     glDeleteVertexArrays(1, &VAO);
 }
 
-void Cube::draw(const glm::mat4& viewProjMtx, GLuint shader) {
+void Cube::draw(const glm::mat4& viewProjMtx, GLuint shader,bool floor) {
     // actiavte the shader program
     glUseProgram(shader);
 
     // get the locations and send the uniforms to the shader
     glUniformMatrix4fv(glGetUniformLocation(shader, "viewProj"), 1, false, (float*)&viewProjMtx);
     glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, (float*)&model);
-    glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &color[0]);
+    // glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &color[0]);
+
+    glm::vec3 color_floor = glm::vec3(0.40f, 0.20f, 0.10f);
+
+    if (floor){
+        glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &color_floor[0]);
+    }else{
+        glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &color[0]);
+    }
 
     // Bind the VAO
     glBindVertexArray(VAO);
@@ -164,6 +172,7 @@ void Cube::update() {
             jumpHeight = 0.0f;
             isJumping = false;
             jumpVelocity = 0.0f;
+            isGrounded = true;
         }
 
         //glm::mat4 baseModel = glm::translate(glm::mat4(1.0f), glm::vec3(0, jumpHeight, 0));
@@ -199,27 +208,47 @@ void Cube::userInput(int key){
             model = glm::rotate(model, -0.1f, glm::vec3(0,1,0));
             break;*/
         case GLFW_KEY_SPACE:
+        if (isGrounded) {
             isJumping = true;
+            isGrounded = false;   
             jumpVelocity = initialJumpVelocity;
+        }
         default:
             break;
     }
 
 
 }
-void Cube::handleContinuousInput(GLFWwindow* window) {
+void Cube::handleContinuousInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir) {
+
+    // if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    //     baseModel = glm::translate(baseModel, glm::vec3(0, 0, -0.005f));
+
+    // if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    //     baseModel = glm::translate(baseModel, glm::vec3(0, 0, 0.005f));
+
+    // if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    //     baseModel = glm::translate(baseModel, glm::vec3(-0.005f, 0, 0));
+
+    // if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    //     baseModel = glm::translate(baseModel, glm::vec3(0.005f, 0, 0));
+
+    glm::vec3 movement(0.0f);
+    float speed = 0.02f;
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        baseModel = glm::translate(baseModel, glm::vec3(0, 0, -0.005f));
-
+        movement += forwardDir;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        baseModel = glm::translate(baseModel, glm::vec3(0, 0, 0.005f));
-
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        baseModel = glm::translate(baseModel, glm::vec3(-0.005f, 0, 0));
-
+        movement -= forwardDir;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        baseModel = glm::translate(baseModel, glm::vec3(0.005f, 0, 0));
+        movement += rightDir;
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        movement -= rightDir;
+
+    if (glm::length(movement) > 0.0f) {
+        movement = glm::normalize(movement) * speed;
+        baseModel = glm::translate(baseModel, movement);
+    }
 
     if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
         baseModel = glm::translate(baseModel, glm::vec3(0, 0.005f, 0));
