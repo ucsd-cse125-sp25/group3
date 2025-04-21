@@ -54,14 +54,50 @@ include_directories(include)
 if (APPLE)
     message(STATUS "Building on macOS (ARM)")
 
-    include_directories(/opt/homebrew/include)
-    link_directories(/opt/homebrew/lib)
-
-    target_link_libraries(${PROJECT_NAME}
-        ${OPENGL_LIBRARIES}
-        /opt/homebrew/lib/libGLEW.dylib
-        /opt/homebrew/lib/libglfw.dylib
+    # Base paths differ
+    set(CUSTOM_PATHS
+        /opt/homebrew
+        /usr/local
     )
+
+    # Find include path (e.g., for GLEW headers)
+    find_path(GLEW_INCLUDE_DIR GL/glew.h
+        PATHS ${CUSTOM_PATHS}
+        PATH_SUFFIXES include
+        NO_DEFAULT_PATH
+    )
+
+    # Find libraries
+    find_library(GLEW_LIBRARY GLEW
+        PATHS ${CUSTOM_PATHS}
+        PATH_SUFFIXES lib
+        NO_DEFAULT_PATH
+    )
+
+    find_library(GLFW_LIBRARY glfw
+        PATHS ${CUSTOM_PATHS}
+        PATH_SUFFIXES lib
+        NO_DEFAULT_PATH
+    )
+
+    # Use system OpenGL
+    find_package(OpenGL REQUIRED)
+
+    # Apply if found
+    if(GLEW_INCLUDE_DIR)
+        target_include_directories(${PROJECT_NAME} PRIVATE ${GLEW_INCLUDE_DIR})
+    endif()
+
+    if(GLEW_LIBRARY)
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${GLEW_LIBRARY})
+    endif()
+
+    if(GLFW_LIBRARY)
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${GLFW_LIBRARY})
+    endif()
+
+target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES})
+
 elseif (WIN32)
     message(STATUS "Building on Windows")
     link_directories(lib)
