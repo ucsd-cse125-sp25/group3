@@ -65,6 +65,13 @@ GLFWwindow* Window::createWindow(int width, int height) {
     glfwWindowHint(GLFW_SAMPLES, 4);
 
     // Create the GLFW window.
+    #ifdef __APPLE__
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    #endif
+
     GLFWwindow* window = glfwCreateWindow(width, height, windowTitle, NULL, NULL);
 
     // Check if the window could not be created.
@@ -92,7 +99,21 @@ GLFWwindow* Window::createWindow(int width, int height) {
     MouseX = MouseY = 0;
 
     // Call the resize callback to make sure things get drawn immediately.
-    Window::resizeCallback(window, width, height);
+    #ifdef __APPLE__
+        // macOS: Use framebuffer size to handle Retina displays correctly
+        int fbWidth, fbHeight;
+        glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+        glViewport(0, 0, fbWidth, fbHeight);
+        Cam->SetAspect(float(fbWidth) / float(fbHeight));
+    #else
+        // Windows or others: Use default logic-pixel-based callback
+        Window::resizeCallback(window, width, height);
+    #endif
+
+
+    // Window::resizeCallback(window, width, height);
+
+
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     return window;

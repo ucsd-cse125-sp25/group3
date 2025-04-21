@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.16)
 
+if(APPLE)
+    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
+
 project(menv)
 
 # Add source files
@@ -41,7 +46,31 @@ link_directories(
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32s.lib glfw3)
+
+# target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32s.lib glfw3)
+# Set include and lib dirs (platform-specific)
+include_directories(include)
+
+if (APPLE)
+    message(STATUS "Building on macOS (ARM)")
+
+    include_directories(/opt/homebrew/include)
+    link_directories(/opt/homebrew/lib)
+
+    target_link_libraries(${PROJECT_NAME}
+        ${OPENGL_LIBRARIES}
+        /opt/homebrew/lib/libGLEW.dylib
+        /opt/homebrew/lib/libglfw.dylib
+    )
+elseif (WIN32)
+    message(STATUS "Building on Windows")
+    link_directories(lib)
+    target_link_libraries(${PROJECT_NAME}
+        ${OPENGL_LIBRARIES}
+        glew32s.lib
+        glfw3
+    )
+endif()
 
 # Move assets to .exe
 add_custom_target(CopyShaders ALL

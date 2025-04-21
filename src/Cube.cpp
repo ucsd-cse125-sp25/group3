@@ -162,7 +162,9 @@ void Cube::draw(const glm::mat4& viewProjMtx, GLuint shader,bool floor) {
 void Cube::update() {
     // Spin the cube
     // spin(0.05f);
-
+    #ifdef __APPLE__
+        gravity = -0.00005f;
+    #endif
     if (isJumping) {
         //update jump height
         jumpVelocity += gravity; 
