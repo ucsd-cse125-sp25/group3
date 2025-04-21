@@ -2,6 +2,8 @@
 
 #include "Camera.h"
 #include "Cube.h"
+#include "Scene.h"
+#include "Mesh.h"
 #include "Shader.h"
 #include "core.h"
 
@@ -15,6 +17,9 @@ public:
     // Objects to render
     static Cube* cube;
     static Cube* floor;
+
+    static Scene* scene;
+    static Mesh* mesh;
 
     // Shader Program
     static GLuint shaderProgram;
