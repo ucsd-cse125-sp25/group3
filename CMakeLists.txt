@@ -10,12 +10,16 @@ project(menv)
 # Add source files
 set(
     SOURCES
-    main.cpp
     src/Camera.cpp
     src/Cube.cpp
     src/Shader.cpp
     src/Tokenizer.cpp
     src/Window.cpp
+    Networking/ServerGame.cpp 
+    Networking/ServerNetwork.cpp 
+    Networking/NetworkServices.cpp
+    Networking/ClientGame.cpp 
+    Networking/ClientNetwork.cpp
 )
 
 # Add header files
@@ -27,6 +31,12 @@ set(
     include/Shader.h
     include/Tokenizer.h
     include/Window.h
+    Networking/ServerGame.h 
+    Networking/ServerNetwork.h
+    Networking/NetworkServices.h
+    Networking/ClientGame.h 
+    Networking/ClientNetwork.h
+    Networking/NetworkData.h 
 )
 
 # Require GL
@@ -43,8 +53,9 @@ link_directories(
 )
 
 # Add executable
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
-
+# add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+add_executable(server Networking/server.cpp ${SOURCES} ${HEADERS})
+add_executable(client Networking/client.cpp ${SOURCES} ${HEADERS})
 # Link libraries
 
 # target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32s.lib glfw3)

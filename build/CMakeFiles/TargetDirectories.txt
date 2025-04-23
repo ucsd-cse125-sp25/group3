@@ -1,4 +1,5 @@
-C:/Users/smrts/Documents/GitHub/group3/build/CMakeFiles/menv.dir
-C:/Users/smrts/Documents/GitHub/group3/build/CMakeFiles/CopyShaders.dir
-C:/Users/smrts/Documents/GitHub/group3/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/smrts/Documents/GitHub/group3/build/CMakeFiles/ZERO_CHECK.dir
+/Users/aprilhsu/desktop/group3/build/CMakeFiles/server.dir
+/Users/aprilhsu/desktop/group3/build/CMakeFiles/client.dir
+/Users/aprilhsu/desktop/group3/build/CMakeFiles/CopyShaders.dir
+/Users/aprilhsu/desktop/group3/build/CMakeFiles/edit_cache.dir
+/Users/aprilhsu/desktop/group3/build/CMakeFiles/rebuild_cache.dir

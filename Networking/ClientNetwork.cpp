@@ -39,8 +39,8 @@ ClientNetwork::ClientNetwork(void) {
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;  //TCP connection!!!
 
-    std::cout << ip << std::endl;
-    iResult = getaddrinfo(ip, DEFAULT_PORT, &hints, &result);
+    // std::cout << ip << std::endl;
+    iResult = getaddrinfo("100.64.217.220", DEFAULT_PORT, &hints, &result);
 
     if( iResult != 0 )
     {

@@ -18,7 +18,7 @@
 #include <map>
 using namespace std; 
 #define DEFAULT_BUFLEN 512
-#define DEFAULT_PORT "6881" 
+#define DEFAULT_PORT "2350" 
 #include <iostream>
 
 class ServerNetwork
