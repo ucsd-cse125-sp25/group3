@@ -32,7 +32,7 @@ bool Window::firstMouse = true;
 // Constructors and desctructors
 bool Window::initializeProgram() {
     // Create a shader program with a vertex shader and a fragment shader.
-    shaderProgram = LoadShaders("shaders/shader.vert", "shaders/shader.frag");
+    shaderProgram = LoadShaders("../shaders/shader.vert", "../shaders/shader.frag");
 
     // Check the shader program.
     if (!shaderProgram) {
@@ -51,8 +51,8 @@ bool Window::initializeObjects() {
     mesh = new Mesh(glm::vec3(1.0f,0.0f,0.0f));
     mesh->setModelMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
 
-    if (!scene->load("models/bunny.ply")){
-        std::cerr << "Failed to load ply" << std::endl;
+    if (!scene->load("../models/bunny.ply")){
+        std::cerr << "Failed to load ply: Bunny" << std::endl;
         return false;
     };
     Mesh* m = scene->getMesh(0);
@@ -61,8 +61,8 @@ bool Window::initializeObjects() {
     scene -> update();
     scene-> setupBufAll();
 
-    if (!mesh->load("models/buddha.ply")){
-        std::cerr << "Failed to load ply" << std::endl;
+    if (!mesh->load("../models/buddha.ply")){
+        std::cerr << "Failed to load ply: Buddha" << std::endl;
         return false;
     }
     mesh -> update();
