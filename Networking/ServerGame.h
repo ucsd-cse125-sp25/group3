@@ -1,5 +1,5 @@
 #include "ServerNetwork.h"
-
+#include "ServerLogic.h"
 
 class ServerGame
 {
@@ -24,4 +24,6 @@ private:
 
     // data buffer
     char network_data[MAX_PACKET_SIZE];
+
+    std::map<unsigned int, PlayerData> playersData; 
 };

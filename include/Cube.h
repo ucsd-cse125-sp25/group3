@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-
+#include <cstdio>
 #include "core.h"
 
 class Cube {

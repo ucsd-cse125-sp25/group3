@@ -3,7 +3,6 @@
 
 ClientGame::ClientGame(void)
 {
-
     network = new ClientNetwork();
     
     window = Window::createWindow(800, 600);

@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
 #include "Window.h"
+#include "Cube.h"
 #include "core.h"
-#include <string>
 
 #ifndef KEY_TYPES
 #define KEY_TYPES

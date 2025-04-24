@@ -16,6 +16,7 @@ set(
     src/Tokenizer.cpp
     src/Window.cpp
     src/ClientLogic.cpp
+    src/ServerLogic.cpp
     Networking/ServerGame.cpp 
     Networking/ServerNetwork.cpp 
     Networking/NetworkServices.cpp
@@ -33,6 +34,7 @@ set(
     include/Tokenizer.h
     include/Window.h
     include/ClientLogic.h
+    include/ServerLogic.h
     Networking/ServerGame.h 
     Networking/ServerNetwork.h
     Networking/NetworkServices.h

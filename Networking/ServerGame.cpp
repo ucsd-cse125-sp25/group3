@@ -13,7 +13,7 @@ ServerGame::ServerGame(void)
 {
     // id's to assign clients for our table
     client_id = 0;
-
+    
     // set up the server network to listen 
     network = new ServerNetwork(); 
 }
@@ -23,11 +23,13 @@ void ServerGame::update()
     // get new clients
    if(network->acceptNewClient(client_id))
    {
+        PlayerData player;
+        playersData.insert( pair<unsigned int, PlayerData>(client_id, player) );
         printf("client %d has been connected to the server\n",client_id);
 
         client_id++;
    }
-
+   
    receiveFromClients();
 }
 
@@ -52,6 +54,13 @@ void ServerGame::receiveFromClients()
             //no data recieved
             continue;
         }
+        printf("grab player data\n");
+        if (playersData.find(iter->first) == playersData.end()) {
+            printf("Client %d does not have associated player data\n", iter->first);
+            continue;
+        }
+
+        PlayerData player = playersData[iter->first];
 
         int i = 0;
         while (i < (unsigned int)data_length) 
@@ -84,7 +93,11 @@ void ServerGame::receiveFromClients()
                     // sendEchoPackets(std::string(packet.message));
                     break;
                 case KEY_EVENT:
+                    KeyType key;
+                    memcpy(&key, packet.payload.data(), sizeof(key));
                     printf("server recieved key event packet from client\n");
+                    printf("Key value: %hhd\n", key);
+                    player.calculateNewPos(key);
                     break;
                 default:
 
