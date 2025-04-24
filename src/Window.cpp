@@ -11,6 +11,7 @@ Cube* Window::floor;
 
 // Camera Properties
 Camera* Cam;
+Camera* MiniMapCam;
 
 // Interaction Variables
 bool LeftDown, RightDown;
@@ -94,6 +95,12 @@ GLFWwindow* Window::createWindow(int width, int height) {
     Cam = new Camera();
     Cam->SetAspect(float(width) / float(height));
 
+    //for minimap
+    MiniMapCam = new Camera();
+    MiniMapCam->SetOrtho(-10, 10, -10, 10, 0.1f, 100.0f); 
+    MiniMapCam->SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
+
+
     // initialize the interaction variables
     LeftDown = RightDown = false;
     MouseX = MouseY = 0;
@@ -153,8 +160,28 @@ void Window::displayCallback(GLFWwindow* window) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Render the object.
+    #ifdef __APPLE__
+        int fbWidth, fbHeight;
+        glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+        glViewport(0, 0, fbWidth, fbHeight);
+    #else
+        glViewport(0, 0, Window::width, Window::height);
+    #endif
+    //glViewport(0, 0, Window::width, Window::height);
     cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
     floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
+
+    int miniMapSize = 256;
+    //glViewport(0, Window::height - miniMapSize, miniMapSize, miniMapSize); 
+    #ifdef __APPLE__
+        glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+        glViewport(0, fbHeight - miniMapSize, miniMapSize, miniMapSize); 
+    #else
+        glViewport(0, Window::height - miniMapSize, miniMapSize, miniMapSize); 
+    #endif
+    glm::mat4 viewProj_miniMap = MiniMapCam->GetViewProjectMtx();
+    cube->draw(viewProj_miniMap, shaderProgram, false);
+    floor->draw(viewProj_miniMap, shaderProgram, true);
 
     // Gets events, including input such as keyboard and mouse or window resizing.
     glfwPollEvents();

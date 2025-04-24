@@ -11,6 +11,7 @@ public:
     static int width;
     static int height;
     static const char* windowTitle;
+    //static Camera* MiniMapCam;
 
     // Objects to render
     static Cube* cube;

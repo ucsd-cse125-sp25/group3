@@ -29,6 +29,9 @@ public:
     float GetAzimuth() { return Azimuth; }
     float GetIncline() { return Incline; }
 
+    void SetOrtho(float left, float right, float bottom, float top, float near, float far);
+    void SetLookAt(const glm::vec3& eye, const glm::vec3& center, const glm::vec3& up);
+
     const glm::mat4 &GetViewProjectMtx() { return ViewProjectMtx; }
 
     glm::vec3 GetForwardVector() const;
@@ -50,4 +53,8 @@ private:
 
     glm::vec3 Eye;    
     glm::vec3 Center; 
+
+    glm::mat4 projection;
+    bool isOrtho = false;
+    void updateProjection();
 };

@@ -8,6 +8,13 @@ Camera::Camera() {
     Reset();
 }
 void Camera::Update(const glm::vec3& targetPos) {
+    if (isOrtho) 
+    {
+        // Don't update orthographic camera this way
+        ViewProjectMtx = projection * glm::lookAt(Eye, Center, glm::vec3(0, 1, 0));
+        return;
+    }
+    
     // Step 1: Start with identity matrix
     glm::mat4 world(1.0f);
 
@@ -34,6 +41,26 @@ void Camera::Update(const glm::vec3& targetPos) {
     Eye = glm::vec3(world[3]);  // camera position
     Center = targetPos;         // cube position
 }
+
+void Camera::updateProjection() 
+{
+    projection = glm::perspective(glm::radians(FOV), Aspect, NearClip, FarClip);
+}
+
+void Camera::SetOrtho(float left, float right, float bottom, float top, float near, float far) 
+{
+    projection = glm::ortho(left, right, bottom, top, near, far);
+    isOrtho = true;
+}
+
+void Camera::SetLookAt(const glm::vec3& eye, const glm::vec3& center, const glm::vec3& up) 
+{
+    Eye = eye;
+    Center = center;
+    ViewProjectMtx = projection * glm::lookAt(eye, center, up);
+}
+
+
 void Camera::Reset() {
     FOV = 45.0f;
     Aspect = 1.33f;
@@ -43,6 +70,9 @@ void Camera::Reset() {
     Distance = 10.0f;
     Azimuth = 0.0f;
     Incline = 20.0f;
+
+    isOrtho = false;
+    updateProjection();
 }
 
 glm::vec3 Camera::GetForwardVector() const {
