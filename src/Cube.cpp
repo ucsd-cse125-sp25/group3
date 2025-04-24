@@ -132,6 +132,9 @@ Cube::~Cube() {
 }
 
 void Cube::draw(const glm::mat4& viewProjMtx, GLuint shader,bool floor) {
+
+    if (isInvisible) return;
+
     // actiavte the shader program
     glUseProgram(shader);
 
@@ -145,7 +148,9 @@ void Cube::draw(const glm::mat4& viewProjMtx, GLuint shader,bool floor) {
     if (floor){
         glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &color_floor[0]);
     }else{
-        glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &color[0]);
+        glm::vec3 finalColor = isAltColor ? colorAlt : color;
+        glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &finalColor[0]);
+        // glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &color[0]);
     }
 
     // Bind the VAO
@@ -180,35 +185,23 @@ void Cube::update() {
         //glm::mat4 baseModel = glm::translate(glm::mat4(1.0f), glm::vec3(0, jumpHeight, 0));
         // model = glm::translate(glm::mat4(1.0f), glm::vec3(0, jumpHeight, 0)) * baseModel;
     }
+
+    if (isInvisible && glfwGetTime() - invisibleStartTime > invisibleDuration) {
+        isInvisible = false;
+    }
+    if (isSpeedBoosted && glfwGetTime() - speedBoostStartTime > speedBoostDuration) {
+        isSpeedBoosted = false;
+        speed = normalSpeed;
+    }
+
     model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
+
+
 }
 
 void Cube::userInput(int key){
     switch(key) {
-        /*case GLFW_KEY_W:
-            model = glm::translate(model, glm::vec3(0,0,-0.5f));
-            break;
-        case GLFW_KEY_A:
-            model = glm::translate(model, glm::vec3(-0.5f,0,0));
-            break;
-        case GLFW_KEY_S:
-            model = glm::translate(model, glm::vec3(0,0,0.5f));
-            break;
-        case GLFW_KEY_D:
-            model = glm::translate(model, glm::vec3(0.5f,0,0));
-            break;
-        case GLFW_KEY_T:
-            model = glm::translate(model, glm::vec3(0,0.5f,0));
-            break;
-        case GLFW_KEY_G:
-            model = glm::translate(model, glm::vec3(0,-0.5f,0));
-            break;
-        case GLFW_KEY_K:
-            model = glm::rotate(model, 0.1f, glm::vec3(0,1,0));
-            break;
-        case GLFW_KEY_L:
-            model = glm::rotate(model, -0.1f, glm::vec3(0,1,0));
-            break;*/
+ 
         case GLFW_KEY_SPACE:
         if (isGrounded) {
             isJumping = true;
@@ -223,20 +216,7 @@ void Cube::userInput(int key){
 }
 void Cube::handleContinuousInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir) {
 
-    // if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-    //     baseModel = glm::translate(baseModel, glm::vec3(0, 0, -0.005f));
-
-    // if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-    //     baseModel = glm::translate(baseModel, glm::vec3(0, 0, 0.005f));
-
-    // if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-    //     baseModel = glm::translate(baseModel, glm::vec3(-0.005f, 0, 0));
-
-    // if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-    //     baseModel = glm::translate(baseModel, glm::vec3(0.005f, 0, 0));
-
     glm::vec3 movement(0.0f);
-    float speed = 0.02f;
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         movement += forwardDir;
@@ -252,6 +232,59 @@ void Cube::handleContinuousInput(GLFWwindow* window, const glm::vec3& forwardDir
         baseModel = glm::translate(baseModel, movement);
     }
 
+    // // for ability invisible 
+    // if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+    //     if (!eWasPressed && !isInvisible) {
+    //         isInvisible = true;
+    //         invisibleStartTime = glfwGetTime();
+    //     }
+    //     eWasPressed = true;
+    // } else {
+    //     eWasPressed = false;
+    // }
+
+    // // check invisible time
+    // if (isInvisible && glfwGetTime() - invisibleStartTime > invisibleDuration) {
+    //     isInvisible = false;
+    // }
+
+    // for ability 
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+        if (!eWasPressed) {
+            switch (type) {
+                case CHARACTER_1: {
+                    // Invisibility
+                    if (!isInvisible) {
+                        isInvisible = true;
+                        invisibleStartTime = glfwGetTime();
+                    }
+                    break;
+                }
+                case CHARACTER_2: {
+                    if (!isSpeedBoosted) {
+                        isSpeedBoosted = true;
+                        speedBoostStartTime = glfwGetTime();
+                        speed = boostedSpeed;
+                    }
+                    break;
+                }
+                case CHARACTER_3: {
+                    isAltColor = !isAltColor;
+                    break;
+                }
+                case CHARACTER_4: {
+                    
+                    break;
+                }
+            }
+        }
+        eWasPressed = true;
+    } else {
+        eWasPressed = false;
+    }
+    
+
+
     if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
         baseModel = glm::translate(baseModel, glm::vec3(0, 0.005f, 0));
 
@@ -263,6 +296,9 @@ void Cube::handleContinuousInput(GLFWwindow* window, const glm::vec3& forwardDir
 
     if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
         baseModel = glm::rotate(baseModel, -0.02f, glm::vec3(0, 1, 0));
+
+    // if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+    //     baseModel = glm::rotate(baseModel, -0.02f, glm::vec3(0, 1, 0));
 
     /*if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !isJumping) {
         isJumping = true;
