@@ -69,7 +69,7 @@ bool Window::initializeObjects() {
     mesh -> setupBuf();
 
     // cube = new Cube(glm::vec3(-1, 0, -2), glm::vec3(1, 1, 1));
-    floor = new Cube(glm::vec3(-4, -2.03, -4), glm::vec3(4, -2.01, 4));
+    floor = new Cube(glm::vec3(-8, -2.03, -8), glm::vec3(8, -2.01, 8));
 
     return true;
 }
@@ -98,6 +98,13 @@ GLFWwindow* Window::createWindow(int width, int height) {
     glfwWindowHint(GLFW_SAMPLES, 4);
 
     // Create the GLFW window.
+    #ifdef __APPLE__
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    #endif
+
     GLFWwindow* window = glfwCreateWindow(width, height, windowTitle, NULL, NULL);
 
     // Check if the window could not be created.
@@ -125,7 +132,21 @@ GLFWwindow* Window::createWindow(int width, int height) {
     MouseX = MouseY = 0;
 
     // Call the resize callback to make sure things get drawn immediately.
-    Window::resizeCallback(window, width, height);
+    #ifdef __APPLE__
+        // macOS: Use framebuffer size to handle Retina displays correctly
+        int fbWidth, fbHeight;
+        glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+        glViewport(0, 0, fbWidth, fbHeight);
+        Cam->SetAspect(float(fbWidth) / float(fbHeight));
+    #else
+        // Windows or others: Use default logic-pixel-based callback
+        Window::resizeCallback(window, width, height);
+    #endif
+
+
+    // Window::resizeCallback(window, width, height);
+
+
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     return window;
@@ -155,14 +176,21 @@ void Window::idleCallback() {
 void Window::displayCallback(GLFWwindow* window) {
 
     if (cube != nullptr) {
-        cube->handleContinuousInput(window);
+        // cube->handleContinuousInput(window);
+        glm::vec3 forward = Cam->GetForwardVector();
+        forward.y = 0.0f;  
+        forward = glm::normalize(forward);
+
+        glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
+
+        cube->handleContinuousInput(window, forward, right);
     }
     // Clear the color and depth buffers.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Render the object.
-    cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
-    floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
+    cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
+    floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
 
     scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
     mesh->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);

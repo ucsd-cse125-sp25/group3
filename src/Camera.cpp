@@ -30,6 +30,9 @@ void Camera::Update(const glm::vec3& targetPos) {
 
     // Step 7: Final view-projection matrix
     ViewProjectMtx = project * view;
+
+    Eye = glm::vec3(world[3]);  // camera position
+    Center = targetPos;         // cube position
 }
 void Camera::Reset() {
     FOV = 45.0f;
@@ -41,3 +44,8 @@ void Camera::Reset() {
     Azimuth = 0.0f;
     Incline = 20.0f;
 }
+
+glm::vec3 Camera::GetForwardVector() const {
+    return glm::normalize(Center - Eye);  
+}
+
