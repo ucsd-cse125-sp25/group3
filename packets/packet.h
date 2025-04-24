@@ -4,7 +4,7 @@
 
 
 // Packet structure will be length (2 bytes), type (1 byte), data (N bytes) 
-class PacketHelper {
+class Packet {
     uint8_t type;
     public:
         uint16_t length;     // Length of payload
