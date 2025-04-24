@@ -10,8 +10,8 @@ enum class PacketType : uint8_t {
 static int overhead = 3;
 
 Packet::Packet() {
-    length = static_cast<uint16_t>(message[0]);
-    PacketTypes type = static_cast<uint8_t>(message[1]);
+    uint16_t length = static_cast<uint16_t>(message[0]);
+    uint8_t type = static_cast<uint8_t>(message[1]);
 
     this->type = type;
     this->length = length;
