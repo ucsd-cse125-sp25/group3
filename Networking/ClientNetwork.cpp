@@ -40,7 +40,7 @@ ClientNetwork::ClientNetwork(void) {
     hints.ai_protocol = IPPROTO_TCP;  //TCP connection!!!
 
     // std::cout << ip << std::endl;
-    iResult = getaddrinfo("100.64.217.220", DEFAULT_PORT, &hints, &result);
+    iResult = getaddrinfo("192.168.1.61", DEFAULT_PORT, &hints, &result);
 
     if( iResult != 0 )
     {

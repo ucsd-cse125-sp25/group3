@@ -15,6 +15,7 @@ set(
     src/Shader.cpp
     src/Tokenizer.cpp
     src/Window.cpp
+    src/ClientLogic.cpp
     Networking/ServerGame.cpp 
     Networking/ServerNetwork.cpp 
     Networking/NetworkServices.cpp
@@ -31,6 +32,7 @@ set(
     include/Shader.h
     include/Tokenizer.h
     include/Window.h
+    include/ClientLogic.h
     Networking/ServerGame.h 
     Networking/ServerNetwork.h
     Networking/NetworkServices.h
@@ -53,7 +55,7 @@ link_directories(
 )
 
 # Add executable
-# add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+add_executable(${PROJECT_NAME} main.cpp ${SOURCES} ${HEADERS})
 add_executable(server Networking/server.cpp ${SOURCES} ${HEADERS})
 add_executable(client Networking/client.cpp ${SOURCES} ${HEADERS})
 # Link libraries
@@ -97,17 +99,25 @@ if (APPLE)
     # Apply if found
     if(GLEW_INCLUDE_DIR)
         target_include_directories(${PROJECT_NAME} PRIVATE ${GLEW_INCLUDE_DIR})
+        target_include_directories(server PRIVATE ${GLEW_INCLUDE_DIR})
+        target_include_directories(client PRIVATE ${GLEW_INCLUDE_DIR})
     endif()
 
     if(GLEW_LIBRARY)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${GLEW_LIBRARY})
+        target_link_libraries(server PRIVATE ${GLEW_LIBRARY})
+        target_link_libraries(client PRIVATE ${GLEW_LIBRARY})
     endif()
 
     if(GLFW_LIBRARY)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${GLFW_LIBRARY})
+        target_link_libraries(server PRIVATE ${GLFW_LIBRARY})
+        target_link_libraries(client PRIVATE ${GLFW_LIBRARY})
     endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES})
+target_link_libraries(server PRIVATE ${OPENGL_LIBRARIES})
+target_link_libraries(client PRIVATE ${OPENGL_LIBRARIES})
 
 elseif (WIN32)
     message(STATUS "Building on Windows")
@@ -126,6 +136,8 @@ add_custom_target(CopyShaders ALL
 	"${CMAKE_BINARY_DIR}/shaders"
 )
 add_dependencies(menv CopyShaders)
+add_dependencies(server CopyShaders)
+add_dependencies(client CopyShaders)
 
 
 find_package(Doxygen)

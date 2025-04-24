@@ -5,16 +5,26 @@ ClientGame::ClientGame(void)
 {
 
     network = new ClientNetwork();
+    
+    window = Window::createWindow(800, 600);
+    if (!window) exit(EXIT_FAILURE);
+
+    setup_callbacks(window);
+    // Setup OpenGL settings.
+    setup_opengl_settings();
+
+    // Initialize the shader program; exit if initialization fails.
+    if (!Window::initializeProgram()) exit(EXIT_FAILURE);
+    // Initialize objects/pointers for rendering; exit if initialization fails.
+    if (!Window::initializeObjects()) exit(EXIT_FAILURE);
 
     // send init packet
-    const unsigned int packet_size = sizeof(Packet);
-    char packet_data[packet_size];
-
     Packet packet;
     packet.packet_type = INIT_CONNECTION;
-
+    packet.length = 0;
+    const unsigned int packet_size = packet.getSize();
+    char packet_data[packet_size];
     packet.serialize(packet_data);
-
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
@@ -38,23 +48,36 @@ void ClientGame::sendEchoPackets(std::string input) {
 
     Packet packet;
     packet.packet_type = ECHO_EVENT;
-    memcpy(packet.message, input.data(), sizeof input);
+    // memcpy(packet.payload, input.data(), sizeof input);
     // packet.message = input.data();
     packet.serialize(packet_data);
     // printf(packet_data);
     NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
 }
 
-void ClientGame::update(std::string input)
+void ClientGame::sendKeyPackets(KeyType key) {
+    Packet packet;
+    packet.packet_type = KEY_EVENT;
+    packet.payload.resize(1);
+    memcpy(packet.payload.data(), &key, sizeof(key));
+    packet.length = packet.payload.size();
+    const unsigned int packet_size = packet.getSize();
+    char packet_data[packet_size];
+    packet.serialize(packet_data);
+    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+}
+
+void ClientGame::update()
 {
-    sendEchoPackets(input);
+    KeyType input = handleUserInput(window);
+
+    if (input != KeyType::NONE) {
+        printf("sending key event packet\n");
+        sendKeyPackets(input);
+    } 
 
     Packet packet;
     int data_length = network->receivePackets(network_data);
-
-    while (data_length <= 0) {
-        data_length = network->receivePackets(network_data);
-    }
 
     if (data_length <= 0) 
     {
@@ -74,12 +97,12 @@ void ClientGame::update(std::string input)
 
                 printf("client received action event packet from server\n");
 
-                sendActionPackets();
+                // sendActionPackets();
 
                 break;
             case ECHO_EVENT:
-                printf("client recieved echo event packet from server\n");
-                printf("Client recieved: %s\n", packet.message);
+                // printf("client recieved echo event packet from server\n");
+                // printf("Client recieved: %s\n", packet.message);
                 break;
             default:
 
@@ -89,3 +112,4 @@ void ClientGame::update(std::string input)
         }
     }
 }
+

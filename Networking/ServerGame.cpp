@@ -34,7 +34,7 @@ void ServerGame::update()
 void ServerGame::receiveFromClients()
 {
     auto start = std::chrono::steady_clock::now();
-    Packet packet;
+    // Packet packet;
 
     // go through all clients
     #ifdef _WIN32
@@ -56,9 +56,9 @@ void ServerGame::receiveFromClients()
         int i = 0;
         while (i < (unsigned int)data_length) 
         {
-            
+            Packet packet;
             packet.deserialize(&(network_data[i]));
-            i += sizeof(Packet);
+            i += packet.getSize();
 
             switch (packet.packet_type) {
 
@@ -80,8 +80,11 @@ void ServerGame::receiveFromClients()
 
                 case ECHO_EVENT:
                     printf("server recieved echo event packet from client\n");
-                    printf("Server recieved: %s\n", packet.message);
-                    sendEchoPackets(std::string(packet.message));
+                    // printf("Server recieved: %s\n", packet.message);
+                    // sendEchoPackets(std::string(packet.message));
+                    break;
+                case KEY_EVENT:
+                    printf("server recieved key event packet from client\n");
                     break;
                 default:
 
@@ -94,7 +97,7 @@ void ServerGame::receiveFromClients()
     auto orig_diff = std::chrono::steady_clock::now() - start;
     auto milli_diff = std::chrono::duration_cast<std::chrono::milliseconds>(orig_diff);
     auto wait = std::chrono::milliseconds(TICK) - milli_diff;
-    assert(wait.count() >= 0);
+    // assert(wait.count() >= 0);
     std::this_thread::sleep_for(wait);
     
     // std::cout << "diff: " << milli_diff.count() << "\n";
@@ -125,7 +128,7 @@ void ServerGame::sendEchoPackets(std::string response) {
 
     Packet packet;
     packet.packet_type = ECHO_EVENT;
-    memcpy(packet.message, response.data(), sizeof response);
+    // memcpy(packet.payload, response.data(), sizeof response);
     packet.serialize(packet_data);
     network->sendToAll(packet_data,packet_size);
 }
