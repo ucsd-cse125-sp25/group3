@@ -94,6 +94,23 @@ CubeState::CubeState(glm::vec3 cubeMin, glm::vec3 cubeMax) {
     };
 }
 
+void CubeState::printState() {
+    std::cout << "base model:" << std::endl;
+    std::cout << glm::to_string(baseModel) << std::endl;
+}
+
+void CubeState::toVector(std::vector<char>* vec) {
+    char buf[4];
+
+    for (int i=0; i<4; i++) {
+        for (int j=0; j<4; j++) {
+            // printf("elem i=%d, j=%d: %f\n", i,j,baseModel[i][j]);
+            memcpy(buf, &baseModel[i][j], sizeof(float));
+            vec->insert(vec->begin(), &buf[0], &buf[4]);
+        }
+    }
+}
+
 // PlayerData::PlayerData() {
     
 //     cube = new CubeState();

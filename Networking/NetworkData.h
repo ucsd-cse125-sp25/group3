@@ -16,6 +16,8 @@ enum PacketTypes {
 
     KEY_EVENT = 3,
 
+    STATE_UPDATE = 4,
+
 }; 
 
 struct Packet {

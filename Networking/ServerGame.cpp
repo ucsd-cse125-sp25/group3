@@ -16,6 +16,8 @@ ServerGame::ServerGame(void)
     
     // set up the server network to listen 
     network = new ServerNetwork(); 
+
+    printf("%lu", sizeof(CubeState));
 }
 
 void ServerGame::update()
@@ -26,7 +28,6 @@ void ServerGame::update()
         PlayerData player;
         playersData.insert( pair<unsigned int, PlayerData>(client_id, player) );
         printf("client %d has been connected to the server\n",client_id);
-
         client_id++;
    }
    
@@ -54,7 +55,7 @@ void ServerGame::receiveFromClients()
             //no data recieved
             continue;
         }
-        printf("grab player data\n");
+        
         if (playersData.find(iter->first) == playersData.end()) {
             printf("Client %d does not have associated player data\n", iter->first);
             continue;
@@ -96,13 +97,13 @@ void ServerGame::receiveFromClients()
                     KeyType key;
                     memcpy(&key, packet.payload.data(), sizeof(key));
                     printf("server recieved key event packet from client\n");
-                    printf("Key value: %hhd\n", key);
                     player.calculateNewPos(key);
+                    // player.cube.printState();
+                    playersData[iter->first] = player;
+                    sendPlayerState(iter->first);
                     break;
                 default:
-
                     printf("error in packet types\n");
-
                     break;
             }
         }
@@ -112,13 +113,6 @@ void ServerGame::receiveFromClients()
     auto wait = std::chrono::milliseconds(TICK) - milli_diff;
     // assert(wait.count() >= 0);
     std::this_thread::sleep_for(wait);
-    
-    // std::cout << "diff: " << milli_diff.count() << "\n";
-    
-    // printf("wait: %d\n", wait.count());
-    
-    // std::cout << "diff: " << d.count() << "\n";
-    //assert(std::chrono::system_clock::now() - std::chrono::milliseconds(TICK) == start && "Exceeded server tick");
 }
 
 void ServerGame::sendActionPackets()
@@ -144,4 +138,18 @@ void ServerGame::sendEchoPackets(std::string response) {
     // memcpy(packet.payload, response.data(), sizeof response);
     packet.serialize(packet_data);
     network->sendToAll(packet_data,packet_size);
+}
+
+void ServerGame::sendPlayerState(unsigned int client_id) {
+    PlayerData player = playersData[client_id];
+    Packet packet;
+    packet.packet_type = STATE_UPDATE;
+    player.cube.toVector(&packet.payload);
+    packet.length = packet.payload.size();
+    const unsigned int packet_size = packet.getSize();
+    char packet_data[packet_size];
+    packet.serialize(packet_data);
+    // for (int i=0; i<64; i++) {
+    //     printf("elem %d: %hhx\n", i, (unsigned char) packet.payload[i]);
+    // }
 }

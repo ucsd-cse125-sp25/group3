@@ -3,6 +3,7 @@
 #include "Cube.h"
 #include "Camera.h"
 #include <cstdio>
+#include "glm/gtx/string_cast.hpp"
 
 class CubeState {
     public:
@@ -16,7 +17,8 @@ class CubeState {
         
         glm::mat4 baseModel = glm::mat4(1.0f);
         CubeState(glm::vec3 cubeMin = glm::vec3(-1, -1, -1), glm::vec3 cubeMax = glm::vec3(1, 1, 1));
-        // ~CubeState();
+        void toVector(std::vector<char>* vec);
+        void printState();
 };
 
 class PlayerData {

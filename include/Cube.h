@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstdio>
 #include "core.h"
+#include <iostream>
 
 class Cube {
 private:
