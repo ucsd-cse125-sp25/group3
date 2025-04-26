@@ -39,4 +39,5 @@ public:
     glm::vec3 getPosition() const;
 
     void spin(float deg);
+    void readFromArray(char * data);
 };

@@ -75,21 +75,20 @@ void ClientGame::update()
         sendKeyPackets(input);
     } 
 
-    Packet packet;
     int data_length = network->receivePackets(network_data);
 
-    if (data_length <= 0) 
+    if (data_length > 0) 
     {
-        //no data recieved
-        return;
-    }
+        
 
     int i = 0;
+
     while (i < (unsigned int)data_length) 
     {
+        Packet packet;
         packet.deserialize(&(network_data[i]));
-        i += sizeof(Packet);
-
+        i += packet.getSize();
+    
         switch (packet.packet_type) {
 
             case ACTION_EVENT:
@@ -103,6 +102,10 @@ void ClientGame::update()
                 // printf("client recieved echo event packet from server\n");
                 // printf("Client recieved: %s\n", packet.message);
                 break;
+            case STATE_UPDATE:
+                printf("client recieved state update from server\n");
+                Window::update(packet.payload.data());
+                break;
             default:
 
                 printf("error in packet types\n");
@@ -110,5 +113,8 @@ void ClientGame::update()
                 break;
         }
     }
+}
+Window::render(window);
+    Window::idleCallback();
 }
 

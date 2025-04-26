@@ -255,3 +255,23 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     Cam->SetAzimuth(newAzimuth);
     Cam->SetIncline(newIncline);
 }
+
+void Window::update(char * data) {
+    cube->readFromArray(data);
+
+}
+void Window::render(GLFWwindow* window) {
+    
+
+    // Clear the color and depth buffers.
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Render the object.
+    cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
+    floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
+
+    // Gets events, including input such as keyboard and mouse or window resizing.
+    glfwPollEvents();
+    // Swap buffers.
+    glfwSwapBuffers(window);
+}

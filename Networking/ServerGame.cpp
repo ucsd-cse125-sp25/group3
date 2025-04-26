@@ -75,7 +75,7 @@ void ServerGame::receiveFromClients()
                 case INIT_CONNECTION:
 
                     printf("server received init packet from client\n");
-
+                    sendPlayerState(iter->first);
                     // sendActionPackets();
 
                     break;
@@ -98,7 +98,7 @@ void ServerGame::receiveFromClients()
                     memcpy(&key, packet.payload.data(), sizeof(key));
                     printf("server recieved key event packet from client\n");
                     player.calculateNewPos(key);
-                    // player.cube.printState();
+                    player.cube.printState();
                     playersData[iter->first] = player;
                     sendPlayerState(iter->first);
                     break;
@@ -111,7 +111,7 @@ void ServerGame::receiveFromClients()
     auto orig_diff = std::chrono::steady_clock::now() - start;
     auto milli_diff = std::chrono::duration_cast<std::chrono::milliseconds>(orig_diff);
     auto wait = std::chrono::milliseconds(TICK) - milli_diff;
-    // assert(wait.count() >= 0);
+    assert(wait.count() >= 0);
     std::this_thread::sleep_for(wait);
 }
 
@@ -137,7 +137,7 @@ void ServerGame::sendEchoPackets(std::string response) {
     packet.packet_type = ECHO_EVENT;
     // memcpy(packet.payload, response.data(), sizeof response);
     packet.serialize(packet_data);
-    network->sendToAll(packet_data,packet_size);
+    // network->sendToAll(packet_data, packet_size);
 }
 
 void ServerGame::sendPlayerState(unsigned int client_id) {
@@ -149,6 +149,7 @@ void ServerGame::sendPlayerState(unsigned int client_id) {
     const unsigned int packet_size = packet.getSize();
     char packet_data[packet_size];
     packet.serialize(packet_data);
+    network->sendToAll(packet_data, packet_size);
     // for (int i=0; i<64; i++) {
     //     printf("elem %d: %hhx\n", i, (unsigned char) packet.payload[i]);
     // }

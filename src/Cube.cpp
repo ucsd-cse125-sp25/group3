@@ -278,3 +278,21 @@ void Cube::spin(float deg) {
 glm::vec3 Cube::getPosition() const {
     return glm::vec3(baseModel[3]);  // extract translation from matrix
 }
+
+void Cube::readFromArray(char * data) {
+
+    for (int i=0; i<16; i++) {
+        // for (int j=0; j<4; j++) {
+            // printf("item %d: %hhu\n", i+j,data[i+j]);
+            memcpy(&baseModel[i/4][i%4], &data[i*4], sizeof(float));
+        // }
+    }
+    // std::cout << "updated base model:" << std::endl;
+    // std::cout << glm::to_string(baseModel) << std::endl;
+
+    // for (int i=0; i<4; i++) {
+    //     for (int j=0; j<4; j++) {
+    //         printf("[%d,%d]: %f\n", i, j, baseModel[i][j]);
+    //     }
+    // }
+}

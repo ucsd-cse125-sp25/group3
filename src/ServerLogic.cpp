@@ -97,6 +97,11 @@ CubeState::CubeState(glm::vec3 cubeMin, glm::vec3 cubeMax) {
 void CubeState::printState() {
     std::cout << "base model:" << std::endl;
     std::cout << glm::to_string(baseModel) << std::endl;
+    // for (int i=0; i<4; i++) {
+    //     for (int j=0; j<4; j++) {
+    //         printf("[%d,%d]: %f\n", i, j, baseModel[i][j]);
+    //     }
+    // }
 }
 
 void CubeState::toVector(std::vector<char>* vec) {
@@ -106,7 +111,7 @@ void CubeState::toVector(std::vector<char>* vec) {
         for (int j=0; j<4; j++) {
             // printf("elem i=%d, j=%d: %f\n", i,j,baseModel[i][j]);
             memcpy(buf, &baseModel[i][j], sizeof(float));
-            vec->insert(vec->begin(), &buf[0], &buf[4]);
+            vec->insert(vec->end(), &buf[0], &buf[4]);
         }
     }
 }
@@ -139,7 +144,7 @@ void PlayerData::calculateNewPos(KeyType key) {
         movement += rightDir;
     if (key == KeyType::KEY_A)
         movement -= rightDir;
-
+        
     if (glm::length(movement) > 0.0f) {
         movement = glm::normalize(movement) * speed;
         cube.baseModel = glm::translate(cube.baseModel, movement);
