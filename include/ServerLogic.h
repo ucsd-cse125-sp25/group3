@@ -19,6 +19,7 @@ class CubeState {
         CubeState(glm::vec3 cubeMin = glm::vec3(-1, -1, -1), glm::vec3 cubeMax = glm::vec3(1, 1, 1));
         void toVector(std::vector<char>* vec);
         void printState();
+        glm::vec3 getPosition();
 };
 
 class PlayerData {

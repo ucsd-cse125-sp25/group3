@@ -116,6 +116,10 @@ void CubeState::toVector(std::vector<char>* vec) {
     }
 }
 
+glm::vec3 CubeState::getPosition() {
+    return glm::vec3(baseModel[3]);  // extract translation from matrix
+}
+
 // PlayerData::PlayerData() {
     
 //     cube = new CubeState();
