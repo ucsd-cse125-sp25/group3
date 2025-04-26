@@ -165,4 +165,7 @@ void PlayerData::calculateNewPos(KeyType key) {
 
     if (key == KeyType::KEY_L)
         cube.baseModel = glm::rotate(cube.baseModel, -0.02f, glm::vec3(0, 1, 0));
+
+    camera.Update(cube.getPosition());
+    
 }

@@ -36,12 +36,6 @@ void clientLoop()
         // std::string input;
         // std::getline(std::cin, input);
         client->update();
-
-       
-        // // Gets events, including input such as keyboard and mouse or window resizing.
-        // glfwPollEvents();
-        // // Swap buffers.
-        // glfwSwapBuffers(client->window);
     }
     Window::cleanUp();
     // Destroy the window.

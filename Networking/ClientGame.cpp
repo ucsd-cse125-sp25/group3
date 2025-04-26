@@ -77,44 +77,41 @@ void ClientGame::update()
 
     int data_length = network->receivePackets(network_data);
 
-    if (data_length > 0) 
-    {
+    if (data_length > 0) {
+        int i = 0;
+
+        while (i < (unsigned int)data_length) 
+        {
+            Packet packet;
+            packet.deserialize(&(network_data[i]));
+            i += packet.getSize();
         
+            switch (packet.packet_type) {
 
-    int i = 0;
+                case ACTION_EVENT:
 
-    while (i < (unsigned int)data_length) 
-    {
-        Packet packet;
-        packet.deserialize(&(network_data[i]));
-        i += packet.getSize();
-    
-        switch (packet.packet_type) {
+                    printf("client received action event packet from server\n");
 
-            case ACTION_EVENT:
+                    // sendActionPackets();
 
-                printf("client received action event packet from server\n");
+                    break;
+                case ECHO_EVENT:
+                    // printf("client recieved echo event packet from server\n");
+                    // printf("Client recieved: %s\n", packet.message);
+                    break;
+                case STATE_UPDATE:
+                    printf("client recieved state update from server\n");
+                    Window::update(packet.payload.data());
+                    break;
+                default:
 
-                // sendActionPackets();
+                    printf("error in packet types\n");
 
-                break;
-            case ECHO_EVENT:
-                // printf("client recieved echo event packet from server\n");
-                // printf("Client recieved: %s\n", packet.message);
-                break;
-            case STATE_UPDATE:
-                printf("client recieved state update from server\n");
-                Window::update(packet.payload.data());
-                break;
-            default:
-
-                printf("error in packet types\n");
-
-                break;
+                    break;
+            }
         }
     }
-}
-Window::render(window);
+    Window::render(window);
     Window::idleCallback();
 }
 
