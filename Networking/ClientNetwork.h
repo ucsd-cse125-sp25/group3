@@ -15,7 +15,7 @@
 #endif
 
 #include "NetworkServices.h"
-#include "NetworkData.h"
+#include "../packets/Packet.h"
 #include <stdio.h>
 
 // size of our buffer

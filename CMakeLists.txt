@@ -22,6 +22,7 @@ set(
     Networking/NetworkServices.cpp
     Networking/ClientGame.cpp 
     Networking/ClientNetwork.cpp
+    packets/Packet.cpp
 )
 
 # Add header files
@@ -40,7 +41,8 @@ set(
     Networking/NetworkServices.h
     Networking/ClientGame.h 
     Networking/ClientNetwork.h
-    Networking/NetworkData.h 
+    packets/Packet.h
+    #Networking/NetworkData.h
 )
 
 # Require GL

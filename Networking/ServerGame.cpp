@@ -72,28 +72,30 @@ void ServerGame::receiveFromClients()
 
             switch (packet.packet_type) {
 
-                case INIT_CONNECTION:
+                case INIT_CONNECTION: {
 
                     printf("server received init packet from client\n");
                     sendPlayerState(iter->first);
                     // sendActionPackets();
 
                     break;
-
-                case ACTION_EVENT:
+                }
+                case ACTION_EVENT: {
 
                     printf("server received action event packet from client\n");
 
                     sendActionPackets();
 
                     break;
-
-                case ECHO_EVENT:
+                }
+                case ECHO_EVENT: {
+                    /* std::string message(packet.payload.begin(), packet.payload.end());
                     printf("server recieved echo event packet from client\n");
-                    // printf("Server recieved: %s\n", packet.message);
-                    // sendEchoPackets(std::string(packet.message));
+                    printf("Server recieved: %s\n", packet.payload.data());
+                    sendEchoPackets(message); */
                     break;
-                case KEY_EVENT:
+                }
+                case KEY_EVENT: {
                     KeyType key;
                     memcpy(&key, packet.payload.data(), sizeof(key));
                     printf("server recieved key event packet from client\n");
@@ -102,9 +104,11 @@ void ServerGame::receiveFromClients()
                     playersData[iter->first] = player;
                     sendPlayerState(iter->first);
                     break;
-                default:
+                }
+                default: {
                     printf("error in packet types\n");
                     break;
+                }
             }
         }
     }

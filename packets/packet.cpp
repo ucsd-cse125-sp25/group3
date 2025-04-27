@@ -1,28 +1,21 @@
-#include "packet.h"
-#include <vector>
+#include "Packet.h"
 
-enum class PacketType : uint8_t {
-    ACTION = 1,
-    WINDOW = 2,
-    
-};
-
-static int overhead = 3;
-
-Packet::Packet() {
-    uint16_t length = static_cast<uint16_t>(message[0]);
-    uint8_t type = static_cast<uint8_t>(message[1]);
-
-    this->type = type;
-    this->length = length;
-    this->data.resize(length / 2);
-    std::memcpy(&this->data[0], &message[overhead], data.size() * sizeof(uint16_t));
+unsigned int Packet::getSize() {
+    return sizeof(packet_type) + sizeof(length) + payload.size();
 }
 
-char* Packet::serialize() {
-    char* serializedData = new char[length + overhead];
-    memcpy(&serializedData[0], &this->length, sizeof length);
-    memcpy(&serializedData[2], &this->type, sizeof type);
-    memcpy(&serializedData[3], &this->data[0], data.size() * sizeof(uint16_t));
-    return serializedData;
+void Packet::serialize(char * data) {
+    memcpy(data, &packet_type, sizeof(unsigned int));
+    memcpy(&data[4], &length, sizeof(unsigned int));
+    // memcpy(&data[8], message, payload.size()); 
+    if (length > 0)
+    std::copy(payload.begin(), payload.end(), &data[8]);
+}
+
+void Packet::deserialize(char * data) {
+    memcpy(&packet_type, data, sizeof(unsigned int));
+    memcpy(&length, &data[4], sizeof(unsigned int));
+    if (length > 0)
+    payload.insert(payload.begin(), &data[8], &data[8 + length]);
+    // memcpy(message, &data[8], sizeof message);  
 }
