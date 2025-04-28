@@ -4,6 +4,11 @@
 
 #include "core.h"
 
+struct BoundingBox {
+    glm::vec3 min;
+    glm::vec3 max;
+};
+
 class Cube {
 private:
     GLuint VAO;
@@ -16,6 +21,8 @@ private:
     std::vector<glm::vec3> positions;
     std::vector<glm::vec3> normals;
     std::vector<unsigned int> indices;
+
+    BoundingBox bbox;
 
 public:
 
@@ -70,6 +77,11 @@ public:
     void userInput(int key);
     void handleContinuousInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir);
     glm::vec3 getPosition() const;
+
+    BoundingBox Cube::calcBBox(const std::vector<glm::vec3>& verts);
+    BoundingBox getWorldBBox();
+    bool isColliding(Cube* entity);
+    std::vector<Cube*> checkCollision(std::vector<Cube*>& scene);
 
     void spin(float deg);
 };

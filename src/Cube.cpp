@@ -1,6 +1,10 @@
 #include "Cube.h"
 
 Cube::Cube(glm::vec3 cubeMin, glm::vec3 cubeMax) {
+
+    bbox.min = cubeMin;
+    bbox.max = cubeMax;
+
     // Model matrix.
     model = glm::mat4(1.0f);
 
@@ -313,4 +317,68 @@ void Cube::spin(float deg) {
 
 glm::vec3 Cube::getPosition() const {
     return glm::vec3(baseModel[3]);  // extract translation from matrix
+}
+
+BoundingBox Cube::calcBBox(const std::vector<glm::vec3>& verts) {
+    struct BoundingBox bbox;
+    bbox.max = verts[0];
+    bbox.min = verts[0];
+
+    for (glm::vec3 v : verts){
+        if (v.x < bbox.min.x){ bbox.min.x = v.x; }
+        if (v.y < bbox.min.y){ bbox.min.y = v.y; }
+        if (v.z < bbox.min.z){ bbox.min.z = v.z; }
+
+        if (v.x > bbox.min.x){ bbox.min.x = v.x; }
+        if (v.y > bbox.min.y){ bbox.min.y = v.y; }
+        if (v.z > bbox.min.z){ bbox.min.z = v.z; }
+    }
+
+    return bbox;
+}
+
+BoundingBox Cube::getWorldBBox() {
+    std::vector<glm::vec3> bbVerts;
+
+    bbVerts.push_back(model * glm::vec4(bbox.max, 1.0f));
+    bbVerts.push_back(model * glm::vec4(bbox.min, 1.0f));
+
+    bbVerts.push_back(model * glm::vec4(bbox.min.x, bbox.max.y, bbox.max.z, 1.0f));
+    bbVerts.push_back(model * glm::vec4(bbox.max.x, bbox.min.y, bbox.max.z, 1.0f));
+    bbVerts.push_back(model * glm::vec4(bbox.max.x, bbox.max.y, bbox.min.z, 1.0f));
+    
+    bbVerts.push_back(model * glm::vec4(bbox.min.x, bbox.min.y, bbox.max.z, 1.0f));
+    bbVerts.push_back(model * glm::vec4(bbox.min.x, bbox.max.y, bbox.min.z, 1.0f));
+    bbVerts.push_back(model * glm::vec4(bbox.max.x, bbox.min.y, bbox.min.z, 1.0f));
+
+    struct BoundingBox worldBBox = calcBBox(bbVerts);
+
+    return worldBBox;
+}
+
+bool Cube::isColliding(Cube* entity) {
+    BoundingBox a = this->getWorldBBox();
+    BoundingBox b = entity->getWorldBBox();
+    
+    return (a.min.x <= b.max.x &&
+    a.max.x >= b.min.x &&
+    a.min.y <= b.max.y &&
+    a.max.y >= b.min.y &&
+    a.min.z <= b.max.z &&
+    a.max.z >= b.min.z);
+}
+
+std::vector<Cube*> Cube::checkCollision(std::vector<Cube*>& scene){
+    std::vector<Cube*> collidingWith;
+    
+    for (Cube* entity : scene){
+        if (entity == this) {
+            continue;
+        }
+        if (isColliding(entity)){
+            collidingWith.push_back(entity);
+        }
+    }
+
+    return collidingWith;
 }
