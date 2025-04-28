@@ -16,6 +16,7 @@ public:
     // Objects to render
     static Cube* cube;
     static Cube* floor;
+    static Cube* artifact;
 
     // Shader Program
     static GLuint shaderProgram;

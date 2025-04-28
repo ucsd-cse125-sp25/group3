@@ -30,6 +30,15 @@ public:
     bool isfloor = false;
     bool isGrounded = true; 
 
+    //to set different color of cube
+    void setColor(const glm::vec3& change_color);
+    void setBaseModel(const glm::mat4& change_model);
+    //interact with artifact
+    bool isCarryingArtifact = false;
+    void attemptGrabArtifact();
+    Cube* carriedArtifact = nullptr;
+    void setCarriedArtifact(Cube* artifact);
+
     // for accelaration ability
     float normalSpeed = 0.02f;
     float boostedSpeed = 0.06f;

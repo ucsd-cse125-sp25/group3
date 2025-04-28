@@ -8,6 +8,7 @@ const char* Window::windowTitle = "Model Environment";
 // Objects to render
 Cube* Window::cube;
 Cube* Window::floor;
+Cube* Window::artifact;
 
 // Camera Properties
 Camera* Cam;
@@ -40,7 +41,10 @@ bool Window::initializeProgram() {
 bool Window::initializeObjects() {
     // Create a cube
     cube = new Cube();
-    // cube = new Cube(glm::vec3(-1, 0, -2), glm::vec3(1, 1, 1));
+    artifact = new Cube(glm::vec3(-0.5, 0, -1), glm::vec3(0, 0.5, 1));
+    artifact->setColor(glm::vec3(0.0f, 0.6f, 1.0f));
+    artifact->setBaseModel(glm::translate(glm::mat4(1.0f), glm::vec3(7.0f, 0.0f, 2.0f)));
+    cube->setCarriedArtifact(artifact);
     floor = new Cube(glm::vec3(-8, -2.03, -8), glm::vec3(8, -2.01, 8));
 
     return true;
@@ -49,6 +53,8 @@ bool Window::initializeObjects() {
 void Window::cleanUp() {
     // Deallcoate the objects.
     delete cube;
+    delete artifact;
+    delete floor;
 
     // Delete the shader program.
     glDeleteProgram(shaderProgram);
@@ -169,6 +175,7 @@ void Window::displayCallback(GLFWwindow* window) {
     #endif
     //glViewport(0, 0, Window::width, Window::height);
     cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
+    artifact->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
     floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
 
     int miniMapSize = 256;
@@ -181,6 +188,8 @@ void Window::displayCallback(GLFWwindow* window) {
     #endif
     glm::mat4 viewProj_miniMap = MiniMapCam->GetViewProjectMtx();
     cube->draw(viewProj_miniMap, shaderProgram, false);
+    artifact->draw(viewProj_miniMap, shaderProgram, false);
+
     floor->draw(viewProj_miniMap, shaderProgram, true);
 
     // Gets events, including input such as keyboard and mouse or window resizing.

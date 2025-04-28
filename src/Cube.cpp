@@ -1,5 +1,6 @@
 #include "Cube.h"
-
+#include <iostream>
+class Window;
 Cube::Cube(glm::vec3 cubeMin, glm::vec3 cubeMax) {
     // Model matrix.
     model = glm::mat4(1.0f);
@@ -144,10 +145,13 @@ void Cube::draw(const glm::mat4& viewProjMtx, GLuint shader,bool floor) {
     // glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &color[0]);
 
     glm::vec3 color_floor = glm::vec3(0.40f, 0.20f, 0.10f);
+    
 
-    if (floor){
+    if (floor)
+    {
         glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &color_floor[0]);
-    }else{
+    }
+    else{
         glm::vec3 finalColor = isAltColor ? colorAlt : color;
         glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &finalColor[0]);
         // glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &color[0]);
@@ -196,6 +200,12 @@ void Cube::update() {
 
     model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
 
+    if (isCarryingArtifact && carriedArtifact != nullptr) 
+    {
+        glm::vec3 offset(1.0f, 1.0f, 0.0f);
+        glm::mat4 newBaseModel = glm::translate(baseModel, offset);
+        carriedArtifact->setBaseModel(newBaseModel);
+    }
 
 }
 
@@ -208,6 +218,10 @@ void Cube::userInput(int key){
             isGrounded = false;   
             jumpVelocity = initialJumpVelocity;
         }
+        case GLFW_KEY_F:
+            attemptGrabArtifact();
+            break;
+
         default:
             break;
     }
@@ -285,17 +299,17 @@ void Cube::handleContinuousInput(GLFWwindow* window, const glm::vec3& forwardDir
     
 
 
-    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
-        baseModel = glm::translate(baseModel, glm::vec3(0, 0.005f, 0));
+    // if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+    //     baseModel = glm::translate(baseModel, glm::vec3(0, 0.005f, 0));
 
-    if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
-        baseModel = glm::translate(baseModel, glm::vec3(0, -0.005f, 0));
+    // if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
+    //     baseModel = glm::translate(baseModel, glm::vec3(0, -0.005f, 0));
 
-    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
-        baseModel = glm::rotate(baseModel, 0.02f, glm::vec3(0, 1, 0));
+    // if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+    //     baseModel = glm::rotate(baseModel, 0.02f, glm::vec3(0, 1, 0));
 
-    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
-        baseModel = glm::rotate(baseModel, -0.02f, glm::vec3(0, 1, 0));
+    // if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+    //     baseModel = glm::rotate(baseModel, -0.02f, glm::vec3(0, 1, 0));
 
     // if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
     //     baseModel = glm::rotate(baseModel, -0.02f, glm::vec3(0, 1, 0));
@@ -312,5 +326,36 @@ void Cube::spin(float deg) {
 }
 
 glm::vec3 Cube::getPosition() const {
-    return glm::vec3(baseModel[3]);  // extract translation from matrix
+    return glm::vec3(model[3]);  // extract translation from matrix
+}
+
+void Cube::setColor(const glm::vec3& change_color) {
+    color = change_color;
+}
+
+void Cube::setBaseModel(const glm::mat4& change_model) {
+    model = change_model;
+}
+
+void Cube::attemptGrabArtifact() {
+    if (carriedArtifact == nullptr) 
+    {
+        std::cout << "carriedArtifact is NULL!" << std::endl;
+        return;
+    }
+
+    if (!isCarryingArtifact && carriedArtifact != nullptr) {
+        glm::vec3 cubePos = getPosition();
+        glm::vec3 artifactPos = carriedArtifact->getPosition();
+        float distance = glm::length(cubePos - artifactPos);
+        // std::cout << "Distance = " << distance << std::endl;
+
+        if (distance < 1.5f) {
+            isCarryingArtifact = true;
+            std::cout << "Picked up!" << std::endl;
+        }
+    }
+}
+void Cube::setCarriedArtifact(Cube* artifact) {
+    carriedArtifact = artifact;
 }
