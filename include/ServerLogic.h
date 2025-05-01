@@ -4,6 +4,13 @@
 #include "Camera.h"
 #include <cstdio>
 
+//player info
+enum CharacterType {
+    CHARACTER_1,
+    CHARACTER_2,
+    CHARACTER_3,
+    CHARACTER_4
+};
 
 class CubeState {
     public:
@@ -16,6 +23,15 @@ class CubeState {
         std::vector<unsigned int> indices;
         
         glm::mat4 baseModel = glm::mat4(1.0f);
+
+        // for invisible ability
+        bool isInvisible = false;
+        std::chrono::time_point<std::chrono::steady_clock> invisibleStartTime;
+        int invisibleDuration = 5;
+        bool eWasPressed = false;
+        
+        CharacterType type = CHARACTER_1;  // default
+
         CubeState(glm::vec3 cubeMin = glm::vec3(-1, -1, -1), glm::vec3 cubeMax = glm::vec3(1, 1, 1));
         void toVector(std::vector<char>* vec);
         void printState();
@@ -29,6 +45,7 @@ class PlayerData {
         // PlayerData();
         // ~PlayerData();
         void calculateNewPos(KeyType key);
+        void setCharacter(CharacterType character);
 };
 
 void init();

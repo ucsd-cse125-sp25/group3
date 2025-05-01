@@ -15,7 +15,7 @@ class ClientGame
 
 public:
 
-    ClientGame();
+    ClientGame(int character);
     ~ClientGame(void);
     GLFWwindow* window;
     ClientNetwork* network; 

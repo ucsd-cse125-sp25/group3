@@ -1,7 +1,7 @@
 
 #include "ClientGame.h" 
 
-ClientGame::ClientGame(void)
+ClientGame::ClientGame(int character)
 {
     network = new ClientNetwork();
     
@@ -20,7 +20,9 @@ ClientGame::ClientGame(void)
     // send init packet
     Packet packet;
     packet.packet_type = INIT_CONNECTION;
-    packet.length = 0;
+    packet.payload.resize(sizeof(int));
+    memcpy(packet.payload.data(), &character, sizeof(character));
+    // packet.length = 0;
     const unsigned int packet_size = packet.getSize();
     char packet_data[packet_size];
     packet.serialize(packet_data);

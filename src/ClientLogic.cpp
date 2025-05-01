@@ -55,5 +55,7 @@ KeyType client_logic::handleUserInput(GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
         key = KeyType::KEY_L;
     
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+        key = KeyType::KEY_E;
     return key;
 }

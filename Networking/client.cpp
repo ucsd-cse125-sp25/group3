@@ -14,13 +14,22 @@ ClientGame * client;
 
 int main()
 {   
+    int choice;
+    std::cout << "Choose your character:\n";
+    std::cout << "1 - theif one\n";
+    std::cout << "2 - theif two\n";
+    std::cout << "3 - theif three\n";
+    std::cout << "4 - security guard\n";
+    std::cin >> choice;
+
     // initialize the client
-    client = new ClientGame();
+    client = new ClientGame(choice);
     clientLoop();
 }
 
 void clientLoop()
 {
+
     //for echo packet testing
 /*     while(true) {
         std::string input;

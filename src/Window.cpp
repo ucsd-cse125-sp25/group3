@@ -267,7 +267,7 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     }
 
     float xoffset = currX - lastX;
-    float yoffset = currY - lastY; // 注意这里是 lastY - ypos，y 是反的
+    float yoffset = currY - lastY; 
 
     lastX = currX;
     lastY = currY;
@@ -277,24 +277,25 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
 
     
     float newAzimuth = Cam->GetAzimuth() + xoffset;
-    float newIncline = glm::clamp(Cam->GetIncline() + yoffset, -89.0f, 89.0f); // 防止翻转
+    float newIncline = glm::clamp(Cam->GetIncline() + yoffset, -89.0f, 89.0f); 
 
     Cam->SetAzimuth(newAzimuth);
     Cam->SetIncline(newIncline);
 }
 
+
 void Window::update(char * data) {
     cube->readFromArray(data);
-
+    cube->isInvisible = data[sizeof(data) - 1];
 }
 void Window::render(GLFWwindow* window) {
-    
 
     // Clear the color and depth buffers.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Render the object.
-    cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
+    if (!cube->isInvisible)
+        cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
     floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
 
     // Gets events, including input such as keyboard and mouse or window resizing.

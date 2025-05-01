@@ -114,6 +114,7 @@ void CubeState::toVector(std::vector<char>* vec) {
             vec->insert(vec->end(), &buf[0], &buf[4]);
         }
     }
+    vec->resize(vec->size() + 1, isInvisible);
 }
 
 glm::vec3 CubeState::getPosition() {
@@ -131,6 +132,10 @@ glm::vec3 CubeState::getPosition() {
 //     delete cube;
 //     delete camera;
 // }
+
+void PlayerData::setCharacter(CharacterType character) {
+    cube.type = character;
+}
 
 void PlayerData::calculateNewPos(KeyType key) {
     glm::vec3 forwardDir = camera.GetForwardVector();
@@ -154,18 +159,59 @@ void PlayerData::calculateNewPos(KeyType key) {
         cube.baseModel = glm::translate(cube.baseModel, movement);
     }
 
-    if (key == KeyType::KEY_T)
-        cube.baseModel = glm::translate(cube.baseModel, glm::vec3(0, 0.005f, 0));
+    // if (key == KeyType::KEY_T)
+    //     cube.baseModel = glm::translate(cube.baseModel, glm::vec3(0, 0.005f, 0));
 
-    if (key == KeyType::KEY_G)
-        cube.baseModel = glm::translate(cube.baseModel, glm::vec3(0, -0.005f, 0));
+    // if (key == KeyType::KEY_G)
+    //     cube.baseModel = glm::translate(cube.baseModel, glm::vec3(0, -0.005f, 0));
 
-    if (key == KeyType::KEY_K)
-        cube.baseModel = glm::rotate(cube.baseModel, 0.02f, glm::vec3(0, 1, 0));
+    // if (key == KeyType::KEY_K)
+    //     cube.baseModel = glm::rotate(cube.baseModel, 0.02f, glm::vec3(0, 1, 0));
 
-    if (key == KeyType::KEY_L)
-        cube.baseModel = glm::rotate(cube.baseModel, -0.02f, glm::vec3(0, 1, 0));
-
-    camera.Update(cube.getPosition());
+    // if (key == KeyType::KEY_L)
+    //     cube.baseModel = glm::rotate(cube.baseModel, -0.02f, glm::vec3(0, 1, 0));
     
+    if (key == KeyType::KEY_E) 
+        if (!cube.eWasPressed) {
+            switch (cube.type) {
+                case CHARACTER_1: {
+                    // Invisibility
+                    if (!cube.isInvisible) {
+                        cube.isInvisible = true;
+                        cube.invisibleStartTime = std::chrono::steady_clock::now();
+                    }
+                    break;
+                }
+                case CHARACTER_2: {
+                    // if (!cube.isSpeedBoosted) {
+                    //     cube.isSpeedBoosted = true;
+                    //     cube.speedBoostStartTime = std::chrono::steady_clock::now();
+                    //     cube.speed = boostedSpeed;
+                    // }
+                    break;
+                }
+                case CHARACTER_3: {
+                    // isAltColor = !isAltColor;
+                    break;
+                }
+                case CHARACTER_4: {
+                    
+                    break;
+                }
+            }
+        
+        cube.eWasPressed = true;
+    } else {
+        cube.eWasPressed = false;
+    }
+
+    if (cube.isInvisible && std::chrono::steady_clock::now() - cube.invisibleStartTime > std::chrono::seconds(cube.invisibleDuration)) {
+        cube.isInvisible = false;
+    }
+    // if (isSpeedBoosted && std::chrono::steady_clock::now() - speedBoostStartTime > speedBoostDuration) {
+    //     isSpeedBoosted = false;
+    //     speed = normalSpeed;
+    // }
+
+    camera.Update(cube.getPosition()); 
 }

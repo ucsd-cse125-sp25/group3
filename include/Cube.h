@@ -40,7 +40,7 @@ public:
     float speedBoostStartTime = 0.0f;
     float speedBoostDuration = 5.0f;
 
-    // for invisibel ability
+    // for invisible ability
     bool isInvisible = false;
     float invisibleStartTime = 0.0f;
     float invisibleDuration = 5.0f;
