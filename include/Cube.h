@@ -19,6 +19,9 @@ private:
     std::vector<unsigned int> indices;
 
 public:
+
+    bool isLocalPlayer = true;
+
     bool isJumping = false;
     float jumpVelocity = 0.0f;
     float jumpHeight = 0.0f;
@@ -27,6 +30,37 @@ public:
     glm::mat4 baseModel = glm::mat4(1.0f);
     bool isfloor = false;
     bool isGrounded = true; 
+
+    // for accelaration ability
+    float normalSpeed = 0.02f;
+    float boostedSpeed = 0.06f;
+    float speed = normalSpeed;
+
+    bool isSpeedBoosted = false;
+    float speedBoostStartTime = 0.0f;
+    float speedBoostDuration = 5.0f;
+
+    // for invisibel ability
+    bool isInvisible = false;
+    float invisibleStartTime = 0.0f;
+    float invisibleDuration = 5.0f;
+    bool eWasPressed = false;
+
+    // for "changing apperance"
+    glm::vec3 colorAlt = glm::vec3(0.2f, 0.8f, 1.0f); 
+    bool isAltColor = false;  
+
+    enum CharacterType {
+        CHARACTER_1,
+        CHARACTER_2,
+        CHARACTER_3,
+        CHARACTER_4
+    };
+    
+    CharacterType type = CHARACTER_1;  // default
+    
+
+
 
     Cube(glm::vec3 cubeMin = glm::vec3(-1, -1, -1), glm::vec3 cubeMax = glm::vec3(1, 1, 1));
     ~Cube();

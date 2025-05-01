@@ -60,6 +60,24 @@ int main(void) {
     // Initialize objects/pointers for rendering; exit if initialization fails.
     if (!Window::initializeObjects()) exit(EXIT_FAILURE);
 
+    int choice;
+    std::cout << "Choose your character:\n";
+    std::cout << "1 - theif one\n";
+    std::cout << "2 - theif two\n";
+    std::cout << "3 - theif three\n";
+    std::cout << "4 - security guard\n";
+    std::cin >> choice;
+
+    if (Window::cube != nullptr) {
+        switch (choice) {
+            case 1: Window::cube->type = Cube::CHARACTER_1; break;
+            case 2: Window::cube->type = Cube::CHARACTER_2; break;
+            case 3: Window::cube->type = Cube::CHARACTER_3; break;
+            case 4: Window::cube->type = Cube::CHARACTER_4; break;
+            default: Window::cube->type = Cube::CHARACTER_1; break;
+        }
+    }
+
     // Loop while GLFW window should stay open.
     while (!glfwWindowShouldClose(window)) {
         // Main render display callback. Rendering of objects is done here.
