@@ -1,0 +1,16 @@
+bugs
+-calculated base model slightly off from expected values
+-base model doesn't change if run client immediately after make (camera forward vector all NaN)
+
+
+todo
+-incoporate other user input into server logic
+-switch server tick to nanoseconds
+-need to remove client from sessions when they disconnect
+-incorporate camera logic into server logic
+-check with game logic on new code in repo
+
+questions
+-recv in a loop?
+-how server should handle multiple clients (only update and send game state once heard back from everyone?)
+-how many packets to handle per client per server loop
