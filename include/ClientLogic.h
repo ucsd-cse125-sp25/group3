@@ -20,10 +20,12 @@ enum class KeyType: uint8_t {
 };
 #endif
 
-void error_callback(int error, const char* description);
+namespace client_logic {
+    void error_callback(int error, const char* description);
 
-void setup_opengl_settings();
+    void setup_opengl_settings();
 
-void setup_callbacks(GLFWwindow* window);
+    void setup_callbacks(GLFWwindow* window);
 
-KeyType handleUserInput(GLFWwindow* window);
+    KeyType handleUserInput(GLFWwindow* window);
+}

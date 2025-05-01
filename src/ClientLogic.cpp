@@ -1,11 +1,11 @@
 #include "ClientLogic.h" 
 
-void error_callback(int error, const char* description) {
+void client_logic::error_callback(int error, const char* description) {
     // Print error.
     std::cerr << description << std::endl;
 }
 
-void setup_opengl_settings() {
+void client_logic::setup_opengl_settings() {
     // Enable depth buffering.
     glEnable(GL_DEPTH_TEST);
     // Related to shaders and z value comparisons for the depth buffer.
@@ -16,7 +16,7 @@ void setup_opengl_settings() {
     glClearColor(0.0, 0.0, 0.0, 0.0);
 }
 
-void setup_callbacks(GLFWwindow* window) {
+void client_logic::setup_callbacks(GLFWwindow* window) {
     // Set the error callback.
     glfwSetErrorCallback(error_callback);
     // Set the window resize callback.
@@ -30,7 +30,7 @@ void setup_callbacks(GLFWwindow* window) {
     glfwSetCursorPosCallback(window, Window::cursor_callback);
 }
 
-KeyType handleUserInput(GLFWwindow* window) {
+KeyType client_logic::handleUserInput(GLFWwindow* window) {
     
     KeyType key = KeyType::NONE;
 

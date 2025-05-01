@@ -1,16 +1,34 @@
+#include <string>
 #include <vector>
+#include <algorithm>
 #ifndef PACKET_H // include guard
 #define PACKET_H
 
+#define MAX_PACKET_SIZE 1000000
+#define MSSG_SIZE 100
 
-// Packet structure will be length (2 bytes), type (1 byte), data (N bytes) 
+enum PacketTypes {
+
+    INIT_CONNECTION = 0,
+
+    ACTION_EVENT = 1,
+
+    ECHO_EVENT = 2,
+
+    KEY_EVENT = 3,
+
+    STATE_UPDATE = 4
+}; 
+
+// Packet structure will be length (4 bytes), type (4 bytes), data (N bytes) 
 class Packet {
-    uint8_t type;
     public:
-        uint16_t length;     // Length of payload
-        std::vector<uint16_t> data; // Payload
-        Packet(const char* message);
-        char* serialize();
+        unsigned int packet_type; // type that maps to PacketType
+        unsigned int length; // size of the payload in bytes
+        std::vector<char> payload;
+        unsigned int getSize();
+        void serialize(char * data);
+        void deserialize(char * data);
 };
 
 #endif

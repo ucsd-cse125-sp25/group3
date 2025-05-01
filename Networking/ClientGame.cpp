@@ -8,9 +8,9 @@ ClientGame::ClientGame(void)
     window = Window::createWindow(800, 600);
     if (!window) exit(EXIT_FAILURE);
 
-    setup_callbacks(window);
+    client_logic::setup_callbacks(window);
     // Setup OpenGL settings.
-    setup_opengl_settings();
+    client_logic::setup_opengl_settings();
 
     // Initialize the shader program; exit if initialization fails.
     if (!Window::initializeProgram()) exit(EXIT_FAILURE);
@@ -68,7 +68,7 @@ void ClientGame::sendKeyPackets(KeyType key) {
 
 void ClientGame::update()
 {
-    KeyType input = handleUserInput(window);
+    KeyType input = client_logic::handleUserInput(window);
 
     if (input != KeyType::NONE) {
         printf("sending key event packet\n");
@@ -96,8 +96,8 @@ void ClientGame::update()
 
                     break;
                 case ECHO_EVENT:
-                    // printf("client recieved echo event packet from server\n");
-                    // printf("Client recieved: %s\n", packet.message);
+                    printf("client recieved echo event packet from server\n");
+                    /* printf("Client recieved: %s\n", packet.payload.data()); */
                     break;
                 case STATE_UPDATE:
                     printf("client recieved state update from server\n");

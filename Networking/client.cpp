@@ -17,13 +17,16 @@ int main()
     // initialize the client
     client = new ClientGame();
     clientLoop();
-
-
 }
 
 void clientLoop()
 {
-    // while(true) 
+    //for echo packet testing
+/*     while(true) {
+        std::string input;
+        std::getline(std::cin, input);
+        client->update(input);
+    } */
     while(!glfwWindowShouldClose(client->window))
     {
         //  // Main render display callback. Rendering of objects is done here.
@@ -31,10 +34,6 @@ void clientLoop()
 
         // // Idle callback. Updating objects, etc. can be done here.
         // Window::idleCallback();
-
-        // do game stuff
-        // std::string input;
-        // std::getline(std::cin, input);
         client->update();
     }
     Window::cleanUp();

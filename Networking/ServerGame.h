@@ -1,5 +1,5 @@
 #include "ServerNetwork.h"
-#include "ServerLogic.h"
+#include "../include/ServerLogic.h"
 
 class ServerGame
 {
