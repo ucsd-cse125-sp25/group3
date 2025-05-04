@@ -13,4 +13,9 @@ todo
 questions
 -recv in a loop?
 -how server should handle multiple clients (only update and send game state once heard back from everyone?)
+    - update no matter what?
 -how many packets to handle per client per server loop
+    -1 client packet / loop to simplify things?
+-what should be done about packets marked with an invalid tick (too far away from actual server tick) 
+    - Ignore? Perhaps send a message so client knows that they're off 
+    - Once we're only sending changes, we could send full game state at longer intervals in case the client gets out of sync

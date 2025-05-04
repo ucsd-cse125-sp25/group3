@@ -4,24 +4,37 @@ unsigned int Packet::getSize() {
     return sizeof(packet_type) + sizeof(length) + payload.size();
 }
 
-void Packet::serialize(char * data) {
-    memcpy(data, &packet_type, sizeof(unsigned int));
-    memcpy(&data[4], &length, sizeof(unsigned int));
+int Packet::serialize(char * data) {
+    unsigned int offset = 0;
+    memcpy(data + offset, &packet_type, sizeof(packet_type));
+    offset += sizeof(packet_type);
+
+    memcpy(data + offset, &length, sizeof(length));
+    offset += sizeof(length);
+
     if (getSize() > MAX_PACKET_SIZE) {
         throw std::runtime_error("Packet size is greater than maximum size permitted");
     }
     else if (length > 0) {
-        std::copy(payload.begin(), payload.end(), &data[8]);
+        std::copy(payload.begin(), payload.end(), data + offset);
+        offset += length;
     }
+    return offset;
 }
 
-void Packet::deserialize(char * data) {
-    memcpy(&packet_type, data, sizeof(unsigned int));
-    memcpy(&length, &data[4], sizeof(unsigned int));
-    if (length > MAX_PACKET_SIZE - 8) {
+int Packet::deserialize(char * data) {
+    unsigned int offset = 0;
+    memcpy(&packet_type, data, sizeof(packet_type));
+    offset += sizeof(packet_type);
+    memcpy(&length, data + offset, sizeof(length));
+    offset += sizeof(length);
+    if (length > MAX_PACKET_SIZE - offset) {
         throw std::runtime_error("Packet size is greater than maximum size permitted");
     }
-    else if (length > 0) {
-        payload.insert(payload.begin(), &data[8], &data[8 + length]);
+    payload.clear();
+    if (length > 0) {
+        payload.insert(payload.begin(), data + offset, data + offset + length);
+        offset += length;
     }
+    return offset;
 }

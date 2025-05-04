@@ -8,7 +8,7 @@
 #include "core.h"
 #include "ClientLogic.h"
 // #include "NetworkData.h"
-// #include "packet.h"
+#include "../packets/Packet.h"
 
 class ClientGame
 {
