@@ -186,13 +186,13 @@ void Cube::update() {
         // model = glm::translate(glm::mat4(1.0f), glm::vec3(0, jumpHeight, 0)) * baseModel;
     }
 
-    if (isInvisible && glfwGetTime() - invisibleStartTime > invisibleDuration) {
-        isInvisible = false;
-    }
-    if (isSpeedBoosted && glfwGetTime() - speedBoostStartTime > speedBoostDuration) {
-        isSpeedBoosted = false;
-        speed = normalSpeed;
-    }
+    // if (isInvisible && glfwGetTime() - invisibleStartTime > invisibleDuration) {
+    //     isInvisible = false;
+    // }
+    // if (isSpeedBoosted && glfwGetTime() - speedBoostStartTime > speedBoostDuration) {
+    //     isSpeedBoosted = false;
+    //     speed = normalSpeed;
+    // }
 
     model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
 
