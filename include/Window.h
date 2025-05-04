@@ -46,5 +46,5 @@ public:
     static void cursor_callback(GLFWwindow* window, double currX, double currY);
 
     static void render(GLFWwindow* window);
-    static void update(char * data, unsigned int length);
+    static void update(char * data, size_t length);
 };
