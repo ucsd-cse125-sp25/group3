@@ -107,7 +107,7 @@ void ClientGame::update()
                     break;
                 case STATE_UPDATE:
                     printf("client recieved state update from server\n");
-                    Window::update(packet.payload.data());
+                    Window::update(packet.payload.data(), packet.length);
                     break;
                 default:
 
