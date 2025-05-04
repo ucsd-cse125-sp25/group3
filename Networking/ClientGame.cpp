@@ -22,11 +22,12 @@ ClientGame::ClientGame(int character)
     packet.packet_type = INIT_CONNECTION;
     packet.payload.resize(sizeof(int));
     memcpy(packet.payload.data(), &character, sizeof(character));
+    // packet.length = 0;
     packet.length = packet.payload.size();
     const unsigned int packet_size = packet.getSize();
-    char packet_data[packet_size];
-    packet.serialize(packet_data);
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+    std::vector<char> packet_data(packet_size);
+    packet.serialize(packet_data.data());
+    NetworkServices::sendMessage(network->ConnectSocket, packet_data.data(), packet_size);
 }
 
 void ClientGame::sendActionPackets()
@@ -62,10 +63,13 @@ void ClientGame::sendKeyPackets(KeyType key) {
     packet.payload.resize(1);
     memcpy(packet.payload.data(), &key, sizeof(key));
     packet.length = packet.payload.size();
+
     const unsigned int packet_size = packet.getSize();
-    char packet_data[packet_size];
-    packet.serialize(packet_data);
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
+
+    std::vector<char> packet_data(packet_size);  
+    packet.serialize(packet_data.data());
+
+    NetworkServices::sendMessage(network->ConnectSocket, packet_data.data(), packet_size);
 }
 
 void ClientGame::update()
@@ -85,8 +89,8 @@ void ClientGame::update()
         while (i < (unsigned int)data_length) 
         {
             Packet packet;
-            packet.deserialize(&(network_data[i]));
-            i += packet.getSize();
+            int bytes_read = packet.deserialize(&(network_data[i]));
+            i += bytes_read;
         
             switch (packet.packet_type) {
 

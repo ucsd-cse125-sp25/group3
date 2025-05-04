@@ -120,8 +120,12 @@ void ServerGame::receiveFromClients()
     auto orig_diff = std::chrono::steady_clock::now() - start;
     auto milli_diff = std::chrono::duration_cast<std::chrono::milliseconds>(orig_diff);
     auto wait = std::chrono::milliseconds(TICK) - milli_diff;
-    assert(wait.count() >= 0);
-    std::this_thread::sleep_for(wait);
+    //assert(wait.count() >= 0);
+    //std::this_thread::sleep_for(wait);
+    std::this_thread::sleep_for(std::max(wait, std::chrono::milliseconds(0)));
+    if(wait.count() < 0) {
+        printf("WARNING: Tick took longer than allocated by %ld ms\n", -wait.count());
+    }
 }
 
 void ServerGame::sendActionPackets()

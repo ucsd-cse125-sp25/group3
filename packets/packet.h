@@ -26,9 +26,9 @@ class Packet {
         unsigned int packet_type; // type that maps to PacketType
         unsigned int length; // size of the payload in bytes
         std::vector<char> payload;
-        unsigned int getSize();
-        void serialize(char * data);
-        void deserialize(char * data);
+        virtual unsigned int getSize();
+        virtual int serialize(char * data);
+        virtual int deserialize(char * data);
 };
 
 #endif
