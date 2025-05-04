@@ -24,13 +24,22 @@ class CubeState {
         
         glm::mat4 baseModel = glm::mat4(1.0f);
 
+        //for character abilities
+        CharacterType type = CHARACTER_1;  // default
+        bool eWasPressed = false;
+
         // for invisible ability
         bool isInvisible = false;
         std::chrono::time_point<std::chrono::steady_clock> invisibleStartTime;
         int invisibleDuration = 5;
-        bool eWasPressed = false;
         
-        CharacterType type = CHARACTER_1;  // default
+        //for speed boost ability
+        float normalSpeed = 0.02f;
+        float boostedSpeed = 0.06f;
+        float speed = normalSpeed;
+        bool isSpeedBoosted = false;
+        std::chrono::time_point<std::chrono::steady_clock> speedBoostStartTime;
+        int speedBoostDuration = 5;
 
         CubeState(glm::vec3 cubeMin = glm::vec3(-1, -1, -1), glm::vec3 cubeMax = glm::vec3(1, 1, 1));
         void toVector(std::vector<char>* vec);

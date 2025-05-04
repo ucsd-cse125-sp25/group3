@@ -146,7 +146,6 @@ void PlayerData::calculateNewPos(KeyType key) {
     forwardDir = glm::normalize(forwardDir);
     glm::vec3 rightDir = glm::normalize(glm::cross(forwardDir, glm::vec3(0, 1, 0)));
     glm::vec3 movement(0.0f);
-    float speed = 0.02f;
 
     if (key == KeyType::KEY_W)
         movement += forwardDir;
@@ -158,7 +157,7 @@ void PlayerData::calculateNewPos(KeyType key) {
         movement -= rightDir;
         
     if (glm::length(movement) > 0.0f) {
-        movement = glm::normalize(movement) * speed;
+        movement = glm::normalize(movement) * cube.speed;
         cube.baseModel = glm::translate(cube.baseModel, movement);
     }
 
@@ -178,8 +177,6 @@ void PlayerData::calculateNewPos(KeyType key) {
         if (!cube.eWasPressed) {
             switch (cube.type) {
                 case CHARACTER_1: {
-                    printf("invisible\n");
-                    // Invisibility
                     if (!cube.isInvisible) {
                         cube.isInvisible = true;
                         cube.invisibleStartTime = std::chrono::steady_clock::now();
@@ -187,11 +184,11 @@ void PlayerData::calculateNewPos(KeyType key) {
                     break;
                 }
                 case CHARACTER_2: {
-                    // if (!cube.isSpeedBoosted) {
-                    //     cube.isSpeedBoosted = true;
-                    //     cube.speedBoostStartTime = std::chrono::steady_clock::now();
-                    //     cube.speed = boostedSpeed;
-                    // }
+                    if (!cube.isSpeedBoosted) {
+                        cube.isSpeedBoosted = true;
+                        cube.speedBoostStartTime = std::chrono::steady_clock::now();
+                        cube.speed = cube.boostedSpeed;
+                    }
                     break;
                 }
                 case CHARACTER_3: {
@@ -212,10 +209,10 @@ void PlayerData::calculateNewPos(KeyType key) {
     if (cube.isInvisible && std::chrono::steady_clock::now() - cube.invisibleStartTime > std::chrono::seconds(cube.invisibleDuration)) {
         cube.isInvisible = false;
     }
-    // if (isSpeedBoosted && std::chrono::steady_clock::now() - speedBoostStartTime > speedBoostDuration) {
-    //     isSpeedBoosted = false;
-    //     speed = normalSpeed;
-    // }
+    if (cube.isSpeedBoosted && std::chrono::steady_clock::now() - cube.speedBoostStartTime > std::chrono::seconds(cube.speedBoostDuration)) {
+        cube.isSpeedBoosted = false;
+        cube.speed = cube.normalSpeed;
+    }
 
     camera.Update(cube.getPosition()); 
 }

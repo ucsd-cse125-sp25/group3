@@ -286,7 +286,6 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
 void Window::update(char * data, unsigned int length) {
     cube->readFromArray(data);
     cube->isInvisible = data[length - 1];
-    // printf("invisible: %lu\n", sizeof(data));
 }
 void Window::render(GLFWwindow* window) {
 
