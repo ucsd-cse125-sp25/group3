@@ -17,7 +17,7 @@ ServerGame::ServerGame(void)
     // set up the server network to listen 
     network = new ServerNetwork(); 
 
-    printf("%lu", sizeof(CubeState));
+    // printf("%lu", sizeof(CubeState));
 }
 
 void ServerGame::update()
@@ -105,7 +105,7 @@ void ServerGame::receiveFromClients()
                     memcpy(&key, packet.payload.data(), sizeof(key));
                     printf("server recieved key event packet from client\n");
                     player.calculateNewPos(key);
-                    player.cube.printState();
+                    // player.cube.printState();
                     playersData[iter->first] = player;
                     sendPlayerState(iter->first);
                     break;

@@ -115,6 +115,9 @@ void CubeState::toVector(std::vector<char>* vec) {
         }
     }
     vec->resize(vec->size() + 1, isInvisible);
+    // memcpy(buf, &isInvisible, sizeof(bool));
+    // vec->insert(vec->end(), &buf[0], &buf[1]);
+    // printf("invisible: %hhu\n", vec->back());
 }
 
 glm::vec3 CubeState::getPosition() {
@@ -171,10 +174,11 @@ void PlayerData::calculateNewPos(KeyType key) {
     // if (key == KeyType::KEY_L)
     //     cube.baseModel = glm::rotate(cube.baseModel, -0.02f, glm::vec3(0, 1, 0));
     
-    if (key == KeyType::KEY_E) 
+    if (key == KeyType::KEY_E){
         if (!cube.eWasPressed) {
             switch (cube.type) {
                 case CHARACTER_1: {
+                    printf("invisible\n");
                     // Invisibility
                     if (!cube.isInvisible) {
                         cube.isInvisible = true;
@@ -199,10 +203,10 @@ void PlayerData::calculateNewPos(KeyType key) {
                     break;
                 }
             }
-        
-        cube.eWasPressed = true;
-    } else {
-        cube.eWasPressed = false;
+            cube.eWasPressed = true;
+        } else {
+            cube.eWasPressed = false;
+        }
     }
 
     if (cube.isInvisible && std::chrono::steady_clock::now() - cube.invisibleStartTime > std::chrono::seconds(cube.invisibleDuration)) {

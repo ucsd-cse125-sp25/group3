@@ -283,10 +283,10 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     Cam->SetIncline(newIncline);
 }
 
-
-void Window::update(char * data) {
+void Window::update(char * data, unsigned int length) {
     cube->readFromArray(data);
-    cube->isInvisible = data[sizeof(data) - 1];
+    cube->isInvisible = data[length - 1];
+    // printf("invisible: %lu\n", sizeof(data));
 }
 void Window::render(GLFWwindow* window) {
 

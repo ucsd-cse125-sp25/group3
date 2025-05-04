@@ -22,7 +22,7 @@ ClientGame::ClientGame(int character)
     packet.packet_type = INIT_CONNECTION;
     packet.payload.resize(sizeof(int));
     memcpy(packet.payload.data(), &character, sizeof(character));
-    // packet.length = 0;
+    packet.length = packet.payload.size();
     const unsigned int packet_size = packet.getSize();
     char packet_data[packet_size];
     packet.serialize(packet_data);
@@ -103,7 +103,7 @@ void ClientGame::update()
                     break;
                 case STATE_UPDATE:
                     printf("client recieved state update from server\n");
-                    Window::update(packet.payload.data());
+                    Window::update(packet.payload.data(), packet.length);
                     break;
                 default:
 
