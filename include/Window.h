@@ -5,6 +5,14 @@
 #include "Shader.h"
 #include "core.h"
 
+enum AbilityType {
+    NONE,
+    INVISIBILITY,
+    SPEED_UP
+};
+
+
+
 class Window {
 public:
     // Window Properties
@@ -13,10 +21,13 @@ public:
     static const char* windowTitle;
     //static Camera* MiniMapCam;
 
+    static AbilityType currentAbility;
+
     // Objects to render
     static Cube* cube;
     static Cube* floor;
     static Cube* artifact;
+
 
     // Shader Program
     static GLuint shaderProgram;
