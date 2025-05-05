@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "Mesh.h"
 // #include <assimp/cimport.h>
 // #include <assimp/scene.h>
 // #include <assimp/postprocess.h>
@@ -14,7 +15,7 @@ Cube* Window::cube;
 Cube* Window::floor;
 
 Scene* Window::scene;
-Mesh* Window::mesh;
+Model* Window::model;
 
 // Camera Properties
 Camera* Cam;
@@ -25,6 +26,7 @@ int MouseX, MouseY;
 
 // The shader program id
 GLuint Window::shaderProgram;
+GLuint Window::shaderProgram_uv;
 
 bool Window::altDown = false;
 bool Window::firstMouse = true;
@@ -40,6 +42,13 @@ bool Window::initializeProgram() {
         return false;
     }
 
+    shaderProgram_uv = LoadShaders("../shaders/shader_uv.vert", "../shaders/shader_uv.frag");
+
+    if (!shaderProgram_uv) {
+        std::cerr << "Failed to initialize shader program with uvs" << std::endl;
+        return false;
+    }
+
     return true;
 }
 
@@ -48,25 +57,26 @@ bool Window::initializeObjects() {
     cube = new Cube();
 
     scene = new Scene();
-    mesh = new Mesh(glm::vec3(1.0f,0.0f,0.0f));
-    mesh->setModelMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
+    model = new Model();
+    model->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
 
     if (!scene->load("../models/bunny.ply")){
         std::cerr << "Failed to load ply: Bunny" << std::endl;
         return false;
     };
-    Mesh* m = scene->getMesh(0);
-    m->setColor(glm::vec3(1.0f, 0.0f, 1.0f));
-    m->setModelMat(glm::scale(glm::mat4(1.0f), glm::vec3(20.0f)));
+    Model* m = scene->getModel(0);
+    Mesh* mesh = m->getMesh(0);
+    mesh->setColor(glm::vec3(1.0f, 0.0f, 1.0f));
+    m->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(20.0f)));
     scene -> update();
     scene-> setupBufAll();
 
-    if (!mesh->load("../models/buddha.ply")){
+    if (!model->load("../models/buddha.ply")){
         std::cerr << "Failed to load ply: Buddha" << std::endl;
         return false;
     }
-    mesh -> update();
-    mesh -> setupBuf();
+    model -> update();
+    model -> setupBuf();
 
     // cube = new Cube(glm::vec3(-1, 0, -2), glm::vec3(1, 1, 1));
     floor = new Cube(glm::vec3(-8, -2.03, -8), glm::vec3(8, -2.01, 8));
@@ -80,10 +90,11 @@ void Window::cleanUp() {
 
     delete floor;
     delete scene;
-    delete mesh;
+    delete model;
 
     // Delete the shader program.
     glDeleteProgram(shaderProgram);
+    glDeleteProgram(shaderProgram_uv);
 }
 
 // for the Window
@@ -170,7 +181,7 @@ void Window::idleCallback() {
     cube->update();
 
     scene->update();
-    mesh->update();
+    model->update();
 }
 
 void Window::displayCallback(GLFWwindow* window) {
@@ -192,8 +203,8 @@ void Window::displayCallback(GLFWwindow* window) {
     cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
     floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
 
-    scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
-    mesh->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
+    scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
+    model->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
 
     // Gets events, including input such as keyboard and mouse or window resizing.
     glfwPollEvents();

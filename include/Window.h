@@ -3,7 +3,7 @@
 #include "Camera.h"
 #include "Cube.h"
 #include "Scene.h"
-#include "Mesh.h"
+#include "Model.h"
 #include "Shader.h"
 #include "core.h"
 
@@ -19,10 +19,11 @@ public:
     static Cube* floor;
 
     static Scene* scene;
-    static Mesh* mesh;
+    static Model* model;
 
     // Shader Program
     static GLuint shaderProgram;
+    static GLuint shaderProgram_uv;
 
     //track the mouse
     static bool altDown;

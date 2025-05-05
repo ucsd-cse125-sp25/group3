@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "Mesh.h"
 #include <iostream>
 #include <string>
 #include "glm/gtx/string_cast.hpp"
@@ -11,18 +12,20 @@ Scene::Scene(){
 }
 
 Scene::~Scene(){
-    for (Mesh* m : meshes){
+    for (Model* m : models){
         delete m;
     }
 }
 
 void Scene::process(const aiScene* scene) {
     if (scene->HasMeshes()){
-        meshes.reserve(scene->mNumMeshes);
+        models.reserve(scene->mNumMeshes);
         for (int i = 0; i < scene->mNumMeshes; i++){
-            Mesh* m = new Mesh();
-            if (m->setMesh(scene->mMeshes[i])){
-                meshes.push_back(m);
+            Mesh* mesh = new Mesh();
+            if (mesh->setMesh(scene->mMeshes[i])){
+                Model* model = new Model();
+                model->addMesh(mesh);
+                models.push_back(model);
             };
         }
     }
@@ -45,33 +48,37 @@ bool Scene::load(const std::string& file){
     return true;
 }
 
-void Scene::addMesh(Mesh* mesh){
-    if (mesh != nullptr){
-        meshes.push_back(mesh);
+void Scene::addModel(Model* model){
+    if (model != nullptr){
+        models.push_back(model);
     }
 }
 
-Mesh* Scene::getMesh(int i){
-    if (0 <= i && i < meshes.size()){
-        return meshes[i];
+std::vector<Model*>* Scene::getModels(){
+    return &models;
+}
+
+Model* Scene::getModel(int i){
+    if (0 <= i && i < models.size()){
+        return models[i];
     }
     return nullptr;
 }
 
 void Scene::setupBufAll(){
-    for (int i = 0; i < meshes.size(); i++){
-        meshes[i]->setupBuf();
+    for (int i = 0; i < models.size(); i++){
+        models[i]->setupBuf();
     }
 }
 
 void Scene::draw(const glm::mat4& viewProjMtx, GLuint shader){
-    for (int i = 0; i < meshes.size(); i++){
-        meshes[i]->draw(viewProjMtx, shader);
+    for (int i = 0; i < models.size(); i++){
+        models[i]->draw(viewProjMtx, shader);
     }
 }
 
 void Scene::update(){
-    for (int i = 0; i < meshes.size(); i++){
-        meshes[i]->update();
+    for (int i = 0; i < models.size(); i++){
+        models[i]->update();
     }
 }

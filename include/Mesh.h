@@ -13,17 +13,16 @@ struct Vertex {
 class Mesh {
 private:
     GLuint VAO;
-    GLuint VBO, EBO;
+    GLuint VBO_pn, VBO_uv, EBO;
 
     glm::mat4 model;
     glm::vec3 color;
 
     std::vector<Vertex> vertices;
 
+    std::vector<glm::vec2> uvs;
     //which vertices correspond to triangle
     std::vector<unsigned int> indices;
-
-    bool process(const aiScene* scene);
 
 public:
     Mesh();
@@ -35,9 +34,8 @@ public:
     void setColor(glm::vec3 color);
 
     bool setMesh(const aiMesh* mesh);
-    bool addMesh(const aiMesh* mesh);
 
-    void setModelMat(glm::mat4 model);
+    void setMMat(glm::mat4 model);
     
     void setupBuf();
 

@@ -18,72 +18,10 @@ Mesh::Mesh(glm::vec3 color){
 
 Mesh::~Mesh(){
     // Delete the VBOs and the VAO.
-    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &VBO_pn);
+    glDeleteBuffers(1, &VBO_uv);
     glDeleteBuffers(1, &EBO);
     glDeleteVertexArrays(1, &VAO);
-}
-
-bool Mesh::process(const aiScene* scene) {
-    if (scene->HasMeshes()) {
-        int numVerts = 0;
-        int numInd = 0;
-        for (int i = 0; i < scene->mNumMeshes; i++){
-            const aiMesh* m = scene->mMeshes[i];
-
-            numVerts += m->mNumVertices;
-            numInd += 3*(m->mNumFaces);
-        }
-
-        vertices.reserve(numVerts);
-        indices.reserve(numInd);
-
-        for (int i = 0; i < scene->mNumMeshes; i++){
-            const aiMesh* mesh = scene->mMeshes[i];
-
-            for (int i = 0; i < mesh->mNumVertices; i++){
-                Vertex v;
-        
-                v.position.x = mesh->mVertices[i].x;
-                v.position.y = mesh->mVertices[i].y;
-                v.position.z = mesh->mVertices[i].z;
-        
-                v.normal.x = mesh->mNormals[i].x;
-                v.normal.y = mesh->mNormals[i].y;
-                v.normal.z = mesh->mNormals[i].z;
-        
-                vertices.push_back(v);
-            }
-        
-            for (int i = 0; i < mesh->mNumFaces; i++){
-                aiFace& face = mesh->mFaces[i];
-                if (face.mNumIndices != 3){
-                    return false;
-                }
-                for (int j = 0; j < 3; j++){
-                    indices.push_back(face.mIndices[j]);
-                }
-            }
-        }
-    }
-
-    return true;
-}
-
-bool Mesh::load(const std::string & file) {
-    Assimp::Importer importer;
-
-    const aiScene* scene = importer.ReadFile(file, 
-        aiProcess_JoinIdenticalVertices |
-        aiProcess_Triangulate |
-        aiProcess_GenNormals);
-
-    if (nullptr == scene) {
-        return false;
-    }
-
-    process(scene);
-
-    return true;
 }
 
 void Mesh::setColor(glm::vec3 color){
@@ -92,6 +30,7 @@ void Mesh::setColor(glm::vec3 color){
 
 bool Mesh::setMesh(const aiMesh* mesh) {
     vertices.reserve(mesh->mNumVertices);
+
     for (int i = 0; i < mesh->mNumVertices; i++){
         Vertex v;
 
@@ -102,6 +41,7 @@ bool Mesh::setMesh(const aiMesh* mesh) {
         v.normal.x = mesh->mNormals[i].x;
         v.normal.y = mesh->mNormals[i].y;
         v.normal.z = mesh->mNormals[i].z;
+
         vertices.push_back(v);
     }
 
@@ -116,53 +56,25 @@ bool Mesh::setMesh(const aiMesh* mesh) {
         }
     }
 
+    std::cout << "yello" << std::endl;
     return true;
 }
 
-bool Mesh::addMesh(const aiMesh* mesh) {
-    vertices.reserve(vertices.size() + mesh->mNumVertices);
-    for (int i = 0; i < mesh->mNumVertices; i++){
-        Vertex v;
-
-        v.position.x = mesh->mVertices[i].x;
-        v.position.y = mesh->mVertices[i].y;
-        v.position.z = mesh->mVertices[i].z;
-
-        v.normal.x = mesh->mNormals[i].x;
-        v.normal.y = mesh->mNormals[i].y;
-        v.normal.z = mesh->mNormals[i].z;
-
-        vertices.push_back(v);
-    }
-
-    indices.reserve(indices.size() + 3*(mesh->mNumFaces));
-    for (int i = 0; i < mesh->mNumFaces; i++){
-        aiFace& face = mesh->mFaces[i];
-        if (face.mNumIndices != 3){
-            return false;
-        }
-        for (int j = 0; j < 3; j++){
-            indices.push_back(face.mIndices[j]);
-        }
-    }
-
-    return true;
-}
-
-void Mesh::setModelMat(glm::mat4 model){
+void Mesh::setMMat(glm::mat4 model){
     this->model = model;
 }
 
 void Mesh::setupBuf(){
     // Generate a vertex array (VAO) and two vertex buffer objects (VBO).
     glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &VBO_pn);
+    glGenBuffers(1, &VBO_uv);
 
     // Bind to the VAO.
     glBindVertexArray(VAO);
 
-    // Bind to the first VBO - We will use it to store the vertices
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    // Bind to the first VBO - We will use it to store the vertex position/normals
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_pn);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
     //positions, every Vertex struct, it is the 1st 3 floats starting from the pointer, which starts off at offset 0
@@ -173,6 +85,12 @@ void Mesh::setupBuf(){
     //(it is given the label index 1 to use as "location" in vertex shader)
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+
+    // Bind to the second VBO - We will use it to store the uvs
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_uv);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * uvs.size(), uvs.data(), GL_STATIC_DRAW);
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
 
     // Generate EBO, bind the EBO to the bound VAO and send the data
     glGenBuffers(1, &EBO);
