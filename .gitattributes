@@ -1,0 +1,12 @@
+*.ply binary
+*.obj binary
+*.fbx binary
+*.glb binary
+*.gltf binary
+*.abc binary
+*.stl binary
+*.dae bnary
+
+*.usd binary
+*.usdc binary
+*.usda binary

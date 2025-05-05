@@ -31,6 +31,8 @@ public:
 
     const glm::mat4 &GetViewProjectMtx() { return ViewProjectMtx; }
 
+    glm::vec3 GetForwardVector() const;
+
 private:
     // Perspective controls
     float FOV;       // Field of View Angle (degrees)
@@ -45,4 +47,7 @@ private:
 
     // Computed data
     glm::mat4 ViewProjectMtx;
+
+    glm::vec3 Eye;    
+    glm::vec3 Center; 
 };

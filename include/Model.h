@@ -2,28 +2,31 @@
 
 #include <vector>
 #include "core.h"
-#include "Model.h"
+#include "Mesh.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 
-class Scene {
+class Model {
 private:
-    std::vector<Model*> models;
+    std::vector<Mesh*> meshes;
+
+    glm::mat4 model;
 
     void process(const aiScene* scene);
 
 public:
-    Scene();
-    ~Scene();
+    Model();
+    ~Model();
 
     bool load(const std::string & file);
-    void addModel(Model* model);
+    void setMMat(glm::mat4 mMat);
+    void addMesh(Mesh* mesh);
 
-    std::vector<Model*>* getModels();
-    Model* getModel(int i);
-    void removeModel(int i);
+    std::vector<Mesh*>* getMeshes();
+    Mesh* getMesh(int i);
+    void deleteMesh(int i);
 
-    void setupBufAll();
+    void setupBuf();
 
     void draw(const glm::mat4& viewProjMtx, GLuint shader);
     void update();
