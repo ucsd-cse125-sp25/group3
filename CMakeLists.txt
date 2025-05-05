@@ -16,6 +16,7 @@ set(
     src/Shader.cpp
     src/Tokenizer.cpp
     src/Window.cpp
+    src/NPCs.cpp
 )
 
 # Add header files
@@ -27,6 +28,7 @@ set(
     include/Shader.h
     include/Tokenizer.h
     include/Window.h
+    include/NPCs.h
 )
 
 # Require GL

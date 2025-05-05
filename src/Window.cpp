@@ -10,6 +10,8 @@ Cube* Window::cube;
 Cube* Window::floor;
 Cube* Window::artifact;
 
+NPCs* Window::NPC;
+
 // Camera Properties
 Camera* Cam;
 Camera* MiniMapCam;
@@ -46,6 +48,7 @@ bool Window::initializeObjects() {
     artifact->setBaseModel(glm::translate(glm::mat4(1.0f), glm::vec3(7.0f, 0.0f, 2.0f)));
     cube->setCarriedArtifact(artifact);
     floor = new Cube(glm::vec3(-8, -2.03, -8), glm::vec3(8, -2.01, 8));
+    NPC = new NPCs(new Cube(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1)));
 
     return true;
 }
@@ -55,6 +58,7 @@ void Window::cleanUp() {
     delete cube;
     delete artifact;
     delete floor;
+
 
     // Delete the shader program.
     glDeleteProgram(shaderProgram);
@@ -148,6 +152,7 @@ void Window::idleCallback() {
     Cam->Update(cube->getPosition());
 
     cube->update();
+
 }
 
 void Window::displayCallback(GLFWwindow* window) {
@@ -177,6 +182,7 @@ void Window::displayCallback(GLFWwindow* window) {
     cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
     artifact->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
     floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
+    NPC->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
 
     int miniMapSize = 256;
     //glViewport(0, Window::height - miniMapSize, miniMapSize, miniMapSize); 

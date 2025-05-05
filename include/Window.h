@@ -2,6 +2,7 @@
 
 #include "Camera.h"
 #include "Cube.h"
+#include "NPCs.h"
 #include "Shader.h"
 #include "core.h"
 
@@ -17,6 +18,7 @@ public:
     static Cube* cube;
     static Cube* floor;
     static Cube* artifact;
+    static NPCs* NPC;
 
     // Shader Program
     static GLuint shaderProgram;
