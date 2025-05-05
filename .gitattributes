@@ -5,8 +5,18 @@
 *.gltf binary
 *.abc binary
 *.stl binary
-*.dae bnary
+*.dae binary
 
 *.usd binary
 *.usdc binary
 *.usda binary
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.tif binary
+*.tiff binary
+*.ico binary
+*.bmp binary
+*.dds binary
