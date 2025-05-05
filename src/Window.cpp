@@ -1,5 +1,6 @@
 #include "Window.h"
 #include "Mesh.h"
+#include "Texture.h"
 // #include <assimp/cimport.h>
 // #include <assimp/scene.h>
 // #include <assimp/postprocess.h>
@@ -34,7 +35,7 @@ bool Window::firstMouse = true;
 // Constructors and desctructors
 bool Window::initializeProgram() {
     // Create a shader program with a vertex shader and a fragment shader.
-    shaderProgram = LoadShaders("../shaders/shader.vert", "../shaders/shader.frag");
+    shaderProgram = LoadShaders("../shaders/shader.vert", "../shaders/shader.frag", false);
 
     // Check the shader program.
     if (!shaderProgram) {
@@ -42,7 +43,7 @@ bool Window::initializeProgram() {
         return false;
     }
 
-    shaderProgram_uv = LoadShaders("../shaders/shader_uv.vert", "../shaders/shader_uv.frag");
+    shaderProgram_uv = LoadShaders("../shaders/shader_uv.vert", "../shaders/shader_uv.frag", true);
 
     if (!shaderProgram_uv) {
         std::cerr << "Failed to initialize shader program with uvs" << std::endl;
@@ -57,9 +58,6 @@ bool Window::initializeObjects() {
     cube = new Cube();
 
     scene = new Scene();
-    model = new Model();
-    model->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
-
     if (!scene->load("../models/bunny.ply")){
         std::cerr << "Failed to load ply: Bunny" << std::endl;
         return false;
@@ -67,14 +65,18 @@ bool Window::initializeObjects() {
     Model* m = scene->getModel(0);
     Mesh* mesh = m->getMesh(0);
     mesh->setColor(glm::vec3(1.0f, 0.0f, 1.0f));
+    mesh->setTex(LoadTexture("../textures/wall.jpg"));
     m->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(20.0f)));
     scene -> update();
     scene-> setupBufAll();
 
+    model = new Model();
+    model->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
     if (!model->load("../models/buddha.ply")){
         std::cerr << "Failed to load ply: Buddha" << std::endl;
         return false;
     }
+    model->getMesh(0)->setTex(LoadTexture("../textures/wall.jpg"));
     model -> update();
     model -> setupBuf();
 

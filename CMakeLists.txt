@@ -108,6 +108,12 @@ add_custom_target(CopyModels ALL
 	"${CMAKE_BINARY_DIR}/models"
 )
 
+add_custom_target(CopyTextures ALL
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	"${PROJECT_SOURCE_DIR}/textures"
+	"${CMAKE_BINARY_DIR}/textures"
+)
+
 if(DEFINED CMAKE_BUILD_TYPE)
     set(my_build_type CMAKE_BUILD_TYPE)
 endif()
@@ -120,7 +126,7 @@ if (WIN32)
     )
 endif()
 
-add_dependencies(menv CopyShaders CopyModels)
+add_dependencies(menv CopyShaders CopyModels CopyTextures)
 
 
 find_package(Doxygen)

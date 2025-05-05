@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 
+#include <stb_image.h>
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -10,4 +11,4 @@
 
 #include "core.h"
 
-GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path, bool hasTex);
+GLuint LoadTexture(const char* texture_file_path);

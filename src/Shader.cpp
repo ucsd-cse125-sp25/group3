@@ -57,7 +57,7 @@ GLuint LoadSingleShader(const char* shaderFilePath, ShaderType type) {
     return shaderID;
 }
 
-GLuint LoadShaders(const char* vertexFilePath, const char* fragmentFilePath) {
+GLuint LoadShaders(const char* vertexFilePath, const char* fragmentFilePath, bool hasTex) {
     // Create the vertex shader and fragment shader.
     GLuint vertexShaderID = LoadSingleShader(vertexFilePath, vertex);
     GLuint fragmentShaderID = LoadSingleShader(fragmentFilePath, fragment);
@@ -94,6 +94,13 @@ GLuint LoadShaders(const char* vertexFilePath, const char* fragmentFilePath) {
     glDetachShader(programID, fragmentShaderID);
     glDeleteShader(vertexShaderID);
     glDeleteShader(fragmentShaderID);
+
+    if (hasTex){
+        glUseProgram(programID);
+        glUniform1i(glGetUniformLocation(programID, "tex"), 0);
+        glUseProgram(0);
+    }
+
 
     return programID;
 }

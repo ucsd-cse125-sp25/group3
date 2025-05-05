@@ -15,12 +15,15 @@ private:
     GLuint VAO;
     GLuint VBO_pn, VBO_uv, EBO;
 
+    GLuint tex;
+
     glm::mat4 model;
     glm::vec3 color;
 
     std::vector<Vertex> vertices;
 
     std::vector<glm::vec2> uvs;
+
     //which vertices correspond to triangle
     std::vector<unsigned int> indices;
 
@@ -31,11 +34,15 @@ public:
 
     bool load(const std::string & file);
 
+    void setTex(GLuint texID);
+
     void setColor(glm::vec3 color);
 
     bool setMesh(const aiMesh* mesh);
 
     void setMMat(glm::mat4 model);
+
+    void setTexture();
     
     void setupBuf();
 

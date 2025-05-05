@@ -18,10 +18,16 @@ Mesh::Mesh(glm::vec3 color){
 
 Mesh::~Mesh(){
     // Delete the VBOs and the VAO.
+    glDeleteTextures(1, &tex);
+    
     glDeleteBuffers(1, &VBO_pn);
     glDeleteBuffers(1, &VBO_uv);
     glDeleteBuffers(1, &EBO);
     glDeleteVertexArrays(1, &VAO);
+}
+
+void Mesh::setTex(GLuint texID){
+    tex = texID;
 }
 
 void Mesh::setColor(glm::vec3 color){
@@ -53,6 +59,23 @@ bool Mesh::setMesh(const aiMesh* mesh) {
         }
         for (int j = 0; j < 3; j++){
             indices.push_back(face.mIndices[j]);
+        }
+    }
+
+    // I'm only going to support 1 texture coordinate channel
+    if (mesh->HasTextureCoords(0)){
+        uvs.reserve(mesh->mNumVertices);
+
+        std::cout << "has texture coordinates" << std::endl;
+    
+        int dim = mesh->mNumUVComponents[0];
+        if (dim != 2){
+            std::cerr << "mesh does not use 2d texture coordinates, will truncate to 2d coordinates" << std::endl;
+        }
+        aiVector3D* uvws = mesh->mTextureCoords[0];
+
+        for (int i = 0; i < mesh->mNumVertices; i++){
+            uvs.push_back(glm::vec2(uvws[i].x, uvws[i].y));
         }
     }
 
@@ -100,9 +123,13 @@ void Mesh::setupBuf(){
     // Unbind the VBOs.
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+
 }
     
 void Mesh::draw(const glm::mat4& viewProjMtx, GLuint shader){
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    
     // actiavte the shader program
     glUseProgram(shader);
 

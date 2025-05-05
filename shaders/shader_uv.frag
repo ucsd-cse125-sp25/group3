@@ -16,6 +16,8 @@ uniform vec3 LightColor = vec3(1.0f);
 uniform float AmbientStrength = 0.1f;
 uniform float SpecularStrength = 0.5f;
 
+uniform sampler2D tex;
+
 // You can output many things. The first vec4 type output determines the color of the fragment
 out vec4 fragColor;
 
@@ -30,7 +32,8 @@ void main()
 	vec3 irradiance = ambient + diffuse;
 
 	// Diffuse reflectance
-	vec3 reflectance = irradiance * DiffuseColor;
+	vec3 reflectance = irradiance * texture(tex, uv).rgb;
+	// vec3 reflectance = irradiance * DiffuseColor;
 
 	// Gamma correction
 	fragColor = vec4(sqrt(reflectance), 1);
