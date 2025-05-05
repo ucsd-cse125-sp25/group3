@@ -24,6 +24,8 @@ GLuint Window::shaderProgram;
 bool Window::altDown = false;
 bool Window::firstMouse = true;
 
+AbilityType Window::currentAbility = NONE;
+
 // Constructors and desctructors
 bool Window::initializeProgram() {
     // Create a shader program with a vertex shader and a fragment shader.
@@ -94,8 +96,8 @@ GLFWwindow* Window::createWindow(int width, int height) {
     // Initialize GLEW
     glewInit();
 
-    // Set swap interval to 1.
-    glfwSwapInterval(0);
+    // Set swap interval to 1 to stop flickering.
+    glfwSwapInterval(1);
 
     // set up the camera
     Cam = new Camera();
@@ -127,7 +129,14 @@ GLFWwindow* Window::createWindow(int width, int height) {
     // Window::resizeCallback(window, width, height);
 
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    if (currentState == PLAYING){
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+    else{
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+    
+
 
     return window;
 }
@@ -145,6 +154,10 @@ void Window::resizeCallback(GLFWwindow* window, int width, int height) {
 void Window::idleCallback() {
     // Perform any updates as necessary.
     // Cam->Update();
+    if (Window::currentAbility == INVISIBILITY) {
+        // Apply invisibility logic
+    }   
+
     Cam->Update(cube->getPosition());
 
     cube->update();
@@ -262,6 +275,7 @@ void Window::mouse_callback(GLFWwindow* window, int button, int action, int mods
 
 void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     if (altDown) return;
+    if (currentState != PLAYING) return;
 
     
     static float lastX = Window::width / 2.0f;

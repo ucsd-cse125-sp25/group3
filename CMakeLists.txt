@@ -29,6 +29,19 @@ set(
     include/Window.h
 )
 
+set(IMGUI_DIR ${CMAKE_SOURCE_DIR}/external/imgui)
+
+set(IMGUI_SOURCES
+    ${IMGUI_DIR}/imgui.cpp
+    ${IMGUI_DIR}/imgui_demo.cpp
+    ${IMGUI_DIR}/imgui_draw.cpp
+    ${IMGUI_DIR}/imgui_tables.cpp
+    ${IMGUI_DIR}/imgui_widgets.cpp
+    ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
+    ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+)
+
+
 # Require GL
 find_package(OpenGL REQUIRED)
 
@@ -43,13 +56,16 @@ link_directories(
 )
 
 # Add executable
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${IMGUI_SOURCES})
+
 
 # Link libraries
 
 # target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32s.lib glfw3)
 # Set include and lib dirs (platform-specific)
 include_directories(include)
+include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends)
+
 
 if (APPLE)
     message(STATUS "Building on macOS (ARM)")
