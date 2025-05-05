@@ -114,10 +114,51 @@ void CubeState::toVector(std::vector<char>* vec) {
             vec->insert(vec->end(), &buf[0], &buf[4]);
         }
     }
+
+    for (int i=0; i<4; i++) {
+        for (int j=0; j<4; j++) {
+            // printf("elem i=%d, j=%d: %f\n", i,j,baseModel[i][j]);
+            memcpy(buf, &model[i][j], sizeof(float));
+            vec->insert(vec->end(), &buf[0], &buf[4]);
+        }
+    }
     vec->resize(vec->size() + 1, isInvisible);
+
     // memcpy(buf, &isInvisible, sizeof(bool));
     // vec->insert(vec->end(), &buf[0], &buf[1]);
     // printf("invisible: %hhu\n", vec->back());
+}
+
+void CubeState::update() {
+    #ifdef __APPLE__
+        gravity = -0.00005f;
+    #endif
+    
+    if (isJumping) {
+        //update jump height
+        jumpVelocity += gravity; 
+        jumpHeight += jumpVelocity;
+
+        if (jumpHeight <= 0.0f) {
+            jumpHeight = 0.0f;
+            isJumping = false;
+            jumpVelocity = 0.0f;
+            isGrounded = true;
+        }
+    }
+
+    if (isInvisible && std::chrono::steady_clock::now() - invisibleStartTime > std::chrono::seconds(invisibleDuration)) {
+        isInvisible = false;
+    }
+
+    if (isSpeedBoosted && std::chrono::steady_clock::now() - speedBoostStartTime > std::chrono::seconds(speedBoostDuration)) {
+        isSpeedBoosted = false;
+        speed = normalSpeed;
+    }
+    model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
+    // printf("jump height: %f\n", jumpHeight);
+    // std::cout << "model:" << std::endl;
+    // std::cout << glm::to_string(model) << std::endl;
 }
 
 glm::vec3 CubeState::getPosition() {
@@ -159,6 +200,15 @@ void PlayerData::calculateNewPos(KeyType key) {
     if (glm::length(movement) > 0.0f) {
         movement = glm::normalize(movement) * cube.speed;
         cube.baseModel = glm::translate(cube.baseModel, movement);
+    }
+
+    if (key == KeyType::KEY_SPACE) {
+        printf("JUMPING\n");
+        if (cube.isGrounded) {
+            cube.isJumping = true;
+            cube.isGrounded = false;   
+            cube.jumpVelocity = cube.initialJumpVelocity;
+        }
     }
 
     // if (key == KeyType::KEY_T)
@@ -206,13 +256,6 @@ void PlayerData::calculateNewPos(KeyType key) {
         }
     }
 
-    if (cube.isInvisible && std::chrono::steady_clock::now() - cube.invisibleStartTime > std::chrono::seconds(cube.invisibleDuration)) {
-        cube.isInvisible = false;
-    }
-    if (cube.isSpeedBoosted && std::chrono::steady_clock::now() - cube.speedBoostStartTime > std::chrono::seconds(cube.speedBoostDuration)) {
-        cube.isSpeedBoosted = false;
-        cube.speed = cube.normalSpeed;
-    }
-
+    
     camera.Update(cube.getPosition()); 
 }

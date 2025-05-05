@@ -74,6 +74,13 @@ void ClientGame::sendKeyPackets(KeyType key) {
 
 void ClientGame::update()
 {
+    glfwPollEvents();
+
+    for (int i=0; i<client_logic::pendingKeys.size(); i++) {
+        sendKeyPackets(client_logic::pendingKeys[i]);
+    }
+    client_logic::pendingKeys.clear();
+
     KeyType input = client_logic::handleUserInput(window);
 
     if (input != KeyType::NONE) {
@@ -108,6 +115,8 @@ void ClientGame::update()
                 case STATE_UPDATE:
                     printf("client recieved state update from server\n");
                     Window::update(packet.payload.data(), packet.length);
+                    // Window::render(window);
+                    // Window::cube->update();
                     break;
                 default:
 
@@ -117,7 +126,9 @@ void ClientGame::update()
             }
         }
     }
+    
     Window::render(window);
-    Window::idleCallback();
+    // Window::cube->update();
+    // Window::idleCallback();
 }
 

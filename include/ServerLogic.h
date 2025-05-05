@@ -13,8 +13,10 @@ enum CharacterType {
 };
 
 class CubeState {
-    public:
+    private:
         glm::mat4 model;
+
+    public:
         glm::vec3 color;
 
         // Cube Information
@@ -23,6 +25,14 @@ class CubeState {
         std::vector<unsigned int> indices;
         
         glm::mat4 baseModel = glm::mat4(1.0f);
+
+        //jumping
+        bool isJumping = false;
+        float jumpVelocity = 0.0f;
+        float jumpHeight = 0.0f;
+        float gravity = -0.00002f;
+        float initialJumpVelocity = 0.015f;
+        bool isGrounded = true;
 
         //for character abilities
         CharacterType type = CHARACTER_1;  // default
@@ -43,6 +53,7 @@ class CubeState {
 
         CubeState(glm::vec3 cubeMin = glm::vec3(-1, -1, -1), glm::vec3 cubeMax = glm::vec3(1, 1, 1));
         void toVector(std::vector<char>* vec);
+        void update();
         void printState();
         glm::vec3 getPosition();
 };

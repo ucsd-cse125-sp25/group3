@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "Cube.h"
 #include "core.h"
+#include <vector>
 
 #ifndef KEY_TYPES
 #define KEY_TYPES
@@ -21,12 +22,28 @@ enum class KeyType: uint8_t {
 };
 #endif
 
-namespace client_logic {
-    void error_callback(int error, const char* description);
+#ifndef OS_TYPES
+#define OS_TYPES
+enum class OSType: uint8_t {
+    APPLE = 0,
+    OTHER = 1,
+};
+#endif
 
-    void setup_opengl_settings();
+#ifndef CLIENT_LOGIC
+#define CLIENT_LOGIC
+class client_logic {
+    public:
+        static std::vector<KeyType> pendingKeys;
 
-    void setup_callbacks(GLFWwindow* window);
+        static void error_callback(int error, const char* description);
 
-    KeyType handleUserInput(GLFWwindow* window);
-}
+        static void setup_opengl_settings();
+
+        static void setup_callbacks(GLFWwindow* window);
+
+        static KeyType handleUserInput(GLFWwindow* window);
+
+        static void keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods);
+};
+#endif

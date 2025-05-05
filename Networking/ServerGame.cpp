@@ -49,12 +49,6 @@ void ServerGame::receiveFromClients()
     for(iter = network->sessions.begin(); iter != network->sessions.end(); iter++)
     {
         int data_length = network->receiveData(iter->first, network_data);
-
-        if (data_length <= 0) 
-        {
-            //no data recieved
-            continue;
-        }
         
         if (playersData.find(iter->first) == playersData.end()) {
             printf("Client %d does not have associated player data\n", iter->first);
@@ -63,8 +57,16 @@ void ServerGame::receiveFromClients()
 
         PlayerData player = playersData[iter->first];
 
+        // if (data_length <= 0) 
+        // {
+        //     player.cube.update();
+        //     playersData[iter->first] = player;
+        //     sendPlayerState(iter->first);
+        //     continue;
+        // }
+
         int i = 0;
-        while (i < (unsigned int)data_length) 
+        while (i < data_length) 
         {
             Packet packet;
             packet.deserialize(&(network_data[i]));
@@ -106,8 +108,9 @@ void ServerGame::receiveFromClients()
                     printf("server recieved key event packet from client\n");
                     player.calculateNewPos(key);
                     // player.cube.printState();
-                    playersData[iter->first] = player;
-                    sendPlayerState(iter->first);
+                    // player.cube.update();
+                    // playersData[iter->first] = player;
+                    // sendPlayerState(iter->first);
                     break;
                 }
                 default: {
@@ -116,6 +119,11 @@ void ServerGame::receiveFromClients()
                 }
             }
         }
+        player.cube.update();
+        playersData[iter->first] = player;
+        sendPlayerState(iter->first);
+        // playersData[iter->first] = player;
+        // sendPlayerState(iter->first);
     }
     auto orig_diff = std::chrono::steady_clock::now() - start;
     auto milli_diff = std::chrono::duration_cast<std::chrono::milliseconds>(orig_diff);
@@ -124,7 +132,7 @@ void ServerGame::receiveFromClients()
     //std::this_thread::sleep_for(wait);
     std::this_thread::sleep_for(std::max(wait, std::chrono::milliseconds(0)));
     if(wait.count() < 0) {
-        printf("WARNING: Tick took longer than allocated by %ld ms\n", -wait.count());
+        printf("WARNING: Tick took longer than allocated by %lld ms\n", -wait.count());
     }
 }
 

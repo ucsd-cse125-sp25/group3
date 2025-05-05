@@ -145,7 +145,7 @@ void Window::idleCallback() {
 }
 
 void Window::displayCallback(GLFWwindow* window) {
-
+    
     if (cube != nullptr) {
         // cube->handleContinuousInput(window);
         glm::vec3 forward = Cam->GetForwardVector();
@@ -286,20 +286,21 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
 void Window::update(char * data, size_t data_length) {
     cube->readFromArray(data);
     cube->isInvisible = data[data_length - 1];
-    // printf("invisible: %lu\n", sizeof(data));
+    // printf("invisible: %d\n", cube->isInvisible);
+    // printf("length: %lu\n", data_length);
 }
 void Window::render(GLFWwindow* window) {
-
     // Clear the color and depth buffers.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Render the object.
-    if (!cube->isInvisible)
-        cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
+    cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
     floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
 
     // Gets events, including input such as keyboard and mouse or window resizing.
-    glfwPollEvents();
+    // glfwPollEvents();
     // Swap buffers.
     glfwSwapBuffers(window);
+    Cam->Update(cube->getPosition());
+    cube->setModel();
 }

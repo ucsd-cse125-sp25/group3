@@ -3,6 +3,7 @@
 Cube::Cube(glm::vec3 cubeMin, glm::vec3 cubeMax) {
     // Model matrix.
     model = glm::mat4(1.0f);
+    nextModel = glm::mat4(1.0f);
 
     // The color of the cube. Try setting it to something else!
     color = glm::vec3(1.0f, 0.95f, 0.1f);
@@ -132,7 +133,6 @@ Cube::~Cube() {
 }
 
 void Cube::draw(const glm::mat4& viewProjMtx, GLuint shader,bool floor) {
-
     if (isInvisible) return;
 
     // actiavte the shader program
@@ -195,7 +195,9 @@ void Cube::update() {
     // }
 
     model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
-
+    // printf("jump height: %d\n", jumpHeight);
+    // std::cout << "updated model:" << std::endl;
+    // std::cout << glm::to_string(model) << std::endl;
 
 }
 
@@ -215,7 +217,6 @@ void Cube::userInput(int key){
 
 }
 void Cube::handleContinuousInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir) {
-
     glm::vec3 movement(0.0f);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -323,12 +324,20 @@ void Cube::readFromArray(char * data) {
             memcpy(&baseModel[i/4][i%4], &data[i*4], sizeof(float));
         // }
     }
-    // std::cout << "updated base model:" << std::endl;
-    // std::cout << glm::to_string(baseModel) << std::endl;
+
+    for (int i=0; i<16; i++) {
+        memcpy(&nextModel[i/4][i%4], &data[64 + i*4], sizeof(float));
+    }
+    // std::cout << "updated model:" << std::endl;
+    // std::cout << glm::to_string(model) << std::endl;
 
     // for (int i=0; i<4; i++) {
     //     for (int j=0; j<4; j++) {
     //         printf("[%d,%d]: %f\n", i, j, baseModel[i][j]);
     //     }
     // }
+}
+
+void Cube::setModel() {
+    model = glm::translate(nextModel, glm::vec3(0.0f, 0.0f, 0.0f));
 }
