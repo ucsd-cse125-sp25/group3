@@ -76,7 +76,7 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
         {
             case GLFW_KEY_ESCAPE:
                 // Close the window. This causes the program to also terminate.
-                glfwSetWindowShouldClose(window, GL_TRUE);
+                pendingKeys.push_back(KeyType::KEY_ESC);
                 break;
 
             // case GLFW_KEY_R:

@@ -46,10 +46,17 @@ void ServerGame::receiveFromClients()
         std::map<unsigned int, int>::iterator iter;
     #endif
     
-    for(iter = network->sessions.begin(); iter != network->sessions.end(); iter++)
+    for(iter = network->sessions.begin(); iter != network->sessions.end();)
     {
         int data_length = network->receiveData(iter->first, network_data);
         
+        if (data_length == 0) {
+            printf("Client %d has disconnected\n", iter->first);
+            playersData.erase(iter->first);
+            iter = network->sessions.erase(iter);
+            continue;
+        }
+
         if (playersData.find(iter->first) == playersData.end()) {
             printf("Client %d does not have associated player data\n", iter->first);
             continue;
@@ -122,8 +129,7 @@ void ServerGame::receiveFromClients()
         player.cube.update();
         playersData[iter->first] = player;
         sendPlayerState(iter->first);
-        // playersData[iter->first] = player;
-        // sendPlayerState(iter->first);
+        iter++;
     }
     auto orig_diff = std::chrono::steady_clock::now() - start;
     auto milli_diff = std::chrono::duration_cast<std::chrono::milliseconds>(orig_diff);

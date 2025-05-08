@@ -77,6 +77,11 @@ void ClientGame::update()
     glfwPollEvents();
 
     for (int i=0; i<client_logic::pendingKeys.size(); i++) {
+        
+        if (client_logic::pendingKeys[i] == KeyType::KEY_ESC) {
+            close(network->ConnectSocket);
+            glfwSetWindowShouldClose(window, GL_TRUE);
+        }
         sendKeyPackets(client_logic::pendingKeys[i]);
     }
     client_logic::pendingKeys.clear();
