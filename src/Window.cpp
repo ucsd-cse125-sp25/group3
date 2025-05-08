@@ -196,10 +196,7 @@ void Window::resetCamera() {
 }
 
 // callbacks - for Interaction
-void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    /*
-     * TODO: Modify below to add your key callbacks.
-     */
+/* void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 
     // Check for a key press.
     if (action == GLFW_PRESS) {
@@ -240,8 +237,7 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
         }
     }
 
-}
-
+}*/
 void Window::mouse_callback(GLFWwindow* window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_LEFT) {
         LeftDown = (action == GLFW_PRESS);

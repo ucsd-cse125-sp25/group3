@@ -16,10 +16,10 @@ int main()
 {   
     int choice;
     std::cout << "Choose your character:\n";
-    std::cout << "0 - thief one\n";
-    std::cout << "1 - thief two\n";
-    std::cout << "2 - thief three\n";
-    std::cout << "3 - security guard\n";
+    std::cout << "1 - theif one\n";
+    std::cout << "2 - theif two\n";
+    std::cout << "3 - theif three\n";
+    std::cout << "4 - security guard\n";
     std::cin >> choice;
 
     // initialize the client

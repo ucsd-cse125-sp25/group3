@@ -13,7 +13,7 @@ void setup_callbacks(GLFWwindow* window) {
     glfwSetWindowSizeCallback(window, Window::resizeCallback);
 
     // Set the key callback.
-    glfwSetKeyCallback(window, Window::keyCallback);
+    //glfwSetKeyCallback(window, Window::keyCallback);
 
     // Set the mouse and cursor callbacks
     glfwSetMouseButtonCallback(window, Window::mouse_callback);

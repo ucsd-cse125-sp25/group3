@@ -10,6 +10,9 @@ project(menv)
 # Add source files
 set(
     SOURCES
+    packets/Packet.cpp
+    packets/KeyPacket.cpp
+    packets/PacketFactory.cpp
     src/Camera.cpp
     src/Cube.cpp
     src/Shader.cpp
@@ -22,12 +25,14 @@ set(
     Networking/NetworkServices.cpp
     Networking/ClientGame.cpp 
     Networking/ClientNetwork.cpp
-    packets/Packet.cpp
 )
 
 # Add header files
 set(
     HEADERS
+    packets/Packet.h
+    packets/KeyPacket.h
+    packets/PacketFactory.h
     include/core.h
     include/Camera.h
     include/Cube.h
@@ -41,7 +46,6 @@ set(
     Networking/NetworkServices.h
     Networking/ClientGame.h 
     Networking/ClientNetwork.h
-    packets/Packet.h
 )
 
 # GoogleTest requires at least C++14

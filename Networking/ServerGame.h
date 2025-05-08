@@ -1,8 +1,10 @@
 #include "ServerNetwork.h"
 #include "../include/ServerLogic.h"
 
-class ServerGame
-{
+class ServerGame {
+
+    friend class Packet;
+    friend class KeyPacket;
 
 public:
 
@@ -17,11 +19,14 @@ public:
 
 private:
 
-   // IDs for the clients connecting for table in ServerNetwork 
+    // IDs for the clients connecting for table in ServerNetwork 
     static unsigned int client_id;
 
-   // The ServerNetwork object 
+    // The ServerNetwork object 
     ServerNetwork* network;
+
+    // The current server tick
+    unsigned int current_tick;
 
     // data buffer
     char network_data[MAX_PACKET_SIZE];

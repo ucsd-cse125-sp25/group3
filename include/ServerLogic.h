@@ -3,6 +3,7 @@
 #include "Cube.h"
 #include "Camera.h"
 #include <cstdio>
+#include "../packets/KeyPacket.h"
 
 //player info
 enum CharacterType {

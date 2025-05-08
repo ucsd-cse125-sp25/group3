@@ -162,6 +162,9 @@ void Cube::draw(const glm::mat4& viewProjMtx, GLuint shader,bool floor) {
     // Unbind the VAO and shader program
     glBindVertexArray(0);
     glUseProgram(0);
+
+    std::cout << "[Cube::draw] model matrix x translation = " << baseModel[3][0] << "\n";
+
 }
 
 void Cube::update() {
