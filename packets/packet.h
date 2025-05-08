@@ -20,7 +20,7 @@ enum PacketTypes {
     STATE_UPDATE = 4
 }; 
 
-// Packet structure will be length (4 bytes), type (4 bytes), data (N bytes) 
+// Packet structure will be type (4 bytes), length (4 bytes), data (N bytes) 
 class Packet {
     public:
         unsigned int packet_type; // type that maps to PacketType

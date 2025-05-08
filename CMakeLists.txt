@@ -11,6 +11,7 @@ project(menv)
 set(
     SOURCES
     packets/Packet.cpp
+    packets/InitPacket.cpp
     packets/KeyPacket.cpp
     packets/PacketFactory.cpp
     src/Camera.cpp
@@ -31,6 +32,7 @@ set(
 set(
     HEADERS
     packets/Packet.h
+    packets/InitPacket.h
     packets/KeyPacket.h
     packets/PacketFactory.h
     include/core.h

@@ -14,13 +14,13 @@ class ClientGame
 
 public:
 
-    ClientGame(int character);
+    ClientGame(CharacterType character);
     ~ClientGame(void);
     GLFWwindow* window;
     ClientNetwork* network; 
-    void sendActionPackets();
-    void sendEchoPackets(std::string);
-    void sendKeyPackets(KeyType);
+    void sendPacket(Packet& packet);
+    void sendInitPacket(CharacterType character);
+    void sendKeyPacket(KeyType);
     char network_data[MAX_PACKET_SIZE];
     void update();
 };

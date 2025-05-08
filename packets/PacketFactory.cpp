@@ -1,22 +1,23 @@
 #include "PacketFactory.h"
 
 std::unique_ptr<Packet> PacketFactory::createFromBuffer(char* data) {
-    unsigned int length;
     unsigned int type;
+    unsigned int length;
 
     unsigned int offset = 0;
-    memcpy(&length, data + offset, sizeof(length));
-    offset += sizeof(length);
 
     memcpy(&type, data + offset, sizeof(type));
     offset += sizeof(type);
 
+    memcpy(&length, data + offset, sizeof(length));
+    offset += sizeof(length);
+
     std::unique_ptr<Packet> packet = nullptr;
 
     switch (type) {
-        /* case INIT_CONNECTION:
+        case INIT_CONNECTION:
             packet = std::make_unique<InitPacket>();
-            break; */
+            break;
         case KEY_EVENT:
             packet = std::make_unique<KeyPacket>();
             break;

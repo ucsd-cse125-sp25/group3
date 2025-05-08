@@ -1,5 +1,6 @@
 #include "Packet.h"
 #include "KeyPacket.h"
+#include "InitPacket.h"
 
 #ifndef PACKETFACTORY_H // include guard
 #define PACKETFACTORY_H

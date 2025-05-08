@@ -76,13 +76,11 @@ void ServerGame::receiveFromClients()
             i += packet->getSize();
 
             switch (packet->packet_type) {
-
                 case INIT_CONNECTION: {
+                    InitPacket* initPacket = dynamic_cast<InitPacket*>(packet.get());
                     printf("server received init packet from client\n");
-                    CharacterType character;
-                    memcpy(&character, packet->payload.data(), sizeof(character));
-                    printf("player is character %d\n", character);
-                    player.setCharacter(character);
+                    printf("player is character %d\n", initPacket->character);
+                    player.setCharacter(initPacket->character);
                     playersData[iter->first] = player;
                     sendPlayerState(iter->first);
                     break;

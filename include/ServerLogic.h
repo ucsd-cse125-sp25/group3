@@ -4,14 +4,6 @@
 #include "Camera.h"
 #include <cstdio>
 
-//player info
-enum CharacterType {
-    CHARACTER_1,
-    CHARACTER_2,
-    CHARACTER_3,
-    CHARACTER_4
-};
-
 class CubeState {
     private:
         glm::mat4 model;

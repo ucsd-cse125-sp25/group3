@@ -1,7 +1,7 @@
 
 #include "ClientGame.h" 
 
-ClientGame::ClientGame(int character)
+ClientGame::ClientGame(CharacterType character)
 {
     network = new ClientNetwork();
     
@@ -18,29 +18,32 @@ ClientGame::ClientGame(int character)
     if (!Window::initializeObjects()) exit(EXIT_FAILURE);
 
     // send init packet
-    Packet packet;
-    packet.packet_type = INIT_CONNECTION;
-    packet.payload.resize(sizeof(int));
-    memcpy(packet.payload.data(), &character, sizeof(character));
-    // packet.length = 0;
-    packet.length = packet.payload.size();
-    const unsigned int packet_size = packet.getSize();
-    std::vector<char> packet_data(packet_size);
-    packet.serialize(packet_data.data());
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data.data(), packet_size);
+    sendInitPacket(character);
 }
 
-void ClientGame::sendKeyPackets(KeyType key) {
-    KeyPacket packet;
-    packet.packet_type = KEY_EVENT;
-    packet.key_type = key;
-
+void ClientGame::sendPacket(Packet& packet) {
     const unsigned int packet_size = packet.getSize();
 
     std::vector<char> packet_data(packet_size);  
     packet.serialize(packet_data.data());
+    printf("Packet of size %d\n", packet_size);
 
     NetworkServices::sendMessage(network->ConnectSocket, packet_data.data(), packet_size);
+}
+
+void ClientGame::sendInitPacket(CharacterType character) {
+    InitPacket packet;
+    packet.packet_type = INIT_CONNECTION;
+    packet.character = character;
+    packet.length = packet.payload.size();
+    sendPacket(packet);
+}
+
+void ClientGame::sendKeyPacket(KeyType key) {
+    KeyPacket packet;
+    packet.packet_type = KEY_EVENT;
+    packet.key_type = key;
+    sendPacket(packet);
 }
 
 void ClientGame::update()
@@ -48,7 +51,7 @@ void ClientGame::update()
     glfwPollEvents();
 
     for (int i=0; i<client_logic::pendingKeys.size(); i++) {
-        sendKeyPackets(client_logic::pendingKeys[i]);
+        sendKeyPacket(client_logic::pendingKeys[i]);
     }
     client_logic::pendingKeys.clear();
 
@@ -56,7 +59,7 @@ void ClientGame::update()
 
     if (input != KeyType::NONE) {
         printf("sending key event packet\n");
-        sendKeyPackets(input);
+        sendKeyPacket(input);
     } 
 
     int data_length = network->receivePackets(network_data);

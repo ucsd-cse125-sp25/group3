@@ -18,9 +18,7 @@ enum KeyType {
 
 class KeyPacket : public Packet {
 public:
-    unsigned int tick;      // Client-side tick 
     KeyType key_type; 
-    bool is_down;           // true = key pressed, false = key released
 
     KeyPacket();
 
