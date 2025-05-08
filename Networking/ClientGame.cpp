@@ -30,39 +30,10 @@ ClientGame::ClientGame(int character)
     NetworkServices::sendMessage(network->ConnectSocket, packet_data.data(), packet_size);
 }
 
-void ClientGame::sendActionPackets()
-{
-    // send action packet
-    const unsigned int packet_size = sizeof(Packet);
-    char packet_data[packet_size];
-
-    Packet packet;
-    packet.packet_type = ACTION_EVENT;
-
-    packet.serialize(packet_data);
-
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
-}
-
-void ClientGame::sendEchoPackets(std::string input) {
-    const unsigned int packet_size = sizeof(Packet);
-    char packet_data[packet_size];
-
-    Packet packet;
-    packet.packet_type = ECHO_EVENT;
-    // memcpy(packet.payload, input.data(), sizeof input);
-    // packet.message = input.data();
-    packet.serialize(packet_data);
-    // printf(packet_data);
-    NetworkServices::sendMessage(network->ConnectSocket, packet_data, packet_size);
-}
-
 void ClientGame::sendKeyPackets(KeyType key) {
-    Packet packet;
+    KeyPacket packet;
     packet.packet_type = KEY_EVENT;
-    packet.payload.resize(1);
-    memcpy(packet.payload.data(), &key, sizeof(key));
-    packet.length = packet.payload.size();
+    packet.key_type = key;
 
     const unsigned int packet_size = packet.getSize();
 
@@ -100,18 +71,6 @@ void ClientGame::update()
             i += bytes_read;
         
             switch (packet.packet_type) {
-
-                case ACTION_EVENT:
-
-                    printf("client received action event packet from server\n");
-
-                    // sendActionPackets();
-
-                    break;
-                case ECHO_EVENT:
-                    printf("client recieved echo event packet from server\n");
-                    /* printf("Client recieved: %s\n", packet.payload.data()); */
-                    break;
                 case STATE_UPDATE:
                     printf("client recieved state update from server\n");
                     Window::update(packet.payload.data(), packet.length);
@@ -119,9 +78,7 @@ void ClientGame::update()
                     // Window::cube->update();
                     break;
                 default:
-
-                    printf("error in packet types\n");
-
+                    printf("client received unknown packet type from server\n");
                     break;
             }
         }

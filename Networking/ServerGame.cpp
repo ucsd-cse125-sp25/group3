@@ -68,49 +68,34 @@ void ServerGame::receiveFromClients()
         int i = 0;
         while (i < data_length) 
         {
-            Packet packet;
-            packet.deserialize(&(network_data[i]));
-            i += packet.getSize();
+            std::unique_ptr<Packet> packet = PacketFactory::createFromBuffer(&network_data[i]);
+            // TODO: Handle case where an invalid packet is received
+            if (packet == nullptr) {
+                break; // couldn't create packet, skip
+            }
+            i += packet->getSize();
 
-            switch (packet.packet_type) {
+            switch (packet->packet_type) {
 
                 case INIT_CONNECTION: {
-
                     printf("server received init packet from client\n");
                     CharacterType character;
-                    memcpy(&character, packet.payload.data(), sizeof(character));
+                    memcpy(&character, packet->payload.data(), sizeof(character));
                     printf("player is character %d\n", character);
                     player.setCharacter(character);
                     playersData[iter->first] = player;
                     sendPlayerState(iter->first);
-                    // sendActionPackets();
-
-                    break;
-                }
-                case ACTION_EVENT: {
-
-                    printf("server received action event packet from client\n");
-
-                    sendActionPackets();
-
-                    break;
-                }
-                case ECHO_EVENT: {
-                    /* std::string message(packet.payload.begin(), packet.payload.end());
-                    printf("server recieved echo event packet from client\n");
-                    printf("Server recieved: %s\n", packet.payload.data());
-                    sendEchoPackets(message); */
                     break;
                 }
                 case KEY_EVENT: {
-                    KeyType key;
-                    memcpy(&key, packet.payload.data(), sizeof(key));
-                    printf("server recieved key event packet from client\n");
-                    player.calculateNewPos(key);
-                    // player.cube.printState();
-                    // player.cube.update();
-                    // playersData[iter->first] = player;
-                    // sendPlayerState(iter->first);
+                    KeyPacket* keyPacket = dynamic_cast<KeyPacket*>(packet.get());
+                    if (keyPacket) {
+                        player.calculateNewPos(keyPacket->key_type);
+                        playersData[iter->first] = player;
+                        sendPlayerState(iter->first);
+                    } else {
+                        printf("Error: Failed to cast to KeyPacket\n");
+                    }
                     break;
                 }
                 default: {
