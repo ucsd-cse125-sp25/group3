@@ -8,6 +8,8 @@ NPCs::NPCs(Cube* cube){
     newmodel = glm::translate(newmodel, startPos);
 
     npcModel->setBaseModel(newmodel);
+    currentTarget = generateRandomTarget();
+
 }
 
 
@@ -21,5 +23,52 @@ void NPCs::draw(const glm::mat4& viewProjMtx, GLuint shader){
 }
 
 void NPCs::update(){
+    
+    // float random_num = static_cast <float> (rand())/ (static_cast <float> (RAND_MAX ));
 
+    // // std::cout<< random_num << std::endl;
+    // if (random_num < 0.5 ){
+    //     // std::cout<< "stop" << std::endl;
+
+    //     return;
+    // }
+
+    using namespace std::chrono;
+
+    if (isWaiting) {
+        auto now = steady_clock::now();
+        auto elapsed = duration_cast<duration<float>>(now - waitStartTime).count();
+
+        if (elapsed >= waitDuration) {
+            isWaiting = false;
+            currentTarget = generateRandomTarget();  // 等完之后换目标
+        } else {
+            return;  // 等待中，不动
+        }
+    }
+
+
+    glm::vec3 currPos = npcModel->getPosition();
+
+    glm::vec3 direction = currentTarget - currPos;
+    if (glm::length(direction) < 0.05f) {
+        float random_num = static_cast <float> (rand())/ (static_cast <float> (RAND_MAX ));
+        if (random_num < 0.5 ){
+            isWaiting = true;
+        }
+        waitStartTime = std::chrono::steady_clock::now();
+        currentTarget = generateRandomTarget();  // 到达才更新
+        return;
+    }
+    
+    glm::vec3 movement = glm::normalize(direction) * speed;
+    npcModel->setBaseAndModel(glm::translate(npcModel->baseModel, movement));
+
+}
+
+glm::vec3 NPCs::generateRandomTarget() {
+    float x = -8.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (16.0f))); // [-8, 8]
+    float z = -8.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (16.0f))); // [-8, 8]
+    // std::cout<< x << "   " << z << std::endl;
+    return glm::vec3(x, 0.0f, z);
 }

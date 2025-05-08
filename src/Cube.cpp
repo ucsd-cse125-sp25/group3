@@ -359,3 +359,9 @@ void Cube::attemptGrabArtifact() {
 void Cube::setCarriedArtifact(Cube* artifact) {
     carriedArtifact = artifact;
 }
+
+void Cube::setBaseAndModel(const glm::mat4& mtx) {
+    baseModel = mtx;
+    // model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
+    model = baseModel;
+}

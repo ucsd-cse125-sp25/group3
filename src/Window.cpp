@@ -152,6 +152,7 @@ void Window::idleCallback() {
     Cam->Update(cube->getPosition());
 
     cube->update();
+    NPC->update();
 
 }
 
