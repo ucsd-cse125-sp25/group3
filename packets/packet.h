@@ -27,8 +27,11 @@ class Packet {
         unsigned int length; // size of the payload in bytes
         std::vector<char> payload;
         virtual unsigned int getSize();
+        static unsigned int getHeaderSize();
         virtual int serialize(char * data);
         virtual int deserialize(char * data);
+        virtual int deserializeHeader(char * header);
+        virtual int deserializePayload(char * data);
 };
 
 #endif

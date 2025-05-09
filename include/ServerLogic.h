@@ -12,6 +12,13 @@ enum CharacterType {
     CHARACTER_4
 };
 
+enum ClientStatus {
+    ONGOING,
+    SUCCESS,
+    DISCONNECT,
+    
+};
+
 class CubeState {
     private:
         glm::mat4 model;

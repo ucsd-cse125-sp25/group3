@@ -46,24 +46,37 @@ void ServerGame::receiveFromClients()
         std::map<unsigned int, int>::iterator iter;
     #endif
     
-    for(iter = network->sessions.begin(); iter != network->sessions.end();)
-    {
-        int data_length = network->receiveData(iter->first, network_data);
-        
-        if (data_length == 0) {
-            printf("Client %d has disconnected\n", iter->first);
-            playersData.erase(iter->first);
-            iter = network->sessions.erase(iter);
-            continue;
-        }
+    for(iter = network->sessions.begin(); iter != network->sessions.end();) {
+        ClientStatus packetsDone = ONGOING;
 
         if (playersData.find(iter->first) == playersData.end()) {
             printf("Client %d does not have associated player data\n", iter->first);
             continue;
-        }
-
+        } 
         PlayerData player = playersData[iter->first];
 
+        while (packetsDone == ONGOING) {
+            int headerSize = Packet::getHeaderSize();
+            char header[headerSize];
+            int data_length = network->receiveData(iter->first, header, headerSize);
+        
+            if (data_length == 0) {
+                printf("Client %d has disconnected\n", iter->first);
+                playersData.erase(iter->first);
+                iter = network->sessions.erase(iter);
+                packetsDone = DISCONNECT;
+                break;
+            } else if (data_length == -1) { //no packets left
+                packetsDone = SUCCESS;
+                // iter++;
+                break;
+            } 
+            Packet packet;
+            packet.deserializeHeader(header);
+            char data[packet.length];
+            data_length = network->receiveData(iter->first, data, packet.length);
+            packet.deserializePayload(data);
+            // printf("data length read: %d\n", data_length);
         // if (data_length <= 0) 
         // {
         //     player.cube.update();
@@ -72,12 +85,12 @@ void ServerGame::receiveFromClients()
         //     continue;
         // }
 
-        int i = 0;
-        while (i < data_length) 
-        {
-            Packet packet;
-            packet.deserialize(&(network_data[i]));
-            i += packet.getSize();
+            // int i = 0;
+        // while (i < data_length) 
+        // {
+            // Packet packet;
+            // packet.deserialize(&(network_data[i]));
+            // i += packet.getSize();
 
             switch (packet.packet_type) {
 
@@ -126,10 +139,12 @@ void ServerGame::receiveFromClients()
                 }
             }
         }
+        // }
         player.cube.update();
         playersData[iter->first] = player;
         sendPlayerState(iter->first);
-        iter++;
+
+        if(packetsDone == SUCCESS) iter++;
     }
     auto orig_diff = std::chrono::steady_clock::now() - start;
     auto milli_diff = std::chrono::duration_cast<std::chrono::milliseconds>(orig_diff);

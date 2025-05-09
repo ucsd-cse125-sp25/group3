@@ -92,46 +92,41 @@ void ClientGame::update()
         printf("sending key event packet\n");
         sendKeyPackets(input);
     } 
+    
+    while (true) {
+        char header[Packet::getHeaderSize()];
+        int data_length = network->receivePackets(header, Packet::getHeaderSize());
 
-    int data_length = network->receivePackets(network_data);
-
-    if (data_length > 0) {
-        int i = 0;
-
-        while (i < (unsigned int)data_length) 
-        {
-            Packet packet;
-            int bytes_read = packet.deserialize(&(network_data[i]));
-            i += bytes_read;
+        if (data_length == -1) {
+            break;
+        }
+        Packet packet;
+        packet.deserializeHeader(header);
+        char data[packet.length];
+        data_length = network->receivePackets(data, packet.length);
+        packet.deserializePayload(data);
         
-            switch (packet.packet_type) {
+        switch (packet.packet_type) {
 
-                case ACTION_EVENT:
+            case ACTION_EVENT:
+                printf("client received action event packet from server\n");
+                break;
+            case ECHO_EVENT:
+                printf("client recieved echo event packet from server\n");
+                break;
+            case STATE_UPDATE:
+                printf("client recieved state update from server\n");
+                Window::update(packet.payload.data(), packet.length);
+                // Window::render(window);
+                // Window::cube->update();
+                break;
+            default:
 
-                    printf("client received action event packet from server\n");
+                printf("error in packet types\n");
 
-                    // sendActionPackets();
-
-                    break;
-                case ECHO_EVENT:
-                    printf("client recieved echo event packet from server\n");
-                    /* printf("Client recieved: %s\n", packet.payload.data()); */
-                    break;
-                case STATE_UPDATE:
-                    printf("client recieved state update from server\n");
-                    Window::update(packet.payload.data(), packet.length);
-                    // Window::render(window);
-                    // Window::cube->update();
-                    break;
-                default:
-
-                    printf("error in packet types\n");
-
-                    break;
-            }
+                break;
         }
     }
-    
     Window::render(window);
     // Window::cube->update();
     // Window::idleCallback();

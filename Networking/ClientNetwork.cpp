@@ -147,22 +147,28 @@ ClientNetwork::ClientNetwork(void) {
     setsockopt( ConnectSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof( value ) );
 }
 
-int ClientNetwork::receivePackets(char * recvbuf) 
+int ClientNetwork::receivePackets(char * recvbuf, int bufLength) 
 {
-    iResult = NetworkServices::receiveMessage(ConnectSocket, recvbuf, MAX_PACKET_SIZE);
+    int totalRead = 0;
 
-    if ( iResult == 0 )
-    {
-        printf("Connection closed\n");
-        
-        #ifdef _WIN32
-            closesocket(ConnectSocket);
-            WSACleanup();
-        #else
-            close(ConnectSocket);
-        #endif
-        exit(1);
+    while (totalRead != bufLength) {
+        iResult = NetworkServices::receiveMessage(ConnectSocket, recvbuf + totalRead, bufLength - totalRead);
+
+        if ( iResult == 0 ) {
+            printf("Connection closed\n");
+            
+            #ifdef _WIN32
+                closesocket(ConnectSocket);
+                WSACleanup();
+            #else
+                close(ConnectSocket);
+            #endif
+            exit(1);
+        } else if (iResult < 0 && totalRead == 0) { //nothing to read
+            return iResult;
+        } else if (iResult > 0) {
+            totalRead += bufLength;
+        }
     }
-
-    return iResult;
+    return totalRead;
 }
