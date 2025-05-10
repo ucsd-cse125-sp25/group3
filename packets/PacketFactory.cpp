@@ -21,6 +21,9 @@ std::unique_ptr<Packet> PacketFactory::createFromBuffer(char* data) {
         case KEY_EVENT:
             packet = std::make_unique<KeyPacket>();
             break;
+        case STATE_UPDATE:
+            packet = std::make_unique<StateUpdatePacket>();
+            break;
         default:
             printf("Unknown packet type passed to PacketFactory: %d \n", type);
             return nullptr;

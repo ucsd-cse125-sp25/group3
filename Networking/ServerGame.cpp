@@ -5,6 +5,7 @@
 #include <chrono>
 #include <thread>
 #include <cassert>
+#include <vector>
 #define TICK 30 //in ms
 
 unsigned int ServerGame::client_id; 
@@ -145,14 +146,24 @@ void ServerGame::sendEchoPackets(std::string response) {
 }
 
 void ServerGame::sendPlayerState(unsigned int client_id) {
-    PlayerData player = playersData[client_id];
-    Packet packet;
+    PlayerData& player = playersData[client_id];
+
+    StateUpdatePacket packet;
     packet.packet_type = STATE_UPDATE;
-    player.cube.toVector(&packet.payload);
-    packet.length = packet.payload.size();
+
+    // Fill base_model_vector and state_model_vector from the cube
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            packet.base_model[i][j] = player.cube.baseModel[i][j];
+            packet.next_model[i][j] = player.cube.model[i][j];
+        }
+    }
+    packet.isInvisible = player.cube.isInvisible;
+
     const unsigned int packet_size = packet.getSize();
     char packet_data[packet_size];
     packet.serialize(packet_data);
+
     network->sendToAll(packet_data, packet_size);
     // for (int i=0; i<64; i++) {
     //     printf("elem %d: %hhx\n", i, (unsigned char) packet.payload[i]);

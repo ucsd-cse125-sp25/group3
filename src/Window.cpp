@@ -283,12 +283,10 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     Cam->SetIncline(newIncline);
 }
 
-void Window::update(char * data, size_t data_length) {
-    cube->readFromArray(data);
-    cube->isInvisible = data[data_length - 1];
-    // printf("invisible: %d\n", cube->isInvisible);
-    // printf("length: %lu\n", data_length);
+void Window::update(const StateUpdatePacket& packet) {
+    cube->updateFromPacket(packet);
 }
+
 void Window::render(GLFWwindow* window) {
     // Clear the color and depth buffers.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

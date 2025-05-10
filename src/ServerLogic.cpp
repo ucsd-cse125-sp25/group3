@@ -104,31 +104,6 @@ void CubeState::printState() {
     // }
 }
 
-void CubeState::toVector(std::vector<char>* vec) {
-    char buf[4];
-
-    for (int i=0; i<4; i++) {
-        for (int j=0; j<4; j++) {
-            // printf("elem i=%d, j=%d: %f\n", i,j,baseModel[i][j]);
-            memcpy(buf, &baseModel[i][j], sizeof(float));
-            vec->insert(vec->end(), &buf[0], &buf[4]);
-        }
-    }
-
-    for (int i=0; i<4; i++) {
-        for (int j=0; j<4; j++) {
-            // printf("elem i=%d, j=%d: %f\n", i,j,baseModel[i][j]);
-            memcpy(buf, &model[i][j], sizeof(float));
-            vec->insert(vec->end(), &buf[0], &buf[4]);
-        }
-    }
-    vec->resize(vec->size() + 1, isInvisible);
-
-    // memcpy(buf, &isInvisible, sizeof(bool));
-    // vec->insert(vec->end(), &buf[0], &buf[1]);
-    // printf("invisible: %hhu\n", vec->back());
-}
-
 void CubeState::update() {
     #ifdef __APPLE__
         gravity = -0.00005f;
@@ -159,6 +134,7 @@ void CubeState::update() {
     // printf("jump height: %f\n", jumpHeight);
     // std::cout << "model:" << std::endl;
     // std::cout << glm::to_string(model) << std::endl;
+    printState();
 }
 
 glm::vec3 CubeState::getPosition() {

@@ -69,14 +69,14 @@ void ClientGame::update()
 
         while (i < (unsigned int)data_length) 
         {
-            Packet packet;
+            StateUpdatePacket packet;
             int bytes_read = packet.deserialize(&(network_data[i]));
             i += bytes_read;
         
             switch (packet.packet_type) {
                 case STATE_UPDATE:
                     printf("client recieved state update from server\n");
-                    Window::update(packet.payload.data(), packet.length);
+                    Window::update(packet);
                     // Window::render(window);
                     // Window::cube->update();
                     break;

@@ -316,26 +316,10 @@ glm::vec3 Cube::getPosition() const {
     return glm::vec3(baseModel[3]);  // extract translation from matrix
 }
 
-void Cube::readFromArray(char * data) {
-
-    for (int i=0; i<16; i++) {
-        // for (int j=0; j<4; j++) {
-            // printf("item %d: %hhu\n", i+j,data[i+j]);
-            memcpy(&baseModel[i/4][i%4], &data[i*4], sizeof(float));
-        // }
-    }
-
-    for (int i=0; i<16; i++) {
-        memcpy(&nextModel[i/4][i%4], &data[64 + i*4], sizeof(float));
-    }
-    // std::cout << "updated model:" << std::endl;
-    // std::cout << glm::to_string(model) << std::endl;
-
-    // for (int i=0; i<4; i++) {
-    //     for (int j=0; j<4; j++) {
-    //         printf("[%d,%d]: %f\n", i, j, baseModel[i][j]);
-    //     }
-    // }
+void Cube::updateFromPacket(const StateUpdatePacket& packet) {
+    memcpy(&baseModel, packet.base_model, sizeof(packet.base_model));
+    memcpy(&nextModel, packet.next_model, sizeof(packet.next_model));
+    isInvisible = packet.isInvisible;
 }
 
 void Cube::setModel() {
