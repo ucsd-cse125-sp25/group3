@@ -255,7 +255,9 @@ void PlayerData::calculateNewPos(KeyType key) {
             cube.eWasPressed = false;
         }
     }
+}
 
-    
-    camera.Update(cube.getPosition()); 
+void PlayerData::toVector(std::vector<char> * vec) {
+    cube.toVector(vec);
+    camera.toVector(vec);
 }

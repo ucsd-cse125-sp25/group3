@@ -92,7 +92,7 @@ void ClientGame::update()
         printf("sending key event packet\n");
         sendKeyPackets(input);
     } 
-    
+
     while (true) {
         char header[Packet::getHeaderSize()];
         int data_length = network->receivePackets(header, Packet::getHeaderSize());
@@ -116,6 +116,7 @@ void ClientGame::update()
                 break;
             case STATE_UPDATE:
                 printf("client recieved state update from server\n");
+                // printf("payload size: %d\n", packet.length);
                 Window::update(packet.payload.data(), packet.length);
                 // Window::render(window);
                 // Window::cube->update();
@@ -128,6 +129,8 @@ void ClientGame::update()
         }
     }
     Window::render(window);
+    // Window::updateRest(packet.payload.data());
+    // Window::applyRest(packet.payload.data(), , packet.length);
     // Window::cube->update();
     // Window::idleCallback();
 }

@@ -36,7 +36,13 @@ public:
 
     glm::vec3 GetForwardVector() const;
 
+    void toVector(std::vector<char> * vec);
+    int readFromArray(char * data);
+    void applyUpdates();
+
 private:
+    char updatedVals[88];
+
     // Perspective controls
     float FOV;       // Field of View Angle (degrees)
     float Aspect;    // Aspect Ratio

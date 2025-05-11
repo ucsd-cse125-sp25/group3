@@ -73,6 +73,7 @@ class PlayerData {
         // ~PlayerData();
         void calculateNewPos(KeyType key);
         void setCharacter(CharacterType character);
+        void toVector(std::vector<char> * vec);
 };
 
 void init();

@@ -140,7 +140,9 @@ void ServerGame::receiveFromClients()
             }
         }
         // }
+        player.camera.Update(player.cube.getPosition()); 
         player.cube.update();
+        
         playersData[iter->first] = player;
         sendPlayerState(iter->first);
 
@@ -182,11 +184,14 @@ void ServerGame::sendEchoPackets(std::string response) {
     // network->sendToAll(packet_data, packet_size);
 }
 
+//cube baseModel, model
+//then camera floats
 void ServerGame::sendPlayerState(unsigned int client_id) {
     PlayerData player = playersData[client_id];
     Packet packet;
     packet.packet_type = STATE_UPDATE;
-    player.cube.toVector(&packet.payload);
+    player.toVector(&packet.payload);
+    // player.cube.toVector(&packet.payload);
     packet.length = packet.payload.size();
     const unsigned int packet_size = packet.getSize();
     char packet_data[packet_size];

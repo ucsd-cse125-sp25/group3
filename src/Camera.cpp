@@ -79,3 +79,67 @@ glm::vec3 Camera::GetForwardVector() const {
     return glm::normalize(Center - Eye);  
 }
 
+//viewProjMatrix, eye, center
+void Camera::toVector(std::vector<char>* vec) {
+    char buf[4];
+
+    for (int i=0; i<4; i++) {
+        for (int j=0; j<4; j++) {
+            // printf("elem i=%d, j=%d: %f\n", i,j,baseModel[i][j]);
+            memcpy(buf, &ViewProjectMtx[i][j], sizeof(float));
+            vec->insert(vec->end(), &buf[0], &buf[4]);
+        }
+    }
+
+    for (int i=0; i<3; i++) {
+        memcpy(buf, &Eye[i], sizeof(float));
+        vec->insert(vec->end(), &buf[0], &buf[4]);
+    }
+
+    for (int i=0; i<3; i++) {
+        memcpy(buf, &Center[i], sizeof(float));
+        vec->insert(vec->end(), &buf[0], &buf[4]);
+    }
+}
+
+int Camera::readFromArray(char * data) {
+    int totalBytes = 0;
+
+    for (int i=0; i<(16+3+3); i++) {
+        memcpy(&updatedVals[i*4], &data[i*4], sizeof(float));
+        totalBytes += sizeof(float);
+    }
+    // for (int i=0; i<16; i++) {
+    //     memcpy(&ViewProjectMtx[i/4][i%4], &data[i*4], sizeof(float));
+    //     totalBytes += sizeof(float);
+    // }
+
+    // for (int i=0; i<3; i++) {
+    //     memcpy(&Eye[i], &data[sizeof(ViewProjectMtx) + i*4], sizeof(float));
+    //     totalBytes += sizeof(float);
+    // }
+
+    // for (int i=0; i<3; i++) {
+    //     memcpy(&Center[i], &data[sizeof(ViewProjectMtx) + sizeof(Eye) + i*4], sizeof(float));
+    //     totalBytes += sizeof(float);
+    // }
+    return totalBytes;
+}
+
+void Camera::applyUpdates() {
+    for (int i=0; i<16; i++) {
+        memcpy(&ViewProjectMtx[i/4][i%4], &updatedVals[i*4], sizeof(float));
+        // totalBytes += sizeof(float);
+    }
+
+    for (int i=0; i<3; i++) {
+        memcpy(&Eye[i], &updatedVals[sizeof(ViewProjectMtx) + i*4], sizeof(float));
+        // totalBytes += sizeof(float);
+    }
+
+    for (int i=0; i<3; i++) {
+        memcpy(&Center[i], &updatedVals[sizeof(ViewProjectMtx) + sizeof(Eye) + i*4], sizeof(float));
+        // totalBytes += sizeof(float);
+    }
+}
+

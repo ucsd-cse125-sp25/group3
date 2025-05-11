@@ -284,8 +284,10 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
 }
 
 void Window::update(char * data, size_t data_length) {
-    cube->readFromArray(data);
-    cube->isInvisible = data[data_length - 1];
+    int offset = cube->readFromArray(data);
+    // printf("offset: %d\n", offset);
+    Cam->readFromArray(&data[offset]);
+    // cube->isInvisible = data[2 * sizeof(cube->baseModel)];
     // printf("invisible: %d\n", cube->isInvisible);
     // printf("length: %lu\n", data_length);
 }
@@ -301,6 +303,11 @@ void Window::render(GLFWwindow* window) {
     // glfwPollEvents();
     // Swap buffers.
     glfwSwapBuffers(window);
-    Cam->Update(cube->getPosition());
+    // Cam->Update(cube->getPosition());
+    Cam->applyUpdates();
     cube->setModel();
 }
+
+// void updateRest() {
+    
+// }
