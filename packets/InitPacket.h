@@ -17,9 +17,9 @@ public:
 
     unsigned int getSize() override;
 
-    int serialize(char* data) override;
+    int serializePayload(char* data) override;
 
-    int deserialize(char* data) override;
+    int deserializePayload(char* data) override;
 };
 
 #endif

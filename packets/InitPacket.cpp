@@ -5,17 +5,11 @@ InitPacket::InitPacket(){
 }
 
 unsigned int InitPacket::getSize() {
-    return sizeof(packet_type) + sizeof(length) + sizeof(character);
+    return getHeaderSize() + length;
 }
 
-int InitPacket::serialize(char* data) {
-    unsigned int offset = 0;
-
-    std::memcpy(data + offset, &packet_type, sizeof(packet_type));
-    offset += sizeof(packet_type);
-
-    std::memcpy(data + offset, &length, sizeof(length));
-    offset += sizeof(length);
+int InitPacket::serializePayload(char* data) {
+    unsigned int offset = getHeaderSize();
 
     std::memcpy(data + offset, &character, sizeof(character));
     offset += sizeof(character);
@@ -23,14 +17,8 @@ int InitPacket::serialize(char* data) {
     return offset;
 }
 
-int InitPacket::deserialize(char* data) {
-    unsigned int offset = 0;
-
-    std::memcpy(&packet_type, data + offset, sizeof(packet_type));
-    offset += sizeof(packet_type);
-
-    std::memcpy(&length, data + offset, sizeof(length));
-    offset += sizeof(length);
+int InitPacket::deserializePayload(char* data) {
+    unsigned int offset = getHeaderSize();
 
     std::memcpy(&character, data + offset, sizeof(character));
     offset += sizeof(character);

@@ -5,17 +5,11 @@ KeyPacket::KeyPacket(){
 }
 
 unsigned int KeyPacket::getSize() {
-    return sizeof(packet_type) + sizeof(length) + sizeof(key_type);
+    return getHeaderSize() + length;
 }
 
-int KeyPacket::serialize(char* data) {
-    unsigned int offset = 0;
-
-    std::memcpy(data + offset, &packet_type, sizeof(packet_type));
-    offset += sizeof(packet_type);
-
-    std::memcpy(data + offset, &length, sizeof(length));
-    offset += sizeof(length);
+int KeyPacket::serializePayload(char* data) {
+    unsigned int offset = getHeaderSize();
 
     std::memcpy(data + offset, &key_type, sizeof(key_type));
     offset += sizeof(key_type);
@@ -23,14 +17,8 @@ int KeyPacket::serialize(char* data) {
     return offset;
 }
 
-int KeyPacket::deserialize(char* data) {
-    unsigned int offset = 0;
-
-    std::memcpy(&packet_type, data + offset, sizeof(packet_type));
-    offset += sizeof(packet_type);
-
-    std::memcpy(&length, data + offset, sizeof(length));
-    offset += sizeof(length);
+int KeyPacket::deserializePayload(char* data) {
+    unsigned int offset = getHeaderSize();
 
     std::memcpy(&key_type, data + offset, sizeof(key_type));
     offset += sizeof(key_type);
