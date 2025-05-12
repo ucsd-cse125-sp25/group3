@@ -30,4 +30,7 @@ public:
 
     void draw(const glm::mat4& viewProjMtx, GLuint shader);
     void update();
+
+    void handleInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir);
+
 };
