@@ -67,7 +67,7 @@ int main() {
         return -1;
     }
     
-    
+    glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
 
     GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Re-enter the Museum", nullptr, nullptr);
     if (!window) {
@@ -85,7 +85,20 @@ int main() {
         return -1;
     }
 
-    glViewport(0, 0, windowWidth, windowHeight);
+
+     #ifdef __APPLE__
+        int fbWidth, fbHeight;
+        glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+        glViewport(0, 0, fbWidth, fbHeight);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(0, fbWidth, fbHeight, 0, -1, 1);
+    #else
+        glViewport(0, 0, windowWidth, windowHeight);  
+    #endif
+
+
+    
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0, windowWidth, windowHeight, 0, -1, 1);
