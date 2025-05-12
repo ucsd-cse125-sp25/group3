@@ -98,9 +98,17 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
                 pendingPackets.push_back(packet);
                 break;
             }
-            // case GLFW_KEY_R:
-            //     resetCamera();
-            //     break;
+            case GLFW_KEY_R: {
+                // resetCamera();
+                Packet packet;
+                KeyType keyType = KeyType::KEY_R;
+                packet.packet_type = KEY_EVENT;
+                packet.payload.resize(1);
+                memcpy(packet.payload.data(), &keyType, sizeof(keyType));
+                packet.length = packet.payload.size();
+                pendingPackets.push_back(packet);
+                break;
+            }
             case GLFW_KEY_SPACE: {
                 Packet packet;
                 KeyType keyType = KeyType::KEY_SPACE;

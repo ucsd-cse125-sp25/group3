@@ -112,6 +112,8 @@ GLFWwindow* Window::createWindow(int width, int height) {
         glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
         glViewport(0, 0, fbWidth, fbHeight);
         Cam->SetAspect(float(fbWidth) / float(fbHeight));
+        Window::width = fbWidth;
+        Window::height = fbHeight;
     #else
         // Windows or others: Use default logic-pixel-based callback
         Window::resizeCallback(window, width, height);
@@ -256,6 +258,7 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     
     static float lastX = Window::width / 2.0f;
     static float lastY = Window::height / 2.0f;
+    printf("width: %d, height: %d\n", Window::width, Window::height);
     float sensitivity = 0.1f;
 
     if (firstMouse) {

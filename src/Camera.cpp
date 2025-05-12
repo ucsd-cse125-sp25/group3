@@ -79,7 +79,7 @@ glm::vec3 Camera::GetForwardVector() const {
     return glm::normalize(Center - Eye);  
 }
 
-//viewProjMatrix, eye, center, azimuth, incline
+//viewProjMatrix, eye, center, azimuth, incline, aspect
 void Camera::toVector(std::vector<char>* vec) {
     char buf[4];
 
@@ -104,12 +104,14 @@ void Camera::toVector(std::vector<char>* vec) {
     vec->insert(vec->end(), &buf[0], &buf[4]);
     memcpy(buf, &Incline, sizeof(float));
     vec->insert(vec->end(), &buf[0], &buf[4]);
+    memcpy(buf, &Aspect, sizeof(float));
+    vec->insert(vec->end(), &buf[0], &buf[4]);
 }
 
 int Camera::readFromArray(char * data) {
     int totalBytes = 0;
 
-    for (int i=0; i<(16+3+3+2); i++) {
+    for (int i=0; i<(16+3+3+3); i++) {
         memcpy(&updatedVals[i*4], &data[i*4], sizeof(float));
         totalBytes += sizeof(float);
     }
@@ -153,5 +155,7 @@ void Camera::applyUpdates() {
     memcpy(&Azimuth, &updatedVals[offset], sizeof(float));
     offset += sizeof(Azimuth);
     memcpy(&Incline, &updatedVals[offset], sizeof(float));
+    offset += sizeof(Incline);
+    memcpy(&Aspect, &updatedVals[offset], sizeof(float));
 }
 

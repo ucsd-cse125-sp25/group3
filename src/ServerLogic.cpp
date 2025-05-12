@@ -202,6 +202,10 @@ void PlayerData::calculateNewPos(KeyType key) {
         cube.baseModel = glm::translate(cube.baseModel, movement);
     }
 
+    if (key == KeyType::KEY_R) {
+        resetCamera();
+    }
+
     if (key == KeyType::KEY_SPACE) {
         // printf("JUMPING\n");
         if (cube.isGrounded) {
@@ -297,4 +301,9 @@ void PlayerData::handleCursor(double currX, double currY) {
 
     camera.SetAzimuth(newAzimuth);
     camera.SetIncline(newIncline);
+}
+
+void PlayerData::resetCamera() {
+    camera.Reset();
+    camera.SetAspect(float(windowWidth) / float(windowHeight));
 }

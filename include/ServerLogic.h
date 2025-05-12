@@ -79,6 +79,7 @@ class PlayerData {
         void setCharacter(CharacterType character);
         void toVector(std::vector<char> * vec);
         void handleCursor(double currX, double currY);
+        void resetCamera();
 };
 
 void init();

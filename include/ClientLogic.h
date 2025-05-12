@@ -21,6 +21,7 @@ enum class KeyType: uint8_t {
     KEY_E = 9,
     KEY_SPACE = 10,
     KEY_ESC = 11,
+    KEY_R = 12,
 };
 #endif
 
