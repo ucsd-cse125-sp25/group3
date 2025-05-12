@@ -65,6 +65,8 @@ void Window::cleanUp() {
 // for the Window
 GLFWwindow* Window::createWindow(int width, int height) {
     // Initialize GLFW.
+    
+
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
         return NULL;
@@ -82,6 +84,16 @@ GLFWwindow* Window::createWindow(int width, int height) {
     #endif
 
     GLFWwindow* window = glfwCreateWindow(width, height, windowTitle, NULL, NULL);
+
+    #ifdef __APPLE__
+        int fbWidth, fbHeight;
+        glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+        Window::width = fbWidth;
+        Window::height = fbHeight;
+    #else
+        Window::width = width;
+        Window::height = height;
+    #endif
 
     // Check if the window could not be created.
     if (!window) {
@@ -116,7 +128,6 @@ GLFWwindow* Window::createWindow(int width, int height) {
     // Call the resize callback to make sure things get drawn immediately.
     #ifdef __APPLE__
         // macOS: Use framebuffer size to handle Retina displays correctly
-        int fbWidth, fbHeight;
         glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
         glViewport(0, 0, fbWidth, fbHeight);
         Cam->SetAspect(float(fbWidth) / float(fbHeight));
@@ -280,6 +291,7 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     
     static float lastX = Window::width / 2.0f;
     static float lastY = Window::height / 2.0f;
+    std::cout << Window::width << std::endl;
 
     float sensitivity = 0.1f;
 
