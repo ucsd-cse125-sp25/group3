@@ -264,10 +264,13 @@ void PlayerData::calculateNewPos(KeyType key) {
 void PlayerData::toVector(std::vector<char> * vec) {
     cube.toVector(vec);
     camera.toVector(vec);
+    miniMapCam.toVector(vec); //only need to send viewProjMtx for miniMapCam
 }
 
 void PlayerData::init(char * data) {
     firstMouse = true;
+    miniMapCam.SetOrtho(-10, 10, -10, 10, 0.1f, 100.0f); 
+    miniMapCam.SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
     memcpy(&cube.type, data, sizeof(int));
     memcpy(&windowWidth, &data[sizeof(int)], sizeof(int));
     memcpy(&windowHeight, &data[2 * sizeof(int)], sizeof(int));

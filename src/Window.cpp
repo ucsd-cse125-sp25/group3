@@ -258,7 +258,7 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     
     static float lastX = Window::width / 2.0f;
     static float lastY = Window::height / 2.0f;
-    printf("width: %d, height: %d\n", Window::width, Window::height);
+    
     float sensitivity = 0.1f;
 
     if (firstMouse) {
@@ -284,10 +284,11 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     Cam->SetIncline(newIncline);
 }
 
-void Window::update(char * data, size_t data_length) {
+void Window::saveServerState(char * data, size_t data_length) {
     int offset = cube->readFromArray(data);
     // printf("offset: %d\n", offset);
-    Cam->readFromArray(&data[offset]);
+    offset += Cam->readFromArray(&data[offset]);
+    MiniMapCam->readFromArray(&data[offset]);
     // cube->isInvisible = data[2 * sizeof(cube->baseModel)];
     // printf("invisible: %d\n", cube->isInvisible);
     // printf("length: %lu\n", data_length);
@@ -297,8 +298,28 @@ void Window::render(GLFWwindow* window) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Render the object.
+    #ifdef __APPLE__
+        int fbWidth, fbHeight;
+        glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+        glViewport(0, 0, fbWidth, fbHeight);
+    #else
+        glViewport(0, 0, Window::width, Window::height);
+    #endif
     cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
     floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
+
+    int miniMapSize = 256;
+    //glViewport(0, Window::height - miniMapSize, miniMapSize, miniMapSize); 
+    #ifdef __APPLE__
+        glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+        glViewport(0, fbHeight - miniMapSize, miniMapSize, miniMapSize); 
+    #else
+        glViewport(0, Window::height - miniMapSize, miniMapSize, miniMapSize); 
+    #endif
+    glm::mat4 viewProj_miniMap = MiniMapCam->GetViewProjectMtx();
+    cube->draw(viewProj_miniMap, Window::shaderProgram, false);
+    floor->draw(viewProj_miniMap, Window::shaderProgram, true);
+
 
     // Gets events, including input such as keyboard and mouse or window resizing.
     // glfwPollEvents();
@@ -306,6 +327,7 @@ void Window::render(GLFWwindow* window) {
     glfwSwapBuffers(window);
     // Cam->Update(cube->getPosition());
     Cam->applyUpdates();
+    MiniMapCam->applyUpdates();
     cube->setModel();
 }
 

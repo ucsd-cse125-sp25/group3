@@ -146,7 +146,7 @@ void ClientGame::update()
             case STATE_UPDATE:
                 printf("client recieved state update from server\n");
                 // printf("payload size: %d\n", packet.length);
-                Window::update(packet.payload.data(), packet.length);
+                Window::saveServerState(packet.payload.data(), packet.length);
                 // Window::render(window);
                 // Window::cube->update();
                 break;

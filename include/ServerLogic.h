@@ -69,6 +69,7 @@ class PlayerData {
     public:
         CubeState cube;
         Camera camera;
+        Camera miniMapCam;
         int windowWidth;
         int windowHeight;
         bool firstMouse;

@@ -81,7 +81,7 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
 
         // if (key == GLFW_KEY_LEFT_ALT || key == GLFW_KEY_RIGHT_ALT) 
         // {
-        //     altDown = true;
+            // altDown = true;
         //     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); // 显示鼠标
         // }
 
@@ -152,5 +152,4 @@ void client_logic::cursor_callback(GLFWwindow* window, double currX, double curr
     // packet.payload.resize(packet.payload.size() + 1, Window::firstMouse);
     packet.length = packet.payload.size();
     pendingPackets.push_back(packet);
-    printf("X: %f, Y: %f\n", currX, currY);
 }
