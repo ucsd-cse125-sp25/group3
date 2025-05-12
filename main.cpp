@@ -1,167 +1,145 @@
-#include "Window.h"
-#include "core.h"
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <iostream>
+#include "include/window.h"
+#include "include/character.h"
+#include "stb_image.h"
+#include <vector>
 
 
-GameState currentState = START_MENU;
+int windowWidth = 0;
+int windowHeight = 0;
 
-void error_callback(int error, const char* description) {
-    std::cerr << description << std::endl;
-}
+Character* player = nullptr;
+GLuint backgroundTex = 0;
 
-void setup_callbacks(GLFWwindow* window) {
-    glfwSetErrorCallback(error_callback);
-    glfwSetWindowSizeCallback(window, Window::resizeCallback);
-    glfwSetKeyCallback(window, Window::keyCallback);
-    glfwSetMouseButtonCallback(window, Window::mouse_callback);
-    glfwSetCursorPosCallback(window, Window::cursor_callback);
-}
+//for platforms
+GLuint platformTex = 0;
+std::vector<Platform> platforms;
 
-void setup_opengl_settings() {
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-}
-
-void print_versions() {
-    std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
-    std::cout << "OpenGL version supported: " << glGetString(GL_VERSION) << std::endl;
-
-#ifdef GL_SHADING_LANGUAGE_VERSION
-    std::cout << "Supported GLSL version is: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
-#endif
-}
-
-int main(void) {
-    GLFWwindow* window = Window::createWindow(800, 600);
-    if (!window) exit(EXIT_FAILURE);
-
-    print_versions();
-    setup_callbacks(window);
-    setup_opengl_settings();
-
-    if (!Window::initializeProgram()) exit(EXIT_FAILURE);
-    if (!Window::initializeObjects()) exit(EXIT_FAILURE);
-
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
-
-    static int selectedCharacter = 0;
-
-    while (!glfwWindowShouldClose(window)) {
-        glfwPollEvents();
-
-        // Set background based on game state
-        if (currentState == START_MENU) {
-            glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Fully black
-        }
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        Window::displayCallback(window);
-
-        // ----- START MENU -----
-        if (currentState == START_MENU) {
-            ImVec2 windowSize = io.DisplaySize;
-
-            ImGui::SetNextWindowPos(ImVec2(0, 0));
-            ImGui::SetNextWindowSize(windowSize);
-
-            ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar |
-                                            ImGuiWindowFlags_NoResize |
-                                            ImGuiWindowFlags_NoMove |
-                                            ImGuiWindowFlags_NoCollapse |
-                                            ImGuiWindowFlags_NoBringToFrontOnFocus |
-                                            ImGuiWindowFlags_NoBackground;
-
-            ImGui::Begin("StartMenu", nullptr, window_flags);
-
-            float centerX = windowSize.x * 0.5f;
-            float centerY = windowSize.y * 0.5f;
-
-            ImGui::SetCursorPos(ImVec2(centerX - 100, centerY - 100));
-            ImGui::Text("Welcome to Heist of the Museum!");
-
-            ImGui::SetCursorPos(ImVec2(centerX - 50, centerY - 40));
-            if (ImGui::Button("Start Game", ImVec2(100, 40))) {
-                currentState = CHARACTER_SELECTION;
-            }
-
-            ImGui::SetCursorPos(ImVec2(centerX - 50, centerY + 10));
-            if (ImGui::Button("Quit", ImVec2(100, 40))) {
-                glfwSetWindowShouldClose(window, true);
-            }
-
-            ImGui::End();
-        }
-
-        // ----- CHARACTER SELECTION -----
-        else if (currentState == CHARACTER_SELECTION) {
-            ImGui::Begin("Select Your Character");
-
-            if (ImGui::RadioButton("Thief", selectedCharacter == 0)) selectedCharacter = 0;
-            if (ImGui::RadioButton("Guard", selectedCharacter == 1)) selectedCharacter = 1;
-            if (ImGui::RadioButton("Something", selectedCharacter == 2)) selectedCharacter = 2;
-
-            if (ImGui::Button("Start Game")) {
-                currentState = PLAYING;
-                // Optionally: setupCharacter(selectedCharacter);
-            }
-
-            ImGui::End();
-
-            if (Window::cube != nullptr) {
-                switch (selectedCharacter) {
-                    case 1: Window::cube->type = Cube::CHARACTER_1; break;
-                    case 2: Window::cube->type = Cube::CHARACTER_2; break;
-                    case 3: Window::cube->type = Cube::CHARACTER_3; break;
-                    case 4: Window::cube->type = Cube::CHARACTER_4; break;
-                    default: Window::cube->type = Cube::CHARACTER_1; break;
-                }
-            }
-        }
-
-        // ----- MAIN GAME -----
-        else {
-            ImGui::Begin("Tool Bar");
-
-            const char* abilities[] = { "None", "Invisibility", "Speed Up" };
-            static int currentSelection = 0;
-
-            if (ImGui::Combo("Select Ability", &currentSelection, abilities, IM_ARRAYSIZE(abilities))) {
-                Window::currentAbility = static_cast<AbilityType>(currentSelection);
-            }
-
-            ImGui::End();
-        }
-
-        // Update objects
-        Window::idleCallback();
-
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        glfwSwapBuffers(window);
+GLuint loadTexture(const char* path) {
+    int width, height, channels;
+    unsigned char* data = stbi_load(path, &width, &height, &channels, 4);
+    if (!data) {
+        std::cerr << "Failed to load texture: " << path << std::endl;
+        return 0;
     }
 
-    // Cleanup
-    Window::cleanUp();
+    GLuint tex;
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    stbi_image_free(data);
+    return tex;
+}
+
+void renderQuad(GLuint texture, float x, float y, float width, float height) {
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0); glVertex2f(x, y);
+    glTexCoord2f(1, 0); glVertex2f(x + width, y);
+    glTexCoord2f(1, 1); glVertex2f(x + width, y + height);
+    glTexCoord2f(0, 1); glVertex2f(x, y + height);
+    glEnd();
+}
+
+int main() {
+
+    int bgWidth, bgHeight, channels;
+    unsigned char* bgData = stbi_load("assets/background.png", &bgWidth, &bgHeight, &channels, 4);
+    if (!bgData) {
+        std::cerr << "Failed to load background image!" << std::endl;
+        return -1;
+    }
+    stbi_image_free(bgData);
+    windowWidth = bgWidth;
+    windowHeight = bgHeight;
+
+    if (!glfwInit()) 
+    {
+        std::cerr << "Failed to initialize GLFW" << std::endl;
+        return -1;
+    }
+    
+    
+
+    GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Re-enter the Museum", nullptr, nullptr);
+    if (!window) {
+        glfwTerminate();
+        return -1;
+    }
+    glfwMakeContextCurrent(window);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glewExperimental = GL_TRUE;
+    if (glewInit() != GLEW_OK) {
+        std::cerr << "Failed to initialize GLEW" << std::endl;
+        return -1;
+    }
+
+    glViewport(0, 0, windowWidth, windowHeight);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, windowWidth, windowHeight, 0, -1, 1);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    backgroundTex = loadTexture("assets/background.png");
+
+    int charW, charH, ch;
+    unsigned char* data = stbi_load("assets/thief1_right.png", &charW, &charH, &ch, 4);
+    if (!data) {
+        std::cerr << "Failed to load texture to get size!\n";
+        return -1;
+    }
+    stbi_image_free(data);
+
+    float scale = 1.0f / 4.0f;
+    float drawW = charW * scale;
+    float drawH = charH * scale;
+
+    float posX = windowWidth - drawW;
+    float posY = windowHeight - drawH;
+
+    player = new Character(posX, posY, "assets/thief1_right.png", "assets/thief1_left.png");
+
+    platforms.emplace_back(270, 1552, 170, 27, platformTex);//1
+    platforms.emplace_back(0, 1350, 220, 27, platformTex);//2
+    platforms.emplace_back(0, 1452, 300, 27, platformTex);//3
+    platforms.emplace_back(360, 1102, 285, 40, platformTex);//4
+    platforms.emplace_back(990, 970, 428, 44, platformTex);//5
+    platforms.emplace_back(1550, 1165, 330, 45, platformTex);//6
+    platforms.emplace_back(2100, 850, 260, 45, platformTex);//7
+    platforms.emplace_back(488, 685, 330, 40, platformTex);//8
+    platforms.emplace_back(1148, 505, 400, 43, platformTex);//9
+    platforms.emplace_back(1850, 470, 400, 30, platformTex);//10
+    
+
+
+    while (!glfwWindowShouldClose(window)) {
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        renderQuad(backgroundTex, 0, 0, windowWidth, windowHeight);
+        player->handleInput(window);
+        player->update(1.0f / 60.0f, windowHeight, windowWidth, platforms);
+        player->draw();
+        for (const auto& p : platforms)
+            p.draw();
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    delete player;
     glfwDestroyWindow(window);
     glfwTerminate();
-
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-
-    exit(EXIT_SUCCESS);
+    return 0;
 }

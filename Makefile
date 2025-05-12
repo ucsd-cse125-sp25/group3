@@ -1,38 +1,18 @@
-# Compiler and flags
 CXX = g++
-CXXFLAGS = -std=c++11 -pthread -Wall -Wextra
-OBJDIR = obj
-BINDIR = Networking
+CXXFLAGS = -std=c++17 -Iinclude -I/opt/homebrew/include
+LDFLAGS = -L/opt/homebrew/lib -lglfw -lGLEW -framework OpenGL
 
-# Source files (all in Networking/)
-SRCS = \
-	Networking/ClientGame.cpp \
-	Networking/ClientNetwork.cpp \
-	Networking/NetworkServices.cpp \
-	Networking/ServerGame.cpp \
-	Networking/ServerNetwork.cpp \
-	Networking/server.cpp \
-	Networking/client.cpp
+SRCS = main.cpp src/window.cpp src/character.cpp src/stb_image_impl.cpp src/platform.o
+OBJS = $(SRCS:.cpp=.o)
+TARGET = game
 
-# Object files (placed in obj/)
-OBJS = $(SRCS:Networking/%.cpp=$(OBJDIR)/%.o)
+all: $(TARGET)
 
-# Targets: server and client executables
-all: $(BINDIR)/server $(BINDIR)/client
+$(TARGET): $(OBJS)
+	$(CXX) -o $@ $^ $(LDFLAGS)
 
-# Server executable
-$(BINDIR)/server: $(OBJDIR)/server.o $(OBJDIR)/ServerNetwork.o $(OBJDIR)/NetworkServices.o $(OBJDIR)/ServerGame.o
-	$(CXX) $^ -o $@ $(CXXFLAGS)
-
-# Client executable
-$(BINDIR)/client: $(OBJDIR)/client.o $(OBJDIR)/ClientGame.o $(OBJDIR)/ClientNetwork.o $(OBJDIR)/NetworkServices.o $(OBJDIR)/ServerNetwork.o
-	$(CXX) $^ -o $@ $(CXXFLAGS)
-
-# Rule for object files (with path adjustment)
-$(OBJDIR)/%.o: Networking/%.cpp
-	@mkdir -p $(OBJDIR)
-	$(CXX) -c $< -o $@ $(CXXFLAGS)
-
-# Clean rule
 clean:
-	rm -rf $(OBJDIR)/*.o $(BINDIR)/server $(BINDIR)/client
+	rm -f *.o src/*.o $(TARGET)
+
+run:
+	./$(TARGET)
