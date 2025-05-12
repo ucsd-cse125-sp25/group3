@@ -79,11 +79,19 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
 
     if (action == GLFW_PRESS) {
 
-        // if (key == GLFW_KEY_LEFT_ALT || key == GLFW_KEY_RIGHT_ALT) 
-        // {
+        if (key == GLFW_KEY_LEFT_ALT || key == GLFW_KEY_RIGHT_ALT) 
+        {
             // altDown = true;
-        //     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); // 显示鼠标
-        // }
+            // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); // 显示鼠标
+            Packet packet;
+            KeyType keyType = KeyType::KEY_ALT_PRESS;
+            packet.packet_type = KEY_EVENT;
+            packet.payload.resize(1);
+            memcpy(packet.payload.data(), &keyType, sizeof(keyType));
+            packet.length = packet.payload.size();
+            pendingPackets.push_back(packet);
+
+        }
 
         switch (key) 
         {
@@ -130,15 +138,22 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
                 break;
         }
     }
-    // else if (action == GLFW_RELEASE)
-    // {
-    //     if (key == GLFW_KEY_LEFT_ALT || key == GLFW_KEY_RIGHT_ALT) 
-    //     {
-    //         altDown = false;
-    //         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    //         firstMouse = true;
-    //     }
-    // }
+    else if (action == GLFW_RELEASE)
+    {
+        if (key == GLFW_KEY_LEFT_ALT || key == GLFW_KEY_RIGHT_ALT) 
+        {
+            // altDown = false;
+            // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            // firstMouse = true;
+            Packet packet;
+            KeyType keyType = KeyType::KEY_ALT_RELEASE;
+            packet.packet_type = KEY_EVENT;
+            packet.payload.resize(1);
+            memcpy(packet.payload.data(), &keyType, sizeof(keyType));
+            packet.length = packet.payload.size();
+            pendingPackets.push_back(packet);
+        }
+    }
 }
 
 void client_logic::cursor_callback(GLFWwindow* window, double currX, double currY) {

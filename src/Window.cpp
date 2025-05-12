@@ -93,12 +93,12 @@ GLFWwindow* Window::createWindow(int width, int height) {
 
     // set up the camera
     Cam = new Camera();
-    Cam->SetAspect(float(width) / float(height));
+    // Cam->SetAspect(float(width) / float(height));
 
     //for minimap
     MiniMapCam = new Camera();
-    MiniMapCam->SetOrtho(-10, 10, -10, 10, 0.1f, 100.0f); 
-    MiniMapCam->SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
+    // MiniMapCam->SetOrtho(-10, 10, -10, 10, 0.1f, 100.0f); 
+    // MiniMapCam->SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
 
 
     // initialize the interaction variables
@@ -111,7 +111,7 @@ GLFWwindow* Window::createWindow(int width, int height) {
         int fbWidth, fbHeight;
         glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
         glViewport(0, 0, fbWidth, fbHeight);
-        Cam->SetAspect(float(fbWidth) / float(fbHeight));
+        // Cam->SetAspect(float(fbWidth) / float(fbHeight));
         Window::width = fbWidth;
         Window::height = fbHeight;
     #else
@@ -284,11 +284,13 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     Cam->SetIncline(newIncline);
 }
 
-void Window::saveServerState(char * data, size_t data_length) {
+void Window::applyServerState(char * data, size_t data_length) {
     int offset = cube->readFromArray(data);
     // printf("offset: %d\n", offset);
     offset += Cam->readFromArray(&data[offset]);
-    MiniMapCam->readFromArray(&data[offset]);
+    offset += MiniMapCam->readFromArray(&data[offset]);
+    // bool newAltState;
+    memcpy(&altDown, &data[offset], sizeof(bool));
     // cube->isInvisible = data[2 * sizeof(cube->baseModel)];
     // printf("invisible: %d\n", cube->isInvisible);
     // printf("length: %lu\n", data_length);
@@ -329,6 +331,12 @@ void Window::render(GLFWwindow* window) {
     Cam->applyUpdates();
     MiniMapCam->applyUpdates();
     cube->setModel();
+
+    if (altDown) {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    } else {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
 }
 
 // void updateRest() {

@@ -206,6 +206,13 @@ void PlayerData::calculateNewPos(KeyType key) {
         resetCamera();
     }
 
+    if (key == KeyType::KEY_ALT_PRESS) {
+        altDown = true;
+    } else if (key == KeyType::KEY_ALT_RELEASE) {
+        altDown = false;
+        firstMouse = true;
+    }
+
     if (key == KeyType::KEY_SPACE) {
         // printf("JUMPING\n");
         if (cube.isGrounded) {
@@ -265,10 +272,12 @@ void PlayerData::toVector(std::vector<char> * vec) {
     cube.toVector(vec);
     camera.toVector(vec);
     miniMapCam.toVector(vec); //only need to send viewProjMtx for miniMapCam
+    vec->resize(vec->size() + 1, altDown);
 }
 
 void PlayerData::init(char * data) {
     firstMouse = true;
+    altDown = false;
     miniMapCam.SetOrtho(-10, 10, -10, 10, 0.1f, 100.0f); 
     miniMapCam.SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
     memcpy(&cube.type, data, sizeof(int));
@@ -279,6 +288,9 @@ void PlayerData::init(char * data) {
 
 void PlayerData::handleCursor(double currX, double currY) {
 
+    if (altDown) {
+        return;
+    }
     static float lastX = windowWidth / 2.0f;
     static float lastY = windowHeight / 2.0f;
     float sensitivity = 0.1f;

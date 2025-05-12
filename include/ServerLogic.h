@@ -73,6 +73,7 @@ class PlayerData {
         int windowWidth;
         int windowHeight;
         bool firstMouse;
+        bool altDown;
         // PlayerData();
         // ~PlayerData();
         void init(char * data);
