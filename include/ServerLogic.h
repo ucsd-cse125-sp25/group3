@@ -69,11 +69,16 @@ class PlayerData {
     public:
         CubeState cube;
         Camera camera;
+        int windowWidth;
+        int windowHeight;
+        bool firstMouse;
         // PlayerData();
         // ~PlayerData();
+        void init(char * data);
         void calculateNewPos(KeyType key);
         void setCharacter(CharacterType character);
         void toVector(std::vector<char> * vec);
+        void handleCursor(double currX, double currY);
 };
 
 void init();

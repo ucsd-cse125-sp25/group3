@@ -17,7 +17,11 @@ enum PacketTypes {
 
     KEY_EVENT = 3,
 
-    STATE_UPDATE = 4
+    STATE_UPDATE = 4,
+
+    END_GAME = 5,
+
+    CURSOR_EVENT = 6,
 }; 
 
 // Packet structure will be length (4 bytes), type (4 bytes), data (N bytes) 

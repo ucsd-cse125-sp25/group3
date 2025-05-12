@@ -20,8 +20,15 @@ ClientGame::ClientGame(int character)
     // send init packet
     Packet packet;
     packet.packet_type = INIT_CONNECTION;
-    packet.payload.resize(sizeof(int));
-    memcpy(packet.payload.data(), &character, sizeof(character));
+    // packet.payload.resize(3 * sizeof(int));
+    char buf[3 * sizeof(int)];
+    // printf("character: %d, width: %d, height: %d\n", character, Window::width, Window::height);
+    memcpy(buf, &character, sizeof(character));
+    // printf("character: %llu%llu%llu%llu", buf[0], buf[1], buf[2], buf[3]);
+    memcpy(&buf[sizeof(int)], &Window::width, sizeof(int));
+    memcpy(&buf[2 * sizeof(int)], &Window::height, sizeof(int));
+    packet.payload.insert(packet.payload.end(), &buf[0], &buf[3 * sizeof(int)]);
+    // memcpy(packet.payload.data(), &character, sizeof(character));
     // packet.length = 0;
     packet.length = packet.payload.size();
     const unsigned int packet_size = packet.getSize();
@@ -72,26 +79,48 @@ void ClientGame::sendKeyPackets(KeyType key) {
     NetworkServices::sendMessage(network->ConnectSocket, packet_data.data(), packet_size);
 }
 
+void ClientGame::sendPendingPackets() {
+
+    for (int i=0; i<client_logic::pendingPackets.size(); i++) {
+        Packet packet = client_logic::pendingPackets[i];
+        const unsigned int packet_size = packet.getSize();
+        std::vector<char> packet_data(packet_size);  
+        packet.serialize(packet_data.data());
+        NetworkServices::sendMessage(network->ConnectSocket, packet_data.data(), packet_size);
+    }
+    client_logic::pendingPackets.clear();
+}
+
 void ClientGame::update()
 {
     glfwPollEvents();
 
-    for (int i=0; i<client_logic::pendingKeys.size(); i++) {
+    // for (int i=0; i<client_logic::pendingKeys.size(); i++) {
         
-        if (client_logic::pendingKeys[i] == KeyType::KEY_ESC) {
-            close(network->ConnectSocket);
-            glfwSetWindowShouldClose(window, GL_TRUE);
-        }
-        sendKeyPackets(client_logic::pendingKeys[i]);
-    }
-    client_logic::pendingKeys.clear();
+    //     if (client_logic::pendingKeys[i] == KeyType::KEY_ESC) {
+    //         close(network->ConnectSocket);
+    //         glfwSetWindowShouldClose(window, GL_TRUE);
+    //     }
+    //     sendKeyPackets(client_logic::pendingKeys[i]);
+    // }
+    // client_logic::pendingKeys.clear();
 
     KeyType input = client_logic::handleUserInput(window);
+    sendPendingPackets();
+    // for (int i=0; i<client_logic::pendingPackets.size(); i++) {
+    //     Packet packet = client_logic::pendingPackets[i];
+    //     const unsigned int packet_size = packet.getSize();
 
-    if (input != KeyType::NONE) {
-        printf("sending key event packet\n");
-        sendKeyPackets(input);
-    } 
+    // std::vector<char> packet_data(packet_size);  
+    // packet.serialize(packet_data.data());
+
+    // NetworkServices::sendMessage(network->ConnectSocket, packet_data.data(), packet_size);
+    // }
+    // client_logic::pendingPackets.clear();
+    // if (input != KeyType::NONE) {
+    //     printf("sending key event packet\n");
+    //     sendKeyPackets(input);
+    // } 
 
     while (true) {
         char header[Packet::getHeaderSize()];
@@ -120,6 +149,10 @@ void ClientGame::update()
                 Window::update(packet.payload.data(), packet.length);
                 // Window::render(window);
                 // Window::cube->update();
+                break;
+            case END_GAME:
+                close(network->ConnectSocket);
+                glfwSetWindowShouldClose(window, GL_TRUE);
                 break;
             default:
 

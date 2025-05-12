@@ -253,11 +253,9 @@ void Window::mouse_callback(GLFWwindow* window, int button, int action, int mods
 
 void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     if (altDown) return;
-
     
     static float lastX = Window::width / 2.0f;
     static float lastY = Window::height / 2.0f;
-
     float sensitivity = 0.1f;
 
     if (firstMouse) {

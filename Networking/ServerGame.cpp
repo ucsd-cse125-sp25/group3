@@ -97,10 +97,11 @@ void ServerGame::receiveFromClients()
                 case INIT_CONNECTION: {
 
                     printf("server received init packet from client\n");
-                    CharacterType character;
-                    memcpy(&character, packet.payload.data(), sizeof(character));
-                    printf("player is character %d\n", character);
-                    player.setCharacter(character);
+                    player.init(packet.payload.data());
+                    // CharacterType character;
+                    // memcpy(&character, packet.payload.data(), sizeof(character));
+                    // printf("player is character %d\n", character);
+                    // player.setCharacter(character);
                     playersData[iter->first] = player;
                     sendPlayerState(iter->first);
                     // sendActionPackets();
@@ -133,6 +134,23 @@ void ServerGame::receiveFromClients()
                     // sendPlayerState(iter->first);
                     break;
                 }
+                case END_GAME: {
+                    // disconnectClient();
+                    // printf("Client %d has disconnected\n", iter->first);
+                    // playersData.erase(iter->first);
+                    // iter = network->sessions.erase(iter);
+                    packetsDone = DISCONNECT;
+                    break;
+                }
+                case CURSOR_EVENT: {
+                    printf("server recieved cursor event packet from client\n");
+                    double currX;
+                    double currY;
+                    memcpy(&currX, packet.payload.data(), sizeof(currX));
+                    memcpy(&currY, packet.payload.data() + sizeof(currX), sizeof(currY));
+                    player.handleCursor(currX, currY);
+                    break;
+                }
                 default: {
                     printf("error in packet types\n");
                     break;
@@ -140,13 +158,19 @@ void ServerGame::receiveFromClients()
             }
         }
         // }
-        player.camera.Update(player.cube.getPosition()); 
-        player.cube.update();
-        
-        playersData[iter->first] = player;
-        sendPlayerState(iter->first);
 
-        if(packetsDone == SUCCESS) iter++;
+        if (packetsDone == DISCONNECT)  {
+            disconnectClient(iter->first);
+            printf("Client %d has disconnected\n", iter->first);
+            iter = network->sessions.erase(iter);
+        } else {
+            player.camera.Update(player.cube.getPosition()); 
+            player.cube.update();
+            playersData[iter->first] = player;
+            sendPlayerState(iter->first);
+            iter++;
+        }
+        
     }
     auto orig_diff = std::chrono::steady_clock::now() - start;
     auto milli_diff = std::chrono::duration_cast<std::chrono::milliseconds>(orig_diff);
@@ -157,6 +181,18 @@ void ServerGame::receiveFromClients()
     if(wait.count() < 0) {
         printf("WARNING: Tick took longer than allocated by %lld ms\n", -wait.count());
     }
+}
+
+//should specify id of who's disconnecting so other clients know to remove that client's data
+void ServerGame::disconnectClient(int client_id) {
+    Packet packet;
+    packet.packet_type = END_GAME;
+    packet.length = 0;
+    const unsigned int packet_size = packet.getSize();
+    char packet_data[packet_size];
+    packet.serialize(packet_data);
+    network->sendToAll(packet_data, packet_size);
+    playersData.erase(client_id);
 }
 
 void ServerGame::sendActionPackets()
@@ -187,6 +223,7 @@ void ServerGame::sendEchoPackets(std::string response) {
 //cube baseModel, model
 //then camera floats
 void ServerGame::sendPlayerState(unsigned int client_id) {
+    // printf("sending state\n");
     PlayerData player = playersData[client_id];
     Packet packet;
     packet.packet_type = STATE_UPDATE;
@@ -197,6 +234,7 @@ void ServerGame::sendPlayerState(unsigned int client_id) {
     char packet_data[packet_size];
     packet.serialize(packet_data);
     network->sendToAll(packet_data, packet_size);
+    // printf("done sending\n");
     // for (int i=0; i<64; i++) {
     //     printf("elem %d: %hhx\n", i, (unsigned char) packet.payload[i]);
     // }

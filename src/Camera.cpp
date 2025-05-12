@@ -79,7 +79,7 @@ glm::vec3 Camera::GetForwardVector() const {
     return glm::normalize(Center - Eye);  
 }
 
-//viewProjMatrix, eye, center
+//viewProjMatrix, eye, center, azimuth, incline
 void Camera::toVector(std::vector<char>* vec) {
     char buf[4];
 
@@ -100,12 +100,16 @@ void Camera::toVector(std::vector<char>* vec) {
         memcpy(buf, &Center[i], sizeof(float));
         vec->insert(vec->end(), &buf[0], &buf[4]);
     }
+    memcpy(buf, &Azimuth, sizeof(float));
+    vec->insert(vec->end(), &buf[0], &buf[4]);
+    memcpy(buf, &Incline, sizeof(float));
+    vec->insert(vec->end(), &buf[0], &buf[4]);
 }
 
 int Camera::readFromArray(char * data) {
     int totalBytes = 0;
 
-    for (int i=0; i<(16+3+3); i++) {
+    for (int i=0; i<(16+3+3+2); i++) {
         memcpy(&updatedVals[i*4], &data[i*4], sizeof(float));
         totalBytes += sizeof(float);
     }
@@ -127,19 +131,27 @@ int Camera::readFromArray(char * data) {
 }
 
 void Camera::applyUpdates() {
+    int offset = 0;
+
     for (int i=0; i<16; i++) {
         memcpy(&ViewProjectMtx[i/4][i%4], &updatedVals[i*4], sizeof(float));
         // totalBytes += sizeof(float);
     }
+    offset += sizeof(ViewProjectMtx);
 
     for (int i=0; i<3; i++) {
-        memcpy(&Eye[i], &updatedVals[sizeof(ViewProjectMtx) + i*4], sizeof(float));
+        memcpy(&Eye[i], &updatedVals[offset + i*4], sizeof(float));
         // totalBytes += sizeof(float);
     }
+    offset += sizeof(Eye);
 
     for (int i=0; i<3; i++) {
-        memcpy(&Center[i], &updatedVals[sizeof(ViewProjectMtx) + sizeof(Eye) + i*4], sizeof(float));
+        memcpy(&Center[i], &updatedVals[offset + i*4], sizeof(float));
         // totalBytes += sizeof(float);
     }
+    offset += sizeof(Center);
+    memcpy(&Azimuth, &updatedVals[offset], sizeof(float));
+    offset += sizeof(Azimuth);
+    memcpy(&Incline, &updatedVals[offset], sizeof(float));
 }
 

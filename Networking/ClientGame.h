@@ -22,6 +22,7 @@ public:
     void sendActionPackets();
     void sendEchoPackets(std::string);
     void sendKeyPackets(KeyType);
+    void sendPendingPackets();
     char network_data[MAX_PACKET_SIZE];
     void update();
 };

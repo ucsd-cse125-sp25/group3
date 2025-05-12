@@ -203,7 +203,7 @@ void PlayerData::calculateNewPos(KeyType key) {
     }
 
     if (key == KeyType::KEY_SPACE) {
-        printf("JUMPING\n");
+        // printf("JUMPING\n");
         if (cube.isGrounded) {
             cube.isJumping = true;
             cube.isGrounded = false;   
@@ -260,4 +260,41 @@ void PlayerData::calculateNewPos(KeyType key) {
 void PlayerData::toVector(std::vector<char> * vec) {
     cube.toVector(vec);
     camera.toVector(vec);
+}
+
+void PlayerData::init(char * data) {
+    firstMouse = true;
+    memcpy(&cube.type, data, sizeof(int));
+    memcpy(&windowWidth, &data[sizeof(int)], sizeof(int));
+    memcpy(&windowHeight, &data[2 * sizeof(int)], sizeof(int));
+    printf("character: %d, width: %d, height: %d\n", cube.type, windowWidth, windowHeight);
+}
+
+void PlayerData::handleCursor(double currX, double currY) {
+
+    static float lastX = windowWidth / 2.0f;
+    static float lastY = windowHeight / 2.0f;
+    float sensitivity = 0.1f;
+
+    if (firstMouse) {
+        lastX = currX;
+        lastY = currY;
+        firstMouse = false;
+    }
+
+    float xoffset = currX - lastX;
+    float yoffset = currY - lastY; 
+
+    lastX = currX;
+    lastY = currY;
+
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    
+    float newAzimuth = camera.GetAzimuth() + xoffset;
+    float newIncline = glm::clamp(camera.GetIncline() + yoffset, -89.0f, 89.0f); 
+
+    camera.SetAzimuth(newAzimuth);
+    camera.SetIncline(newIncline);
 }
