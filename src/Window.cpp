@@ -290,7 +290,7 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     }
 
     float xoffset = currX - lastX;
-    float yoffset = currY - lastY; // 注意这里是 lastY - ypos，y 是反的
+    float yoffset = currY - lastY; 
 
     lastX = currX;
     lastY = currY;
@@ -300,7 +300,7 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
 
     
     float newAzimuth = Cam->GetAzimuth() + xoffset;
-    float newIncline = glm::clamp(Cam->GetIncline() + yoffset, -89.0f, 89.0f); // 防止翻转
+    float newIncline = glm::clamp(Cam->GetIncline() + yoffset, -89.0f, 89.0f); 
 
     Cam->SetAzimuth(newAzimuth);
     Cam->SetIncline(newIncline);
