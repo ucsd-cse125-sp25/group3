@@ -34,6 +34,9 @@ public:
 
     bool load(const std::string & file);
 
+    /*
+    Sets the UV Texture corresponding to the Mesh.
+    */
     void setTex(GLuint texID);
 
     void setColor(glm::vec3 color);
@@ -41,8 +44,6 @@ public:
     bool setMesh(const aiMesh* mesh);
 
     void setMMat(glm::mat4 model);
-
-    void setTexture();
     
     void setupBuf();
 

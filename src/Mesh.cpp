@@ -18,8 +18,6 @@ Mesh::Mesh(glm::vec3 color){
 
 Mesh::~Mesh(){
     // Delete the VBOs and the VAO.
-    glDeleteTextures(1, &tex);
-    
     glDeleteBuffers(1, &VBO_pn);
     glDeleteBuffers(1, &VBO_uv);
     glDeleteBuffers(1, &EBO);

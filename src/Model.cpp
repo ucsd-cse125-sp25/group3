@@ -68,8 +68,7 @@ Mesh* Model::getMesh(int i){
     return nullptr;
 }
 
-void Model::deleteMesh(int i){
-    delete meshes[i];
+void Model::removeMesh(int i){
     meshes.erase(meshes.begin() + i);
 }
 

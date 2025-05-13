@@ -1,6 +1,16 @@
-#include "Texture.h"
+#include "TextureManager.h"
 
-GLuint LoadTexture(const char* texture_file_path){
+TextureManager::TextureManager(){
+
+}
+
+TextureManager::~TextureManager(){
+    for (GLuint tex : textures){
+        glDeleteTextures(1, &tex);
+    }
+}
+
+GLuint TextureManager::LoadTexture(const char* texture_file_path){
     GLuint texID;
 
     glGenTextures(1, &texID);
@@ -30,6 +40,8 @@ GLuint LoadTexture(const char* texture_file_path){
         std::cout << "Failed to load texture" << std::endl;
     }
     stbi_image_free(data);
+
+    textures.push_back(texID);
 
     return texID;
 }

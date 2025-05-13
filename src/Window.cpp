@@ -1,6 +1,6 @@
 #include "Window.h"
 #include "Mesh.h"
-#include "Texture.h"
+#include "TextureManager.h"
 // #include <assimp/cimport.h>
 // #include <assimp/scene.h>
 // #include <assimp/postprocess.h>
@@ -30,6 +30,8 @@ int MouseX, MouseY;
 GLuint Window::shaderProgram;
 GLuint Window::shaderProgram_uv;
 
+TextureManager* textureManager;
+
 bool Window::altDown = false;
 bool Window::firstMouse = true;
 
@@ -51,6 +53,8 @@ bool Window::initializeProgram() {
         return false;
     }
 
+    textureManager = new TextureManager();
+
     return true;
 }
 
@@ -66,7 +70,7 @@ bool Window::initializeObjects() {
     Model* m = scene->getModel(0);
     Mesh* mesh = m->getMesh(0);
     mesh->setColor(glm::vec3(1.0f, 0.0f, 1.0f));
-    mesh->setTex(LoadTexture("../textures/wall.jpg"));
+    mesh->setTex(textureManager->LoadTexture("../textures/wall.jpg"));
     m->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(20.0f)));
     scene -> update();
     scene-> setupBufAll();
@@ -77,7 +81,7 @@ bool Window::initializeObjects() {
         std::cerr << "Failed to load ply: Buddha" << std::endl;
         return false;
     }
-    model->getMesh(0)->setTex(LoadTexture("../textures/wall.jpg"));
+    model->getMesh(0)->setTex(textureManager->LoadTexture("../textures/wall.jpg"));
     model -> update();
     model -> setupBuf();
 
@@ -97,6 +101,8 @@ void Window::cleanUp() {
     delete model;
     delete character;
 
+    delete textureManager;
+    
     // Delete the shader program.
     glDeleteProgram(shaderProgram);
     glDeleteProgram(shaderProgram_uv);
