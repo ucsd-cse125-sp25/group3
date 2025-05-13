@@ -6,6 +6,7 @@
 #include "Model.h"
 #include "Shader.h"
 #include "core.h"
+#include "Character.h"
 
 class Window {
 public:
@@ -17,6 +18,7 @@ public:
     // Objects to render
     static Cube* cube;
     static Cube* floor;
+    static Character* character;
 
     static Scene* scene;
     static Model* model;

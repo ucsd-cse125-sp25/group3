@@ -165,21 +165,21 @@ void Cube::update() {
     #ifdef __APPLE__
         gravity = -0.00005f;
     #endif
-    if (isJumping) {
-        //update jump height
-        jumpVelocity += gravity; 
-        jumpHeight += jumpVelocity;
+    // if (isJumping) {
+    //     //update jump height
+    //     jumpVelocity += gravity; 
+    //     jumpHeight += jumpVelocity;
 
-        if (jumpHeight <= 0.0f) {
-            jumpHeight = 0.0f;
-            isJumping = false;
-            jumpVelocity = 0.0f;
-            isGrounded = true;
-        }
+    //     if (jumpHeight <= 0.0f) {
+    //         jumpHeight = 0.0f;
+    //         isJumping = false;
+    //         jumpVelocity = 0.0f;
+    //         isGrounded = true;
+    //     }
 
-        //glm::mat4 baseModel = glm::translate(glm::mat4(1.0f), glm::vec3(0, jumpHeight, 0));
-        // model = glm::translate(glm::mat4(1.0f), glm::vec3(0, jumpHeight, 0)) * baseModel;
-    }
+    //     //glm::mat4 baseModel = glm::translate(glm::mat4(1.0f), glm::vec3(0, jumpHeight, 0));
+    //     // model = glm::translate(glm::mat4(1.0f), glm::vec3(0, jumpHeight, 0)) * baseModel;
+    // }
     model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
 }
 

@@ -14,6 +14,7 @@ const char* Window::windowTitle = "Model Environment";
 // Objects to render
 Cube* Window::cube;
 Cube* Window::floor;
+Character* Window::character;
 
 Scene* Window::scene;
 Model* Window::model;
@@ -56,7 +57,7 @@ bool Window::initializeProgram() {
 bool Window::initializeObjects() {
     // Create a cube
     cube = new Cube();
-
+    
     scene = new Scene();
     if (!scene->load("../models/bunny.ply")){
         std::cerr << "Failed to load ply: Bunny" << std::endl;
@@ -80,6 +81,7 @@ bool Window::initializeObjects() {
     model -> update();
     model -> setupBuf();
 
+    character = new Character(model);
     // cube = new Cube(glm::vec3(-1, 0, -2), glm::vec3(1, 1, 1));
     floor = new Cube(glm::vec3(-8, -2.03, -8), glm::vec3(8, -2.01, 8));
 
@@ -93,6 +95,7 @@ void Window::cleanUp() {
     delete floor;
     delete scene;
     delete model;
+    delete character;
 
     // Delete the shader program.
     glDeleteProgram(shaderProgram);
@@ -180,33 +183,46 @@ void Window::idleCallback() {
     // Cam->Update();
     Cam->Update(cube->getPosition());
 
-    cube->update();
+    // cube->update();
+    character->update();
 
     scene->update();
-    model->update();
+    // model->update();
 }
 
 void Window::displayCallback(GLFWwindow* window) {
 
-    if (cube != nullptr) {
-        // cube->handleContinuousInput(window);
+    // if (cube != nullptr) {
+    //     // cube->handleContinuousInput(window);
+    //     glm::vec3 forward = Cam->GetForwardVector();
+    //     forward.y = 0.0f;  
+    //     forward = glm::normalize(forward);
+
+    //     glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
+
+    //     cube->handleContinuousInput(window, forward, right);
+    //     // character->handleInput(window, forward,right);
+    // }
+    if (character != nullptr) {
         glm::vec3 forward = Cam->GetForwardVector();
-        forward.y = 0.0f;  
+        forward.y = 0.0f;
         forward = glm::normalize(forward);
-
+    
         glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
-
-        cube->handleContinuousInput(window, forward, right);
+    
+        character->handleInput(window, forward, right);
     }
+    
     // Clear the color and depth buffers.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Render the object.
-    cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
+    // cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
     floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
 
     scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
-    model->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
+    // model->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
+    character->draw(Cam->GetViewProjectMtx(),shaderProgram_uv);
 
     // Gets events, including input such as keyboard and mouse or window resizing.
     glfwPollEvents();
@@ -248,9 +264,15 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
 
 
             default:
-                if (cube != nullptr) {
-                    cube->userInput(key);
-                    //cube->handleContinuousInput(window);
+                // if (cube != nullptr) {
+                //     cube->userInput(key);
+                //     //cube->handleContinuousInput(window);
+                // }
+                // break;
+                if (character != nullptr) {
+                    if (key == GLFW_KEY_SPACE) {
+                        character->triggerJump();
+                    }
                 }
                 break;
         }
