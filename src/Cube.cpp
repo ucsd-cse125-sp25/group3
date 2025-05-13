@@ -3,7 +3,6 @@
 Cube::Cube(glm::vec3 cubeMin, glm::vec3 cubeMax) {
     // Model matrix.
     model = glm::mat4(1.0f);
-    nextModel = glm::mat4(1.0f);
 
     // The color of the cube. Try setting it to something else!
     color = glm::vec3(1.0f, 0.95f, 0.1f);
@@ -328,7 +327,7 @@ int Cube::readFromArray(char * data) {
     }
 
     for (int i=0; i<16; i++) {
-        memcpy(&nextModel[i/4][i%4], &data[sizeof(baseModel) + i*4], sizeof(float));
+        memcpy(&model[i/4][i%4], &data[sizeof(baseModel) + i*4], sizeof(float));
         totalBytes += sizeof(float);
     }
 
@@ -343,8 +342,4 @@ int Cube::readFromArray(char * data) {
     //         printf("[%d,%d]: %f\n", i, j, baseModel[i][j]);
     //     }
     // }
-}
-
-void Cube::setModel() {
-    model = glm::translate(nextModel, glm::vec3(0.0f, 0.0f, 0.0f));
 }

@@ -106,56 +106,31 @@ void Camera::toVector(std::vector<char>* vec) {
     vec->insert(vec->end(), &buf[0], &buf[4]);
     memcpy(buf, &Aspect, sizeof(float));
     vec->insert(vec->end(), &buf[0], &buf[4]);
-}
+} 
 
 int Camera::readFromArray(char * data) {
     int totalBytes = 0;
 
-    for (int i=0; i<(16+3+3+3); i++) {
-        memcpy(&updatedVals[i*4], &data[i*4], sizeof(float));
-        totalBytes += sizeof(float);
+    for (int i=0; i<16; i++) {
+        memcpy(&ViewProjectMtx[i/4][i%4], &data[i*4], sizeof(float));
     }
-    // for (int i=0; i<16; i++) {
-    //     memcpy(&ViewProjectMtx[i/4][i%4], &data[i*4], sizeof(float));
-    //     totalBytes += sizeof(float);
-    // }
+    totalBytes += sizeof(ViewProjectMtx);
 
-    // for (int i=0; i<3; i++) {
-    //     memcpy(&Eye[i], &data[sizeof(ViewProjectMtx) + i*4], sizeof(float));
-    //     totalBytes += sizeof(float);
-    // }
+    for (int i=0; i<3; i++) {
+        memcpy(&Eye[i], &data[totalBytes + i*4], sizeof(float));
+        
+    }
+    totalBytes += sizeof(Eye);
 
-    // for (int i=0; i<3; i++) {
-    //     memcpy(&Center[i], &data[sizeof(ViewProjectMtx) + sizeof(Eye) + i*4], sizeof(float));
-    //     totalBytes += sizeof(float);
-    // }
+    for (int i=0; i<3; i++) {
+        memcpy(&Center[i], &data[totalBytes + sizeof(Eye) + i*4], sizeof(float));
+    }
+    totalBytes += sizeof(Center);
+    memcpy(&Azimuth, &data[totalBytes], sizeof(float));
+    totalBytes += sizeof(Azimuth);
+    memcpy(&Incline, &data[totalBytes], sizeof(float));
+    totalBytes += sizeof(Incline);
+    memcpy(&Aspect, &data[totalBytes], sizeof(float));
+    totalBytes += sizeof(Aspect);
     return totalBytes;
 }
-
-void Camera::applyUpdates() {
-    int offset = 0;
-
-    for (int i=0; i<16; i++) {
-        memcpy(&ViewProjectMtx[i/4][i%4], &updatedVals[i*4], sizeof(float));
-        // totalBytes += sizeof(float);
-    }
-    offset += sizeof(ViewProjectMtx);
-
-    for (int i=0; i<3; i++) {
-        memcpy(&Eye[i], &updatedVals[offset + i*4], sizeof(float));
-        // totalBytes += sizeof(float);
-    }
-    offset += sizeof(Eye);
-
-    for (int i=0; i<3; i++) {
-        memcpy(&Center[i], &updatedVals[offset + i*4], sizeof(float));
-        // totalBytes += sizeof(float);
-    }
-    offset += sizeof(Center);
-    memcpy(&Azimuth, &updatedVals[offset], sizeof(float));
-    offset += sizeof(Azimuth);
-    memcpy(&Incline, &updatedVals[offset], sizeof(float));
-    offset += sizeof(Incline);
-    memcpy(&Aspect, &updatedVals[offset], sizeof(float));
-}
-

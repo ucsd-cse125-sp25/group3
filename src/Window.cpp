@@ -284,17 +284,13 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     Cam->SetIncline(newIncline);
 }
 
-void Window::applyServerState(char * data, size_t data_length) {
+void Window::applyServerState(char * data) {
     int offset = cube->readFromArray(data);
-    // printf("offset: %d\n", offset);
     offset += Cam->readFromArray(&data[offset]);
     offset += MiniMapCam->readFromArray(&data[offset]);
-    // bool newAltState;
     memcpy(&altDown, &data[offset], sizeof(bool));
-    // cube->isInvisible = data[2 * sizeof(cube->baseModel)];
-    // printf("invisible: %d\n", cube->isInvisible);
-    // printf("length: %lu\n", data_length);
 }
+
 void Window::render(GLFWwindow* window) {
     // Clear the color and depth buffers.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -328,17 +324,10 @@ void Window::render(GLFWwindow* window) {
     // Swap buffers.
     glfwSwapBuffers(window);
     // Cam->Update(cube->getPosition());
-    Cam->applyUpdates();
-    MiniMapCam->applyUpdates();
-    cube->setModel();
-
+    
     if (altDown) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     } else {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 }
-
-// void updateRest() {
-    
-// }

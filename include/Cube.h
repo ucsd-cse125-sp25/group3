@@ -11,7 +11,6 @@ private:
     GLuint VBO_positions, VBO_normals, EBO;
 
     glm::mat4 model;
-    glm::mat4 nextModel;
     glm::vec3 color;
 
     // Cube Information
@@ -75,5 +74,4 @@ public:
 
     void spin(float deg);
     int readFromArray(char * data);
-    void setModel();
 };
