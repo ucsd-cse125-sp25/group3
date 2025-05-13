@@ -59,7 +59,7 @@ void ClientGame::sendEchoPackets(std::string input) {
 
 void ClientGame::sendKeyPackets(KeyType key) {
     Packet packet;
-    packet.packet_type = KEY_EVENT;
+    packet.packet_type = KEY_INPUT;
     packet.payload.resize(1);
     memcpy(packet.payload.data(), &key, sizeof(key));
     packet.length = packet.payload.size();
@@ -79,7 +79,11 @@ void ClientGame::update()
     for (int i=0; i<client_logic::pendingKeys.size(); i++) {
         
         if (client_logic::pendingKeys[i] == KeyType::KEY_ESC) {
+            #ifdef _WIN32
+            closesocket(network->ConnectSocket);
+            #else 
             close(network->ConnectSocket);
+            #endif
             glfwSetWindowShouldClose(window, GL_TRUE);
         }
         sendKeyPackets(client_logic::pendingKeys[i]);

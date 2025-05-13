@@ -45,17 +45,9 @@ set(
 )
 
 # GoogleTest requires at least C++14
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-)
-# For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
 
 # Require GL
 find_package(OpenGL REQUIRED)
@@ -143,6 +135,21 @@ elseif (WIN32)
         glew32s.lib
         glfw3
     )
+    target_link_libraries(server
+        ${OPENGL_LIBRARIES}
+        glew32s.lib
+        glfw3
+        wsock32
+        ws2_32
+    )
+    target_link_libraries(client
+        ${OPENGL_LIBRARIES}
+        glew32s.lib
+        glfw3
+        wsock32
+        ws2_32
+    )
+
 endif()
 
 # Move assets to .exe
@@ -167,19 +174,3 @@ if(DOXYGEN_FOUND)
         COMMENT "Generating API documentation with Doxygen"
         VERBATIM)
 endif()
-
-# build GoogleTest code
-enable_testing()
-
-add_executable(
-  Packet_test
-  ./packets/Packet_test.cpp
-  ./packets/Packet.cpp
-)
-target_link_libraries(
-  Packet_test
-  GTest::gtest_main
-)
-
-include(GoogleTest)
-gtest_discover_tests(Packet_test)

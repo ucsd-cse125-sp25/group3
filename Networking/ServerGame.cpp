@@ -2,7 +2,7 @@
 #include "ServerGame.h"
 #include <iostream>
 #include <cstdio>
-#include <chrono>
+#include <chrono> 
 #include <thread>
 #include <cassert>
 #define TICK 30 //in ms
@@ -109,7 +109,7 @@ void ServerGame::receiveFromClients()
                     sendEchoPackets(message); */
                     break;
                 }
-                case KEY_EVENT: {
+                case KEY_INPUT: {
                     KeyType key;
                     memcpy(&key, packet.payload.data(), sizeof(key));
                     printf("server recieved key event packet from client\n");
@@ -174,7 +174,7 @@ void ServerGame::sendPlayerState(unsigned int client_id) {
     player.cube.toVector(&packet.payload);
     packet.length = packet.payload.size();
     const unsigned int packet_size = packet.getSize();
-    char packet_data[packet_size];
+    char packet_data[128];
     packet.serialize(packet_data);
     network->sendToAll(packet_data, packet_size);
     // for (int i=0; i<64; i++) {

@@ -1,6 +1,8 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <stdexcept> 
+#include <Windows.h>
 #ifndef PACKET_H // include guard
 #define PACKET_H
 
@@ -15,9 +17,9 @@ enum PacketTypes {
 
     ECHO_EVENT = 2,
 
-    KEY_EVENT = 3,
+    KEY_INPUT = 3,
 
-    STATE_UPDATE = 4
+    STATE_UPDATE = 4,
 }; 
 
 // Packet structure will be length (4 bytes), type (4 bytes), data (N bytes) 
