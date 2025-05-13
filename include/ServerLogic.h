@@ -3,6 +3,7 @@
 #include "Cube.h"
 #include "Camera.h"
 #include <cstdio>
+#include <chrono>
 
 //player info
 enum CharacterType {
@@ -84,4 +85,3 @@ class PlayerData {
         void resetCamera();
 };
 
-void init();

@@ -57,8 +57,9 @@ void ServerGame::receiveFromClients()
 
         while (packetsDone == ONGOING) {
             int headerSize = Packet::getHeaderSize();
-            char header[headerSize];
-            int data_length = network->receiveData(iter->first, header, headerSize);
+            //char header[headerSize];
+            std::vector<char> header(Packet::getHeaderSize());
+            int data_length = network->receiveData(iter->first, header.data(), headerSize);
         
             if (data_length == 0) {
                 printf("Client %d has disconnected\n", iter->first);
@@ -72,10 +73,11 @@ void ServerGame::receiveFromClients()
                 break;
             } 
             Packet packet;
-            packet.deserializeHeader(header);
-            char data[packet.length];
-            data_length = network->receiveData(iter->first, data, packet.length);
-            packet.deserializePayload(data);
+            packet.deserializeHeader(header.data());
+            //char data[packet.length];
+            std::vector<char> data(packet.length);
+            data_length = network->receiveData(iter->first, data.data(), packet.length);
+            packet.deserializePayload(data.data());
             // printf("data length read: %d\n", data_length);
         // if (data_length <= 0) 
         // {
@@ -123,7 +125,7 @@ void ServerGame::receiveFromClients()
                     sendEchoPackets(message); */
                     break;
                 }
-                case KEY_EVENT: {
+                case KEY_INPUT: {
                     KeyType key;
                     memcpy(&key, packet.payload.data(), sizeof(key));
                     printf("server recieved key event packet from client\n");
@@ -189,9 +191,10 @@ void ServerGame::disconnectClient(int client_id) {
     packet.packet_type = END_GAME;
     packet.length = 0;
     const unsigned int packet_size = packet.getSize();
-    char packet_data[packet_size];
-    packet.serialize(packet_data);
-    network->sendToAll(packet_data, packet_size);
+    //char packet_data[packet_size];
+    std::vector<char> packet_data(packet_size);
+    packet.serialize(packet_data.data());
+    network->sendToAll(packet_data.data(), packet_size);
     playersData.erase(client_id);
 }
 
@@ -231,9 +234,10 @@ void ServerGame::sendPlayerState(unsigned int client_id) {
     // player.cube.toVector(&packet.payload);
     packet.length = packet.payload.size();
     const unsigned int packet_size = packet.getSize();
-    char packet_data[packet_size];
-    packet.serialize(packet_data);
-    network->sendToAll(packet_data, packet_size);
+    //char packet_data[packet_size];
+    std::vector<char> packet_data(packet_size);
+    packet.serialize(packet_data.data());
+    network->sendToAll(packet_data.data(), packet_size);
     // printf("done sending\n");
     // for (int i=0; i<64; i++) {
     //     printf("elem %d: %hhx\n", i, (unsigned char) packet.payload[i]);

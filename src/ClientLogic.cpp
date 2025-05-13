@@ -63,7 +63,7 @@ KeyType client_logic::handleUserInput(GLFWwindow* window) {
 
     if (key != KeyType::NONE) {
         Packet packet;
-        packet.packet_type = KEY_EVENT;
+        packet.packet_type = KEY_INPUT;
         packet.payload.resize(1);
         memcpy(packet.payload.data(), &key, sizeof(key));
         packet.length = packet.payload.size();
@@ -85,7 +85,7 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
             // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); // 显示鼠标
             Packet packet;
             KeyType keyType = KeyType::KEY_ALT_PRESS;
-            packet.packet_type = KEY_EVENT;
+            packet.packet_type = KEY_INPUT;
             packet.payload.resize(1);
             memcpy(packet.payload.data(), &keyType, sizeof(keyType));
             packet.length = packet.payload.size();
@@ -110,7 +110,7 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
                 // resetCamera();
                 Packet packet;
                 KeyType keyType = KeyType::KEY_R;
-                packet.packet_type = KEY_EVENT;
+                packet.packet_type = KEY_INPUT;
                 packet.payload.resize(1);
                 memcpy(packet.payload.data(), &keyType, sizeof(keyType));
                 packet.length = packet.payload.size();
@@ -121,7 +121,7 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
                 Packet packet;
                 KeyType keyType = KeyType::KEY_SPACE;
                 
-                packet.packet_type = KEY_EVENT;
+                packet.packet_type = KEY_INPUT;
                 packet.payload.resize(1);
                 memcpy(packet.payload.data(), &keyType, sizeof(keyType));
                 packet.length = packet.payload.size();
@@ -147,7 +147,7 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
             // firstMouse = true;
             Packet packet;
             KeyType keyType = KeyType::KEY_ALT_RELEASE;
-            packet.packet_type = KEY_EVENT;
+            packet.packet_type = KEY_INPUT;
             packet.payload.resize(1);
             memcpy(packet.payload.data(), &keyType, sizeof(keyType));
             packet.length = packet.payload.size();

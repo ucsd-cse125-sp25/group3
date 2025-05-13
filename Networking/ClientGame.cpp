@@ -24,7 +24,7 @@ ClientGame::ClientGame(int character)
     char buf[3 * sizeof(int)];
     // printf("character: %d, width: %d, height: %d\n", character, Window::width, Window::height);
     memcpy(buf, &character, sizeof(character));
-    // printf("character: %llu%llu%llu%llu", buf[0], buf[1], buf[2], buf[3]);
+    // printf("character: %llu%llu%llu%llu", buf[0], buf[1], buf[2], buf[3]);key_eve
     memcpy(&buf[sizeof(int)], &Window::width, sizeof(int));
     memcpy(&buf[2 * sizeof(int)], &Window::height, sizeof(int));
     packet.payload.insert(packet.payload.end(), &buf[0], &buf[3 * sizeof(int)]);
@@ -66,7 +66,7 @@ void ClientGame::sendEchoPackets(std::string input) {
 
 void ClientGame::sendKeyPackets(KeyType key) {
     Packet packet;
-    packet.packet_type = KEY_EVENT;
+    packet.packet_type = KEY_INPUT;
     packet.payload.resize(1);
     memcpy(packet.payload.data(), &key, sizeof(key));
     packet.length = packet.payload.size();
@@ -123,17 +123,19 @@ void ClientGame::update()
     // } 
 
     while (true) {
-        char header[Packet::getHeaderSize()];
-        int data_length = network->receivePackets(header, Packet::getHeaderSize());
+        //char header[Packet::getHeaderSize()];
+        std::vector<char> header(Packet::getHeaderSize());
+        int data_length = network->receivePackets(header.data(), Packet::getHeaderSize());
 
         if (data_length == -1) {
             break;
         }
         Packet packet;
-        packet.deserializeHeader(header);
-        char data[packet.length];
-        data_length = network->receivePackets(data, packet.length);
-        packet.deserializePayload(data);
+        packet.deserializeHeader(header.data());
+        //char data[packet.length];
+        std::vector<char> data(packet.length);
+        data_length = network->receivePackets(data.data(), packet.length);
+        packet.deserializePayload(data.data());
         
         switch (packet.packet_type) {
 
@@ -151,7 +153,11 @@ void ClientGame::update()
                 // Window::cube->update();
                 break;
             case END_GAME:
+                #ifdef _WIN32
+                closesocket(network->ConnectSocket);
+                #else
                 close(network->ConnectSocket);
+                #endif
                 glfwSetWindowShouldClose(window, GL_TRUE);
                 break;
             default:
