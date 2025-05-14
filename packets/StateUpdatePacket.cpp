@@ -1,7 +1,7 @@
 #include "StateUpdatePacket.h"
 
 StateUpdatePacket::StateUpdatePacket(){
-    length = sizeof(base_model) + sizeof(next_model) + sizeof(uint8_t);
+    length = sizeof(model) + sizeof(uint8_t);
 }
 
 unsigned int StateUpdatePacket::getSize() {
@@ -11,11 +11,8 @@ unsigned int StateUpdatePacket::getSize() {
 int StateUpdatePacket::serializePayload(char* data) {
     unsigned int offset = getHeaderSize();
 
-    std::memcpy(data + offset, &base_model, sizeof(base_model));
-    offset += sizeof(base_model);
-
-    std::memcpy(data + offset, &next_model, sizeof(next_model));
-    offset += sizeof(next_model);
+    std::memcpy(data + offset, &model, sizeof(model));
+    offset += sizeof(model);
 
     uint8_t invisibleByte = isInvisible ? 1 : 0;
     std::memcpy(data + offset, &invisibleByte, sizeof(invisibleByte));
@@ -27,11 +24,8 @@ int StateUpdatePacket::serializePayload(char* data) {
 int StateUpdatePacket::deserializePayload(char* data) {
     unsigned int offset = getHeaderSize();
 
-    std::memcpy(&base_model, data + offset, sizeof(base_model));
-    offset += sizeof(base_model);
-
-    std::memcpy(&next_model, data + offset, sizeof(next_model));
-    offset += sizeof(next_model);
+    std::memcpy(&model, data + offset, sizeof(model));
+    offset += sizeof(model);
 
     uint8_t invisibleByte;
     std::memcpy(&invisibleByte, data + offset, sizeof(invisibleByte));

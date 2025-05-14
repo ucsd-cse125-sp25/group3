@@ -13,7 +13,6 @@ class CubeState {
         std::vector<glm::vec3> normals;
         std::vector<unsigned int> indices;
         glm::mat4 model;
-        glm::mat4 nextModel;
         glm::mat4 baseModel = glm::mat4(1.0f);
 
         //jumping

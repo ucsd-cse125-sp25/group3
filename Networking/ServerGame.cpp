@@ -151,11 +151,9 @@ void ServerGame::sendPlayerState(unsigned int client_id) {
     StateUpdatePacket packet;
     packet.packet_type = STATE_UPDATE;
 
-    // Fill base_model_vector and state_model_vector from the cube
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
-            packet.base_model[i][j] = player.cube.baseModel[i][j];
-            packet.next_model[i][j] = player.cube.model[i][j];
+            packet.model[i][j] = player.cube.model[i][j];
         }
     }
     packet.isInvisible = player.cube.isInvisible;

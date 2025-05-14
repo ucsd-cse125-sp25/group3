@@ -5,8 +5,7 @@
 
 class StateUpdatePacket : public Packet {
 public:
-    float base_model[4][4];
-    float next_model[4][4];
+    float model[4][4];
     bool isInvisible;
 
     StateUpdatePacket();

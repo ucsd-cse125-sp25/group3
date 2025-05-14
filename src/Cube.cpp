@@ -3,7 +3,6 @@
 Cube::Cube(glm::vec3 cubeMin, glm::vec3 cubeMax) {
     // Model matrix.
     model = glm::mat4(1.0f);
-    nextModel = glm::mat4(1.0f);
 
     // The color of the cube. Try setting it to something else!
     color = glm::vec3(1.0f, 0.95f, 0.1f);
@@ -318,8 +317,7 @@ glm::vec3 Cube::getPosition() const {
 }
 
 void Cube::updateFromPacket(const StateUpdatePacket& packet) {
-    memcpy(&baseModel, packet.next_model, sizeof(packet.next_model));
-    //memcpy(&nextModel, packet.base_model, sizeof(packet.base_model));
+    memcpy(&baseModel, packet.model, sizeof(packet.model));
     isInvisible = packet.isInvisible;
     printState();
 }
