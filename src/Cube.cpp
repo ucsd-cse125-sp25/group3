@@ -194,8 +194,7 @@ void Cube::update() {
     //     speed = normalSpeed;
     // }
 
-    baseModel = glm::translate(glm::mat4(1.0f), getPosition()); 
-
+    //baseModel = glm::translate(glm::mat4(1.0f), getPosition()); 
     model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
     // printf("jump height: %d\n", jumpHeight);
     // std::cout << "updated model:" << std::endl;
@@ -315,16 +314,12 @@ void Cube::spin(float deg) {
 }
 
 glm::vec3 Cube::getPosition() const {
-    return glm::vec3(baseModel[3]);  // extract translation from matrix
+    return glm::vec3(model[3]);  // extract translation from matrix
 }
 
 void Cube::updateFromPacket(const StateUpdatePacket& packet) {
-    memcpy(&baseModel, packet.base_model, sizeof(packet.base_model));
+    memcpy(&baseModel, packet.next_model, sizeof(packet.next_model));
     //memcpy(&nextModel, packet.base_model, sizeof(packet.base_model));
     isInvisible = packet.isInvisible;
     printState();
-}
-
-void Cube::setModel() {
-    model = glm::translate(baseModel, glm::vec3(0.0f, 0.0f, 0.0f));
 }

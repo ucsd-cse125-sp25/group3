@@ -75,7 +75,6 @@ public:
     void updateFromPacket(const StateUpdatePacket& packet);
 
     void spin(float deg);
-    void setModel();
 
     void printState() {
         std::cout << "base model:" << std::endl;

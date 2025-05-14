@@ -299,6 +299,6 @@ void Window::render(GLFWwindow* window) {
     // glfwPollEvents();
     // Swap buffers.
     glfwSwapBuffers(window);
-    cube->setModel();
+    cube->update();
     Cam->Update(cube->getPosition());
 }

@@ -126,16 +126,18 @@ void CubeState::update() {
         speed = normalSpeed;
     }
 
-    baseModel = glm::translate(glm::mat4(1.0f), getPosition()); 
     model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
     // printf("jump height: %f\n", jumpHeight);
     // std::cout << "model:" << std::endl;
     // std::cout << glm::to_string(model) << std::endl;
-    printState();
+    //printState();
+    std::cout << "jumpHeight: " << jumpHeight << std::endl;
+    std::cout << "model position: " << glm::to_string(glm::vec3(model[3])) << std::endl;
+
 }
 
 glm::vec3 CubeState::getPosition() {
-    return glm::vec3(baseModel[3]);  // extract translation from matrix
+    return glm::vec3(model[3]);  // extract translation from matrix
 }
 
 // PlayerData::PlayerData() {
@@ -229,5 +231,6 @@ void PlayerData::calculateNewPos(KeyType key) {
         }
     }
     
+    cube.update();
     camera.Update(cube.getPosition()); 
 }
