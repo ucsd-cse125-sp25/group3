@@ -139,9 +139,9 @@ void Window::resizeCallback(GLFWwindow* window, int width, int height) {
 void Window::idleCallback() {
     // Perform any updates as necessary.
     // Cam->Update();
-    Cam->Update(cube->getPosition());
 
     cube->update();
+    Cam->Update(cube->getPosition());
 }
 
 void Window::displayCallback(GLFWwindow* window) {
@@ -299,6 +299,6 @@ void Window::render(GLFWwindow* window) {
     // glfwPollEvents();
     // Swap buffers.
     glfwSwapBuffers(window);
-    Cam->Update(cube->getPosition());
     cube->setModel();
+    Cam->Update(cube->getPosition());
 }

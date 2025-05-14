@@ -4,6 +4,7 @@
 #include <cstdio>
 #include "core.h"
 #include <iostream>
+#include <fstream>
 #include "../packets/StateUpdatePacket.h"
 
 class Cube {
@@ -75,4 +76,9 @@ public:
 
     void spin(float deg);
     void setModel();
+
+    void printState() {
+        std::cout << "base model:" << std::endl;
+        std::cout << glm::to_string(baseModel) << std::endl;
+    }
 };

@@ -194,6 +194,8 @@ void Cube::update() {
     //     speed = normalSpeed;
     // }
 
+    baseModel = glm::translate(glm::mat4(1.0f), getPosition()); 
+
     model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
     // printf("jump height: %d\n", jumpHeight);
     // std::cout << "updated model:" << std::endl;
@@ -318,10 +320,11 @@ glm::vec3 Cube::getPosition() const {
 
 void Cube::updateFromPacket(const StateUpdatePacket& packet) {
     memcpy(&baseModel, packet.base_model, sizeof(packet.base_model));
-    memcpy(&nextModel, packet.next_model, sizeof(packet.next_model));
+    //memcpy(&nextModel, packet.base_model, sizeof(packet.base_model));
     isInvisible = packet.isInvisible;
+    printState();
 }
 
 void Cube::setModel() {
-    model = glm::translate(nextModel, glm::vec3(0.0f, 0.0f, 0.0f));
+    model = glm::translate(baseModel, glm::vec3(0.0f, 0.0f, 0.0f));
 }

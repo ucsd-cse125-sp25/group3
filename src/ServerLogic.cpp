@@ -97,11 +97,6 @@ CubeState::CubeState(glm::vec3 cubeMin, glm::vec3 cubeMax) {
 void CubeState::printState() {
     std::cout << "base model:" << std::endl;
     std::cout << glm::to_string(baseModel) << std::endl;
-    // for (int i=0; i<4; i++) {
-    //     for (int j=0; j<4; j++) {
-    //         printf("[%d,%d]: %f\n", i, j, baseModel[i][j]);
-    //     }
-    // }
 }
 
 void CubeState::update() {
@@ -130,6 +125,8 @@ void CubeState::update() {
         isSpeedBoosted = false;
         speed = normalSpeed;
     }
+
+    baseModel = glm::translate(glm::mat4(1.0f), getPosition()); 
     model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
     // printf("jump height: %f\n", jumpHeight);
     // std::cout << "model:" << std::endl;
@@ -231,7 +228,6 @@ void PlayerData::calculateNewPos(KeyType key) {
             cube.eWasPressed = false;
         }
     }
-
     
     camera.Update(cube.getPosition()); 
 }
