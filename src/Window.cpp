@@ -141,9 +141,9 @@ void Window::resizeCallback(GLFWwindow* window, int width, int height) {
 void Window::idleCallback() {
     // Perform any updates as necessary.
     // Cam->Update();
-    Cam->Update(cube->getPosition());
 
     cube->update();
+    Cam->Update(cube->getPosition());
 }
 
 void Window::displayCallback(GLFWwindow* window) {
@@ -284,11 +284,8 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     Cam->SetIncline(newIncline);
 }
 
-void Window::applyServerState(char * data) {
-    int offset = cube->readFromArray(data);
-    offset += Cam->readFromArray(&data[offset]);
-    offset += MiniMapCam->readFromArray(&data[offset]);
-    memcpy(&altDown, &data[offset], sizeof(bool));
+void Window::applyServerState(const StateUpdatePacket& packet) {
+    cube->updateFromPacket(packet);
 }
 
 void Window::render(GLFWwindow* window) {
@@ -323,11 +320,13 @@ void Window::render(GLFWwindow* window) {
     // glfwPollEvents();
     // Swap buffers.
     glfwSwapBuffers(window);
-    // Cam->Update(cube->getPosition());
     
     if (altDown) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     } else {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
+  
+    cube->update();
+    Cam->Update(cube->getPosition());
 }

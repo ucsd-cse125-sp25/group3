@@ -97,36 +97,6 @@ CubeState::CubeState(glm::vec3 cubeMin, glm::vec3 cubeMax) {
 void CubeState::printState() {
     std::cout << "base model:" << std::endl;
     std::cout << glm::to_string(baseModel) << std::endl;
-    // for (int i=0; i<4; i++) {
-    //     for (int j=0; j<4; j++) {
-    //         printf("[%d,%d]: %f\n", i, j, baseModel[i][j]);
-    //     }
-    // }
-}
-
-void CubeState::toVector(std::vector<char>* vec) {
-    char buf[4];
-
-    for (int i=0; i<4; i++) {
-        for (int j=0; j<4; j++) {
-            // printf("elem i=%d, j=%d: %f\n", i,j,baseModel[i][j]);
-            memcpy(buf, &baseModel[i][j], sizeof(float));
-            vec->insert(vec->end(), &buf[0], &buf[4]);
-        }
-    }
-
-    for (int i=0; i<4; i++) {
-        for (int j=0; j<4; j++) {
-            // printf("elem i=%d, j=%d: %f\n", i,j,baseModel[i][j]);
-            memcpy(buf, &model[i][j], sizeof(float));
-            vec->insert(vec->end(), &buf[0], &buf[4]);
-        }
-    }
-    vec->resize(vec->size() + 1, isInvisible);
-
-    // memcpy(buf, &isInvisible, sizeof(bool));
-    // vec->insert(vec->end(), &buf[0], &buf[1]);
-    // printf("invisible: %hhu\n", vec->back());
 }
 
 void CubeState::update() {
@@ -155,14 +125,19 @@ void CubeState::update() {
         isSpeedBoosted = false;
         speed = normalSpeed;
     }
+
     model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
     // printf("jump height: %f\n", jumpHeight);
     // std::cout << "model:" << std::endl;
     // std::cout << glm::to_string(model) << std::endl;
+    //printState();
+    std::cout << "jumpHeight: " << jumpHeight << std::endl;
+    std::cout << "model position: " << glm::to_string(glm::vec3(model[3])) << std::endl;
+
 }
 
 glm::vec3 CubeState::getPosition() {
-    return glm::vec3(baseModel[3]);  // extract translation from matrix
+    return glm::vec3(model[3]);  // extract translation from matrix
 }
 
 // PlayerData::PlayerData() {
@@ -268,6 +243,7 @@ void PlayerData::calculateNewPos(KeyType key) {
     }
 }
 
+// TODO: use serialize instead
 void PlayerData::toVector(std::vector<char> * vec) {
     cube.toVector(vec);
     camera.toVector(vec);
@@ -275,6 +251,7 @@ void PlayerData::toVector(std::vector<char> * vec) {
     vec->resize(vec->size() + 1, altDown);
 }
 
+// TODO: make this work with packet class
 void PlayerData::init(char * data) {
     firstMouse = true;
     altDown = false;
@@ -316,6 +293,9 @@ void PlayerData::handleCursor(double currX, double currY) {
 
     camera.SetAzimuth(newAzimuth);
     camera.SetIncline(newIncline);
+    
+    cube.update();
+    camera.Update(cube.getPosition()); 
 }
 
 void PlayerData::resetCamera() {

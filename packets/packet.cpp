@@ -5,10 +5,10 @@ unsigned int Packet::getHeaderSize() {
 }
 
 unsigned int Packet::getSize() {
-    return sizeof(packet_type) + sizeof(length) + payload.size();
+    return getHeaderSize() + payload.size();
 }
 
-int Packet::serialize(char * data) {
+int Packet::serializeHeader(char * data) {
     unsigned int offset = 0;
     memcpy(data + offset, &packet_type, sizeof(packet_type));
     offset += sizeof(packet_type);
@@ -16,43 +16,37 @@ int Packet::serialize(char * data) {
     memcpy(data + offset, &length, sizeof(length));
     offset += sizeof(length);
 
-    if (getSize() > MAX_PACKET_SIZE) {
-        throw std::runtime_error("Packet size is greater than maximum size permitted");
-    }
-    else if (length > 0) {
-        std::copy(payload.begin(), payload.end(), data + offset);
-        offset += length;
-    }
+    if (getSize() > MAX_PACKET_SIZE) throw std::runtime_error("Packet size is greater than maximum size permitted");
+
     return offset;
 }
 
-int Packet::deserialize(char * data) {
+int Packet::serializePayload(char * data) {
+    unsigned int offset = getHeaderSize();
+    if (length > 0) {
+        std::copy(payload.begin(), payload.end(), data + offset);
+        offset += length;
+    }
+
+    return offset;
+}
+
+int Packet::serialize(char * data) {
+    serializeHeader(data);
+    return serializePayload(data);
+}
+
+int Packet::deserializeHeader(char * data) {
     unsigned int offset = 0;
     memcpy(&packet_type, data, sizeof(packet_type));
     offset += sizeof(packet_type);
     memcpy(&length, data + offset, sizeof(length));
-    offset += sizeof(length);
-    if (length > MAX_PACKET_SIZE - offset) {
-        throw std::runtime_error("Packet size is greater than maximum size permitted");
-    }
-    payload.clear();
-    if (length > 0) {
-        payload.insert(payload.begin(), data + offset, data + offset + length);
-        offset += length;
-    }
-    return offset;
-}
-
-int Packet::deserializeHeader(char * header) {
-    unsigned int offset = 0;
-    memcpy(&packet_type, header, sizeof(packet_type));
-    offset += sizeof(packet_type);
-    memcpy(&length, header + offset, sizeof(length));
+    if (length > MAX_PACKET_SIZE - offset) throw std::runtime_error("Packet size is greater than maximum size permitted");
     return offset;
 }
 
 int Packet::deserializePayload(char * data) {
-    unsigned int offset = 0;
+    unsigned int offset = getHeaderSize();
     payload.clear();
 
     if (length > 0) {
@@ -60,4 +54,9 @@ int Packet::deserializePayload(char * data) {
         offset += length;
     }
     return offset;
+}
+
+int Packet::deserialize(char * data) {
+    deserializeHeader(data);
+    return deserializePayload(data);
 }

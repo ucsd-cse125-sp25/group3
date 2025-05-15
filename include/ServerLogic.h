@@ -5,25 +5,13 @@
 #include <cstdio>
 #include <chrono>
 
-//player info
-enum CharacterType {
-    CHARACTER_1,
-    CHARACTER_2,
-    CHARACTER_3,
-    CHARACTER_4
-};
-
 enum ClientStatus {
     ONGOING,
     SUCCESS,
     DISCONNECT,
-    
 };
 
 class CubeState {
-    private:
-        glm::mat4 model;
-
     public:
         glm::vec3 color;
 
@@ -31,7 +19,7 @@ class CubeState {
         std::vector<glm::vec3> positions;
         std::vector<glm::vec3> normals;
         std::vector<unsigned int> indices;
-        
+        glm::mat4 model;
         glm::mat4 baseModel = glm::mat4(1.0f);
 
         //jumping
@@ -60,7 +48,6 @@ class CubeState {
         int speedBoostDuration = 5;
 
         CubeState(glm::vec3 cubeMin = glm::vec3(-1, -1, -1), glm::vec3 cubeMax = glm::vec3(1, 1, 1));
-        void toVector(std::vector<char>* vec);
         void update();
         void printState();
         glm::vec3 getPosition();
