@@ -47,17 +47,39 @@ void ServerGame::receiveFromClients()
         std::map<unsigned int, int>::iterator iter;
     #endif
     
-    for(iter = network->sessions.begin(); iter != network->sessions.end(); iter++)
-    {
-        int data_length = network->receiveData(iter->first, network_data);
-        
+    for(iter = network->sessions.begin(); iter != network->sessions.end();) {
+        ClientStatus packetsDone = ONGOING;
+
         if (playersData.find(iter->first) == playersData.end()) {
             printf("Client %d does not have associated player data\n", iter->first);
             continue;
-        }
-
+        } 
         PlayerData player = playersData[iter->first];
 
+        while (packetsDone == ONGOING) {
+            int headerSize = Packet::getHeaderSize();
+            //char header[headerSize];
+            std::vector<char> header(Packet::getHeaderSize());
+            int data_length = network->receiveData(iter->first, header.data(), headerSize);
+        
+            if (data_length == 0) {
+                printf("Client %d has disconnected\n", iter->first);
+                playersData.erase(iter->first);
+                iter = network->sessions.erase(iter);
+                packetsDone = DISCONNECT;
+                break;
+            } else if (data_length == -1) { //no packets left
+                packetsDone = SUCCESS;
+                // iter++;
+                break;
+            } 
+            Packet packet;
+            packet.deserializeHeader(header.data());
+            //char data[packet.length];
+            std::vector<char> data(packet.length);
+            data_length = network->receiveData(iter->first, data.data(), packet.length);
+            packet.deserializePayload(data.data());
+            // printf("data length read: %d\n", data_length);
         // if (data_length <= 0) 
         // {
         //     player.cube.update();
@@ -77,16 +99,18 @@ void ServerGame::receiveFromClients()
             i += packet->getSize();
 
             switch (packet->packet_type) {
+                //TODO: make this work with PlayerData 
                 case INIT_CONNECTION: {
                     InitPacket* initPacket = dynamic_cast<InitPacket*>(packet.get());
                     printf("server received init packet from client\n");
+                    //player.init(packet.payload.data());
                     printf("player is character %d\n", initPacket->character);
                     player.setCharacter(initPacket->character);
-                    playersData[iter->first] = player;
-                    sendPlayerState(iter->first);
+                    //playersData[iter->first] = player;
+                    //sendPlayerState(iter->first);
                     break;
                 }
-                case KEY_EVENT: {
+                case KEY_INPUT: {
                     KeyPacket* keyPacket = dynamic_cast<KeyPacket*>(packet.get());
                     if (keyPacket) {
                         player.calculateNewPos(keyPacket->key_type);
@@ -97,17 +121,43 @@ void ServerGame::receiveFromClients()
                     }
                     break;
                 }
+                case END_GAME: {
+                    // disconnectClient();
+                    // printf("Client %d has disconnected\n", iter->first);
+                    // playersData.erase(iter->first);
+                    // iter = network->sessions.erase(iter);
+                    packetsDone = DISCONNECT;
+                    break;
+                }
+                case CURSOR_EVENT: {
+                    printf("server recieved cursor event packet from client\n");
+                    double currX;
+                    double currY;
+                    memcpy(&currX, packet.payload.data(), sizeof(currX));
+                    memcpy(&currY, packet.payload.data() + sizeof(currX), sizeof(currY));
+                    player.handleCursor(currX, currY);
+                    break;
+                }
                 default: {
                     printf("error in packet types\n");
                     break;
                 }
             }
         }
-        player.cube.update();
-        playersData[iter->first] = player;
-        sendPlayerState(iter->first);
-        // playersData[iter->first] = player;
-        // sendPlayerState(iter->first);
+        // }
+
+        if (packetsDone == DISCONNECT)  {
+            disconnectClient(iter->first);
+            printf("Client %d has disconnected\n", iter->first);
+            iter = network->sessions.erase(iter);
+        } else {
+            player.camera.Update(player.cube.getPosition()); 
+            player.cube.update();
+            playersData[iter->first] = player;
+            sendPlayerState(iter->first);
+            iter++;
+        }
+        
     }
     auto orig_diff = std::chrono::steady_clock::now() - start;
     auto milli_diff = std::chrono::duration_cast<std::chrono::milliseconds>(orig_diff);
@@ -118,6 +168,19 @@ void ServerGame::receiveFromClients()
     if(wait.count() < 0) {
         printf("WARNING: Tick took longer than allocated by %lld ms\n", -wait.count());
     }
+}
+
+//should specify id of who's disconnecting so other clients know to remove that client's data
+void ServerGame::disconnectClient(int client_id) {
+    Packet packet;
+    packet.packet_type = END_GAME;
+    packet.length = 0;
+    const unsigned int packet_size = packet.getSize();
+    //char packet_data[packet_size];
+    std::vector<char> packet_data(packet_size);
+    packet.serialize(packet_data.data());
+    network->sendToAll(packet_data.data(), packet_size);
+    playersData.erase(client_id);
 }
 
 void ServerGame::sendActionPackets()
@@ -145,6 +208,8 @@ void ServerGame::sendEchoPackets(std::string response) {
     // network->sendToAll(packet_data, packet_size);
 }
 
+//cube baseModel, model
+//then camera floats
 void ServerGame::sendPlayerState(unsigned int client_id) {
     PlayerData& player = playersData[client_id];
 
@@ -163,7 +228,4 @@ void ServerGame::sendPlayerState(unsigned int client_id) {
     packet.serialize(packet_data);
 
     network->sendToAll(packet_data, packet_size);
-    // for (int i=0; i<64; i++) {
-    //     printf("elem %d: %hhx\n", i, (unsigned char) packet.payload[i]);
-    // }
 }

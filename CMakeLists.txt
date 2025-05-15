@@ -151,6 +151,16 @@ elseif (WIN32)
         glew32s.lib
         glfw3
     )
+    target_link_libraries(server
+        ${OPENGL_LIBRARIES}
+        glew32s.lib
+        glfw3
+    )
+    target_link_libraries(client
+        ${OPENGL_LIBRARIES}
+        glew32s.lib
+        glfw3
+    )
 endif()
 
 # Move assets to .exe

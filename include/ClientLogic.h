@@ -18,7 +18,7 @@ enum class OSType: uint8_t {
 #define CLIENT_LOGIC
 class client_logic {
     public:
-        static std::vector<KeyType> pendingKeys;
+        static std::vector<Packet> pendingPackets;
 
         static void error_callback(int error, const char* description);
 
@@ -29,5 +29,7 @@ class client_logic {
         static KeyType handleUserInput(GLFWwindow* window);
 
         static void keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+        static void cursor_callback(GLFWwindow* window, double currX, double currY);
 };
 #endif

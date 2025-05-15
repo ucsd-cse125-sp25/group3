@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <stdexcept>
 #ifndef PACKET_H // include guard
 #define PACKET_H
 
@@ -15,9 +16,13 @@ enum PacketTypes {
 
     ECHO_EVENT = 2,
 
-    KEY_EVENT = 3,
+    KEY_INPUT = 3,
 
-    STATE_UPDATE = 4
+    STATE_UPDATE = 4,
+
+    END_GAME = 5,
+
+    CURSOR_EVENT = 6,
 }; 
 
 // Packet structure will be type (4 bytes), length (4 bytes), data (N bytes) 

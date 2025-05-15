@@ -168,28 +168,38 @@ bool ServerNetwork::acceptNewClient(unsigned int & id)
 }
 
 // receive incoming data
-int ServerNetwork::receiveData(unsigned int client_id, char * recvbuf)
+int ServerNetwork::receiveData(unsigned int client_id, char * recvbuf, int bufLength)
 {
-    if( sessions.find(client_id) != sessions.end() )
-    {
+    int totalRead = 0;
+
+    if( sessions.find(client_id) != sessions.end()) {
         #ifdef _WIN32
         SOCKET currentSocket = sessions[client_id];
         #else
         int currentSocket = sessions[client_id];
         #endif
-        iResult = NetworkServices::receiveMessage(currentSocket, recvbuf, MAX_PACKET_SIZE);
-        if (iResult == 0)
-        {
-            printf("Connection closed\n");
-            #ifdef _WIN32
-            closesocket(currentSocket);
-            #else
-            close(currentSocket);
-            #endif
+
+        while (totalRead != bufLength) {
+            iResult = NetworkServices::receiveMessage(currentSocket, recvbuf + totalRead, bufLength - totalRead);
+            
+            if (iResult == 0) {
+                printf("Connection closed\n");
+                #ifdef _WIN32
+                closesocket(currentSocket);
+                #else
+                close(currentSocket);
+                #endif
+                return 0;
+            } else if (iResult < 0 && totalRead == 0) { //nothing to read
+                return -1;
+            } else if (iResult > 0) {
+                totalRead += iResult;
+            }
+            
         }
-        return iResult;
     }
-    return 0;
+
+    return totalRead;
 } 
 
 // send data to all clients
@@ -208,7 +218,7 @@ void ServerNetwork::sendToAll(char * packets, int totalSize)
     {
         currentSocket = iter->second;
         iSendResult = NetworkServices::sendMessage(currentSocket, packets, totalSize);
-
+        
         #ifdef _WIN32
         if (iSendResult == SOCKET_ERROR) {
             printf("send failed with error: %d\n", WSAGetLastError());

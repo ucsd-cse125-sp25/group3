@@ -50,7 +50,7 @@ public:
     bool acceptNewClient(unsigned int & id);
 
     // receive incoming data
-    int receiveData(unsigned int client_id, char * recvbuf);
+    int receiveData(unsigned int client_id, char * recvbuf, int bufLength);
 
     // send data to all clients
     void sendToAll(char * packets, int totalSize);

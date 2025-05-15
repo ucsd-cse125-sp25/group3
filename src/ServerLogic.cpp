@@ -177,8 +177,19 @@ void PlayerData::calculateNewPos(KeyType key) {
         cube.baseModel = glm::translate(cube.baseModel, movement);
     }
 
+    if (key == KeyType::KEY_R) {
+        resetCamera();
+    }
+
+    if (key == KeyType::KEY_ALT_PRESS) {
+        altDown = true;
+    } else if (key == KeyType::KEY_ALT_RELEASE) {
+        altDown = false;
+        firstMouse = true;
+    }
+
     if (key == KeyType::KEY_SPACE) {
-        printf("JUMPING\n");
+        // printf("JUMPING\n");
         if (cube.isGrounded) {
             cube.isJumping = true;
             cube.isGrounded = false;   
@@ -230,7 +241,64 @@ void PlayerData::calculateNewPos(KeyType key) {
             cube.eWasPressed = false;
         }
     }
+}
+
+// TODO: use serialize instead
+void PlayerData::toVector(std::vector<char> * vec) {
+    cube.toVector(vec);
+    camera.toVector(vec);
+    miniMapCam.toVector(vec); //only need to send viewProjMtx for miniMapCam
+    vec->resize(vec->size() + 1, altDown);
+}
+
+// TODO: make this work with packet class
+void PlayerData::init(char * data) {
+    firstMouse = true;
+    altDown = false;
+    miniMapCam.SetOrtho(-10, 10, -10, 10, 0.1f, 100.0f); 
+    miniMapCam.SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
+    memcpy(&cube.type, data, sizeof(int));
+    memcpy(&windowWidth, &data[sizeof(int)], sizeof(int));
+    memcpy(&windowHeight, &data[2 * sizeof(int)], sizeof(int));
+    printf("character: %d, width: %d, height: %d\n", cube.type, windowWidth, windowHeight);
+}
+
+void PlayerData::handleCursor(double currX, double currY) {
+
+    if (altDown) {
+        return;
+    }
+    static float lastX = windowWidth / 2.0f;
+    static float lastY = windowHeight / 2.0f;
+    float sensitivity = 0.1f;
+
+    if (firstMouse) {
+        lastX = currX;
+        lastY = currY;
+        firstMouse = false;
+    }
+
+    float xoffset = currX - lastX;
+    float yoffset = currY - lastY; 
+
+    lastX = currX;
+    lastY = currY;
+
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    
+    float newAzimuth = camera.GetAzimuth() + xoffset;
+    float newIncline = glm::clamp(camera.GetIncline() + yoffset, -89.0f, 89.0f); 
+
+    camera.SetAzimuth(newAzimuth);
+    camera.SetIncline(newIncline);
     
     cube.update();
     camera.Update(cube.getPosition()); 
+}
+
+void PlayerData::resetCamera() {
+    camera.Reset();
+    camera.SetAspect(float(windowWidth) / float(windowHeight));
 }

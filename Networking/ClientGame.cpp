@@ -46,48 +46,69 @@ void ClientGame::sendKeyPacket(KeyType key) {
     sendPacket(packet);
 }
 
+// TODO: Dynamically determine type of packet to send
+void ClientGame::sendPendingPackets() {
+
+    for (int i=0; i<client_logic::pendingPackets.size(); i++) {
+        Packet packet = client_logic::pendingPackets[i];
+        const unsigned int packet_size = packet.getSize();
+        std::vector<char> packet_data(packet_size);  
+        packet.serialize(packet_data.data());
+        NetworkServices::sendMessage(network->ConnectSocket, packet_data.data(), packet_size);
+    }
+    client_logic::pendingPackets.clear();
+}
+
 void ClientGame::update()
 {
     glfwPollEvents();
 
-    for (int i=0; i<client_logic::pendingKeys.size(); i++) {
-        sendKeyPacket(client_logic::pendingKeys[i]);
-    }
-    client_logic::pendingKeys.clear();
-
     KeyType input = client_logic::handleUserInput(window);
+    sendPendingPackets();
 
-    if (input != KeyType::NONE) {
-        printf("sending key event packet\n");
-        sendKeyPacket(input);
-    } 
+    while (true) {
+        std::vector<char> header(Packet::getHeaderSize());
+        int data_length = network->receivePackets(header.data(), Packet::getHeaderSize());
+        if (data_length == -1) {
+            break;
+        }
+        std::vector<char> data(packet.length);
+        data_length = network->receivePackets(data.data(), packet.length);
+      
+        StateUpdatePacket packet;
+        packet.deserialize(data.data());
+     
+        switch (packet.packet_type) {
 
-    int data_length = network->receivePackets(network_data);
-
-    if (data_length > 0) {
-        int i = 0;
-
-        while (i < (unsigned int)data_length) 
-        {
-            StateUpdatePacket packet;
-            int bytes_read = packet.deserialize(&(network_data[i]));
-            i += bytes_read;
-        
-            switch (packet.packet_type) {
-                case STATE_UPDATE:
-                    printf("client recieved state update from server\n");
-                    Window::update(packet);
-                    // Window::render(window);
-                    // Window::cube->update();
-                    break;
-                default:
-                    printf("client received unknown packet type from server\n");
-                    break;
-            }
+            case ACTION_EVENT:
+                printf("client received action event packet from server\n");
+                break;
+            case ECHO_EVENT:
+                printf("client recieved echo event packet from server\n");
+                break;
+            case STATE_UPDATE:
+                printf("client recieved state update from server\n");
+                // printf("payload size: %d\n", packet.length);
+                Window::applyServerState(packet.payload.data());
+                // Window::render(window);
+                // Window::cube->update();
+                break;
+            case END_GAME:
+                #ifdef _WIN32
+                closesocket(network->ConnectSocket);
+                #else
+                close(network->ConnectSocket);
+                #endif
+                glfwSetWindowShouldClose(window, GL_TRUE);
+                break;
+            default:
+                printf("client received unknown packet type from server\n");
+                break;
         }
     }
-    
     Window::render(window);
+    // Window::updateRest(packet.payload.data());
+    // Window::applyRest(packet.payload.data(), , packet.length);
     // Window::cube->update();
     // Window::idleCallback();
 }

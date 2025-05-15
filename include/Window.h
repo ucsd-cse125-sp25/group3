@@ -47,5 +47,5 @@ public:
     static void cursor_callback(GLFWwindow* window, double currX, double currY);
 
     static void render(GLFWwindow* window);
-    static void update(const StateUpdatePacket& packet);
+    static void applyServerState(const StateUpdatePacket& packet);
 };

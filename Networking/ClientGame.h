@@ -18,6 +18,7 @@ public:
     ~ClientGame(void);
     GLFWwindow* window;
     ClientNetwork* network; 
+    void sendPendingPackets();
     void sendPacket(Packet& packet);
     void sendInitPacket(CharacterType character);
     void sendKeyPacket(KeyType);

@@ -6,6 +6,7 @@
 
 #include "core.h"
 #include "glm/gtx/euler_angles.hpp"
+#include <vector>
 
 // The Camera class provides a simple means to controlling the 3D camera. It could
 // be extended to support more interactive controls. Ultimately. the camera sets the
@@ -35,6 +36,9 @@ public:
     const glm::mat4 &GetViewProjectMtx() { return ViewProjectMtx; }
 
     glm::vec3 GetForwardVector() const;
+
+    void toVector(std::vector<char> * vec);
+    int readFromArray(char * data);
 
 private:
     // Perspective controls
