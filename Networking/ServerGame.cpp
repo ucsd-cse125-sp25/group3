@@ -35,8 +35,7 @@ void ServerGame::update()
    receiveFromClients();
 }
 
-void ServerGame::receiveFromClients()
-{
+void ServerGame::receiveFromClients() {
     auto start = std::chrono::steady_clock::now();
     // Packet packet;
 
@@ -130,12 +129,9 @@ void ServerGame::receiveFromClients()
                     break;
                 }
                 case CURSOR_EVENT: {
+                    CursorPacket* cursorPacket = dynamic_cast<CursorPacket*>(packet.get());
                     printf("server recieved cursor event packet from client\n");
-                    double currX;
-                    double currY;
-                    memcpy(&currX, packet.payload.data(), sizeof(currX));
-                    memcpy(&currY, packet.payload.data() + sizeof(currX), sizeof(currY));
-                    player.handleCursor(currX, currY);
+                    player.handleCursor(cursorPacket->currX, cursorPacket->currY);
                     break;
                 }
                 default: {

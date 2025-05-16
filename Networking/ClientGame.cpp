@@ -41,7 +41,7 @@ void ClientGame::sendInitPacket(CharacterType character) {
 
 void ClientGame::sendKeyPacket(KeyType key) {
     KeyPacket packet;
-    packet.packet_type = KEY_EVENT;
+    packet.packet_type = KEY_INPUT;
     packet.key_type = key;
     sendPacket(packet);
 }
@@ -49,8 +49,7 @@ void ClientGame::sendKeyPacket(KeyType key) {
 // TODO: Dynamically determine type of packet to send
 void ClientGame::sendPendingPackets() {
 
-    for (int i=0; i<client_logic::pendingPackets.size(); i++) {
-        Packet packet = client_logic::pendingPackets[i];
+    for (auto& packet : client_logic::pendingPackets) {
         const unsigned int packet_size = packet.getSize();
         std::vector<char> packet_data(packet_size);  
         packet.serialize(packet_data.data());
@@ -69,17 +68,17 @@ void ClientGame::update()
     while (true) {
         std::vector<char> header(Packet::getHeaderSize());
         int data_length = network->receivePackets(header.data(), Packet::getHeaderSize());
+
         if (data_length == -1) {
             break;
         }
-        std::vector<char> data(packet.length);
-        data_length = network->receivePackets(data.data(), packet.length);
-      
-        StateUpdatePacket packet;
-        packet.deserialize(data.data());
+        Packet tempPacket;
+        tempPacket.deserializeHeader(header.data());
+        //char data[packet.length];
+        std::vector<char> data(tempPacket.length);
+        data_length = network->receivePackets(data.data(), tempPacket.length);
      
-        switch (packet.packet_type) {
-
+        switch (tempPacket.packet_type) {
             case ACTION_EVENT:
                 printf("client received action event packet from server\n");
                 break;
@@ -87,13 +86,20 @@ void ClientGame::update()
                 printf("client recieved echo event packet from server\n");
                 break;
             case STATE_UPDATE:
+            {
                 printf("client recieved state update from server\n");
+                StateUpdatePacket packet;
+                packet.deserializeHeader(header.data());
+                packet.deserializePayload(data.data());
                 // printf("payload size: %d\n", packet.length);
-                Window::applyServerState(packet.payload.data());
+                Window::applyServerState(packet);
                 // Window::render(window);
                 // Window::cube->update();
                 break;
+            }
             case END_GAME:
+            {
+                printf("client end game packet from server\n");
                 #ifdef _WIN32
                 closesocket(network->ConnectSocket);
                 #else
@@ -101,6 +107,7 @@ void ClientGame::update()
                 #endif
                 glfwSetWindowShouldClose(window, GL_TRUE);
                 break;
+            }
             default:
                 printf("client received unknown packet type from server\n");
                 break;

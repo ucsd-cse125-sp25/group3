@@ -2,6 +2,7 @@
 #include "KeyPacket.h"
 #include "InitPacket.h"
 #include "StateUpdatePacket.h"
+#include "CursorPacket.h"
 
 #ifndef PACKETFACTORY_H // include guard
 #define PACKETFACTORY_H

@@ -62,11 +62,9 @@ KeyType client_logic::handleUserInput(GLFWwindow* window) {
     // return key;
 
     if (key != KeyType::NONE) {
-        Packet packet;
+        KeyPacket packet;
         packet.packet_type = KEY_INPUT;
-        packet.payload.resize(1);
-        memcpy(packet.payload.data(), &key, sizeof(key));
-        packet.length = packet.payload.size();
+        packet.key_type = key;
         pendingPackets.push_back(packet);
     }
         return key;
@@ -83,14 +81,10 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
         {
             // altDown = true;
             // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); // 显示鼠标
-            Packet packet;
-            KeyType keyType = KeyType::KEY_ALT_PRESS;
+            KeyPacket packet;
             packet.packet_type = KEY_INPUT;
-            packet.payload.resize(1);
-            memcpy(packet.payload.data(), &keyType, sizeof(keyType));
-            packet.length = packet.payload.size();
+            packet.key_type = KEY_ALT_PRESS;
             pendingPackets.push_back(packet);
-
         }
 
         switch (key) 
@@ -108,23 +102,16 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
             }
             case GLFW_KEY_R: {
                 // resetCamera();
-                Packet packet;
-                KeyType keyType = KeyType::KEY_R;
+                KeyPacket packet;
                 packet.packet_type = KEY_INPUT;
-                packet.payload.resize(1);
-                memcpy(packet.payload.data(), &keyType, sizeof(keyType));
-                packet.length = packet.payload.size();
+                packet.key_type = KEY_R;
                 pendingPackets.push_back(packet);
                 break;
             }
             case GLFW_KEY_SPACE: {
-                Packet packet;
-                KeyType keyType = KeyType::KEY_SPACE;
-                
+                KeyPacket packet;
                 packet.packet_type = KEY_INPUT;
-                packet.payload.resize(1);
-                memcpy(packet.payload.data(), &keyType, sizeof(keyType));
-                packet.length = packet.payload.size();
+                packet.key_type = KEY_SPACE;
                 pendingPackets.push_back(packet);
                 
                 // pendingKeys.push_back(KeyType::KEY_SPACE);
@@ -145,26 +132,18 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
             // altDown = false;
             // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             // firstMouse = true;
-            Packet packet;
-            KeyType keyType = KeyType::KEY_ALT_RELEASE;
+            KeyPacket packet;
             packet.packet_type = KEY_INPUT;
-            packet.payload.resize(1);
-            memcpy(packet.payload.data(), &keyType, sizeof(keyType));
-            packet.length = packet.payload.size();
+            packet.key_type = KEY_ALT_RELEASE;
             pendingPackets.push_back(packet);
         }
     }
 }
 
 void client_logic::cursor_callback(GLFWwindow* window, double currX, double currY) {
-    Packet packet;
+    CursorPacket packet;
     packet.packet_type = CURSOR_EVENT;
-    // packet.payload.resize(2 * sizeof(double));
-    char buf[2 * sizeof(double)];
-    memcpy(buf, &currX, sizeof(double));
-    memcpy(&buf[sizeof(currX)], &currY, sizeof(double));
-    packet.payload.insert(packet.payload.end(), &buf[0], &buf[2 * sizeof(double)]);
-    // packet.payload.resize(packet.payload.size() + 1, Window::firstMouse);
-    packet.length = packet.payload.size();
+    packet.currX = currX;
+    packet.currY = currY;
     pendingPackets.push_back(packet);
 }
