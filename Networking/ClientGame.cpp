@@ -16,7 +16,7 @@ ClientGame::ClientGame(int character)
     if (!Window::initializeProgram()) exit(EXIT_FAILURE);
     // Initialize objects/pointers for rendering; exit if initialization fails.
     if (!Window::initializeObjects()) exit(EXIT_FAILURE);
-
+  
     // send init packet
     Packet packet;
     packet.packet_type = INIT_CONNECTION;
@@ -138,7 +138,11 @@ void ClientGame::update()
         packet.deserializePayload(data.data());
         
         switch (packet.packet_type) {
-
+            case INIT_PLAYER:
+                printf("recieved init player packet from server\n");
+                /*Window::setClientID(packet.payload.data());*/
+                Window::setInitState(packet.payload.data());
+                break;
             case ACTION_EVENT:
                 printf("client received action event packet from server\n");
                 break;
@@ -147,7 +151,8 @@ void ClientGame::update()
                 break;
             case STATE_UPDATE:
                 printf("client recieved state update from server\n");
-                // printf("payload size: %d\n", packet.length);
+                 //printf("payload size: %d\n", packet.length);
+                if (Window::initialized)
                 Window::applyServerState(packet.payload.data());
                 // Window::render(window);
                 // Window::cube->update();

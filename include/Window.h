@@ -4,9 +4,13 @@
 #include "Cube.h"
 #include "Shader.h"
 #include "core.h"
+#include <map>
 
 class Window {
 public:
+    static unsigned int client_id;
+    static bool initialized;
+
     // Window Properties
     static int width;
     static int height;
@@ -15,6 +19,7 @@ public:
 
     // Objects to render
     static Cube* cube;
+    static std::map<unsigned int, Cube*> cubes;
     static Cube* floor;
 
     // Shader Program
@@ -47,4 +52,7 @@ public:
 
     static void render(GLFWwindow* window);
     static void applyServerState(char * data);
+    static void setClientID(char * data);
+    static void addClient(unsigned int client);
+    static void setInitState(char * data);
 };
