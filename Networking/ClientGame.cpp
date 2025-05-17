@@ -158,13 +158,21 @@ void ClientGame::update()
                 // Window::cube->update();
                 break;
             case END_GAME:
-                #ifdef _WIN32
-                closesocket(network->ConnectSocket);
-                #else
-                close(network->ConnectSocket);
-                #endif
-                glfwSetWindowShouldClose(window, GL_TRUE);
-                break;
+                unsigned int closedClient;
+                memcpy(&closedClient, packet.payload.data(), sizeof(closedClient));
+
+                if (closedClient == Window::client_id) {
+                    #ifdef _WIN32
+                    closesocket(network->ConnectSocket);
+                    #else
+                    close(network->ConnectSocket);
+                    #endif
+                    glfwSetWindowShouldClose(window, GL_TRUE);
+                    break;
+                } else {
+                    Window::removeClient(closedClient);
+                }
+                
             default:
 
                 printf("error in packet types\n");

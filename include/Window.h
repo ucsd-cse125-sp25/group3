@@ -54,5 +54,6 @@ public:
     static void applyServerState(char * data);
     static void setClientID(char * data);
     static void addClient(unsigned int client);
+    static void removeClient(unsigned int client);
     static void setInitState(char * data);
 };

@@ -386,6 +386,15 @@ void Window::addClient(unsigned int client) {
     printf("init cube for client %u\n", client);
 }
 
+void Window::removeClient(unsigned int client) {
+
+    if (cubes.find(client) != cubes.end()) {
+        Cube* cubePtr = cubes[client];
+        delete cubePtr;
+        cubes.erase(client);
+    }
+}
+
 void Window::setInitState(char * data) {
     memcpy(&client_id, data, sizeof(client_id));
     addClient(client_id);
