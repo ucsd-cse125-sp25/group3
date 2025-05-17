@@ -285,7 +285,11 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
 }
 
 void Window::applyServerState(char * data) {
-    int offset = cube->readFromArray(data);
+    int offset = 4;
+    int numClients;
+    memcpy(&numClients, data, sizeof(int));
+    printf("there are %d clients", numClients);
+    offset += cube->readFromArray(&data[offset]);
     offset += Cam->readFromArray(&data[offset]);
     offset += MiniMapCam->readFromArray(&data[offset]);
     memcpy(&altDown, &data[offset], sizeof(bool));

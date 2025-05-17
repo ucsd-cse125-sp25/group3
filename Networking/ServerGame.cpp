@@ -169,11 +169,11 @@ void ServerGame::receiveFromClients()
             player.camera.Update(player.cube.getPosition()); 
             player.cube.update();
             playersData[iter->first] = player;
-            sendPlayerState(iter->first);
             iter++;
         }
         
     }
+    sendStateUpdate();
     auto orig_diff = std::chrono::steady_clock::now() - start;
     auto milli_diff = std::chrono::duration_cast<std::chrono::milliseconds>(orig_diff);
     auto wait = std::chrono::milliseconds(TICK) - milli_diff;
@@ -230,7 +230,7 @@ void ServerGame::sendPlayerState(unsigned int client_id) {
     PlayerData player = playersData[client_id];
     Packet packet;
     packet.packet_type = STATE_UPDATE;
-    player.toVector(&packet.payload);
+    //player.toVector(&packet.payload);
     // player.cube.toVector(&packet.payload);
     packet.length = packet.payload.size();
     const unsigned int packet_size = packet.getSize();
@@ -242,4 +242,24 @@ void ServerGame::sendPlayerState(unsigned int client_id) {
     // for (int i=0; i<64; i++) {
     //     printf("elem %d: %hhx\n", i, (unsigned char) packet.payload[i]);
     // }
+}
+
+void ServerGame::sendStateUpdate() {
+    std::map<unsigned int, PlayerData>::iterator iter;
+    Packet packet;
+    packet.packet_type = STATE_UPDATE;
+    char buf[4];
+    unsigned int numClients = playersData.size();
+    memcpy(buf, &numClients, sizeof(numClients));
+    packet.payload.insert(packet.payload.end(), &buf[0], &buf[4]);
+
+    for (iter = playersData.begin(); iter != playersData.end();) {
+        PlayerData player = iter->second;
+        player.toVector(iter->first, &packet.payload);
+    }
+    packet.length = packet.payload.size();
+    const unsigned int packet_size = packet.getSize();
+    std::vector<char> packet_data(packet_size);
+    packet.serialize(packet_data.data());
+    network->sendToAll(packet_data.data(), packet_size);
 }

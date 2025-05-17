@@ -268,7 +268,11 @@ void PlayerData::calculateNewPos(KeyType key) {
     }
 }
 
-void PlayerData::toVector(std::vector<char> * vec) {
+void PlayerData::toVector(unsigned int client_id, std::vector<char> * vec) {
+    char buf[4];
+    memcpy(buf, &client_id, sizeof(int));
+    vec->insert(vec->end(), &buf[0], &buf[4]);
+
     cube.toVector(vec);
     camera.toVector(vec);
     miniMapCam.toVector(vec); //only need to send viewProjMtx for miniMapCam

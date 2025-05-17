@@ -80,7 +80,7 @@ class PlayerData {
         void init(char * data);
         void calculateNewPos(KeyType key);
         void setCharacter(CharacterType character);
-        void toVector(std::vector<char> * vec);
+        void toVector(unsigned int client_id, std::vector<char> * vec);
         void handleCursor(double currX, double currY);
         void resetCamera();
 };
