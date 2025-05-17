@@ -294,13 +294,13 @@ void Window::applyServerState(char * data) {
     int numClients;
     memcpy(&numClients, data, sizeof(int));
     int offset = sizeof(numClients);
-    //printf("num clients is %d\n", numClients);
+    printf("num clients is %d\n", numClients);
     for (int i = 0; i < numClients; i++) {
         //printf("there are %d clients", numClients);
         unsigned int currClient;
         memcpy(&currClient, &data[offset], sizeof(currClient));
         offset += sizeof(currClient);
-        //printf("curr client is %d\n", currClient);
+        printf("curr client is %u\n", currClient);
 
         if (cubes.find(currClient) == cubes.end()) {
             addClient(currClient);
@@ -308,11 +308,12 @@ void Window::applyServerState(char * data) {
         Cube* cubePtr = cubes[currClient];
         int cubeOffset = cubePtr->readFromArray(&data[offset]);
         offset += cubeOffset;
-
+   
         if (currClient == client_id) {
             offset += Cam->readFromArray(&data[offset]);
             offset += MiniMapCam->readFromArray(&data[offset]);
             memcpy(&altDown, &data[offset], sizeof(bool));
+            offset += sizeof(bool);
         }
         else {
             offset += (2 * (100) + 1);
@@ -336,7 +337,8 @@ void Window::render(GLFWwindow* window) {
     #endif
     std::map<unsigned int, Cube*>::iterator iter;
 
-    for (iter = cubes.begin(); iter!=cubes.end(); iter++) {
+    for (iter = cubes.begin(); iter != cubes.end(); iter++) {
+        //printf("rendering cube for client %u\n", iter->first);
         iter->second->draw(Cam->GetViewProjectMtx(), Window::shaderProgram, false);
     }
 
