@@ -13,7 +13,7 @@ public:
     void receiveFromClients();
     void sendActionPackets();
     void sendEchoPackets(std::string);
-    void sendPlayerState(unsigned int client_id);
+    void sendInitPlayerState(unsigned int client_id);
     void sendStateUpdate();
     void disconnectClient(int client_id);
 

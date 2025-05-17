@@ -280,6 +280,7 @@ void PlayerData::toVector(unsigned int client_id, std::vector<char> * vec) {
 }
 
 void PlayerData::init(char * data) {
+    initialized = true;
     firstMouse = true;
     altDown = false;
     miniMapCam.SetOrtho(-10, 10, -10, 10, 0.1f, 100.0f); 

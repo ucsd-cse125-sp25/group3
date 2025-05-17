@@ -73,6 +73,7 @@ class PlayerData {
         Camera miniMapCam;
         int windowWidth;
         int windowHeight;
+        bool initialized = false;
         bool firstMouse;
         bool altDown;
         // PlayerData();

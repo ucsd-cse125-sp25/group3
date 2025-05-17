@@ -60,7 +60,7 @@ void ServerGame::receiveFromClients()
             //char header[headerSize];
             std::vector<char> header(Packet::getHeaderSize());
             int data_length = network->receiveData(iter->first, header.data(), headerSize);
-        
+           
             if (data_length == 0) {
                 printf("Client %d has disconnected\n", iter->first);
                 playersData.erase(iter->first);
@@ -105,7 +105,7 @@ void ServerGame::receiveFromClients()
                     // printf("player is character %d\n", character);
                     // player.setCharacter(character);
                     playersData[iter->first] = player;
-                    sendPlayerState(iter->first);
+                    sendInitPlayerState(iter->first);
                     // sendActionPackets();
 
                     break;
@@ -225,12 +225,12 @@ void ServerGame::sendEchoPackets(std::string response) {
 
 //cube baseModel, model
 //then camera floats
-void ServerGame::sendPlayerState(unsigned int client_id) {
+void ServerGame::sendInitPlayerState(unsigned int client_id) {
     // printf("sending state\n");
     PlayerData player = playersData[client_id];
     Packet packet;
-    packet.packet_type = STATE_UPDATE;
-    //player.toVector(&packet.payload);
+    packet.packet_type = INIT_PLAYER;
+    player.toVector(client_id, &packet.payload);
     // player.cube.toVector(&packet.payload);
     packet.length = packet.payload.size();
     const unsigned int packet_size = packet.getSize();
@@ -253,9 +253,12 @@ void ServerGame::sendStateUpdate() {
     memcpy(buf, &numClients, sizeof(numClients));
     packet.payload.insert(packet.payload.end(), &buf[0], &buf[4]);
 
-    for (iter = playersData.begin(); iter != playersData.end();) {
+    for (iter = playersData.begin(); iter != playersData.end(); iter++) {
         PlayerData player = iter->second;
-        player.toVector(iter->first, &packet.payload);
+
+        if (player.initialized) {
+            player.toVector(iter->first, &packet.payload);
+        }
     }
     packet.length = packet.payload.size();
     const unsigned int packet_size = packet.getSize();

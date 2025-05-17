@@ -23,6 +23,8 @@ enum PacketTypes {
     END_GAME = 5,
 
     CURSOR_EVENT = 6,
+
+    INIT_PLAYER = 7,
 }; 
 
 // Packet structure will be length (4 bytes), type (4 bytes), data (N bytes) 
