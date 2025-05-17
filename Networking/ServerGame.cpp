@@ -189,7 +189,10 @@ void ServerGame::receiveFromClients()
 void ServerGame::disconnectClient(int client_id) {
     Packet packet;
     packet.packet_type = END_GAME;
-    packet.length = 0;
+    char buf[4];
+    memcpy(buf, &client_id, sizeof(client_id));
+    packet.payload.insert(packet.payload.end(), &buf[0], &buf[4]);
+    packet.length = sizeof(client_id);
     const unsigned int packet_size = packet.getSize();
     //char packet_data[packet_size];
     std::vector<char> packet_data(packet_size);
@@ -237,7 +240,7 @@ void ServerGame::sendInitPlayerState(unsigned int client_id) {
     //char packet_data[packet_size];
     std::vector<char> packet_data(packet_size);
     packet.serialize(packet_data.data());
-    network->sendToAll(packet_data.data(), packet_size);
+    network->sendToOne(client_id, packet_data.data(), packet_size);
     // printf("done sending\n");
     // for (int i=0; i<64; i++) {
     //     printf("elem %d: %hhx\n", i, (unsigned char) packet.payload[i]);
@@ -248,18 +251,19 @@ void ServerGame::sendStateUpdate() {
     std::map<unsigned int, PlayerData>::iterator iter;
     Packet packet;
     packet.packet_type = STATE_UPDATE;
-    char buf[4];
-    unsigned int numClients = playersData.size();
-    memcpy(buf, &numClients, sizeof(numClients));
-    packet.payload.insert(packet.payload.end(), &buf[0], &buf[4]);
-
+    unsigned int numClients = 0;
+    
     for (iter = playersData.begin(); iter != playersData.end(); iter++) {
         PlayerData player = iter->second;
 
         if (player.initialized) {
             player.toVector(iter->first, &packet.payload);
+            numClients++;
         }
     }
+    char buf[4];
+    memcpy(buf, &numClients, sizeof(numClients));
+    packet.payload.insert(packet.payload.begin(), &buf[0], &buf[4]);
     packet.length = packet.payload.size();
     const unsigned int packet_size = packet.getSize();
     std::vector<char> packet_data(packet_size);

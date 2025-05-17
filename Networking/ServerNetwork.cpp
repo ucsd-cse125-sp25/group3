@@ -1,6 +1,7 @@
 
 #include "ServerNetwork.h"
 #include <cstdio>
+#include <cstdlib>
 
 const char *ip = nullptr;
 
@@ -223,6 +224,7 @@ void ServerNetwork::sendToAll(char * packets, int totalSize)
         if (iSendResult == SOCKET_ERROR) {
             printf("send failed with error: %d\n", WSAGetLastError());
             closesocket(currentSocket);
+            exit(1);
         }
             #else
         if (iSendResult < 0) {
@@ -232,4 +234,29 @@ void ServerNetwork::sendToAll(char * packets, int totalSize)
         #endif
         
     }
+}
+
+void ServerNetwork::sendToOne(unsigned int client_id, char* packets, int totalSize) {
+    #ifdef _WIN32
+    SOCKET currentSocket;
+    std::map<unsigned int, SOCKET>::iterator iter;
+    #else
+    int currentSocket;
+    std::map<unsigned int, int>::iterator iter;
+    #endif
+    int iSendResult;
+    currentSocket = sessions[client_id];
+    iSendResult = NetworkServices::sendMessage(currentSocket, packets, totalSize);
+
+    #ifdef _WIN32
+    if (iSendResult == SOCKET_ERROR) {
+        printf("send failed with error: %d\n", WSAGetLastError());
+        closesocket(currentSocket);
+    }
+    #else
+    if (iSendResult < 0) {
+        printf("sendToAll failed");
+        close(currentSocket);
+    }
+    #endif
 }
