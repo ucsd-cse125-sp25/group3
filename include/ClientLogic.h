@@ -18,7 +18,7 @@ enum class OSType: uint8_t {
 #define CLIENT_LOGIC
 class client_logic {
     public:
-        static std::vector<Packet> pendingPackets;
+        static std::vector<std::unique_ptr<Packet>> pendingPackets;
 
         static void error_callback(int error, const char* description);
 

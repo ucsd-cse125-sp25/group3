@@ -50,9 +50,9 @@ void ClientGame::sendKeyPacket(KeyType key) {
 void ClientGame::sendPendingPackets() {
 
     for (auto& packet : client_logic::pendingPackets) {
-        const unsigned int packet_size = packet.getSize();
+        const unsigned int packet_size = packet->getSize();
         std::vector<char> packet_data(packet_size);  
-        packet.serialize(packet_data.data());
+        packet->serialize(packet_data.data());
         NetworkServices::sendMessage(network->ConnectSocket, packet_data.data(), packet_size);
     }
     client_logic::pendingPackets.clear();

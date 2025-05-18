@@ -72,12 +72,12 @@ void ServerGame::receiveFromClients() {
                 // iter++;
                 break;
             } 
-            Packet packet;
-            packet.deserializeHeader(header.data());
+            Packet temp;
+            temp.deserializeHeader(header.data());
             //char data[packet.length];
-            std::vector<char> data(packet.length);
-            data_length = network->receiveData(iter->first, data.data(), packet.length);
-            packet.deserializePayload(data.data());
+            std::vector<char> full_packet(headerSize + temp.length);
+            std::copy(header.begin(), header.end(), full_packet.begin());
+            data_length = network->receiveData(iter->first, full_packet.data() + headerSize, temp.length);
             // printf("data length read: %d\n", data_length);
             // if (data_length <= 0) 
             // {
@@ -87,53 +87,50 @@ void ServerGame::receiveFromClients() {
             //     continue;
             // }
 
-            int i = 0;
-            while (i < data_length) 
-            {
-                std::unique_ptr<Packet> packet = PacketFactory::createFromBuffer(&network_data[i]);
-                // TODO: Handle case where an invalid packet is received
-                if (packet == nullptr) {
-                    break; // couldn't create packet, skip
-                }
-                i += packet->getSize();
+            std::unique_ptr<Packet> packet = PacketFactory::createFromBuffer(full_packet.data());
+            if (!packet) {
+                printf("Received invalid packet from client %d\n", iter->first);
+                break;
+            }
 
-                switch (packet->packet_type) {
-                    case INIT_CONNECTION: {
-                        InitPacket* initPacket = dynamic_cast<InitPacket*>(packet.get());
-                        printf("server received init packet from client\n");
-                        player.init(initPacket);
-                        printf("player is character %d\n", initPacket->character);
-                        break;
+            switch (packet->packet_type) {
+                case INIT_CONNECTION: {
+                    InitPacket* initPacket = dynamic_cast<InitPacket*>(packet.get());
+                    printf("server received init packet from client\n");
+                    player.init(initPacket);
+                    printf("player is character %d\n", initPacket->character);
+                    break;
+                }
+                case KEY_INPUT: {
+                    KeyPacket* keyPacket = dynamic_cast<KeyPacket*>(packet.get());
+                    printf("server recieved key input packet from client\n");
+                    if (keyPacket) {
+                        player.calculateNewPos(keyPacket->key_type);
+                        //playersData[iter->first] = player;
+                        //sendPlayerState(iter->first);
+                    } else {
+                        printf("Error: Failed to cast to KeyPacket\n");
                     }
-                    case KEY_INPUT: {
-                        KeyPacket* keyPacket = dynamic_cast<KeyPacket*>(packet.get());
-                        if (keyPacket) {
-                            player.calculateNewPos(keyPacket->key_type);
-                            //playersData[iter->first] = player;
-                            //sendPlayerState(iter->first);
-                        } else {
-                            printf("Error: Failed to cast to KeyPacket\n");
-                        }
-                        break;
-                    }
-                    case END_GAME: {
-                        // disconnectClient();
-                        // printf("Client %d has disconnected\n", iter->first);
-                        // playersData.erase(iter->first);
-                        // iter = network->sessions.erase(iter);
-                        packetsDone = DISCONNECT;
-                        break;
-                    }
-                    case CURSOR_EVENT: {
-                        CursorPacket* cursorPacket = dynamic_cast<CursorPacket*>(packet.get());
-                        printf("server recieved cursor event packet from client\n");
-                        player.handleCursor(cursorPacket->currX, cursorPacket->currY);
-                        break;
-                    }
-                    default: {
-                        printf("error in packet types\n");
-                        break;
-                    }
+                    break;
+                }
+                case END_GAME: {
+                    printf("server recieved end game packet from client\n");
+                    // disconnectClient();
+                    // printf("Client %d has disconnected\n", iter->first);
+                    // playersData.erase(iter->first);
+                    // iter = network->sessions.erase(iter);
+                    packetsDone = DISCONNECT;
+                    break;
+                }
+                case CURSOR_EVENT: {
+                    CursorPacket* cursorPacket = dynamic_cast<CursorPacket*>(packet.get());
+                    printf("server recieved cursor event packet from client\n");
+                    player.handleCursor(cursorPacket->currX, cursorPacket->currY);
+                    break;
+                }
+                default: {
+                    printf("error in packet types\n");
+                    break;
                 }
             }
         }
