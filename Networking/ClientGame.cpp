@@ -66,19 +66,22 @@ void ClientGame::update()
     sendPendingPackets();
 
     while (true) {
-        std::vector<char> header(Packet::getHeaderSize());
-        int data_length = network->receivePackets(header.data(), Packet::getHeaderSize());
+        int headerSize = Packet::getHeaderSize();
+        std::vector<char> header(headerSize);
+        int data_length = network->receivePackets(header.data(), headerSize);
 
         if (data_length == -1) {
             break;
         }
-        Packet tempPacket;
-        tempPacket.deserializeHeader(header.data());
+        Packet temp;
+        temp.deserializeHeader(header.data());
         //char data[packet.length];
-        std::vector<char> data(tempPacket.length);
-        data_length = network->receivePackets(data.data(), tempPacket.length);
-     
-        switch (tempPacket.packet_type) {
+        std::vector<char> full_packet(headerSize + temp.length);
+        std::copy(header.begin(), header.end(), full_packet.begin());
+        data_length = network->receivePackets(full_packet.data() + headerSize, temp.length);
+        std::unique_ptr<Packet> packet = PacketFactory::createFromBuffer(full_packet.data());
+
+        switch (temp.packet_type) {
             case ACTION_EVENT:
                 printf("client received action event packet from server\n");
                 break;
@@ -88,11 +91,9 @@ void ClientGame::update()
             case STATE_UPDATE:
             {
                 printf("client recieved state update from server\n");
-                StateUpdatePacket packet;
-                packet.deserializeHeader(header.data());
-                packet.deserializePayload(data.data());
+                StateUpdatePacket* statePacket = dynamic_cast<StateUpdatePacket*>(packet.get());
                 // printf("payload size: %d\n", packet.length);
-                Window::applyServerState(packet);
+                Window::applyServerState(*statePacket);
                 // Window::render(window);
                 // Window::cube->update();
                 break;
