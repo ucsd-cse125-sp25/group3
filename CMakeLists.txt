@@ -11,6 +11,7 @@ project(menv)
 set(
     SOURCES
     packets/Packet.cpp
+    packets/CursorPacket.cpp
     packets/InitPacket.cpp
     packets/KeyPacket.cpp
     packets/StateUpdatePacket.cpp
@@ -33,6 +34,7 @@ set(
 set(
     HEADERS
     packets/Packet.h
+    packets/CursorPacket.h
     packets/InitPacket.h
     packets/KeyPacket.h
     packets/StateUpdatePacket.h

@@ -286,6 +286,9 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
 
 void Window::applyServerState(const StateUpdatePacket& packet) {
     cube->updateFromPacket(packet);
+    Cam->updateFromPacket(packet, false);
+    MiniMapCam->updateFromPacket(packet, true);
+    altDown = packet.altDown;
 }
 
 void Window::render(GLFWwindow* window) {

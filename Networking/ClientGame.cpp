@@ -35,7 +35,8 @@ void ClientGame::sendInitPacket(CharacterType character) {
     InitPacket packet;
     packet.packet_type = INIT_CONNECTION;
     packet.character = character;
-    packet.length = packet.payload.size();
+    packet.windowWidth = Window::width;
+    packet.windowHeight = Window::height;
     sendPacket(packet);
 }
 
@@ -46,7 +47,6 @@ void ClientGame::sendKeyPacket(KeyType key) {
     sendPacket(packet);
 }
 
-// TODO: Dynamically determine type of packet to send
 void ClientGame::sendPendingPackets() {
 
     for (auto& packet : client_logic::pendingPackets) {
