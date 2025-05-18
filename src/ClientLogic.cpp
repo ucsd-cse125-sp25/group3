@@ -1,6 +1,6 @@
 #include "ClientLogic.h" 
 
-std::vector<Packet> client_logic::pendingPackets;
+std::vector<std::unique_ptr<Packet>> client_logic::pendingPackets;
 
 void client_logic::error_callback(int error, const char* description) {
     // Print error.
@@ -62,12 +62,10 @@ KeyType client_logic::handleUserInput(GLFWwindow* window) {
     // return key;
 
     if (key != KeyType::NONE) {
-        Packet packet;
-        packet.packet_type = KEY_INPUT;
-        packet.payload.resize(1);
-        memcpy(packet.payload.data(), &key, sizeof(key));
-        packet.length = packet.payload.size();
-        pendingPackets.push_back(packet);
+        auto packet = std::make_unique<KeyPacket>();
+        packet->packet_type = KEY_INPUT;
+        packet->key_type = key;
+        pendingPackets.push_back(std::move(packet));
     }
         return key;
 }
@@ -83,14 +81,10 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
         {
             // altDown = true;
             // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); // 显示鼠标
-            Packet packet;
-            KeyType keyType = KeyType::KEY_ALT_PRESS;
-            packet.packet_type = KEY_INPUT;
-            packet.payload.resize(1);
-            memcpy(packet.payload.data(), &keyType, sizeof(keyType));
-            packet.length = packet.payload.size();
-            pendingPackets.push_back(packet);
-
+            auto packet = std::make_unique<KeyPacket>();
+            packet->packet_type = KEY_INPUT;
+            packet->key_type = KEY_ALT_PRESS;
+            pendingPackets.push_back(std::move(packet));
         }
 
         switch (key) 
@@ -98,34 +92,27 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
             case GLFW_KEY_ESCAPE: {
                 // Close the window. This causes the program to also terminate.
                 // pendingKeys.push_back(KeyType::KEY_ESC);
-                Packet packet;
-                packet.packet_type = END_GAME;
                 // packet.payload.resize(1);
                 // memcpy(packet.payload.data(), &key, sizeof(key));
-                packet.length = 0;
-                pendingPackets.push_back(packet);
+
+                auto packet = std::make_unique<EndGamePacket>();
+                packet->packet_type = END_GAME;
+                pendingPackets.push_back(std::move(packet));
                 break;
             }
             case GLFW_KEY_R: {
                 // resetCamera();
-                Packet packet;
-                KeyType keyType = KeyType::KEY_R;
-                packet.packet_type = KEY_INPUT;
-                packet.payload.resize(1);
-                memcpy(packet.payload.data(), &keyType, sizeof(keyType));
-                packet.length = packet.payload.size();
-                pendingPackets.push_back(packet);
+                auto packet = std::make_unique<KeyPacket>();
+                packet->packet_type = KEY_INPUT;
+                packet->key_type = KEY_R;
+                pendingPackets.push_back(std::move(packet));
                 break;
             }
             case GLFW_KEY_SPACE: {
-                Packet packet;
-                KeyType keyType = KeyType::KEY_SPACE;
-                
-                packet.packet_type = KEY_INPUT;
-                packet.payload.resize(1);
-                memcpy(packet.payload.data(), &keyType, sizeof(keyType));
-                packet.length = packet.payload.size();
-                pendingPackets.push_back(packet);
+                auto packet = std::make_unique<KeyPacket>();
+                packet->packet_type = KEY_INPUT;
+                packet->key_type = KEY_SPACE;
+                pendingPackets.push_back(std::move(packet));
                 
                 // pendingKeys.push_back(KeyType::KEY_SPACE);
                 // printf("size: %zu\n", pendingKeys.size());
@@ -145,26 +132,18 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
             // altDown = false;
             // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             // firstMouse = true;
-            Packet packet;
-            KeyType keyType = KeyType::KEY_ALT_RELEASE;
-            packet.packet_type = KEY_INPUT;
-            packet.payload.resize(1);
-            memcpy(packet.payload.data(), &keyType, sizeof(keyType));
-            packet.length = packet.payload.size();
-            pendingPackets.push_back(packet);
+            auto packet = std::make_unique<KeyPacket>();
+            packet->packet_type = KEY_INPUT;
+            packet->key_type = KEY_ALT_RELEASE;
+            pendingPackets.push_back(std::move(packet));
         }
     }
 }
 
 void client_logic::cursor_callback(GLFWwindow* window, double currX, double currY) {
-    Packet packet;
-    packet.packet_type = CURSOR_EVENT;
-    // packet.payload.resize(2 * sizeof(double));
-    char buf[2 * sizeof(double)];
-    memcpy(buf, &currX, sizeof(double));
-    memcpy(&buf[sizeof(currX)], &currY, sizeof(double));
-    packet.payload.insert(packet.payload.end(), &buf[0], &buf[2 * sizeof(double)]);
-    // packet.payload.resize(packet.payload.size() + 1, Window::firstMouse);
-    packet.length = packet.payload.size();
-    pendingPackets.push_back(packet);
+    auto packet = std::make_unique<CursorPacket>();
+    packet->packet_type = CURSOR_EVENT;
+    packet->currX = currX;
+    packet->currY = currY;
+    pendingPackets.push_back(std::move(packet));
 }

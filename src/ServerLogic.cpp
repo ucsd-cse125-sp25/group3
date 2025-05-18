@@ -128,16 +128,17 @@ void CubeState::update() {
 
     model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
     // printf("jump height: %f\n", jumpHeight);
-    // std::cout << "model:" << std::endl;
-    // std::cout << glm::to_string(model) << std::endl;
     //printState();
-    std::cout << "jumpHeight: " << jumpHeight << std::endl;
-    std::cout << "model position: " << glm::to_string(glm::vec3(model[3])) << std::endl;
-
 }
 
 glm::vec3 CubeState::getPosition() {
     return glm::vec3(model[3]);  // extract translation from matrix
+}
+
+void CubeState::updateFromPacket(const StateUpdatePacket& packet) {
+    memcpy(&baseModel, packet.model, sizeof(packet.model));
+    isInvisible = packet.isInvisible;
+    printState();
 }
 
 // PlayerData::PlayerData() {
@@ -151,11 +152,6 @@ glm::vec3 CubeState::getPosition() {
 //     delete cube;
 //     delete camera;
 // }
-
-void PlayerData::setCharacter(CharacterType character) {
-    cube.type = character;
-}
-
 void PlayerData::calculateNewPos(KeyType key) {
     glm::vec3 forwardDir = camera.GetForwardVector();
     forwardDir.y = 0.0f;  
@@ -243,23 +239,14 @@ void PlayerData::calculateNewPos(KeyType key) {
     }
 }
 
-// TODO: use serialize instead
-void PlayerData::toVector(std::vector<char> * vec) {
-    cube.toVector(vec);
-    camera.toVector(vec);
-    miniMapCam.toVector(vec); //only need to send viewProjMtx for miniMapCam
-    vec->resize(vec->size() + 1, altDown);
-}
-
-// TODO: make this work with packet class
-void PlayerData::init(char * data) {
+void PlayerData::init(InitPacket* packet) {
     firstMouse = true;
     altDown = false;
     miniMapCam.SetOrtho(-10, 10, -10, 10, 0.1f, 100.0f); 
     miniMapCam.SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
-    memcpy(&cube.type, data, sizeof(int));
-    memcpy(&windowWidth, &data[sizeof(int)], sizeof(int));
-    memcpy(&windowHeight, &data[2 * sizeof(int)], sizeof(int));
+    cube.type = packet->character;
+    windowWidth = packet->windowWidth;
+    windowHeight = packet->windowHeight;
     printf("character: %d, width: %d, height: %d\n", cube.type, windowWidth, windowHeight);
 }
 

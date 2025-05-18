@@ -35,8 +35,7 @@ void ServerGame::update()
    receiveFromClients();
 }
 
-void ServerGame::receiveFromClients()
-{
+void ServerGame::receiveFromClients() {
     auto start = std::chrono::steady_clock::now();
     // Packet packet;
 
@@ -73,55 +72,49 @@ void ServerGame::receiveFromClients()
                 // iter++;
                 break;
             } 
-            Packet packet;
-            packet.deserializeHeader(header.data());
+            Packet temp;
+            temp.deserializeHeader(header.data());
             //char data[packet.length];
-            std::vector<char> data(packet.length);
-            data_length = network->receiveData(iter->first, data.data(), packet.length);
-            packet.deserializePayload(data.data());
+            std::vector<char> full_packet(headerSize + temp.length);
+            std::copy(header.begin(), header.end(), full_packet.begin());
+            data_length = network->receiveData(iter->first, full_packet.data() + headerSize, temp.length);
             // printf("data length read: %d\n", data_length);
-        // if (data_length <= 0) 
-        // {
-        //     player.cube.update();
-        //     playersData[iter->first] = player;
-        //     sendPlayerState(iter->first);
-        //     continue;
-        // }
+            // if (data_length <= 0) 
+            // {
+            //     player.cube.update();
+            //     playersData[iter->first] = player;
+            //     sendPlayerState(iter->first);
+            //     continue;
+            // }
 
-        int i = 0;
-        while (i < data_length) 
-        {
-            std::unique_ptr<Packet> packet = PacketFactory::createFromBuffer(&network_data[i]);
-            // TODO: Handle case where an invalid packet is received
-            if (packet == nullptr) {
-                break; // couldn't create packet, skip
+            std::unique_ptr<Packet> packet = PacketFactory::createFromBuffer(full_packet.data());
+            if (!packet) {
+                printf("Received invalid packet from client %d\n", iter->first);
+                break;
             }
-            i += packet->getSize();
 
             switch (packet->packet_type) {
-                //TODO: make this work with PlayerData 
                 case INIT_CONNECTION: {
                     InitPacket* initPacket = dynamic_cast<InitPacket*>(packet.get());
                     printf("server received init packet from client\n");
-                    //player.init(packet.payload.data());
+                    player.init(initPacket);
                     printf("player is character %d\n", initPacket->character);
-                    player.setCharacter(initPacket->character);
-                    //playersData[iter->first] = player;
-                    //sendPlayerState(iter->first);
                     break;
                 }
                 case KEY_INPUT: {
                     KeyPacket* keyPacket = dynamic_cast<KeyPacket*>(packet.get());
+                    printf("server recieved key input packet from client\n");
                     if (keyPacket) {
                         player.calculateNewPos(keyPacket->key_type);
-                        playersData[iter->first] = player;
-                        sendPlayerState(iter->first);
+                        //playersData[iter->first] = player;
+                        //sendPlayerState(iter->first);
                     } else {
                         printf("Error: Failed to cast to KeyPacket\n");
                     }
                     break;
                 }
                 case END_GAME: {
+                    printf("server recieved end game packet from client\n");
                     // disconnectClient();
                     // printf("Client %d has disconnected\n", iter->first);
                     // playersData.erase(iter->first);
@@ -130,12 +123,9 @@ void ServerGame::receiveFromClients()
                     break;
                 }
                 case CURSOR_EVENT: {
+                    CursorPacket* cursorPacket = dynamic_cast<CursorPacket*>(packet.get());
                     printf("server recieved cursor event packet from client\n");
-                    double currX;
-                    double currY;
-                    memcpy(&currX, packet.payload.data(), sizeof(currX));
-                    memcpy(&currY, packet.payload.data() + sizeof(currX), sizeof(currY));
-                    player.handleCursor(currX, currY);
+                    player.handleCursor(cursorPacket->currX, cursorPacket->currY);
                     break;
                 }
                 default: {
@@ -144,8 +134,6 @@ void ServerGame::receiveFromClients()
                 }
             }
         }
-        // }
-
         if (packetsDone == DISCONNECT)  {
             disconnectClient(iter->first);
             printf("Client %d has disconnected\n", iter->first);
@@ -157,7 +145,6 @@ void ServerGame::receiveFromClients()
             sendPlayerState(iter->first);
             iter++;
         }
-        
     }
     auto orig_diff = std::chrono::steady_clock::now() - start;
     auto milli_diff = std::chrono::duration_cast<std::chrono::milliseconds>(orig_diff);
@@ -216,12 +203,53 @@ void ServerGame::sendPlayerState(unsigned int client_id) {
     StateUpdatePacket packet;
     packet.packet_type = STATE_UPDATE;
 
+    packet.altDown = player.altDown;
+
+    // cube
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             packet.model[i][j] = player.cube.model[i][j];
         }
     }
     packet.isInvisible = player.cube.isInvisible;
+
+    // camera 
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            packet.viewProjectMtx[i][j] = player.camera.ViewProjectMtx[i][j];
+        }
+    }
+
+    for (int i = 0; i < 3; ++i) {
+        packet.eye[i] = player.camera.Eye[i];
+    }
+
+    for (int i = 0; i < 3; ++i) {
+        packet.center[i] = player.camera.Center[i];
+    }
+
+    packet.azimuth = player.camera.Azimuth;
+    packet.incline = player.camera.Incline;
+    packet.aspect = player.camera.Aspect;
+
+    // minimap camera
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            packet.miniViewProjectMtx[i][j] = player.miniMapCam.ViewProjectMtx[i][j];
+        }
+    }
+
+    for (int i = 0; i < 3; ++i) {
+        packet.miniEye[i] = player.miniMapCam.Eye[i];
+    }
+
+    for (int i = 0; i < 3; ++i) {
+        packet.miniCenter[i] = player.miniMapCam.Center[i];
+    }
+
+    packet.miniAzimuth = player.miniMapCam.Azimuth;
+    packet.miniIncline = player.miniMapCam.Incline;
+    packet.miniAspect = player.miniMapCam.Aspect;
 
     const unsigned int packet_size = packet.getSize();
     char packet_data[packet_size];

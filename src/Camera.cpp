@@ -79,58 +79,21 @@ glm::vec3 Camera::GetForwardVector() const {
     return glm::normalize(Center - Eye);  
 }
 
-//viewProjMatrix, eye, center, azimuth, incline, aspect
-void Camera::toVector(std::vector<char>* vec) {
-    char buf[4];
-
-    for (int i=0; i<4; i++) {
-        for (int j=0; j<4; j++) {
-            // printf("elem i=%d, j=%d: %f\n", i,j,baseModel[i][j]);
-            memcpy(buf, &ViewProjectMtx[i][j], sizeof(float));
-            vec->insert(vec->end(), &buf[0], &buf[4]);
-        }
+void Camera::updateFromPacket(const StateUpdatePacket& packet, bool isMini) {
+    if(!isMini) {
+        memcpy(&ViewProjectMtx, packet.viewProjectMtx, sizeof(packet.viewProjectMtx));
+        memcpy(&Eye, packet.eye, sizeof(packet.eye));
+        memcpy(&Center, packet.center, sizeof(packet.center));
+        Azimuth = packet.azimuth;
+        Incline = packet.incline;
+        Aspect = packet.aspect;
     }
-
-    for (int i=0; i<3; i++) {
-        memcpy(buf, &Eye[i], sizeof(float));
-        vec->insert(vec->end(), &buf[0], &buf[4]);
+    else {
+        memcpy(&ViewProjectMtx, packet.miniViewProjectMtx, sizeof(packet.miniViewProjectMtx));
+        memcpy(&Eye, packet.miniEye, sizeof(packet.miniEye));
+        memcpy(&Center, packet.miniCenter, sizeof(packet.miniCenter));
+        Azimuth = packet.miniAzimuth;
+        Incline = packet.miniIncline;
+        Aspect = packet.miniAspect;
     }
-
-    for (int i=0; i<3; i++) {
-        memcpy(buf, &Center[i], sizeof(float));
-        vec->insert(vec->end(), &buf[0], &buf[4]);
-    }
-    memcpy(buf, &Azimuth, sizeof(float));
-    vec->insert(vec->end(), &buf[0], &buf[4]);
-    memcpy(buf, &Incline, sizeof(float));
-    vec->insert(vec->end(), &buf[0], &buf[4]);
-    memcpy(buf, &Aspect, sizeof(float));
-    vec->insert(vec->end(), &buf[0], &buf[4]);
-} 
-
-int Camera::readFromArray(char * data) {
-    int totalBytes = 0;
-
-    for (int i=0; i<16; i++) {
-        memcpy(&ViewProjectMtx[i/4][i%4], &data[i*4], sizeof(float));
-    }
-    totalBytes += sizeof(ViewProjectMtx);
-
-    for (int i=0; i<3; i++) {
-        memcpy(&Eye[i], &data[totalBytes + i*4], sizeof(float));
-        
-    }
-    totalBytes += sizeof(Eye);
-
-    for (int i=0; i<3; i++) {
-        memcpy(&Center[i], &data[totalBytes + sizeof(Eye) + i*4], sizeof(float));
-    }
-    totalBytes += sizeof(Center);
-    memcpy(&Azimuth, &data[totalBytes], sizeof(float));
-    totalBytes += sizeof(Azimuth);
-    memcpy(&Incline, &data[totalBytes], sizeof(float));
-    totalBytes += sizeof(Incline);
-    memcpy(&Aspect, &data[totalBytes], sizeof(float));
-    totalBytes += sizeof(Aspect);
-    return totalBytes;
 }

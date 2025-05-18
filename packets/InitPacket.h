@@ -13,6 +13,10 @@ class InitPacket : public Packet {
 public:
     CharacterType character;
 
+    // window
+    int windowWidth;
+    int windowHeight;
+
     InitPacket();
 
     unsigned int getSize() override;

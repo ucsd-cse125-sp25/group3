@@ -14,6 +14,10 @@ enum KeyType {
     KEY_L = 8,
     KEY_E = 9,
     KEY_SPACE = 10,
+    KEY_ESC = 11,
+    KEY_R = 12,
+    KEY_ALT_PRESS = 13,
+    KEY_ALT_RELEASE = 14,
 };
 
 class KeyPacket : public Packet {
