@@ -10,6 +10,9 @@ std::unique_ptr<Packet> PacketFactory::createFromBuffer(char* data) {
         case INIT_CONNECTION:
             packet = std::make_unique<InitPacket>();
             break;
+        case END_GAME:
+            packet = std::make_unique<EndGamePacket>();
+            break;
         case KEY_INPUT:
             packet = std::make_unique<KeyPacket>();
             break;
