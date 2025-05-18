@@ -128,16 +128,17 @@ void CubeState::update() {
 
     model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
     // printf("jump height: %f\n", jumpHeight);
-    // std::cout << "model:" << std::endl;
-    // std::cout << glm::to_string(model) << std::endl;
     //printState();
-    std::cout << "jumpHeight: " << jumpHeight << std::endl;
-    std::cout << "model position: " << glm::to_string(glm::vec3(model[3])) << std::endl;
-
 }
 
 glm::vec3 CubeState::getPosition() {
     return glm::vec3(model[3]);  // extract translation from matrix
+}
+
+void CubeState::updateFromPacket(const StateUpdatePacket& packet) {
+    memcpy(&baseModel, packet.model, sizeof(packet.model));
+    isInvisible = packet.isInvisible;
+    printState();
 }
 
 // PlayerData::PlayerData() {
