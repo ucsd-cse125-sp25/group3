@@ -209,8 +209,13 @@ void Window::displayCallback(GLFWwindow* window) {
 
     floor->draw(viewProj_miniMap, shaderProgram, true);
     if (showOthersOnMiniMap){
+        /*
+        Drawing npc for test only, for multiplayer with networking, can do draw others here 
+        something like for each cube in cubePtr, draw it ish
+        */
         NPC->draw(viewProj_miniMap, Window::shaderProgram);
     }
+    
     
     // Gets events, including input such as keyboard and mouse or window resizing.
     glfwPollEvents();
