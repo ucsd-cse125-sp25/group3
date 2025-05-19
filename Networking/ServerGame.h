@@ -17,7 +17,8 @@ public:
     void sendEchoPackets(std::string);
     void sendInitPlayerState(unsigned int client_id);
     void sendStateUpdate();
-    void disconnectClient(int client_id);
+    void disconnectClient(unsigned int client_id);
+    void sendPlayerState(unsigned int client_id);
 
 private:
 

@@ -173,15 +173,11 @@ void ServerGame::receiveFromClients() {
 }
 
 //should specify id of who's disconnecting so other clients know to remove that client's data
-void ServerGame::disconnectClient(int client_id) {
-    Packet packet;
+void ServerGame::disconnectClient(unsigned int client_id) {
+    EndGamePacket packet;
     packet.packet_type = END_GAME;
-    char buf[4];
-    memcpy(buf, &client_id, sizeof(client_id));
-    packet.payload.insert(packet.payload.end(), &buf[0], &buf[4]);
-    packet.length = sizeof(client_id);
+    packet.closedClient = client_id;
     const unsigned int packet_size = packet.getSize();
-    //char packet_data[packet_size];
     std::vector<char> packet_data(packet_size);
     packet.serialize(packet_data.data());
     network->sendToAll(packet_data.data(), packet_size);

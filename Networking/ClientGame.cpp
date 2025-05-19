@@ -106,9 +106,8 @@ void ClientGame::update()
             }
             case END_GAME:
                 printf("client end game packet from server\n");
-                // TODO: Make this work with END_GAME packet
-                unsigned int closedClient;
-                memcpy(&closedClient, packet.payload.data(), sizeof(closedClient));
+                EndGamePacket* endPacket = dynamic_cast<EndGamePacket*>(packet.get());
+                unsigned int closedClient = endPacket->closedClient;
 
                 if (closedClient == Window::client_id) {
                     #ifdef _WIN32
