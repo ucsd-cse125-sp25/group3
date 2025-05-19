@@ -287,7 +287,9 @@ void Cube::handleContinuousInput(GLFWwindow* window, const glm::vec3& forwardDir
                     break;
                 }
                 case CHARACTER_4: {
-                    
+                    if (!radarUsed) {
+                        radarUsed = true; 
+                    }
                     break;
                 }
             }
@@ -364,4 +366,12 @@ void Cube::setBaseAndModel(const glm::mat4& mtx) {
     baseModel = mtx;
     // model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
     model = baseModel;
+}
+
+bool Cube::didUseRadarAbility() {
+    if (radarUsed) {
+        radarUsed = false; 
+        return true;
+    }
+    return false;
 }

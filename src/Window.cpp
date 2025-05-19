@@ -26,6 +26,11 @@ GLuint Window::shaderProgram;
 bool Window::altDown = false;
 bool Window::firstMouse = true;
 
+// // for show-on-map ability 
+bool Window::showOthersOnMiniMap = false;
+bool Window::radarActive = false;
+std::chrono::steady_clock::time_point Window::radarStartTime;
+
 // Constructors and desctructors
 bool Window::initializeProgram() {
     // Create a shader program with a vertex shader and a fragment shader.
@@ -154,6 +159,11 @@ void Window::idleCallback() {
     cube->update();
     NPC->update();
 
+    if (cube->didUseRadarAbility()) {
+        activateRadarAbility();
+    }
+
+    updateRadarAbility();
 }
 
 void Window::displayCallback(GLFWwindow* window) {
@@ -198,7 +208,10 @@ void Window::displayCallback(GLFWwindow* window) {
     artifact->draw(viewProj_miniMap, shaderProgram, false);
 
     floor->draw(viewProj_miniMap, shaderProgram, true);
-
+    if (showOthersOnMiniMap){
+        NPC->draw(viewProj_miniMap, Window::shaderProgram);
+    }
+    
     // Gets events, including input such as keyboard and mouse or window resizing.
     glfwPollEvents();
     // Swap buffers.
@@ -283,7 +296,7 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     }
 
     float xoffset = currX - lastX;
-    float yoffset = currY - lastY; // 注意这里是 lastY - ypos，y 是反的
+    float yoffset = currY - lastY; 
 
     lastX = currX;
     lastY = currY;
@@ -293,8 +306,26 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
 
     
     float newAzimuth = Cam->GetAzimuth() + xoffset;
-    float newIncline = glm::clamp(Cam->GetIncline() + yoffset, -89.0f, 89.0f); // 防止翻转
+    float newIncline = glm::clamp(Cam->GetIncline() + yoffset, -89.0f, 89.0f); 
 
     Cam->SetAzimuth(newAzimuth);
     Cam->SetIncline(newIncline);
+}
+
+void Window::activateRadarAbility() {
+    showOthersOnMiniMap = true; // 开启显示
+    radarActive = true;         // 标记为激活状态
+    radarStartTime = std::chrono::steady_clock::now(); // 记录起始时间
+}
+
+void Window::updateRadarAbility() {
+    if (radarActive) {
+        auto now = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - radarStartTime);
+
+        if (elapsed.count() > radarDuration) {
+            showOthersOnMiniMap = false;  // 自动关闭显示
+            radarActive = false;
+        }
+    }
 }

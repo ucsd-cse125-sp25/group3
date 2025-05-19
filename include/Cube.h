@@ -66,9 +66,6 @@ public:
     };
     
     CharacterType type = CHARACTER_1;  // default
-    
-
-
 
     Cube(glm::vec3 cubeMin = glm::vec3(-1, -1, -1), glm::vec3 cubeMax = glm::vec3(1, 1, 1));
     ~Cube();
@@ -82,4 +79,8 @@ public:
 
     void spin(float deg);
     void setBaseAndModel(const glm::mat4& mtx);
+
+    // for show-on-map ability 
+    bool didUseRadarAbility();
+    bool radarUsed = false; 
 };
