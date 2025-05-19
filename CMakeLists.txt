@@ -16,6 +16,7 @@ set(
     src/Shader.cpp
     src/Tokenizer.cpp
     src/Window.cpp
+
 )
 
 # Add header files
@@ -27,6 +28,12 @@ set(
     include/Shader.h
     include/Tokenizer.h
     include/Window.h
+)
+
+# Add mini-game files
+file(GLOB MINIGAME_SOURCES
+    "minigame/*.cpp"
+    "minigame/src/*.cpp"
 )
 
 set(IMGUI_DIR ${CMAKE_SOURCE_DIR}/external/imgui)
@@ -48,6 +55,8 @@ find_package(OpenGL REQUIRED)
 # Add include directories
 include_directories(
     include
+    minigame
+    minigame/include
 )
 
 # Add library directories
@@ -56,7 +65,7 @@ link_directories(
 )
 
 # Add executable
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${IMGUI_SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${IMGUI_SOURCES} ${MINIGAME_SOURCES})
 
 
 # Link libraries

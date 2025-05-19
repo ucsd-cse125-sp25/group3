@@ -9,7 +9,8 @@
 enum GameState {
     START_MENU,
     CHARACTER_SELECTION,
-    PLAYING
+    PLAYING,
+    IN_MINIGAME
 };
 
 extern GameState currentState;

@@ -3,9 +3,12 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "minigame/minigame.h"
 
 
 GameState currentState = START_MENU;
+static MiniGame miniGame;
+static bool miniGameInitialized = false;
 
 void error_callback(int error, const char* description) {
     std::cerr << description << std::endl;
@@ -62,6 +65,25 @@ int main(void) {
         if (currentState == START_MENU) {
             glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Fully black
         }
+
+        if (currentState == IN_MINIGAME) {
+        if (!miniGameInitialized) {
+            miniGame.init(window);
+            miniGameInitialized = true;
+        }
+
+        miniGame.update(window);
+        miniGame.render();
+
+        if (miniGame.isFinished()) {
+            miniGame.cleanup();
+            currentState = PLAYING; 
+            miniGameInitialized = false;
+        }
+
+        glfwSwapBuffers(window);
+        continue; 
+    }
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

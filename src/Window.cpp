@@ -254,6 +254,10 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
                 resetCamera();
                 break;
 
+            if (key == GLFW_KEY_P && currentState == PLAYING) {
+                currentState = IN_MINIGAME;
+            }
+
 
             default:
                 if (cube != nullptr) {
