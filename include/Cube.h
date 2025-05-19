@@ -4,6 +4,8 @@
 #include <cstdio>
 #include "core.h"
 #include <iostream>
+#include <fstream>
+#include "../packets/StateUpdatePacket.h"
 
 class Cube {
 private:
@@ -59,9 +61,6 @@ public:
     
     CharacterType type = CHARACTER_1;  // default
     
-
-
-
     Cube(glm::vec3 cubeMin = glm::vec3(-1, -1, -1), glm::vec3 cubeMax = glm::vec3(1, 1, 1));
     ~Cube();
 
@@ -72,6 +71,12 @@ public:
     void handleContinuousInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir);
     glm::vec3 getPosition() const;
 
+    void updateFromPacket(const StateUpdatePacket& packet);
+
     void spin(float deg);
-    int readFromArray(char * data);
+
+    void printState() {
+        std::cout << "base model:" << std::endl;
+        std::cout << glm::to_string(baseModel) << std::endl;
+    }
 };

@@ -193,6 +193,7 @@ void Cube::update() {
     //     speed = normalSpeed;
     // }
 
+    //baseModel = glm::translate(glm::mat4(1.0f), getPosition()); 
     model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
     // printf("jump height: %d\n", jumpHeight);
     // std::cout << "updated model:" << std::endl;
@@ -312,34 +313,11 @@ void Cube::spin(float deg) {
 }
 
 glm::vec3 Cube::getPosition() const {
-    return glm::vec3(baseModel[3]);  // extract translation from matrix
+    return glm::vec3(model[3]);  // extract translation from matrix
 }
 
-int Cube::readFromArray(char * data) {
-    int totalBytes = 0;
-
-    for (int i=0; i<16; i++) {
-        // for (int j=0; j<4; j++) {
-            // printf("item %d: %hhu\n", i+j,data[i+j]);
-            memcpy(&baseModel[i/4][i%4], &data[i*4], sizeof(float));
-            totalBytes += sizeof(float);
-        // }
-    }
-
-    for (int i=0; i<16; i++) {
-        memcpy(&model[i/4][i%4], &data[sizeof(baseModel) + i*4], sizeof(float));
-        totalBytes += sizeof(float);
-    }
-
-    memcpy(&isInvisible, &data[sizeof(baseModel) + sizeof(model)], sizeof(bool));
-    totalBytes += sizeof(bool);
-    return totalBytes;
-    // std::cout << "updated model:" << std::endl;
-    // std::cout << glm::to_string(model) << std::endl;
-
-    // for (int i=0; i<4; i++) {
-    //     for (int j=0; j<4; j++) {
-    //         printf("[%d,%d]: %f\n", i, j, baseModel[i][j]);
-    //     }
-    // }
+void Cube::updateFromPacket(const StateUpdatePacket& packet) {
+    memcpy(&baseModel, packet.model, sizeof(packet.model));
+    isInvisible = packet.isInvisible;
+    printState();
 }

@@ -4,10 +4,12 @@
 class ServerGame
 {
 
+    friend class Packet;
+    friend class KeyPacket;
+
 public:
 
     ServerGame(void);
-    ~ServerGame(void);
 
     void update();
     void receiveFromClients();

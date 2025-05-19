@@ -23,7 +23,7 @@ int main()
     std::cin >> choice;
 
     // initialize the client
-    client = new ClientGame(choice);
+    client = new ClientGame((CharacterType) choice);
     clientLoop();
 }
 

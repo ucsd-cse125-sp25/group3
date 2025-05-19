@@ -27,18 +27,20 @@ enum PacketTypes {
     INIT_PLAYER = 7,
 }; 
 
-// Packet structure will be length (4 bytes), type (4 bytes), data (N bytes) 
+// Packet structure will be type (4 bytes), length (4 bytes), data (N bytes) 
 class Packet {
     public:
         unsigned int packet_type; // type that maps to PacketType
         unsigned int length; // size of the payload in bytes
         std::vector<char> payload;
-        virtual unsigned int getSize();
         static unsigned int getHeaderSize();
-        virtual int serialize(char * data);
-        virtual int deserialize(char * data);
-        virtual int deserializeHeader(char * header);
+        virtual unsigned int getSize();
+        virtual int serializeHeader(char * data);
+        virtual int serializePayload(char * data);
+        int serialize(char * data);
+        virtual int deserializeHeader(char * data);
         virtual int deserializePayload(char * data);
+        int deserialize(char * data);
 };
 
 #endif

@@ -14,7 +14,7 @@
     #include <netinet/tcp.h>
 #endif
 #include "NetworkServices.h"
-#include "../packets/Packet.h"
+#include "../packets/PacketFactory.h"
 #include <map>
 using namespace std; 
 #define DEFAULT_BUFLEN 512

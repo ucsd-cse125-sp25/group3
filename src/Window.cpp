@@ -147,9 +147,9 @@ void Window::resizeCallback(GLFWwindow* window, int width, int height) {
 void Window::idleCallback() {
     // Perform any updates as necessary.
     // Cam->Update();
-    Cam->Update(cube->getPosition());
 
     cube->update();
+    Cam->Update(cube->getPosition());
 }
 
 void Window::displayCallback(GLFWwindow* window) {
@@ -290,6 +290,7 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     Cam->SetIncline(newIncline);
 }
 
+/*
 void Window::applyServerState(char * data) {
     int numClients;
     memcpy(&numClients, data, sizeof(int));
@@ -319,6 +320,15 @@ void Window::applyServerState(char * data) {
             offset += (2 * (100) + 1);
         }
     }
+}
+*/
+
+// TODO: Send numClients, go through each client and send as packet
+void Window::applyServerState(const StateUpdatePacket& packet) {
+    cube->updateFromPacket(packet);
+    Cam->updateFromPacket(packet, false);
+    MiniMapCam->updateFromPacket(packet, true);
+    altDown = packet.altDown;
 }
 
 void Window::render(GLFWwindow* window) {
@@ -365,15 +375,17 @@ void Window::render(GLFWwindow* window) {
     // glfwPollEvents();
     // Swap buffers.
     glfwSwapBuffers(window);
-    // Cam->Update(cube->getPosition());
     
     if (altDown) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     } else {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
+    cube->update();
+    Cam->Update(cube->getPosition());
 }
 
+// TODO: make this work with packet class
 void Window::setClientID(char * data) {
     memcpy(&client_id, data, sizeof(client_id));
     
@@ -387,7 +399,6 @@ void Window::addClient(unsigned int client) {
 }
 
 void Window::removeClient(unsigned int client) {
-
     if (cubes.find(client) != cubes.end()) {
         Cube* cubePtr = cubes[client];
         delete cubePtr;
@@ -395,6 +406,7 @@ void Window::removeClient(unsigned int client) {
     }
 }
 
+// TODO: make this work with packet class
 void Window::setInitState(char * data) {
     memcpy(&client_id, data, sizeof(client_id));
     addClient(client_id);

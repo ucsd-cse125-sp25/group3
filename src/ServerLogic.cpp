@@ -97,36 +97,6 @@ CubeState::CubeState(glm::vec3 cubeMin, glm::vec3 cubeMax) {
 void CubeState::printState() {
     std::cout << "base model:" << std::endl;
     std::cout << glm::to_string(baseModel) << std::endl;
-    // for (int i=0; i<4; i++) {
-    //     for (int j=0; j<4; j++) {
-    //         printf("[%d,%d]: %f\n", i, j, baseModel[i][j]);
-    //     }
-    // }
-}
-
-void CubeState::toVector(std::vector<char>* vec) {
-    char buf[4];
-
-    for (int i=0; i<4; i++) {
-        for (int j=0; j<4; j++) {
-            // printf("elem i=%d, j=%d: %f\n", i,j,baseModel[i][j]);
-            memcpy(buf, &baseModel[i][j], sizeof(float));
-            vec->insert(vec->end(), &buf[0], &buf[4]);
-        }
-    }
-
-    for (int i=0; i<4; i++) {
-        for (int j=0; j<4; j++) {
-            // printf("elem i=%d, j=%d: %f\n", i,j,baseModel[i][j]);
-            memcpy(buf, &model[i][j], sizeof(float));
-            vec->insert(vec->end(), &buf[0], &buf[4]);
-        }
-    }
-    vec->resize(vec->size() + 1, isInvisible);
-
-    // memcpy(buf, &isInvisible, sizeof(bool));
-    // vec->insert(vec->end(), &buf[0], &buf[1]);
-    // printf("invisible: %hhu\n", vec->back());
 }
 
 void CubeState::update() {
@@ -155,14 +125,20 @@ void CubeState::update() {
         isSpeedBoosted = false;
         speed = normalSpeed;
     }
+
     model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
     // printf("jump height: %f\n", jumpHeight);
-    // std::cout << "model:" << std::endl;
-    // std::cout << glm::to_string(model) << std::endl;
+    //printState();
 }
 
 glm::vec3 CubeState::getPosition() {
-    return glm::vec3(baseModel[3]);  // extract translation from matrix
+    return glm::vec3(model[3]);  // extract translation from matrix
+}
+
+void CubeState::updateFromPacket(const StateUpdatePacket& packet) {
+    memcpy(&baseModel, packet.model, sizeof(packet.model));
+    isInvisible = packet.isInvisible;
+    printState();
 }
 
 // PlayerData::PlayerData() {
@@ -176,11 +152,6 @@ glm::vec3 CubeState::getPosition() {
 //     delete cube;
 //     delete camera;
 // }
-
-void PlayerData::setCharacter(CharacterType character) {
-    cube.type = character;
-}
-
 void PlayerData::calculateNewPos(KeyType key) {
     glm::vec3 forwardDir = camera.GetForwardVector();
     forwardDir.y = 0.0f;  
@@ -268,26 +239,15 @@ void PlayerData::calculateNewPos(KeyType key) {
     }
 }
 
-void PlayerData::toVector(unsigned int client_id, std::vector<char> * vec) {
-    char buf[4];
-    memcpy(buf, &client_id, sizeof(int));
-    vec->insert(vec->end(), &buf[0], &buf[4]);
-
-    cube.toVector(vec);
-    camera.toVector(vec);
-    miniMapCam.toVector(vec); //only need to send viewProjMtx for miniMapCam
-    vec->resize(vec->size() + 1, altDown);
-}
-
-void PlayerData::init(char * data) {
+void PlayerData::init(InitPacket* packet) {
     initialized = true;
     firstMouse = true;
     altDown = false;
     miniMapCam.SetOrtho(-10, 10, -10, 10, 0.1f, 100.0f); 
     miniMapCam.SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
-    memcpy(&cube.type, data, sizeof(int));
-    memcpy(&windowWidth, &data[sizeof(int)], sizeof(int));
-    memcpy(&windowHeight, &data[2 * sizeof(int)], sizeof(int));
+    cube.type = packet->character;
+    windowWidth = packet->windowWidth;
+    windowHeight = packet->windowHeight;
     printf("character: %d, width: %d, height: %d\n", cube.type, windowWidth, windowHeight);
 }
 
@@ -321,6 +281,9 @@ void PlayerData::handleCursor(double currX, double currY) {
 
     camera.SetAzimuth(newAzimuth);
     camera.SetIncline(newIncline);
+    
+    cube.update();
+    camera.Update(cube.getPosition()); 
 }
 
 void PlayerData::resetCamera() {

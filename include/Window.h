@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "core.h"
 #include <map>
+#include "../packets/StateUpdatePacket.h"
 
 class Window {
 public:
@@ -51,9 +52,9 @@ public:
     static void cursor_callback(GLFWwindow* window, double currX, double currY);
 
     static void render(GLFWwindow* window);
-    static void applyServerState(char * data);
     static void setClientID(char * data);
     static void addClient(unsigned int client);
     static void removeClient(unsigned int client);
     static void setInitState(char * data);
+    static void applyServerState(const StateUpdatePacket& packet);
 };
