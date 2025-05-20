@@ -4,7 +4,17 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-GameState currentState = START_MENU;
+GameState currentState = PLAYING;
+
+const char* GameStateToString(GameState state) {
+    switch (state) {
+        case START_MENU: return "START_MENU";
+        case CHARACTER_SELECTION: return "CHARACTER_SELECTION";
+        case PLAYING: return "PLAYING";
+        default: return "UNKNOWN";
+    }
+}
+
 
 void error_callback(int error, const char* description) {
     std::cerr << description << std::endl;
@@ -40,6 +50,7 @@ void CenterText(const char* text) {
 }
 
 int main(void) {
+    
     GLFWwindow* window = Window::createWindow(800, 600);
     if (!window) exit(EXIT_FAILURE);
 
@@ -53,6 +64,8 @@ int main(void) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
+     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+    // io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
     
     // Font and style setup
     io.Fonts->AddFontFromFileTTF("external/style/fonts/Bauhaus93.ttf", 32.0f);
@@ -69,6 +82,8 @@ int main(void) {
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
+
+    
 
     
     while (!glfwWindowShouldClose(window)) {
@@ -103,10 +118,11 @@ int main(void) {
         // Render game scene ONLY when playing
         if (currentState == PLAYING) {
             ImVec2 windowSize = io.DisplaySize;
-            Window::displayCallback(window);
             ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+            Window::displayCallback(window);
+
             ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x / 2 - 200, ImGui::GetIO().DisplaySize.y - 100));
     ImGui::SetNextWindowSize(ImVec2(400, 80));
 
@@ -144,12 +160,15 @@ int main(void) {
     }
 
     ImGui::PopStyleVar(2);
+  
+
     ImGui::End();
 
+ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+ImGui::Text("Current Game State: %s", GameStateToString(currentState));
+ImGui::End();
 
 
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         }
 
@@ -181,7 +200,7 @@ int main(void) {
 
     ImGui::SetCursorPos(ImVec2(centerX - 250, 120));
     ImGui::PushFont(io.Fonts->Fonts[0]);
-    ImGui::Text("HEIST OF THE MUSEUM");
+    ImGui::Text("HEUM");
     ImGui::PopFont();
 
     ImGui::SetCursorPos(ImVec2(centerX - 120, 200));
@@ -200,8 +219,10 @@ int main(void) {
             ImGui::End(); 
 
              // Mandatory ImGui frame termination
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+             ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+ImGui::Text("Current Game State: %s", GameStateToString(currentState));
+ImGui::End();
+
         }
         else if (currentState == CHARACTER_SELECTION) {
             // Start ImGui frame
@@ -280,16 +301,27 @@ ImGui::End();
             ImGui::End(); // Crucial for proper frame ending
 
              // Mandatory ImGui frame termination
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+             ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+ImGui::Text("Current Game State: %s", GameStateToString(currentState));
+ImGui::End();
+
+        
         }
 
 
 
        
 
-        glfwSwapBuffers(window);
+         
         Window::idleCallback();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+// Gets events, including input such as keyboard and mouse or window resizing.
+    glfwPollEvents();
+    glfwSwapBuffers(window);
+
     }
 
 
