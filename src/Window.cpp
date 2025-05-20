@@ -327,24 +327,24 @@ void Window::applyServerState(const StateUpdatePacket& packet) {
     int numClients = packet.numClients;
     printf("num clients is %d\n", numClients);
     for (const auto& clientPacketPtr : packet.clientPackets) {
-    if (clientPacketPtr) {
-        const InitPlayerPacket* initPacket = dynamic_cast<const InitPlayerPacket*>(clientPacketPtr.get());
-        if (initPacket) {
-            unsigned int currClient = initPacket->clientID;
-            printf("curr client is %u\n", currClient);
-            if (cubes.find(currClient) == cubes.end()) {
-                addClient(currClient);
-            }
-            Cube* cube = cubes[currClient];
-            cube->updateFromPacket(*initPacket);
-            if (currClient == client_id) {
-                Cam->updateFromPacket(*initPacket, false);
-                MiniMapCam->updateFromPacket(*initPacket, true);
-                altDown = initPacket->altDown;
+        if (clientPacketPtr) {
+            const InitPlayerPacket* initPacket = dynamic_cast<const InitPlayerPacket*>(clientPacketPtr.get());
+            if (initPacket) {
+                unsigned int currClient = initPacket->clientID;
+                printf("curr client is %u\n", currClient);
+                if (cubes.find(currClient) == cubes.end()) {
+                    addClient(currClient);
+                }
+                Cube* cube = cubes[currClient];
+                cube->updateFromPacket(*initPacket);
+                if (currClient == client_id) {
+                    Cam->updateFromPacket(*initPacket, false);
+                    MiniMapCam->updateFromPacket(*initPacket, true);
+                    altDown = initPacket->altDown;
+                }
             }
         }
     }
-}
 }
 
 void Window::render(GLFWwindow* window) {
@@ -422,6 +422,7 @@ void Window::removeClient(unsigned int client) {
 }
 
 void Window::setInitState(const InitPlayerPacket& packet) {
+    client_id = packet.clientID;
     addClient(packet.clientID);
     cubes[packet.clientID]->updateFromPacket(packet);
     Cam->updateFromPacket(packet, false);
