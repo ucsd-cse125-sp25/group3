@@ -3,7 +3,7 @@
 
 #include <GLFW/glfw3.h>
 #include <string>
-#include <platform.h>
+#include "platform.h"
 
 class Character {
 public:
