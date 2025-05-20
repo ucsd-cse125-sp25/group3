@@ -2,6 +2,8 @@
 #include <vector>
 #include <algorithm>
 #include <stdexcept>
+#include <memory>
+
 #ifndef PACKET_H // include guard
 #define PACKET_H
 
