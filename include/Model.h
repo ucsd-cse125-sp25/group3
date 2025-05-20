@@ -3,9 +3,10 @@
 #include <vector>
 #include "core.h"
 #include "Mesh.h"
-#include "CharState.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
+#include <map>
+#include "CharState.h"
 
 /*
 The Model class should handle everything about a 3D model.
@@ -76,6 +77,8 @@ public:
     Once removed, the mesh will no longer be deleted when the model is deleted.
     */
     void removeMesh(int i);
+
+    void setSkel(Skeleton* skel);
 
     /*
     Sets up the buffers for OpenGL, must be called before draw().

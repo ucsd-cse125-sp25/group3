@@ -4,10 +4,24 @@
 #include "core.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
+#include <map>
+#include "utils.h"
+#include "Skeleton.h"
+
+#define MAX_JOINT_INFLUENCE 4
+#define MAX_JOINTS 100
 
 struct Vertex {
     glm::vec3 position;
     glm::vec3 normal;
+    int jointIDs[MAX_JOINT_INFLUENCE];
+    float weights[MAX_JOINT_INFLUENCE];
+    int numJoints;
+};
+
+struct invBMatInfo{
+    int id;
+    glm::mat4 invBMat;
 };
 
 class Mesh {
@@ -17,6 +31,7 @@ private:
 
     GLuint tex;
 
+    Skeleton* skel;
     glm::mat4 model;
     glm::vec3 color;
 
@@ -26,6 +41,14 @@ private:
 
     //which vertices correspond to triangle
     std::vector<unsigned int> indices;
+
+    std::map<std::string, invBMatInfo> invBMats;
+
+    std::vector<glm::mat4> mMat;
+
+    int numJoints;
+
+    void setDefaultJointVal(Vertex &v);
 
 public:
     Mesh();
@@ -39,9 +62,13 @@ public:
     */
     void setTex(GLuint texID);
 
+    void setJointVals(const aiMesh* mesh);
+
     void setColor(glm::vec3 color);
 
     bool setMesh(const aiMesh* mesh);
+
+    void setSkel(Skeleton* skel);
 
     void setMMat(glm::mat4 model);
     

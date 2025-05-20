@@ -56,6 +56,11 @@ void Model::addMesh(Mesh* mesh){
     }
 }
 
+void Model::setSkel(Skeleton* skel){
+    for (int i = 0; i < meshes.size(); i++){
+        meshes[i]->setSkel(skel);
+    }
+}
 
 std::vector<Mesh*>* Model::getMeshes() {
     return &meshes;

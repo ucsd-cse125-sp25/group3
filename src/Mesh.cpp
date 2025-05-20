@@ -8,8 +8,13 @@
 
 
 Mesh::Mesh(){
+    skel = NULL;
     model = glm::mat4(1.0f);
     color = glm::vec3(1.0f, 0.95f, 0.1f);
+    mMat.reserve(MAX_JOINTS);
+    for (int i = 0; i < MAX_JOINTS; i++){
+        mMat.push_back(glm::mat4(1.0f));
+    }
 }
 
 Mesh::Mesh(glm::vec3 color){
@@ -46,6 +51,8 @@ bool Mesh::setMesh(const aiMesh* mesh) {
         v.normal.y = mesh->mNormals[i].y;
         v.normal.z = mesh->mNormals[i].z;
 
+        setDefaultJointVal(v);
+
         vertices.push_back(v);
     }
 
@@ -77,8 +84,56 @@ bool Mesh::setMesh(const aiMesh* mesh) {
         }
     }
 
-    std::cout << "yello" << std::endl;
+    if (mesh->HasBones()){
+        setJointVals(mesh);
+    }
+
     return true;
+}
+
+void Mesh::setSkel(Skeleton* skel){
+    this->skel = skel;
+}
+
+void Mesh::setJointVals(const aiMesh* mesh){
+    for (int i = 0; i < mesh->mNumBones; i++) {
+        int id = -1;
+        std::string name = mesh->mBones[i]->mName.C_Str();
+        if (invBMats.find(name) == invBMats.end()) {
+            invBMatInfo newInvBMat;
+            id = invBMats.size();
+            newInvBMat.id = id;
+            newInvBMat.invBMat = aiMatToGLM(mesh->mBones[i]->mOffsetMatrix);
+            invBMats[name] = newInvBMat;
+        } else {
+            id = invBMats[name].id;
+        }
+
+        assert(id != -1);
+
+        auto weights = mesh->mBones[i]->mWeights;
+        int numWeights = mesh->mBones[i]->mNumWeights;
+
+        for (int wid= 0; wid < numWeights; wid++){
+            int vid = weights[wid].mVertexId;
+
+            assert(vid < vertices.size());
+
+            int sz = vertices[vid].numJoints;
+            vertices[vid].jointIDs[sz] = id;
+            vertices[vid].weights[sz] = weights[wid].mWeight;
+
+            vertices[vid].numJoints += 1;
+        }
+    }
+}
+
+void Mesh::setDefaultJointVal(Vertex &v){
+    for (int i = 0; i < MAX_JOINT_INFLUENCE; i++) {
+        v.jointIDs[i] = -1;
+        v.weights[i] = 0.0f;
+        v.numJoints = 0;
+    }
 }
 
 void Mesh::setMMat(glm::mat4 model){
@@ -107,11 +162,19 @@ void Mesh::setupBuf(){
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 
+    //jointIDs
+    glEnableVertexAttribArray(2);
+    glVertexAttribIPointer(2, MAX_JOINT_INFLUENCE, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, jointIDs));
+
+    //weights
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, MAX_JOINT_INFLUENCE, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
+
     // Bind to the second VBO - We will use it to store the uvs
     glBindBuffer(GL_ARRAY_BUFFER, VBO_uv);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * uvs.size(), uvs.data(), GL_STATIC_DRAW);
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
 
     // Generate EBO, bind the EBO to the bound VAO and send the data
     glGenBuffers(1, &EBO);
@@ -135,6 +198,7 @@ void Mesh::draw(const glm::mat4& viewProjMtx, GLuint shader){
     glUniformMatrix4fv(glGetUniformLocation(shader, "viewProj"), 1, false, (float*)&viewProjMtx);
     glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, (float*)&model);
     glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &color[0]);
+    glUniformMatrix4fv(glGetUniformLocation(shader, "finalJointMats"), MAX_JOINTS, GL_FALSE, &(mMat[0])[0][0]);
 
     // Bind the VAO
     glBindVertexArray(VAO);
@@ -148,5 +212,10 @@ void Mesh::draw(const glm::mat4& viewProjMtx, GLuint shader){
 }
 
 void Mesh::update(){
-    
+    if (skel != NULL){
+        for (auto it = invBMats.begin(); it != invBMats.end(); ++it){
+            int id = it->second.id;
+            mMat[id] = skel->getWorldMatrix(it->first) * it->second.invBMat;
+        }
+    }
 }

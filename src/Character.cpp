@@ -70,7 +70,7 @@ void Character::update() {
 void Character::draw(const glm::mat4& viewProjMtx, GLuint shader) {
     if (useModel) {
         model->draw(viewProjMtx, shader);
-        std::cout<< "yes use model draw" <<std::endl;
+        // std::cout<< "yes use model draw" <<std::endl;
     } else {
         cube->draw(viewProjMtx, shader, false);
     }

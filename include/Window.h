@@ -8,6 +8,10 @@
 #include "core.h"
 #include "Character.h"
 
+#include "Skeleton.h"
+#include "Animation.h"
+#include "AnimationPlayer.h"
+
 class Window {
 public:
     // Window Properties
@@ -23,9 +27,12 @@ public:
     static Scene* scene;
     static Model* model;
 
+    static AnimationPlayer* animationPlayer;
+
     // Shader Program
     static GLuint shaderProgram;
     static GLuint shaderProgram_uv;
+    static GLuint shaderProgram_anim;
 
     //track the mouse
     static bool altDown;

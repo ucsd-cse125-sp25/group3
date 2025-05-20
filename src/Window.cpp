@@ -19,6 +19,8 @@ Character* Window::character;
 Scene* Window::scene;
 Model* Window::model;
 
+AnimationPlayer* Window::animationPlayer;
+
 // Camera Properties
 Camera* Cam;
 
@@ -29,6 +31,7 @@ int MouseX, MouseY;
 // The shader program id
 GLuint Window::shaderProgram;
 GLuint Window::shaderProgram_uv;
+GLuint Window::shaderProgram_anim;
 
 TextureManager* textureManager;
 
@@ -53,7 +56,16 @@ bool Window::initializeProgram() {
         return false;
     }
 
+    shaderProgram_anim = LoadShaders("../shaders/anim_shader.vert", "../shaders/shader_uv.frag", true);
+
+    if (!shaderProgram_uv) {
+        std::cerr << "Failed to initialize shader program with uvs" << std::endl;
+        return false;
+    }
+
     textureManager = new TextureManager();
+
+    animationPlayer = new AnimationPlayer();
 
     return true;
 }
@@ -61,8 +73,17 @@ bool Window::initializeProgram() {
 bool Window::initializeObjects() {
     // Create a cube
     cube = new Cube();
-    
+
+    animationPlayer->loadAnims("../models/Running.fbx");
+    Model* bro = new Model();
+    if (!bro->load("../model/Running.fbx")){
+        std::cerr << "Failed to load fbx model" << std::endl;
+        return false;
+    }
+    bro->setSkel(animationPlayer->getSkel());
+
     scene = new Scene();
+
     if (!scene->load("../models/bunny.ply")){
         std::cerr << "Failed to load ply: Bunny" << std::endl;
         return false;
@@ -72,6 +93,9 @@ bool Window::initializeObjects() {
     mesh->setColor(glm::vec3(1.0f, 0.0f, 1.0f));
     mesh->setTex(textureManager->LoadTexture("../textures/wall.jpg"));
     m->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(20.0f)));
+
+    scene->addModel(bro);
+
     scene -> update();
     scene-> setupBufAll();
 
@@ -88,7 +112,7 @@ bool Window::initializeObjects() {
     character = new Character(model);
     // cube = new Cube(glm::vec3(-1, 0, -2), glm::vec3(1, 1, 1));
     floor = new Cube(glm::vec3(-8, -2.03, -8), glm::vec3(8, -2.01, 8));
-
+    
     return true;
 }
 
@@ -103,9 +127,12 @@ void Window::cleanUp() {
 
     delete textureManager;
     
+    delete animationPlayer;
+
     // Delete the shader program.
     glDeleteProgram(shaderProgram);
     glDeleteProgram(shaderProgram_uv);
+    glDeleteProgram(shaderProgram_anim);
 }
 
 // for the Window
@@ -189,6 +216,7 @@ void Window::idleCallback() {
     // Cam->Update();
     Cam->Update(cube->getPosition());
 
+    animationPlayer->fullUpdate();
     // cube->update();
     character->update();
 
@@ -222,6 +250,7 @@ void Window::displayCallback(GLFWwindow* window) {
     // Clear the color and depth buffers.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // animationPlayer->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
     // Render the object.
     // cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
     floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
