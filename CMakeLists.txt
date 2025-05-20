@@ -46,7 +46,10 @@ set(IMGUI_SOURCES
     ${IMGUI_DIR}/imgui_widgets.cpp
     ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
     ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+
 )
+
+
 
 
 # Require GL
@@ -74,6 +77,9 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${IMGUI_SOURCES} ${MINIGAME
 # Set include and lib dirs (platform-specific)
 include_directories(include)
 include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends)
+include_directories(
+    external
+)
 
 
 if (APPLE)

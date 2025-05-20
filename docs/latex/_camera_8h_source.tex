@@ -1,0 +1,58 @@
+\doxysection{Camera.\+h}
+\hypertarget{_camera_8h_source}{}\label{_camera_8h_source}\index{include/Camera.h@{include/Camera.h}}
+\mbox{\hyperlink{_camera_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Camera.h}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{core_8h}{core.h}}"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{euler__angles_8hpp}{glm/gtx/euler\_angles.hpp}}"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ The\ Camera\ class\ provides\ a\ simple\ means\ to\ controlling\ the\ 3D\ camera.\ It\ could}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ be\ extended\ to\ support\ more\ interactive\ controls.\ Ultimately.\ the\ camera\ sets\ the}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ GL\ projection\ and\ viewing\ matrices.}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_camera_a01f94c3543f56ede7af49dc778f19331}{Camera}}\ \{}
+\DoxyCodeLine{00015\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{class_camera_a01f94c3543f56ede7af49dc778f19331}{Camera}}();}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{comment}{//\ void\ Update();}}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_camera_a6af15ab6994faa31b1273420f28409d3}{Update}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm::vec3}}\&\ targetPos);}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_camera_aa46f58b32270a571ab56dde4caca46db}{Reset}}();}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{comment}{//\ Access\ functions}}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_camera_ad46123d3bfc99150733fb2c7b3571a6e}{SetAspect}}(\textcolor{keywordtype}{float}\ a)\ \{\ Aspect\ =\ a;\ \}}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_camera_a581879a1039a0929aeaffe90c4117384}{SetDistance}}(\textcolor{keywordtype}{float}\ d)\ \{\ Distance\ =\ d;\ \}}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_camera_a905ab2e6b78941104d9d4c392578314c}{SetAzimuth}}(\textcolor{keywordtype}{float}\ a)\ \{\ Azimuth\ =\ a;\ \}}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_camera_abb33b93ad3b07d7128cdd5ff6ba0b395}{SetIncline}}(\textcolor{keywordtype}{float}\ i)\ \{\ Incline\ =\ i;\ \}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_camera_ab82cfce7b9e63cb71131fee8b03f2dbb}{GetDistance}}()\ \{\ \textcolor{keywordflow}{return}\ Distance;\ \}}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_camera_a13c2aae55c7a8518f550e0e800c89fcb}{GetAzimuth}}()\ \{\ \textcolor{keywordflow}{return}\ Azimuth;\ \}}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_camera_a80375ac8f9377e25db14dc0bf5443c63}{GetIncline}}()\ \{\ \textcolor{keywordflow}{return}\ Incline;\ \}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{group__core__matrix_gac54cbc572f1349a255fe476ca6a42a7b}{glm::mat4}}\ \&\mbox{\hyperlink{class_camera_aa291fd3c5e3b12a4ec690208faf26bfb}{GetViewProjectMtx}}()\ \{\ \textcolor{keywordflow}{return}\ ViewProjectMtx;\ \}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm::vec3}}\ \mbox{\hyperlink{class_camera_a7f30beabec8b1c0cfa3dc634128b78f6}{GetForwardVector}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{comment}{//\ Perspective\ controls}}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{float}\ FOV;\ \ \ \ \ \ \ \textcolor{comment}{//\ Field\ of\ View\ Angle\ (degrees)}}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{float}\ Aspect;\ \ \ \ \textcolor{comment}{//\ Aspect\ Ratio}}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{float}\ NearClip;\ \ \textcolor{comment}{//\ Near\ clipping\ plane\ distance}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{float}\ FarClip;\ \ \ \textcolor{comment}{//\ Far\ clipping\ plane\ distance}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{comment}{//\ Polar\ controls}}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{float}\ Distance;\ \ \textcolor{comment}{//\ Distance\ of\ the\ camera\ eye\ position\ to\ the\ origin\ (meters)}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{float}\ Azimuth;\ \ \ \textcolor{comment}{//\ Rotation\ of\ the\ camera\ eye\ position\ around\ the\ Y\ axis\ (degrees)}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{float}\ Incline;\ \ \ \textcolor{comment}{//\ Angle\ of\ the\ camera\ eye\ position\ over\ the\ XZ\ plane\ (degrees)}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{comment}{//\ Computed\ data}}
+\DoxyCodeLine{00049\ \ \ \ \ \mbox{\hyperlink{group__core__matrix_gac54cbc572f1349a255fe476ca6a42a7b}{glm::mat4}}\ ViewProjectMtx;}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm::vec3}}\ Eye;\ \ \ \ }
+\DoxyCodeLine{00052\ \ \ \ \ \mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm::vec3}}\ Center;\ }
+\DoxyCodeLine{00053\ \};}
+
+\end{DoxyCode}

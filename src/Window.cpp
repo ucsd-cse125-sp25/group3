@@ -126,28 +126,15 @@ GLFWwindow* Window::createWindow(int width, int height) {
     MouseX = MouseY = 0;
 
     // Call the resize callback to make sure things get drawn immediately.
+
     #ifdef __APPLE__
         // macOS: Use framebuffer size to handle Retina displays correctly
         glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
         glViewport(0, 0, fbWidth, fbHeight);
         Cam->SetAspect(float(fbWidth) / float(fbHeight));
     #else
-        // Windows or others: Use default logic-pixel-based callback
         Window::resizeCallback(window, width, height);
     #endif
-
-
-    // Window::resizeCallback(window, width, height);
-
-
-    if (currentState == PLAYING){
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    }
-    else{
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    }
-    
-
 
     return window;
 }
@@ -217,9 +204,9 @@ void Window::displayCallback(GLFWwindow* window) {
     floor->draw(viewProj_miniMap, shaderProgram, true);
 
     // Gets events, including input such as keyboard and mouse or window resizing.
-    glfwPollEvents();
+    // glfwPollEvents();
     // Swap buffers.
-    glfwSwapBuffers(window);
+    // glfwSwapBuffers(window);
 }
 
 // helper to reset the camera
@@ -254,9 +241,9 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
                 resetCamera();
                 break;
 
-            if (key == GLFW_KEY_P && currentState == PLAYING) {
-                currentState = IN_MINIGAME;
-            }
+            // if (key == GLFW_KEY_P && currentState == PLAYING) {
+            //     currentState = IN_MINIGAME;
+            // }
 
 
             default:
@@ -290,7 +277,6 @@ void Window::mouse_callback(GLFWwindow* window, int button, int action, int mods
 
 void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     if (altDown) return;
-    if (currentState != PLAYING) return;
 
     
     static float lastX = Window::width / 2.0f;

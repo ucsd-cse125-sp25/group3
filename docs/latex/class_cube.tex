@@ -1,0 +1,155 @@
+\doxysection{Cube Class Reference}
+\hypertarget{class_cube}{}\label{class_cube}\index{Cube@{Cube}}
+
+
+{\ttfamily \#include $<$Cube.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_cube_a3dd144087777011a801795d54942c532}{Cube}} (\mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm\+::vec3}} cube\+Min=\mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm\+::vec3}}(-\/1, -\/1, -\/1), \mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm\+::vec3}} cube\+Max=\mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm\+::vec3}}(1, 1, 1))
+\item 
+\mbox{\hyperlink{class_cube_aa814e979cecb8c451fdb332ded2cea1e}{\texorpdfstring{$\sim$}{\string~}\+Cube}} ()
+\item 
+void \mbox{\hyperlink{class_cube_a4cb0af26275a23132dbab6b8aa3e68ce}{draw}} (const \mbox{\hyperlink{group__core__matrix_gac54cbc572f1349a255fe476ca6a42a7b}{glm\+::mat4}} \&view\+Proj\+Mtx, \mbox{\hyperlink{glew_8h_aa311c7f0d6ec4f1a33f9235c3651b86b}{GLuint}} shader, bool floor)
+\item 
+void \mbox{\hyperlink{class_cube_a2eb5e485e2ced5470b51a783b2ecddb1}{update}} ()
+\item 
+void \mbox{\hyperlink{class_cube_a0c8ba10bd882021d0b7fe24d1faf0b33}{user\+Input}} (int key)
+\item 
+void \mbox{\hyperlink{class_cube_af654dedabebb39a1cfe57784733b8667}{handle\+Continuous\+Input}} (\mbox{\hyperlink{group__window_ga3c96d80d363e67d13a41b5d1821f3242}{GLFWwindow}} \texorpdfstring{$\ast$}{*}window, const \mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm\+::vec3}} \&forward\+Dir, const \mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm\+::vec3}} \&right\+Dir)
+\item 
+\mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm\+::vec3}} \mbox{\hyperlink{class_cube_acf06ad5f5c97468a042d1f5fe97beca5}{get\+Position}} () const
+\item 
+void \mbox{\hyperlink{class_cube_ada8ba294d5e434b783b63938e6620910}{spin}} (float deg)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{class_cube_a5706c1fc10fa996a3a2a210f8aa40c8e}{is\+Jumping}} = false
+\item 
+float \mbox{\hyperlink{class_cube_a8b69ab758300a59f96d6cb69c13730bf}{jump\+Velocity}} = 0.\+0f
+\item 
+float \mbox{\hyperlink{class_cube_af1cc58827ba7e95f5da00ced141c7d63}{jump\+Height}} = 0.\+0f
+\item 
+float \mbox{\hyperlink{class_cube_a22d6f4e4ef17084c0811b9f9ed16ad4e}{gravity}} = -\/0.\+00002f
+\item 
+float \mbox{\hyperlink{class_cube_a470379dde79a34a5a3331648f007b0ee}{initial\+Jump\+Velocity}} = 0.\+015f
+\item 
+\mbox{\hyperlink{group__core__matrix_gac54cbc572f1349a255fe476ca6a42a7b}{glm\+::mat4}} \mbox{\hyperlink{class_cube_afaa3cc6fd2ad913f300d1d6a35942b93}{base\+Model}} = \mbox{\hyperlink{group__core__matrix_gac54cbc572f1349a255fe476ca6a42a7b}{glm\+::mat4}}(1.\+0f)
+\item 
+bool \mbox{\hyperlink{class_cube_a3887230073ac99ce007617b3ae5892ad}{isfloor}} = false
+\item 
+bool \mbox{\hyperlink{class_cube_a3488b793ffb5ac7c8a9a76d83ebd2ad7}{is\+Grounded}} = true
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_cube_a3dd144087777011a801795d54942c532}\index{Cube@{Cube}!Cube@{Cube}}
+\index{Cube@{Cube}!Cube@{Cube}}
+\doxysubsubsection{\texorpdfstring{Cube()}{Cube()}}
+{\footnotesize\ttfamily \label{class_cube_a3dd144087777011a801795d54942c532} 
+Cube\+::\+Cube (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm\+::vec3}}}]{cube\+Min}{ = {\ttfamily \mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm\+::vec3}}(-\/1,~-\/1,~-\/1)}, }\item[{\mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm\+::vec3}}}]{cube\+Max}{ = {\ttfamily \mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm\+::vec3}}(1,~1,~1)}}\end{DoxyParamCaption})}
+
+\Hypertarget{class_cube_aa814e979cecb8c451fdb332ded2cea1e}\index{Cube@{Cube}!````~Cube@{\texorpdfstring{$\sim$}{\string~}Cube}}
+\index{````~Cube@{\texorpdfstring{$\sim$}{\string~}Cube}!Cube@{Cube}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}Cube()}{\string~Cube()}}
+{\footnotesize\ttfamily \label{class_cube_aa814e979cecb8c451fdb332ded2cea1e} 
+Cube\+::\texorpdfstring{$\sim$}{\string~}\+Cube (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_cube_a4cb0af26275a23132dbab6b8aa3e68ce}\index{Cube@{Cube}!draw@{draw}}
+\index{draw@{draw}!Cube@{Cube}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily \label{class_cube_a4cb0af26275a23132dbab6b8aa3e68ce} 
+void Cube\+::draw (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{group__core__matrix_gac54cbc572f1349a255fe476ca6a42a7b}{glm\+::mat4}} \&}]{view\+Proj\+Mtx}{, }\item[{\mbox{\hyperlink{glew_8h_aa311c7f0d6ec4f1a33f9235c3651b86b}{GLuint}}}]{shader}{, }\item[{bool}]{floor}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_cube_acf06ad5f5c97468a042d1f5fe97beca5}\index{Cube@{Cube}!getPosition@{getPosition}}
+\index{getPosition@{getPosition}!Cube@{Cube}}
+\doxysubsubsection{\texorpdfstring{getPosition()}{getPosition()}}
+{\footnotesize\ttfamily \label{class_cube_acf06ad5f5c97468a042d1f5fe97beca5} 
+\mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm\+::vec3}} Cube\+::get\+Position (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+\Hypertarget{class_cube_af654dedabebb39a1cfe57784733b8667}\index{Cube@{Cube}!handleContinuousInput@{handleContinuousInput}}
+\index{handleContinuousInput@{handleContinuousInput}!Cube@{Cube}}
+\doxysubsubsection{\texorpdfstring{handleContinuousInput()}{handleContinuousInput()}}
+{\footnotesize\ttfamily \label{class_cube_af654dedabebb39a1cfe57784733b8667} 
+void Cube\+::handle\+Continuous\+Input (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__window_ga3c96d80d363e67d13a41b5d1821f3242}{GLFWwindow}} \texorpdfstring{$\ast$}{*}}]{window}{, }\item[{const \mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm\+::vec3}} \&}]{forward\+Dir}{, }\item[{const \mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm\+::vec3}} \&}]{right\+Dir}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_cube_ada8ba294d5e434b783b63938e6620910}\index{Cube@{Cube}!spin@{spin}}
+\index{spin@{spin}!Cube@{Cube}}
+\doxysubsubsection{\texorpdfstring{spin()}{spin()}}
+{\footnotesize\ttfamily \label{class_cube_ada8ba294d5e434b783b63938e6620910} 
+void Cube\+::spin (\begin{DoxyParamCaption}\item[{float}]{deg}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_cube_a2eb5e485e2ced5470b51a783b2ecddb1}\index{Cube@{Cube}!update@{update}}
+\index{update@{update}!Cube@{Cube}}
+\doxysubsubsection{\texorpdfstring{update()}{update()}}
+{\footnotesize\ttfamily \label{class_cube_a2eb5e485e2ced5470b51a783b2ecddb1} 
+void Cube\+::update (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_cube_a0c8ba10bd882021d0b7fe24d1faf0b33}\index{Cube@{Cube}!userInput@{userInput}}
+\index{userInput@{userInput}!Cube@{Cube}}
+\doxysubsubsection{\texorpdfstring{userInput()}{userInput()}}
+{\footnotesize\ttfamily \label{class_cube_a0c8ba10bd882021d0b7fe24d1faf0b33} 
+void Cube\+::user\+Input (\begin{DoxyParamCaption}\item[{int}]{key}{}\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_cube_afaa3cc6fd2ad913f300d1d6a35942b93}\index{Cube@{Cube}!baseModel@{baseModel}}
+\index{baseModel@{baseModel}!Cube@{Cube}}
+\doxysubsubsection{\texorpdfstring{baseModel}{baseModel}}
+{\footnotesize\ttfamily \label{class_cube_afaa3cc6fd2ad913f300d1d6a35942b93} 
+\mbox{\hyperlink{group__core__matrix_gac54cbc572f1349a255fe476ca6a42a7b}{glm\+::mat4}} Cube\+::base\+Model = \mbox{\hyperlink{group__core__matrix_gac54cbc572f1349a255fe476ca6a42a7b}{glm\+::mat4}}(1.\+0f)}
+
+\Hypertarget{class_cube_a22d6f4e4ef17084c0811b9f9ed16ad4e}\index{Cube@{Cube}!gravity@{gravity}}
+\index{gravity@{gravity}!Cube@{Cube}}
+\doxysubsubsection{\texorpdfstring{gravity}{gravity}}
+{\footnotesize\ttfamily \label{class_cube_a22d6f4e4ef17084c0811b9f9ed16ad4e} 
+float Cube\+::gravity = -\/0.\+00002f}
+
+\Hypertarget{class_cube_a470379dde79a34a5a3331648f007b0ee}\index{Cube@{Cube}!initialJumpVelocity@{initialJumpVelocity}}
+\index{initialJumpVelocity@{initialJumpVelocity}!Cube@{Cube}}
+\doxysubsubsection{\texorpdfstring{initialJumpVelocity}{initialJumpVelocity}}
+{\footnotesize\ttfamily \label{class_cube_a470379dde79a34a5a3331648f007b0ee} 
+float Cube\+::initial\+Jump\+Velocity = 0.\+015f}
+
+\Hypertarget{class_cube_a3887230073ac99ce007617b3ae5892ad}\index{Cube@{Cube}!isfloor@{isfloor}}
+\index{isfloor@{isfloor}!Cube@{Cube}}
+\doxysubsubsection{\texorpdfstring{isfloor}{isfloor}}
+{\footnotesize\ttfamily \label{class_cube_a3887230073ac99ce007617b3ae5892ad} 
+bool Cube\+::isfloor = false}
+
+\Hypertarget{class_cube_a3488b793ffb5ac7c8a9a76d83ebd2ad7}\index{Cube@{Cube}!isGrounded@{isGrounded}}
+\index{isGrounded@{isGrounded}!Cube@{Cube}}
+\doxysubsubsection{\texorpdfstring{isGrounded}{isGrounded}}
+{\footnotesize\ttfamily \label{class_cube_a3488b793ffb5ac7c8a9a76d83ebd2ad7} 
+bool Cube\+::is\+Grounded = true}
+
+\Hypertarget{class_cube_a5706c1fc10fa996a3a2a210f8aa40c8e}\index{Cube@{Cube}!isJumping@{isJumping}}
+\index{isJumping@{isJumping}!Cube@{Cube}}
+\doxysubsubsection{\texorpdfstring{isJumping}{isJumping}}
+{\footnotesize\ttfamily \label{class_cube_a5706c1fc10fa996a3a2a210f8aa40c8e} 
+bool Cube\+::is\+Jumping = false}
+
+\Hypertarget{class_cube_af1cc58827ba7e95f5da00ced141c7d63}\index{Cube@{Cube}!jumpHeight@{jumpHeight}}
+\index{jumpHeight@{jumpHeight}!Cube@{Cube}}
+\doxysubsubsection{\texorpdfstring{jumpHeight}{jumpHeight}}
+{\footnotesize\ttfamily \label{class_cube_af1cc58827ba7e95f5da00ced141c7d63} 
+float Cube\+::jump\+Height = 0.\+0f}
+
+\Hypertarget{class_cube_a8b69ab758300a59f96d6cb69c13730bf}\index{Cube@{Cube}!jumpVelocity@{jumpVelocity}}
+\index{jumpVelocity@{jumpVelocity}!Cube@{Cube}}
+\doxysubsubsection{\texorpdfstring{jumpVelocity}{jumpVelocity}}
+{\footnotesize\ttfamily \label{class_cube_a8b69ab758300a59f96d6cb69c13730bf} 
+float Cube\+::jump\+Velocity = 0.\+0f}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{_cube_8h}{Cube.\+h}}\item 
+src/\mbox{\hyperlink{_cube_8cpp}{Cube.\+cpp}}\end{DoxyCompactItemize}

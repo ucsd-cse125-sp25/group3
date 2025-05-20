@@ -1,0 +1,5 @@
+/Users/jessieouyang/group3/CMakeFiles/menv.dir
+/Users/jessieouyang/group3/CMakeFiles/CopyShaders.dir
+/Users/jessieouyang/group3/CMakeFiles/doc_doxygen.dir
+/Users/jessieouyang/group3/CMakeFiles/edit_cache.dir
+/Users/jessieouyang/group3/CMakeFiles/rebuild_cache.dir

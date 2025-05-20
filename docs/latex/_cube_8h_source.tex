@@ -1,0 +1,47 @@
+\doxysection{Cube.\+h}
+\hypertarget{_cube_8h_source}{}\label{_cube_8h_source}\index{include/Cube.h@{include/Cube.h}}
+\mbox{\hyperlink{_cube_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{core_8h}{core.h}}"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_cube_a3dd144087777011a801795d54942c532}{Cube}}\ \{}
+\DoxyCodeLine{00008\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00009\ \ \ \ \ \mbox{\hyperlink{glew_8h_aa311c7f0d6ec4f1a33f9235c3651b86b}{GLuint}}\ VAO;}
+\DoxyCodeLine{00010\ \ \ \ \ \mbox{\hyperlink{glew_8h_aa311c7f0d6ec4f1a33f9235c3651b86b}{GLuint}}\ VBO\_positions,\ VBO\_normals,\ EBO;}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \ \ \ \ \mbox{\hyperlink{group__core__matrix_gac54cbc572f1349a255fe476ca6a42a7b}{glm::mat4}}\ model;}
+\DoxyCodeLine{00013\ \ \ \ \ \mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm::vec3}}\ color;}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{comment}{//\ Cube\ Information}}
+\DoxyCodeLine{00016\ \ \ \ \ std::vector<glm::vec3>\ positions;}
+\DoxyCodeLine{00017\ \ \ \ \ std::vector<glm::vec3>\ normals;}
+\DoxyCodeLine{00018\ \ \ \ \ std::vector<unsigned\ int>\ indices;}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_cube_a5706c1fc10fa996a3a2a210f8aa40c8e}{isJumping}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_cube_a8b69ab758300a59f96d6cb69c13730bf}{jumpVelocity}}\ =\ 0.0f;}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_cube_af1cc58827ba7e95f5da00ced141c7d63}{jumpHeight}}\ =\ 0.0f;}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_cube_a22d6f4e4ef17084c0811b9f9ed16ad4e}{gravity}}\ =\ -\/0.00002f;}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_cube_a470379dde79a34a5a3331648f007b0ee}{initialJumpVelocity}}\ =\ 0.015f;}
+\DoxyCodeLine{00026\ \ \ \ \ \mbox{\hyperlink{group__core__matrix_gac54cbc572f1349a255fe476ca6a42a7b}{glm::mat4}}\ \mbox{\hyperlink{class_cube_afaa3cc6fd2ad913f300d1d6a35942b93}{baseModel}}\ =\ \mbox{\hyperlink{group__core__matrix_gac54cbc572f1349a255fe476ca6a42a7b}{glm::mat4}}(1.0f);}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_cube_a3887230073ac99ce007617b3ae5892ad}{isfloor}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_cube_a3488b793ffb5ac7c8a9a76d83ebd2ad7}{isGrounded}}\ =\ \textcolor{keyword}{true};\ }
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \mbox{\hyperlink{class_cube_a3dd144087777011a801795d54942c532}{Cube}}(\mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm::vec3}}\ cubeMin\ =\ \mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm::vec3}}(-\/1,\ -\/1,\ -\/1),\ \mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm::vec3}}\ cubeMax\ =\ \mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm::vec3}}(1,\ 1,\ 1));}
+\DoxyCodeLine{00031\ \ \ \ \ \mbox{\hyperlink{class_cube_aa814e979cecb8c451fdb332ded2cea1e}{\string~Cube}}();}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_cube_a4cb0af26275a23132dbab6b8aa3e68ce}{draw}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{group__core__matrix_gac54cbc572f1349a255fe476ca6a42a7b}{glm::mat4}}\&\ viewProjMtx,\ \mbox{\hyperlink{glew_8h_aa311c7f0d6ec4f1a33f9235c3651b86b}{GLuint}}\ shader,\ \textcolor{keywordtype}{bool}\ floor);}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_cube_a2eb5e485e2ced5470b51a783b2ecddb1}{update}}();}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_cube_a0c8ba10bd882021d0b7fe24d1faf0b33}{userInput}}(\textcolor{keywordtype}{int}\ key);}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_cube_af654dedabebb39a1cfe57784733b8667}{handleContinuousInput}}(\mbox{\hyperlink{group__window_ga3c96d80d363e67d13a41b5d1821f3242}{GLFWwindow}}*\ window,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm::vec3}}\&\ forwardDir,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm::vec3}}\&\ rightDir);}
+\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{group__core__vector_ga4320b87e41013b7e875f845f439fc498}{glm::vec3}}\ \mbox{\hyperlink{class_cube_acf06ad5f5c97468a042d1f5fe97beca5}{getPosition}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_cube_ada8ba294d5e434b783b63938e6620910}{spin}}(\textcolor{keywordtype}{float}\ deg);}
+\DoxyCodeLine{00041\ \};}
+
+\end{DoxyCode}
