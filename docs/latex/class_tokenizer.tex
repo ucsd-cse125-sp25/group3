@@ -1,0 +1,149 @@
+\doxysection{Tokenizer Class Reference}
+\hypertarget{class_tokenizer}{}\label{class_tokenizer}\index{Tokenizer@{Tokenizer}}
+
+
+{\ttfamily \#include $<$Tokenizer.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_tokenizer_a2a6c04ea8c784f66bebcb6df7073769c}{Tokenizer}} ()
+\item 
+\mbox{\hyperlink{class_tokenizer_a3f60f887953edf0f95ba5f36102f7017}{\texorpdfstring{$\sim$}{\string~}\+Tokenizer}} ()
+\item 
+bool \mbox{\hyperlink{class_tokenizer_a0b4ba9a72b2f31660c95b39f879e1fbf}{Open}} (const char \texorpdfstring{$\ast$}{*}file)
+\item 
+bool \mbox{\hyperlink{class_tokenizer_a014bed36cfed5d1a5fdcdcb221d9a1f7}{Close}} ()
+\item 
+bool \mbox{\hyperlink{class_tokenizer_a7475acc838fb9729bbc7752b75f92a88}{Abort}} (char \texorpdfstring{$\ast$}{*}error)
+\item 
+char \mbox{\hyperlink{class_tokenizer_ab95b6f1e85dbdc1448b4bb70b296fce4}{Get\+Char}} ()
+\item 
+char \mbox{\hyperlink{class_tokenizer_aef69f2c5159f0665d67597bd48ba6240}{Check\+Char}} ()
+\item 
+int \mbox{\hyperlink{class_tokenizer_a7c93306e68a0c216657cee14af99b243}{Get\+Int}} ()
+\item 
+float \mbox{\hyperlink{class_tokenizer_ac73b9bc0f49cca9f33b7fc7531172b8f}{Get\+Float}} ()
+\item 
+bool \mbox{\hyperlink{class_tokenizer_a3dd3f19501cb23c69143d2b1c19eeb2e}{Get\+Token}} (char \texorpdfstring{$\ast$}{*}str)
+\item 
+bool \mbox{\hyperlink{class_tokenizer_a423e338248242d78f7796ee123051a46}{Find\+Token}} (const char \texorpdfstring{$\ast$}{*}tok)
+\item 
+bool \mbox{\hyperlink{class_tokenizer_ab50e4f484e0d637211585940726a6b3d}{Skip\+Whitespace}} ()
+\item 
+bool \mbox{\hyperlink{class_tokenizer_ae8af2eacfd6cb98637df0c30e5ce8f2b}{Skip\+Line}} ()
+\item 
+bool \mbox{\hyperlink{class_tokenizer_a8fab01188fb836efb11ecd0b3d927536}{Reset}} ()
+\item 
+char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{class_tokenizer_a6155f39fbb3910fcdd9621eb47d1eacb}{Get\+File\+Name}} ()
+\item 
+int \mbox{\hyperlink{class_tokenizer_a62007f83fee053baedfea4bc886b9a6c}{Get\+Line\+Num}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_tokenizer_a2a6c04ea8c784f66bebcb6df7073769c}\index{Tokenizer@{Tokenizer}!Tokenizer@{Tokenizer}}
+\index{Tokenizer@{Tokenizer}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{Tokenizer()}{Tokenizer()}}
+{\footnotesize\ttfamily \label{class_tokenizer_a2a6c04ea8c784f66bebcb6df7073769c} 
+Tokenizer\+::\+Tokenizer (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_tokenizer_a3f60f887953edf0f95ba5f36102f7017}\index{Tokenizer@{Tokenizer}!````~Tokenizer@{\texorpdfstring{$\sim$}{\string~}Tokenizer}}
+\index{````~Tokenizer@{\texorpdfstring{$\sim$}{\string~}Tokenizer}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}Tokenizer()}{\string~Tokenizer()}}
+{\footnotesize\ttfamily \label{class_tokenizer_a3f60f887953edf0f95ba5f36102f7017} 
+Tokenizer\+::\texorpdfstring{$\sim$}{\string~}\+Tokenizer (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_tokenizer_a7475acc838fb9729bbc7752b75f92a88}\index{Tokenizer@{Tokenizer}!Abort@{Abort}}
+\index{Abort@{Abort}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{Abort()}{Abort()}}
+{\footnotesize\ttfamily \label{class_tokenizer_a7475acc838fb9729bbc7752b75f92a88} 
+bool Tokenizer\+::\+Abort (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{error}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_tokenizer_aef69f2c5159f0665d67597bd48ba6240}\index{Tokenizer@{Tokenizer}!CheckChar@{CheckChar}}
+\index{CheckChar@{CheckChar}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{CheckChar()}{CheckChar()}}
+{\footnotesize\ttfamily \label{class_tokenizer_aef69f2c5159f0665d67597bd48ba6240} 
+char Tokenizer\+::\+Check\+Char (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_tokenizer_a014bed36cfed5d1a5fdcdcb221d9a1f7}\index{Tokenizer@{Tokenizer}!Close@{Close}}
+\index{Close@{Close}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{Close()}{Close()}}
+{\footnotesize\ttfamily \label{class_tokenizer_a014bed36cfed5d1a5fdcdcb221d9a1f7} 
+bool Tokenizer\+::\+Close (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_tokenizer_a423e338248242d78f7796ee123051a46}\index{Tokenizer@{Tokenizer}!FindToken@{FindToken}}
+\index{FindToken@{FindToken}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{FindToken()}{FindToken()}}
+{\footnotesize\ttfamily \label{class_tokenizer_a423e338248242d78f7796ee123051a46} 
+bool Tokenizer\+::\+Find\+Token (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{tok}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_tokenizer_ab95b6f1e85dbdc1448b4bb70b296fce4}\index{Tokenizer@{Tokenizer}!GetChar@{GetChar}}
+\index{GetChar@{GetChar}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{GetChar()}{GetChar()}}
+{\footnotesize\ttfamily \label{class_tokenizer_ab95b6f1e85dbdc1448b4bb70b296fce4} 
+char Tokenizer\+::\+Get\+Char (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_tokenizer_a6155f39fbb3910fcdd9621eb47d1eacb}\index{Tokenizer@{Tokenizer}!GetFileName@{GetFileName}}
+\index{GetFileName@{GetFileName}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{GetFileName()}{GetFileName()}}
+{\footnotesize\ttfamily \label{class_tokenizer_a6155f39fbb3910fcdd9621eb47d1eacb} 
+char \texorpdfstring{$\ast$}{*} Tokenizer\+::\+Get\+File\+Name (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{class_tokenizer_ac73b9bc0f49cca9f33b7fc7531172b8f}\index{Tokenizer@{Tokenizer}!GetFloat@{GetFloat}}
+\index{GetFloat@{GetFloat}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{GetFloat()}{GetFloat()}}
+{\footnotesize\ttfamily \label{class_tokenizer_ac73b9bc0f49cca9f33b7fc7531172b8f} 
+float Tokenizer\+::\+Get\+Float (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_tokenizer_a7c93306e68a0c216657cee14af99b243}\index{Tokenizer@{Tokenizer}!GetInt@{GetInt}}
+\index{GetInt@{GetInt}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{GetInt()}{GetInt()}}
+{\footnotesize\ttfamily \label{class_tokenizer_a7c93306e68a0c216657cee14af99b243} 
+int Tokenizer\+::\+Get\+Int (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_tokenizer_a62007f83fee053baedfea4bc886b9a6c}\index{Tokenizer@{Tokenizer}!GetLineNum@{GetLineNum}}
+\index{GetLineNum@{GetLineNum}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{GetLineNum()}{GetLineNum()}}
+{\footnotesize\ttfamily \label{class_tokenizer_a62007f83fee053baedfea4bc886b9a6c} 
+int Tokenizer\+::\+Get\+Line\+Num (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{class_tokenizer_a3dd3f19501cb23c69143d2b1c19eeb2e}\index{Tokenizer@{Tokenizer}!GetToken@{GetToken}}
+\index{GetToken@{GetToken}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{GetToken()}{GetToken()}}
+{\footnotesize\ttfamily \label{class_tokenizer_a3dd3f19501cb23c69143d2b1c19eeb2e} 
+bool Tokenizer\+::\+Get\+Token (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{str}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_tokenizer_a0b4ba9a72b2f31660c95b39f879e1fbf}\index{Tokenizer@{Tokenizer}!Open@{Open}}
+\index{Open@{Open}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{Open()}{Open()}}
+{\footnotesize\ttfamily \label{class_tokenizer_a0b4ba9a72b2f31660c95b39f879e1fbf} 
+bool Tokenizer\+::\+Open (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{file}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_tokenizer_a8fab01188fb836efb11ecd0b3d927536}\index{Tokenizer@{Tokenizer}!Reset@{Reset}}
+\index{Reset@{Reset}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{Reset()}{Reset()}}
+{\footnotesize\ttfamily \label{class_tokenizer_a8fab01188fb836efb11ecd0b3d927536} 
+bool Tokenizer\+::\+Reset (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_tokenizer_ae8af2eacfd6cb98637df0c30e5ce8f2b}\index{Tokenizer@{Tokenizer}!SkipLine@{SkipLine}}
+\index{SkipLine@{SkipLine}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{SkipLine()}{SkipLine()}}
+{\footnotesize\ttfamily \label{class_tokenizer_ae8af2eacfd6cb98637df0c30e5ce8f2b} 
+bool Tokenizer\+::\+Skip\+Line (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_tokenizer_ab50e4f484e0d637211585940726a6b3d}\index{Tokenizer@{Tokenizer}!SkipWhitespace@{SkipWhitespace}}
+\index{SkipWhitespace@{SkipWhitespace}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{SkipWhitespace()}{SkipWhitespace()}}
+{\footnotesize\ttfamily \label{class_tokenizer_ab50e4f484e0d637211585940726a6b3d} 
+bool Tokenizer\+::\+Skip\+Whitespace (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{_tokenizer_8h}{Tokenizer.\+h}}\item 
+src/\mbox{\hyperlink{_tokenizer_8cpp}{Tokenizer.\+cpp}}\end{DoxyCompactItemize}
