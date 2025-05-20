@@ -4,7 +4,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-GameState currentState = PLAYING;
+GameState currentState = START_MENU;
 
 const char* GameStateToString(GameState state) {
     switch (state) {
@@ -232,73 +232,82 @@ ImGui::End();
 
             ImGui::SetNextWindowSize(windowSize);
             ImGui::SetNextWindowPos(ImVec2(0, 0));
-            ImGui::Begin("CharacterSelect", nullptr,
-                ImGuiWindowFlags_NoTitleBar |
-                ImGuiWindowFlags_NoResize |
-                ImGuiWindowFlags_NoMove);
+            // ImGui::Begin("CharacterSelect", nullptr,
+            //     ImGuiWindowFlags_NoTitleBar |
+            //     ImGuiWindowFlags_NoResize |
+            //     ImGuiWindowFlags_NoMove);
 
             ImGui::Begin("Character Customization", nullptr, ImGuiWindowFlags_NoResize);
-
-ImGui::Text("🧍 Customize Your Character");
-ImGui::Separator();
-ImGui::Spacing();
-
-ImGui::Columns(2, nullptr, false);
-
-// === Left Column ===
-ImGui::BeginChild("Preview", ImVec2(350, 500), true, ImGuiWindowFlags_AlwaysUseWindowPadding);
-ImGui::Text("🖼 Character Preview");
-ImGui::Dummy(ImVec2(300, 400));
-ImGui::Text("Render goes here");
-ImGui::EndChild();
-
-ImGui::NextColumn();
-
-// === Right Column ===
-ImGui::BeginChild("Options", ImVec2(0, 500), true, ImGuiWindowFlags_AlwaysUseWindowPadding);
-
-const char* tabs[] = { "👔 Outfit", "🎩 Hat", "🎒 Accessory" };
-static int tab = 0;
-for (int i = 0; i < 3; ++i) {
-    if (i > 0) ImGui::SameLine();
-    if (ImGui::Selectable(tabs[i], tab == i)) tab = i;
-}
-ImGui::Separator();
-
-const char* outfitOptions[] = { "Casual", "Stealth", "Fancy", "Rugged" };
-const char* hatOptions[] = { "None", "Cap", "Hood", "Crown" };
-const char* accessoryOptions[] = { "Backpack", "Cape", "Glasses" };
-
-const char** options = nullptr;
-int count = 0;
-if (tab == 0) { options = outfitOptions; count = IM_ARRAYSIZE(outfitOptions); }
-else if (tab == 1) { options = hatOptions; count = IM_ARRAYSIZE(hatOptions); }
-else { options = accessoryOptions; count = IM_ARRAYSIZE(accessoryOptions); }
-
-for (int i = 0; i < count; ++i) {
-    if (ImGui::Button(options[i], ImVec2(200, 40))) {
-        // Handle selection
-    }
-}
-
-ImGui::EndChild();
-
-ImGui::Spacing();
-if (ImGui::Button("◀ Back")) currentState = START_MENU;
-ImGui::SameLine();
-if (ImGui::Button("Randomize")) { /* randomize logic */ }
-ImGui::SameLine();
-// if (ImGui::Button("Confirm")) {currentState = PLAYING;}
-if (ImGui::Button("Confirm", ImVec2(120, 40))) {
+            if (ImGui::Button("Confirm", ImVec2(120, 40))) {
         currentState = PLAYING;
         stateChanged = true; // Flag for state transition
         glfwPostEmptyEvent(); // Force frame refresh
     }
+            ImGui::End();
 
-ImGui::End();
+
+//             ImGui::Begin("Character Customization", nullptr, ImGuiWindowFlags_NoResize);
+
+// ImGui::Text("🧍 Customize Your Character");
+// ImGui::Separator();
+// ImGui::Spacing();
+
+// ImGui::Columns(2, nullptr, false);
+
+// // === Left Column ===
+// ImGui::BeginChild("Preview", ImVec2(350, 500), true, ImGuiWindowFlags_AlwaysUseWindowPadding);
+// ImGui::Text("🖼 Character Preview");
+// ImGui::Dummy(ImVec2(300, 400));
+// ImGui::Text("Render goes here");
+// ImGui::EndChild();
+
+// ImGui::NextColumn();
+
+// // === Right Column ===
+// ImGui::BeginChild("Options", ImVec2(0, 500), true, ImGuiWindowFlags_AlwaysUseWindowPadding);
+
+// const char* tabs[] = { "👔 Outfit", "🎩 Hat", "🎒 Accessory" };
+// static int tab = 0;
+// for (int i = 0; i < 3; ++i) {
+//     if (i > 0) ImGui::SameLine();
+//     if (ImGui::Selectable(tabs[i], tab == i)) tab = i;
+// }
+// ImGui::Separator();
+
+// const char* outfitOptions[] = { "Casual", "Stealth", "Fancy", "Rugged" };
+// const char* hatOptions[] = { "None", "Cap", "Hood", "Crown" };
+// const char* accessoryOptions[] = { "Backpack", "Cape", "Glasses" };
+
+// const char** options = nullptr;
+// int count = 0;
+// if (tab == 0) { options = outfitOptions; count = IM_ARRAYSIZE(outfitOptions); }
+// else if (tab == 1) { options = hatOptions; count = IM_ARRAYSIZE(hatOptions); }
+// else { options = accessoryOptions; count = IM_ARRAYSIZE(accessoryOptions); }
+
+// for (int i = 0; i < count; ++i) {
+//     if (ImGui::Button(options[i], ImVec2(200, 40))) {
+//         // Handle selection
+//     }
+// }
+
+// ImGui::EndChild();
+
+// ImGui::Spacing();
+// if (ImGui::Button("◀ Back")) currentState = START_MENU;
+// ImGui::SameLine();
+// if (ImGui::Button("Randomize")) { /* randomize logic */ }
+// ImGui::SameLine();
+// // if (ImGui::Button("Confirm")) {currentState = PLAYING;}
+// if (ImGui::Button("Confirm", ImVec2(120, 40))) {
+//         currentState = PLAYING;
+//         stateChanged = true; // Flag for state transition
+//         glfwPostEmptyEvent(); // Force frame refresh
+//     }
+
+// ImGui::End();
 
             
-            ImGui::End(); // Crucial for proper frame ending
+//             ImGui::End(); // Crucial for proper frame ending
 
              // Mandatory ImGui frame termination
              ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
