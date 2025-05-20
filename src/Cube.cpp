@@ -172,7 +172,8 @@ void Cube::update() {
     // Spin the cube
     // spin(0.05f);
     #ifdef __APPLE__
-        gravity = -0.00005f;
+        gravity = -0.00035f;
+        initialJumpVelocity = 0.030f;
     #endif
     if (isJumping) {
         //update jump height
