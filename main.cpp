@@ -3,6 +3,10 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include <GL/glew.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include "external/stb_image.h"
+
 
 GameState currentState = START_MENU;
 
@@ -13,6 +17,56 @@ const char* GameStateToString(GameState state) {
         case PLAYING: return "PLAYING";
         default: return "UNKNOWN";
     }
+}
+
+// Simple helper function to load an image into a OpenGL texture with common settings
+bool LoadTextureFromMemory(const void* data, size_t data_size, GLuint* out_texture, int* out_width, int* out_height)
+{
+    // Load from file
+    int image_width = 0;
+    int image_height = 0;
+    unsigned char* image_data = stbi_load_from_memory((const unsigned char*)data, (int)data_size, &image_width, &image_height, NULL, 4);
+    if (image_data == NULL)
+        return false;
+
+    // Create a OpenGL texture identifier
+    GLuint image_texture;
+    glGenTextures(1, &image_texture);
+    glBindTexture(GL_TEXTURE_2D, image_texture);
+
+    // Setup filtering parameters for display
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Upload pixels into texture
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+    stbi_image_free(image_data);
+
+    *out_texture = image_texture;
+    *out_width = image_width;
+    *out_height = image_height;
+
+    return true;
+}
+
+// Open and read a file, then forward to LoadTextureFromMemory()
+bool LoadTextureFromFile(const char* file_name, GLuint* out_texture, int* out_width, int* out_height)
+{
+    FILE* f = fopen(file_name, "rb");
+    if (f == NULL)
+        return false;
+    fseek(f, 0, SEEK_END);
+    size_t file_size = (size_t)ftell(f);
+    if (file_size == -1)
+        return false;
+    fseek(f, 0, SEEK_SET);
+    void* file_data = IM_ALLOC(file_size);
+    fread(file_data, 1, file_size, f);
+    fclose(f);
+    bool ret = LoadTextureFromMemory(file_data, file_size, out_texture, out_width, out_height);
+    IM_FREE(file_data);
+    return ret;
 }
 
 
@@ -68,7 +122,8 @@ int main(void) {
     // io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
     
     // Font and style setup
-    io.Fonts->AddFontFromFileTTF("external/style/fonts/Bauhaus93.ttf", 32.0f);
+    // https://github.com/Fromager/junicode
+    io.Fonts->AddFontFromFileTTF("external/style/fonts/Junicode-Bold.ttf", 32.0f);
     ImGuiStyle& style = ImGui::GetStyle();
     style.Colors[ImGuiCol_WindowBg] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f); // Opaque background
     style.Colors[ImGuiCol_Button] = ImVec4(0.7f, 0.6f, 0.2f, 1.0f);
@@ -82,6 +137,13 @@ int main(void) {
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
+
+    
+    int my_image_width = 0;
+int my_image_height = 0;
+GLuint my_image_texture = 0;
+bool ret = LoadTextureFromFile("external/images/HeistAtTheMuseumTitle.png", &my_image_texture, &my_image_width, &my_image_height);
+IM_ASSERT(ret);
 
     
 
@@ -176,47 +238,107 @@ ImGui::End();
         ImVec2 windowSize = ImGui::GetIO().DisplaySize;
         
         if (currentState == START_MENU) {
-// Start ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+// // Start ImGui frame
+//         ImGui_ImplOpenGL3_NewFrame();
+//         ImGui_ImplGlfw_NewFrame();
+//         ImGui::NewFrame();
 
-            ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar |
-                                            ImGuiWindowFlags_NoResize |
-                                            ImGuiWindowFlags_NoMove |
-                                            ImGuiWindowFlags_NoCollapse |
-                                            ImGuiWindowFlags_NoBringToFrontOnFocus |
-                                            ImGuiWindowFlags_NoBackground;
+//             ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar |
+//                                             ImGuiWindowFlags_NoResize |
+//                                             ImGuiWindowFlags_NoMove |
+//                                             ImGuiWindowFlags_NoCollapse |
+//                                             ImGuiWindowFlags_NoBringToFrontOnFocus |
+//                                             ImGuiWindowFlags_NoBackground;
            
 
-            // [Your menu UI code here]
-            ImVec2 windowSize = io.DisplaySize;
+//             // [Your menu UI code here]
+//             ImVec2 windowSize = io.DisplaySize;
 
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
-    ImGui::SetNextWindowSize(windowSize);
-    ImGui::Begin("StartMenu", nullptr, window_flags);
+//     ImGui::SetNextWindowPos(ImVec2(0, 0));
+//     ImGui::SetNextWindowSize(windowSize);
+//     ImGui::Begin("StartMenu", nullptr, window_flags);
 
-    float centerX = windowSize.x * 0.5f;
+//     float centerX = windowSize.x * 0.5f;
 
-    ImGui::SetCursorPos(ImVec2(centerX - 250, 120));
-    ImGui::PushFont(io.Fonts->Fonts[0]);
-    ImGui::Text("HEUM");
-    ImGui::PopFont();
+//     ImGui::SetCursorPos(ImVec2(centerX - 250, 120));
+//     ImGui::PushFont(io.Fonts->Fonts[0]);
+//     ImGui::Text("HEUM");
+//     ImGui::PopFont();
 
-    ImGui::SetCursorPos(ImVec2(centerX - 120, 200));
+//     ImGui::SetCursorPos(ImVec2(centerX - 120, 200));
 
-    ImGui::SetCursorPos(ImVec2(centerX - 70, 260));
-    if (ImGui::Button("Start Game", ImVec2(160, 50))) {
-        currentState = CHARACTER_SELECTION;
-    }
+//     ImGui::SetCursorPos(ImVec2(centerX - 70, 260));
+//     if (ImGui::Button("Start Game", ImVec2(160, 50))) {
+//         currentState = CHARACTER_SELECTION;
+//     }
 
-    ImGui::SetCursorPos(ImVec2(centerX - 70, 330));
-    if (ImGui::Button("Quit", ImVec2(160, 50))) {
-        glfwSetWindowShouldClose(window, true);
-    }
+//     ImGui::SetCursorPos(ImVec2(centerX - 70, 330));
+//     if (ImGui::Button("Quit", ImVec2(160, 50))) {
+//         glfwSetWindowShouldClose(window, true);
+//     }
 
             
-            ImGui::End(); 
+//             ImGui::End(); 
+
+// Assuming you have initialized ImGui and OpenGL context
+
+// Load the title image once during initialization
+// Load the title image once during initialization
+
+
+// Start the ImGui frame
+ImGui_ImplOpenGL3_NewFrame();
+ImGui_ImplGlfw_NewFrame();
+ImGui::NewFrame();
+
+// Set window flags
+ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar |
+                                ImGuiWindowFlags_NoResize |
+                                ImGuiWindowFlags_NoMove |
+                                ImGuiWindowFlags_NoCollapse |
+                                ImGuiWindowFlags_NoBringToFrontOnFocus |
+                                ImGuiWindowFlags_NoBackground;
+
+ImVec2 windowSize = io.DisplaySize;
+ImGui::SetNextWindowPos(ImVec2(0, 0));
+ImGui::SetNextWindowSize(windowSize);
+ImGui::Begin("StartMenu", nullptr, window_flags);
+
+float maxDisplayWidth = windowSize.x * 0.5f;
+float maxDisplayHeight = windowSize.y * 0.5f;
+
+// Calculate the scaling factor based on the smaller dimension
+float scale = std::min(maxDisplayWidth / my_image_width, maxDisplayHeight / my_image_height);
+
+// Compute the new image dimensions
+float displayWidth = my_image_width * scale;
+float displayHeight = my_image_height * scale;
+
+// Calculate position to center the image
+float posX = (windowSize.x - displayWidth) * 0.5f;
+float posY = (windowSize.y - displayHeight) * 0.5f;
+
+// Set cursor position and render the image
+ImGui::SetCursorPos(ImVec2(posX, posY));
+
+ImGui::Image((ImTextureID)(intptr_t)my_image_texture, ImVec2(displayWidth, displayHeight));
+float centerX = windowSize.x * 0.5f;
+
+
+// Start Game button
+ImGui::SetCursorPos(ImVec2(centerX - 8, 430));
+if (ImGui::Button("Start Game", ImVec2(160, 50))) {
+    currentState = CHARACTER_SELECTION;
+}
+
+// Quit button
+ImGui::SetCursorPos(ImVec2(centerX - 200, 430));
+if (ImGui::Button("Quit", ImVec2(160, 50))) {
+    glfwSetWindowShouldClose(window, true);
+}
+
+ImGui::End();
+
 
              // Mandatory ImGui frame termination
              ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);

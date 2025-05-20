@@ -4,7 +4,7 @@
 # compile CXX with /Library/Developer/CommandLineTools/usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/Users/jessieouyang/group3/include -I/Users/jessieouyang/group3/external/imgui -I/Users/jessieouyang/group3/external/imgui/backends -I/usr/local/include -F/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/System/Library/Frameworks
+CXX_INCLUDES = -I/Users/jessieouyang/group3/include -I/Users/jessieouyang/group3/external/imgui -I/Users/jessieouyang/group3/external/imgui/backends -I/Users/jessieouyang/group3/external -I/usr/local/include -F/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/System/Library/Frameworks
 
 CXX_FLAGS = -std=gnu++11 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
 

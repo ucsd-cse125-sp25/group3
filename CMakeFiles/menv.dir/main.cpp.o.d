@@ -1119,4 +1119,9 @@ CMakeFiles/menv.dir/main.cpp.o: /Users/jessieouyang/group3/main.cpp \
   /Users/jessieouyang/group3/external/imgui/imconfig.h \
   /Users/jessieouyang/group3/external/imgui/backends/imgui_impl_glfw.h \
   /Users/jessieouyang/group3/external/imgui/backends/imgui_impl_opengl3.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/TargetConditionals.h
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/TargetConditionals.h \
+  /Users/jessieouyang/group3/external/stb_image.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/emmintrin.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/xmmintrin.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/mmintrin.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/mm_malloc.h

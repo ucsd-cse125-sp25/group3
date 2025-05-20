@@ -3415,15 +3415,20 @@ CMakeFiles/menv.dir/main.cpp.o
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/xlocale/_wchar.h
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/xlocale/_wctype.h
  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/__stddef_max_align_t.h
+ /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/emmintrin.h
  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/float.h
  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/limits.h
+ /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/mm_malloc.h
+ /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/mmintrin.h
  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdarg.h
  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stddef.h
  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdint.h
+ /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/xmmintrin.h
  /Users/jessieouyang/group3/external/imgui/backends/imgui_impl_glfw.h
  /Users/jessieouyang/group3/external/imgui/backends/imgui_impl_opengl3.h
  /Users/jessieouyang/group3/external/imgui/imconfig.h
  /Users/jessieouyang/group3/external/imgui/imgui.h
+ /Users/jessieouyang/group3/external/stb_image.h
  /Users/jessieouyang/group3/include/Camera.h
  /Users/jessieouyang/group3/include/Cube.h
  /Users/jessieouyang/group3/include/GL/glew.h

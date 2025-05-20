@@ -27,6 +27,7 @@ set(
     include/Shader.h
     include/Tokenizer.h
     include/Window.h
+    external/stb_image.h
 )
 
 set(IMGUI_DIR ${CMAKE_SOURCE_DIR}/external/imgui)
@@ -39,7 +40,10 @@ set(IMGUI_SOURCES
     ${IMGUI_DIR}/imgui_widgets.cpp
     ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
     ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+
 )
+
+
 
 
 # Require GL
@@ -65,6 +69,9 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${IMGUI_SOURCES})
 # Set include and lib dirs (platform-specific)
 include_directories(include)
 include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends)
+include_directories(
+    external
+)
 
 
 if (APPLE)
