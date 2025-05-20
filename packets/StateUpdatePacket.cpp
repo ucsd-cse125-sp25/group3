@@ -28,7 +28,7 @@ int StateUpdatePacket::serializePayload(char* data) {
     offset += sizeof(numClients);
 
     for (const auto& packet : clientPackets) {
-        packet->serializePayload(data + offset);
+        packet->serialize(data + offset);
         offset += packet->getSize();
     }
 
@@ -45,7 +45,7 @@ int StateUpdatePacket::deserializePayload(char* data) {
 
     for (unsigned int i = 0; i < numClients; ++i) {
         auto packet = std::make_unique<InitPlayerPacket>();
-        packet->deserializePayload(data + offset);
+        packet->deserialize(data + offset);
         offset += packet->getSize();
 
         clientPackets.push_back(std::move(packet));

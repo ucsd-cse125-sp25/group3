@@ -53,7 +53,6 @@ void ClientGame::sendKeyPacket(KeyType key) {
 }
 
 void ClientGame::sendPendingPackets() {
-    printf("Sending pending packets");
     for (auto& packet : client_logic::pendingPackets) {
         const unsigned int packet_size = packet->getSize();
         std::vector<char> packet_data(packet_size);  
