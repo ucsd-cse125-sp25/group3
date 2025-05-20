@@ -50,16 +50,16 @@ void MiniGame::init(GLFWwindow* window) {
         "minigame/assets/thief1_left.png");
 
     // Add platforms (same as your original main)
-    platforms.emplace_back(270, 1552, 170, 27, 0);
-    platforms.emplace_back(0, 1350, 220, 27, 0);
-    platforms.emplace_back(0, 1452, 300, 27, 0);
-    platforms.emplace_back(360, 1102, 285, 40, 0);
-    platforms.emplace_back(990, 970, 428, 44, 0);
-    platforms.emplace_back(1550, 1165, 330, 45, 0);
-    platforms.emplace_back(2100, 850, 260, 45, 0);
-    platforms.emplace_back(488, 685, 330, 40, 0);
-    platforms.emplace_back(1148, 505, 400, 43, 0);
-    platforms.emplace_back(1850, 470, 400, 30, 0);
+    platforms.emplace_back(270, 1552, 170, 27, 0);//1
+    platforms.emplace_back(0, 1350, 220, 27, 0);//2
+    platforms.emplace_back(0, 1452, 300, 27, 0);//3
+    platforms.emplace_back(380, 1102, 285, 40, 0);//4
+    platforms.emplace_back(990, 970, 428, 44, 0);//5
+    platforms.emplace_back(1550, 1165, 330, 45, 0);//6
+    platforms.emplace_back(2100, 850, 260, 45, 0);//7
+    platforms.emplace_back(420, 680, 330, 40, 0);//8
+    platforms.emplace_back(1148, 505, 400, 43, 0);//9
+    platforms.emplace_back(1850, 470, 400, 30, 0);//10
 }
 
 void MiniGame::update(GLFWwindow* window) {

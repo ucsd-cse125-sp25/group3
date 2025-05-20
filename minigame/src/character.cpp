@@ -98,11 +98,11 @@ void Character::update(float dt, int windowHeight, int windowWidth, const std::v
             vx = 0.f;
         }
 
-        // bool bottomContact = (y >= p.y + p.height) && (nextY < p.y + p.height);
-        // if (isJumping && horizontalOverlap && bottomContact) {
-        //     nextY = p.y + p.height;
-        //     vy = 0.f;
-        // }
+        bool bottomContact = (y >= p.y + p.height) && (nextY < p.y + p.height);
+        if (isJumping && horizontalOverlap && bottomContact) {
+            nextY = p.y + p.height;
+            vy = 0.f;
+        }
     }
     x = nextX;
     y = nextY;
