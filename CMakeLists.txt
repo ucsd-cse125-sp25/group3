@@ -14,6 +14,7 @@ set(
     packets/CursorPacket.cpp
     packets/EndGamePacket.cpp
     packets/InitPacket.cpp
+    packets/InitPlayerPacket.cpp
     packets/KeyPacket.cpp
     packets/StateUpdatePacket.cpp
     packets/PacketFactory.cpp
@@ -38,6 +39,7 @@ set(
     packets/CursorPacket.h
     packets/EndGamePacket.h
     packets/InitPacket.h
+    packets/InitPlayerPacket.h
     packets/KeyPacket.h
     packets/StateUpdatePacket.h
     packets/PacketFactory.h

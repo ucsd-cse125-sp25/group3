@@ -1,7 +1,7 @@
 #include "EndGamePacket.h"
 
 EndGamePacket::EndGamePacket(){
-    length = 0;
+    length = sizeof(closedClient);
 }
 
 unsigned int EndGamePacket::getSize() {
@@ -11,11 +11,17 @@ unsigned int EndGamePacket::getSize() {
 int EndGamePacket::serializePayload(char* data) {
     unsigned int offset = getHeaderSize();
 
+    std::memcpy(data + offset, &closedClient, sizeof(closedClient));
+    offset += sizeof(closedClient);
+
     return offset;
 }
 
 int EndGamePacket::deserializePayload(char* data) {
     unsigned int offset = getHeaderSize();
+
+    std::memcpy(&closedClient, data + offset, sizeof(closedClient));
+    offset += sizeof(closedClient);
 
     return offset;
 }

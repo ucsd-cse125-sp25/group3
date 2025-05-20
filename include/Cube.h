@@ -5,7 +5,7 @@
 #include "core.h"
 #include <iostream>
 #include <fstream>
-#include "../packets/StateUpdatePacket.h"
+#include "../packets/InitPlayerPacket.h"
 
 class Cube {
 private:
@@ -71,7 +71,7 @@ public:
     void handleContinuousInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir);
     glm::vec3 getPosition() const;
 
-    void updateFromPacket(const StateUpdatePacket& packet);
+    void updateFromPacket(const InitPlayerPacket& packet);
 
     void spin(float deg);
 

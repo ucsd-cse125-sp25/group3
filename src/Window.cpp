@@ -1,5 +1,8 @@
 #include "Window.h"
 
+unsigned int Window::client_id;
+bool Window::initialized = false;
+
 // Window Properties
 int Window::width;
 int Window::height;
@@ -8,6 +11,7 @@ const char* Window::windowTitle = "Model Environment";
 // Objects to render
 Cube* Window::cube;
 Cube* Window::floor;
+std::map<unsigned int, Cube*> Window::cubes;
 
 // Camera Properties
 Camera* Cam;
@@ -49,7 +53,9 @@ bool Window::initializeObjects() {
 void Window::cleanUp() {
     // Deallcoate the objects.
     delete cube;
-
+    delete floor;
+    delete Cam;
+    delete MiniMapCam;
     // Delete the shader program.
     glDeleteProgram(shaderProgram);
 }
@@ -284,14 +290,66 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     Cam->SetIncline(newIncline);
 }
 
+/*
+void Window::applyServerState(char * data) {
+    int numClients;
+    memcpy(&numClients, data, sizeof(int));
+    int offset = sizeof(numClients);
+    printf("num clients is %d\n", numClients);
+    for (int i = 0; i < numClients; i++) {
+        //printf("there are %d clients", numClients);
+        unsigned int currClient;
+        memcpy(&currClient, &data[offset], sizeof(currClient));
+        offset += sizeof(currClient);
+        printf("curr client is %u\n", currClient);
+
+        if (cubes.find(currClient) == cubes.end()) {
+            addClient(currClient);
+        }
+        Cube* cubePtr = cubes[currClient];
+        int cubeOffset = cubePtr->readFromArray(&data[offset]);
+        offset += cubeOffset;
+   
+        if (currClient == client_id) {
+            offset += Cam->readFromArray(&data[offset]);
+            offset += MiniMapCam->readFromArray(&data[offset]);
+            memcpy(&altDown, &data[offset], sizeof(bool));
+            offset += sizeof(bool);
+        }
+        else {
+            offset += (2 * (100) + 1);
+        }
+    }
+}
+*/
+
 void Window::applyServerState(const StateUpdatePacket& packet) {
-    cube->updateFromPacket(packet);
-    Cam->updateFromPacket(packet, false);
-    MiniMapCam->updateFromPacket(packet, true);
-    altDown = packet.altDown;
+    int numClients = packet.numClients;
+    printf("num clients is %d\n", numClients);
+    for (const auto& clientPacketPtr : packet.clientPackets) {
+    if (clientPacketPtr) {
+        const InitPlayerPacket* initPacket = dynamic_cast<const InitPlayerPacket*>(clientPacketPtr.get());
+        if (initPacket) {
+            unsigned int currClient = initPacket->clientID;
+            printf("curr client is %u\n", currClient);
+            if (cubes.find(currClient) == cubes.end()) {
+                addClient(currClient);
+            }
+            Cube* cube = cubes[currClient];
+            cube->updateFromPacket(*initPacket);
+            if (currClient == client_id) {
+                Cam->updateFromPacket(*initPacket, false);
+                MiniMapCam->updateFromPacket(*initPacket, true);
+                altDown = initPacket->altDown;
+            }
+        }
+    }
+}
 }
 
 void Window::render(GLFWwindow* window) {
+    if (!initialized) return;
+
     // Clear the color and depth buffers.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -303,7 +361,14 @@ void Window::render(GLFWwindow* window) {
     #else
         glViewport(0, 0, Window::width, Window::height);
     #endif
-    cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
+    std::map<unsigned int, Cube*>::iterator iter;
+
+    for (iter = cubes.begin(); iter != cubes.end(); iter++) {
+        //printf("rendering cube for client %u\n", iter->first);
+        iter->second->draw(Cam->GetViewProjectMtx(), Window::shaderProgram, false);
+    }
+
+   //cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
     floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
 
     int miniMapSize = 256;
@@ -315,7 +380,10 @@ void Window::render(GLFWwindow* window) {
         glViewport(0, Window::height - miniMapSize, miniMapSize, miniMapSize); 
     #endif
     glm::mat4 viewProj_miniMap = MiniMapCam->GetViewProjectMtx();
-    cube->draw(viewProj_miniMap, Window::shaderProgram, false);
+    //cube->draw(viewProj_miniMap, Window::shaderProgram, false);
+    for (iter = cubes.begin(); iter != cubes.end(); iter++) {
+        iter->second->draw(viewProj_miniMap, Window::shaderProgram, false);
+    }
     floor->draw(viewProj_miniMap, Window::shaderProgram, true);
 
 
@@ -329,7 +397,35 @@ void Window::render(GLFWwindow* window) {
     } else {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
-  
     cube->update();
     Cam->Update(cube->getPosition());
+}
+
+void Window::setClientID(const InitPlayerPacket& packet) {
+    client_id = packet.clientID;
+    
+    printf("client id is %d\n", client_id);
+}
+
+void Window::addClient(unsigned int client) {
+    Cube* cubePtr = new Cube();
+    cubes.insert(std::pair<unsigned int, Cube*>(client, cubePtr));
+    printf("init cube for client %u\n", client);
+}
+
+void Window::removeClient(unsigned int client) {
+    if (cubes.find(client) != cubes.end()) {
+        Cube* cubePtr = cubes[client];
+        delete cubePtr;
+        cubes.erase(client);
+    }
+}
+
+void Window::setInitState(const InitPlayerPacket& packet) {
+    addClient(packet.clientID);
+    cubes[packet.clientID]->updateFromPacket(packet);
+    Cam->updateFromPacket(packet, false);
+    MiniMapCam->updateFromPacket(packet, true);
+    altDown = packet.altDown;
+    initialized = true;
 }

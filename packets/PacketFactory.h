@@ -4,6 +4,7 @@
 #include "StateUpdatePacket.h"
 #include "CursorPacket.h"
 #include "EndGamePacket.h"
+#include "InitPlayerPacket.h"
 
 #ifndef PACKETFACTORY_H // include guard
 #define PACKETFACTORY_H

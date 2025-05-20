@@ -22,6 +22,9 @@ std::unique_ptr<Packet> PacketFactory::createFromBuffer(char* data) {
         case CURSOR_EVENT:
             packet = std::make_unique<CursorPacket>();
             break;
+        case INIT_PLAYER:
+            packet = std::make_unique<InitPlayerPacket>();
+            break;
         default:
             printf("Unknown packet type passed to PacketFactory: %d \n", packet->packet_type);
             return nullptr;

@@ -4,6 +4,8 @@
 
 class EndGamePacket : public Packet {
 public:
+    unsigned int closedClient;
+    
     EndGamePacket();
 
     unsigned int getSize() override;
