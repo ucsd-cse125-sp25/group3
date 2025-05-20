@@ -39,6 +39,7 @@ void Mesh::setColor(glm::vec3 color){
 
 bool Mesh::setMesh(const aiMesh* mesh) {
     vertices.reserve(mesh->mNumVertices);
+    verticesRaw.reserve(mesh->mNumVertices);
 
     for (int i = 0; i < mesh->mNumVertices; i++){
         Vertex v;
@@ -96,6 +97,7 @@ void Mesh::setSkel(Skeleton* skel){
 }
 
 void Mesh::setJointVals(const aiMesh* mesh){
+    std::cout << mesh->mNumBones << std::endl;
     for (int i = 0; i < mesh->mNumBones; i++) {
         int id = -1;
         std::string name = mesh->mBones[i]->mName.C_Str();
@@ -126,6 +128,7 @@ void Mesh::setJointVals(const aiMesh* mesh){
             vertices[vid].numJoints += 1;
         }
     }
+    
 }
 
 void Mesh::setDefaultJointVal(Vertex &v){
@@ -148,6 +151,15 @@ void Mesh::setupBuf(){
 
     // Bind to the VAO.
     glBindVertexArray(VAO);
+
+    // glBindBuffer(GL_ARRAY_BUFFER, VBO_pn);
+    // glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*verticesRaw.size(), verticesRaw.data(), GL_DYNAMIC_DRAW);
+
+    // glEnableVertexAttribArray(0);
+    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+
+    // glEnableVertexAttribArray(1);
+    // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 
     // Bind to the first VBO - We will use it to store the vertex position/normals
     glBindBuffer(GL_ARRAY_BUFFER, VBO_pn);
@@ -217,5 +229,49 @@ void Mesh::update(){
             int id = it->second.id;
             mMat[id] = skel->getWorldMatrix(it->first) * it->second.invBMat;
         }
+
+        // std::cout << "start" << std::endl;
+        // for(glm::mat4 m : mMat){
+        //     if (m != glm::mat4(1.0f)){
+        //         std::cout << "yay" << std::endl;
+        //     }
+        // }
+        // int id = 0;
+        for(Vertex v : vertices){
+            glm::vec4 totalPos = glm::vec4(0.0f);
+            glm::vec4 totalNorm = glm::vec4(0.0f);
+            for(int i = 0; i < MAX_JOINT_INFLUENCE; i++){
+                // std::cout << v.weights[i] << std::endl;
+                if (v.jointIDs[i] == -1)
+                    continue;
+                if (v.jointIDs[i] >= MAX_JOINTS)
+                {
+                    totalPos = glm::vec4(v.position, 1.0f);
+                    totalNorm = glm::vec4(v.normal, 0.0f);
+                    break;
+                }
+                glm::vec4 localPos = mMat[v.jointIDs[i]] * glm::vec4(v.position, 1.0f);
+                //assumes no scale or skew
+                glm::vec4 localNorm = mMat[v.jointIDs[i]]* glm::vec4(v.normal, 0.0f);
+                totalPos += v.weights[i] * localPos;
+                totalNorm += v.weights[i] * localNorm;
+            }
+            totalNorm = normalize(totalNorm);
+            // std::cout << glm::to_string(totalNorm) << std::endl;
+            // std::cout << glm::to_string(totalPos) << std::endl;
+            Vertex v;
+            v.position = totalPos;
+            v.normal = totalNorm;
+            // if (id == 50){
+            //     std::cout << glm::to_string(totalPos) << std::endl;
+            // }
+            // id++;
+            verticesRaw.push_back(v);
+        }
+
+        // //newadd
+        // glBindBuffer(GL_ARRAY_BUFFER, VBO_pn);
+        // glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*verticesRaw.size(), verticesRaw.data(), GL_DYNAMIC_DRAW);
+        // //endnewadd
     }
 }

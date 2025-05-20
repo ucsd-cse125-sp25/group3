@@ -28,11 +28,10 @@ void main()
 {
     vec4 totalPos = vec4(0.0f);
     vec4 totalNorm = vec4(0.0f);
+    
     for(int i = 0; i < MAX_JOINT_INFLUENCE; i++){
         if (jointIDs[i] == -1)
-            totalPos = vec4(position, 1.0f);
-            totalNorm = vec4(normal, 0.0f);
-            break;
+            continue;
         if (jointIDs[i] >= MAX_JOINTS)
         {
             totalPos = vec4(position, 1.0f);
@@ -42,8 +41,8 @@ void main()
         vec4 localPos = finalJointMats[jointIDs[i]] * vec4(position, 1.0f);
         //assumes no scale or skew
         vec4 localNorm = finalJointMats[jointIDs[i]]* vec4(normal, 0.0f);
-        totalPos += localPos * weights[i];
-        totalNorm += localNorm * weights[i];
+        totalPos += weights[i] * localPos;
+        totalNorm += weights[i] * localNorm;
     }
     totalNorm = normalize(totalNorm);
     // OpenGL maintains the D matrix so you only need to multiply by P, V (aka C inverse), and M
@@ -51,6 +50,7 @@ void main()
     
     // for shading
 	fragNormal = vec3(model * totalNorm);
+
     fragPos = vec3(model * totalPos);
     uv = vertexUV;
 

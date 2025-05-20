@@ -24,7 +24,9 @@ bool Channel::load(const aiNodeAnim* channel){
         VecKF keyframe;
         keyframe.value = aiVecToGLM(channel->mPositionKeys[i].mValue);
         keyframe.time = (float) (channel->mPositionKeys[i].mTime);
-        
+
+        // std::cout << keyframe.time << std::endl;
+
         posKFs.push_back(keyframe);    
     }
 
@@ -358,7 +360,5 @@ glm::mat4 Channel::evalRot(float time){
 }
 
 glm::mat4 Channel::evaluate(float time){
-    glm::mat4 pMat = evalPos(time);
-    glm::mat4 rMat = evalPos(time);
     return evalPos(time) * evalRot(time) * evalScale(time);
 }

@@ -14,6 +14,7 @@ void AnimationPlayer::loadAnims(const std::string& file){
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(file, 
         aiProcess_Triangulate);
+    if (scene == nullptr){std::cout << "breh" << file << std::endl;}
     assert(scene && scene->mRootNode);
 
     skel = new Skeleton();
@@ -59,7 +60,7 @@ void AnimationPlayer::fullUpdate(){
 /*evaluates the local matrices for each channel*/
 void AnimationPlayer::update(){
     time = (float) glfwGetTime();
-    //std::cout << time << std::endl;
+    // std::cout << time << std::endl;
     anim -> evaluate(time, pose);
 }
 

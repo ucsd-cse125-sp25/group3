@@ -45,3 +45,7 @@ GLuint TextureManager::LoadTexture(const char* texture_file_path){
 
     return texID;
 }
+
+GLuint TextureManager::getTexture(int id) {
+    return textures[id];
+}

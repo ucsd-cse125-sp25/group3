@@ -29,4 +29,5 @@ public:
 
     GLuint LoadTexture(const char* texture_file_path);
 
+    GLuint getTexture(int id);
 };

@@ -87,8 +87,8 @@ void Joint::resetDOFRecursive(){
 }
 
 glm::mat4 Joint::getWorldMatrix(){
-    //std::cout << "JointLM: " << glm::to_string(localMat) << std::endl;
-    //std::cout << "JointWM: " << glm::to_string(worldMat) << std::endl;
+    // std::cout << "JointLM: " << name << glm::to_string(localMat) << std::endl;
+    // std::cout << "JointWM: " << name << glm::to_string(worldMat) << std::endl;
     return worldMat;
 }
 
@@ -108,6 +108,7 @@ void Joint::setPoseRec(std::map<std::string, glm::mat4>& values){
 void Joint::setPose(std::map<std::string, glm::mat4>& values){
     // assert(values.find(name) != values.end());
     if (values.find(name) == values.end()){
+        // localMat = glm::mat4(1.0f);
         localMat = origMat;
     } else {
         // std::cout << name << std::endl;

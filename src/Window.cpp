@@ -74,9 +74,9 @@ bool Window::initializeObjects() {
     // Create a cube
     cube = new Cube();
 
-    animationPlayer->loadAnims("../models/Running.fbx");
+    animationPlayer->loadAnims("../models/spider.fbx");
     Model* bro = new Model();
-    if (!bro->load("../model/Running.fbx")){
+    if (!bro->load("../models/spider.fbx")){
         std::cerr << "Failed to load fbx model" << std::endl;
         return false;
     }
@@ -84,15 +84,15 @@ bool Window::initializeObjects() {
 
     scene = new Scene();
 
-    if (!scene->load("../models/bunny.ply")){
-        std::cerr << "Failed to load ply: Bunny" << std::endl;
-        return false;
-    };
-    Model* m = scene->getModel(0);
-    Mesh* mesh = m->getMesh(0);
-    mesh->setColor(glm::vec3(1.0f, 0.0f, 1.0f));
-    mesh->setTex(textureManager->LoadTexture("../textures/wall.jpg"));
-    m->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(20.0f)));
+    // if (!scene->load("../models/bunny.ply")){
+    //     std::cerr << "Failed to load ply: Bunny" << std::endl;
+    //     return false;
+    // };
+    // Model* m = scene->getModel(0);
+    // Mesh* mesh = m->getMesh(0);
+    // mesh->setColor(glm::vec3(1.0f, 0.0f, 1.0f));
+    // mesh->setTex(textureManager->LoadTexture("../textures/wall.jpg"));
+    // m->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(20.0f)));
 
     scene->addModel(bro);
 
@@ -250,14 +250,16 @@ void Window::displayCallback(GLFWwindow* window) {
     // Clear the color and depth buffers.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // animationPlayer->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
-    // Render the object.
-    // cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
-    floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
+    // // animationPlayer->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
+    // // Render the object.
+    // // cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
+    // floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
 
-    scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
-    // model->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
-    character->draw(Cam->GetViewProjectMtx(),shaderProgram_uv);
+    scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_anim);
+    // scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
+    // scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
+    // // model->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
+    // character->draw(Cam->GetViewProjectMtx(),shaderProgram_uv);
 
     // Gets events, including input such as keyboard and mouse or window resizing.
     glfwPollEvents();

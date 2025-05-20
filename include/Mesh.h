@@ -36,6 +36,7 @@ private:
     glm::vec3 color;
 
     std::vector<Vertex> vertices;
+    std::vector<Vertex> verticesRaw;
 
     std::vector<glm::vec2> uvs;
 
