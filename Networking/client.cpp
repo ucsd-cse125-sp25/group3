@@ -23,7 +23,10 @@ int main()
     std::cin >> choice;
 
     // initialize the client
+    std::cout << "Choice passed in\n";
     client = new ClientGame((CharacterType) choice);
+    //ClientGame tempClient((CharacterType) choice);
+    std::cout << "Client game created\n";
     clientLoop();
 }
 
@@ -36,6 +39,7 @@ void clientLoop()
         std::getline(std::cin, input);
         client->update(input);
     } */
+    std::cout << "Client loop starting\n";
     while(!glfwWindowShouldClose(client->window))
     {
         //  // Main render display callback. Rendering of objects is done here.
@@ -45,6 +49,7 @@ void clientLoop()
         // Window::idleCallback();
         client->update();
     }
+    std::cout << "Window closed\n";
     Window::cleanUp();
     // Destroy the window.
     glfwDestroyWindow(client->window);

@@ -52,7 +52,8 @@ class CubeState {
         void printState();
         glm::vec3 getPosition();
 
-        void updateFromPacket(const StateUpdatePacket& packet);
+        void updateFromPacket(const InitPlayerPacket& packet);
+        void saveToPacket(InitPlayerPacket& packet);
 };
 
 class PlayerData {
@@ -71,5 +72,6 @@ class PlayerData {
         void calculateNewPos(KeyType key);
         void handleCursor(double currX, double currY);
         void resetCamera();
+        void saveToPacket(unsigned int client_id, InitPlayerPacket& packet);
 };
 

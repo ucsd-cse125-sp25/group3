@@ -18,7 +18,6 @@ public:
     void sendInitPlayerState(unsigned int client_id);
     void sendStateUpdate();
     void disconnectClient(unsigned int client_id);
-    void sendPlayerState(unsigned int client_id);
 
 private:
 

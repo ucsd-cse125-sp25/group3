@@ -316,7 +316,7 @@ glm::vec3 Cube::getPosition() const {
     return glm::vec3(model[3]);  // extract translation from matrix
 }
 
-void Cube::updateFromPacket(const StateUpdatePacket& packet) {
+void Cube::updateFromPacket(const InitPlayerPacket& packet) {
     memcpy(&baseModel, packet.model, sizeof(packet.model));
     isInvisible = packet.isInvisible;
     printState();

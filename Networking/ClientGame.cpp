@@ -3,10 +3,13 @@
 
 ClientGame::ClientGame(CharacterType character)
 {
+    //std::cout << "Starting process of creating ClientGame\n";
     network = new ClientNetwork();
+    //std::cout << "ClientNetwork created\n";
     
     window = Window::createWindow(800, 600);
     if (!window) exit(EXIT_FAILURE);
+    //std::cout << "Window created\n";
 
     client_logic::setup_callbacks(window);
     // Setup OpenGL settings.
@@ -18,7 +21,9 @@ ClientGame::ClientGame(CharacterType character)
     if (!Window::initializeObjects()) exit(EXIT_FAILURE);
   
     // send init packet
+    //std::cout << "Sending Init Packet\n";
     sendInitPacket(character);
+    //std::cout << "Init Packet sent\n";
 }
 
 void ClientGame::sendPacket(Packet& packet) {
@@ -48,7 +53,7 @@ void ClientGame::sendKeyPacket(KeyType key) {
 }
 
 void ClientGame::sendPendingPackets() {
-
+    printf("Sending pending packets");
     for (auto& packet : client_logic::pendingPackets) {
         const unsigned int packet_size = packet->getSize();
         std::vector<char> packet_data(packet_size);  
@@ -82,12 +87,14 @@ void ClientGame::update()
         std::unique_ptr<Packet> packet = PacketFactory::createFromBuffer(full_packet.data());
 
         switch (temp.packet_type) {
-            case INIT_PLAYER:
+            case INIT_PLAYER: {
+                InitPlayerPacket* initPlayerPacket = dynamic_cast<InitPlayerPacket*>(packet.get());
                 // TODO: Make this work with packet class
                 printf("recieved init player packet from server\n");
                 /*Window::setClientID(packet.payload.data());*/
-                Window::setInitState(packet.payload.data());
+                Window::setInitState(*initPlayerPacket);
                 break;
+            }
             case ACTION_EVENT:
                 printf("client received action event packet from server\n");
                 break;
@@ -104,7 +111,7 @@ void ClientGame::update()
                 // Window::cube->update();
                 break;
             }
-            case END_GAME:
+            case END_GAME: {
                 printf("client end game packet from server\n");
                 EndGamePacket* endPacket = dynamic_cast<EndGamePacket*>(packet.get());
                 unsigned int closedClient = endPacket->closedClient;
@@ -120,6 +127,7 @@ void ClientGame::update()
                     Window::removeClient(closedClient);
                 }
                 break;
+            }
             default:
                 printf("client received unknown packet type from server\n");
                 break;

@@ -135,10 +135,23 @@ glm::vec3 CubeState::getPosition() {
     return glm::vec3(model[3]);  // extract translation from matrix
 }
 
-void CubeState::updateFromPacket(const StateUpdatePacket& packet) {
+void CubeState::updateFromPacket(const InitPlayerPacket& packet) {
     memcpy(&baseModel, packet.model, sizeof(packet.model));
     isInvisible = packet.isInvisible;
     printState();
+}
+
+void CubeState::saveToPacket(InitPlayerPacket& packet) {
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            packet.model[i][j] = model[i][j];
+        }
+    }
+    packet.isInvisible = isInvisible;
+
+    // memcpy(buf, &isInvisible, sizeof(bool));
+    // vec->insert(vec->end(), &buf[0], &buf[1]);
+    // printf("invisible: %hhu\n", vec->back());
 }
 
 // PlayerData::PlayerData() {
@@ -289,4 +302,13 @@ void PlayerData::handleCursor(double currX, double currY) {
 void PlayerData::resetCamera() {
     camera.Reset();
     camera.SetAspect(float(windowWidth) / float(windowHeight));
+}
+
+void PlayerData::saveToPacket(unsigned int client_id, InitPlayerPacket& packet) {
+    packet.clientID = client_id;
+
+    cube.saveToPacket(packet);
+    camera.saveToPacket(packet, false);
+    miniMapCam.saveToPacket(packet, true); 
+    packet.altDown = altDown;
 }

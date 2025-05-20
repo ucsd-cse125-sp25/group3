@@ -323,12 +323,28 @@ void Window::applyServerState(char * data) {
 }
 */
 
-// TODO: Send numClients, go through each client and send as packet
 void Window::applyServerState(const StateUpdatePacket& packet) {
-    cube->updateFromPacket(packet);
-    Cam->updateFromPacket(packet, false);
-    MiniMapCam->updateFromPacket(packet, true);
-    altDown = packet.altDown;
+    int numClients = packet.numClients;
+    printf("num clients is %d\n", numClients);
+    for (const auto& clientPacketPtr : packet.clientPackets) {
+    if (clientPacketPtr) {
+        const InitPlayerPacket* initPacket = dynamic_cast<const InitPlayerPacket*>(clientPacketPtr.get());
+        if (initPacket) {
+            unsigned int currClient = initPacket->clientID;
+            printf("curr client is %u\n", currClient);
+            if (cubes.find(currClient) == cubes.end()) {
+                addClient(currClient);
+            }
+            Cube* cube = cubes[currClient];
+            cube->updateFromPacket(*initPacket);
+            if (currClient == client_id) {
+                Cam->updateFromPacket(*initPacket, false);
+                MiniMapCam->updateFromPacket(*initPacket, true);
+                altDown = initPacket->altDown;
+            }
+        }
+    }
+}
 }
 
 void Window::render(GLFWwindow* window) {
@@ -385,9 +401,8 @@ void Window::render(GLFWwindow* window) {
     Cam->Update(cube->getPosition());
 }
 
-// TODO: make this work with packet class
-void Window::setClientID(char * data) {
-    memcpy(&client_id, data, sizeof(client_id));
+void Window::setClientID(const InitPlayerPacket& packet) {
+    client_id = packet.clientID;
     
     printf("client id is %d\n", client_id);
 }
@@ -406,14 +421,11 @@ void Window::removeClient(unsigned int client) {
     }
 }
 
-// TODO: make this work with packet class
-void Window::setInitState(char * data) {
-    memcpy(&client_id, data, sizeof(client_id));
-    addClient(client_id);
-    int offset = sizeof(client_id);
-    offset += cubes[client_id]->readFromArray(&data[offset]);
-    offset += Cam->readFromArray(&data[offset]);
-    offset += MiniMapCam->readFromArray(&data[offset]);
-    memcpy(&altDown, &data[offset], sizeof(bool));
+void Window::setInitState(const InitPlayerPacket& packet) {
+    addClient(packet.clientID);
+    cubes[packet.clientID]->updateFromPacket(packet);
+    Cam->updateFromPacket(packet, false);
+    MiniMapCam->updateFromPacket(packet, true);
+    altDown = packet.altDown;
     initialized = true;
 }

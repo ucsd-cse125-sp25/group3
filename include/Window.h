@@ -6,6 +6,7 @@
 #include "core.h"
 #include <map>
 #include "../packets/StateUpdatePacket.h"
+#include "../packets/InitPlayerPacket.h"
 
 class Window {
 public:
@@ -52,9 +53,9 @@ public:
     static void cursor_callback(GLFWwindow* window, double currX, double currY);
 
     static void render(GLFWwindow* window);
-    static void setClientID(char * data);
+    static void setClientID(const InitPlayerPacket& packet);
     static void addClient(unsigned int client);
     static void removeClient(unsigned int client);
-    static void setInitState(char * data);
+    static void setInitState(const InitPlayerPacket& packet);
     static void applyServerState(const StateUpdatePacket& packet);
 };

@@ -79,7 +79,48 @@ glm::vec3 Camera::GetForwardVector() const {
     return glm::normalize(Center - Eye);  
 }
 
-void Camera::updateFromPacket(const StateUpdatePacket& packet, bool isMini) {
+void Camera::saveToPacket(InitPlayerPacket& packet, bool isMini) {
+    if(!isMini) {
+        for (int i = 0; i < 4; ++i) {
+            for (int j = 0; j < 4; ++j) {
+                packet.viewProjectMtx[i][j] = ViewProjectMtx[i][j];
+            }
+        }
+
+        for (int i = 0; i < 3; ++i) {
+            packet.eye[i] = Eye[i];
+        }
+
+        for (int i = 0; i < 3; ++i) {
+            packet.center[i] = Center[i];
+        }
+
+        packet.azimuth = Azimuth;
+        packet.incline = Incline;
+        packet.aspect = Aspect;
+    }
+    else {
+        for (int i = 0; i < 4; ++i) {
+            for (int j = 0; j < 4; ++j) {
+                packet.miniViewProjectMtx[i][j] = ViewProjectMtx[i][j];
+            }
+        }
+
+        for (int i = 0; i < 3; ++i) {
+            packet.miniEye[i] = Eye[i];
+        }
+
+        for (int i = 0; i < 3; ++i) {
+            packet.miniCenter[i] = Center[i];
+        }
+
+        packet.miniAzimuth = Azimuth;
+        packet.miniIncline = Incline;
+        packet.miniAspect = Aspect;
+    }
+} 
+
+void Camera::updateFromPacket(const InitPlayerPacket& packet, bool isMini) {
     if(!isMini) {
         memcpy(&ViewProjectMtx, packet.viewProjectMtx, sizeof(packet.viewProjectMtx));
         memcpy(&Eye, packet.eye, sizeof(packet.eye));

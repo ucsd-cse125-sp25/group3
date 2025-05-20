@@ -31,7 +31,6 @@ void ServerGame::update()
         printf("client %d has been connected to the server\n",client_id);
         client_id++;
    }
-   
    receiveFromClients();
 }
 
@@ -211,108 +210,58 @@ void ServerGame::sendEchoPackets(std::string response) {
 
 //cube baseModel, model
 //then camera floats
-// TODO: Make this work with packet classes
 void ServerGame::sendInitPlayerState(unsigned int client_id) {
-    // printf("sending state\n");
-    PlayerData player = playersData[client_id];
-    Packet packet;
+    printf("Sending initial player state");
+    PlayerData& player = playersData[client_id];
+
+    InitPlayerPacket packet;
     packet.packet_type = INIT_PLAYER;
-    player.toVector(client_id, &packet.payload);
-    // player.cube.toVector(&packet.payload);
-    packet.length = packet.payload.size();
+
+    packet.altDown = player.altDown;
+
+    player.cube.saveToPacket(packet);
+    player.camera.saveToPacket(packet, false);
+    player.camera.saveToPacket(packet, true);
+
     const unsigned int packet_size = packet.getSize();
-    //char packet_data[packet_size];
     std::vector<char> packet_data(packet_size);
     packet.serialize(packet_data.data());
+
     network->sendToOne(client_id, packet_data.data(), packet_size);
+
     // printf("done sending\n");
     // for (int i=0; i<64; i++) {
     //     printf("elem %d: %hhx\n", i, (unsigned char) packet.payload[i]);
     // }
 }
 
-/*
+
 void ServerGame::sendStateUpdate() {
     std::map<unsigned int, PlayerData>::iterator iter;
-    Packet packet;
+    StateUpdatePacket packet;
     packet.packet_type = STATE_UPDATE;
+
     unsigned int numClients = 0;
     
     for (iter = playersData.begin(); iter != playersData.end(); iter++) {
         PlayerData player = iter->second;
 
         if (player.initialized) {
-            player.toVector(iter->first, &packet.payload);
+            auto playerPacket = std::make_unique<InitPlayerPacket>();
+            playerPacket->packet_type = INIT_PLAYER;
+            playerPacket->altDown = player.altDown;
+
+            player.cube.saveToPacket(*playerPacket);
+            player.camera.saveToPacket(*playerPacket, false);
+            player.camera.saveToPacket(*playerPacket, true);
+
+            packet.clientPackets.push_back(std::move(playerPacket));
             numClients++;
         }
     }
-    char buf[4];
-    memcpy(buf, &numClients, sizeof(numClients));
-    packet.payload.insert(packet.payload.begin(), &buf[0], &buf[4]);
-    packet.length = packet.payload.size();
+    packet.numClients = numClients;
     const unsigned int packet_size = packet.getSize();
     std::vector<char> packet_data(packet_size);
     packet.serialize(packet_data.data());
     network->sendToAll(packet_data.data(), packet_size);
-*/
-// TODO: Figure out numClients, include all players in the state update packet
-void ServerGame::sendPlayerState(unsigned int client_id) {
-    PlayerData& player = playersData[client_id];
-
-    StateUpdatePacket packet;
-    packet.packet_type = STATE_UPDATE;
-
-    packet.altDown = player.altDown;
-
-    // cube
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            packet.model[i][j] = player.cube.model[i][j];
-        }
-    }
-    packet.isInvisible = player.cube.isInvisible;
-
-    // camera 
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            packet.viewProjectMtx[i][j] = player.camera.ViewProjectMtx[i][j];
-        }
-    }
-
-    for (int i = 0; i < 3; ++i) {
-        packet.eye[i] = player.camera.Eye[i];
-    }
-
-    for (int i = 0; i < 3; ++i) {
-        packet.center[i] = player.camera.Center[i];
-    }
-
-    packet.azimuth = player.camera.Azimuth;
-    packet.incline = player.camera.Incline;
-    packet.aspect = player.camera.Aspect;
-
-    // minimap camera
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            packet.miniViewProjectMtx[i][j] = player.miniMapCam.ViewProjectMtx[i][j];
-        }
-    }
-
-    for (int i = 0; i < 3; ++i) {
-        packet.miniEye[i] = player.miniMapCam.Eye[i];
-    }
-
-    for (int i = 0; i < 3; ++i) {
-        packet.miniCenter[i] = player.miniMapCam.Center[i];
-    }
-
-    packet.miniAzimuth = player.miniMapCam.Azimuth;
-    packet.miniIncline = player.miniMapCam.Incline;
-    packet.miniAspect = player.miniMapCam.Aspect;
-
-    const unsigned int packet_size = packet.getSize();
-    char packet_data[packet_size];
-    packet.serialize(packet_data);
-
-    network->sendToAll(packet_data, packet_size);
 }

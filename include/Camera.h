@@ -7,7 +7,7 @@
 #include "core.h"
 #include "glm/gtx/euler_angles.hpp"
 #include <vector>
-#include "../packets/StateUpdatePacket.h"
+#include "../packets/InitPlayerPacket.h"
 
 // The Camera class provides a simple means to controlling the 3D camera. It could
 // be extended to support more interactive controls. Ultimately. the camera sets the
@@ -38,7 +38,8 @@ public:
 
     glm::vec3 GetForwardVector() const;
 
-    void updateFromPacket(const StateUpdatePacket& packet, bool isMini);
+    void saveToPacket(InitPlayerPacket& packet, bool isMini);
+    void updateFromPacket(const InitPlayerPacket& packet, bool isMini);
 
 //private:
     // Perspective controls
