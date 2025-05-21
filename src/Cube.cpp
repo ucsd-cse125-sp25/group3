@@ -317,7 +317,7 @@ glm::vec3 Cube::getPosition() const {
 }
 
 void Cube::updateFromPacket(const StateUpdatePacket& packet) {
-    memcpy(&baseModel, packet.model, sizeof(packet.model));
+    memcpy(&model, packet.model, sizeof(packet.model));
     isInvisible = packet.isInvisible;
     printState();
 }

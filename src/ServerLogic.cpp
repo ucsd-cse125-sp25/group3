@@ -132,7 +132,7 @@ void CubeState::update() {
 }
 
 glm::vec3 CubeState::getPosition() {
-    return glm::vec3(model[3]);  // extract translation from matrix
+    return glm::vec3(baseModel[3]);  // extract translation from matrix
 }
 
 void CubeState::updateFromPacket(const StateUpdatePacket& packet) {

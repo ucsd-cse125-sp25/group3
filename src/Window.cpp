@@ -330,6 +330,6 @@ void Window::render(GLFWwindow* window) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
   
-    cube->update();
-    Cam->Update(cube->getPosition());
+    // cube->update();
+    // Cam->Update(cube->getPosition());
 }
