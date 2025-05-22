@@ -122,7 +122,7 @@ if (WIN32)
     add_custom_command(TARGET menv
         COMMENT "Copy Assimp DLL"
         POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/_deps/assimp-build/bin/${my_build_type}/assimp-vc143-mtd.dll ${CMAKE_BINARY_DIR}/${my_build_type}    
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/assimp/bin/${my_build_type}/assimp-vc143-mtd.dll ${CMAKE_BINARY_DIR}/${my_build_type}    
     )
 endif()
 

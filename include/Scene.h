@@ -10,7 +10,7 @@ class Scene {
 private:
     std::vector<Model*> models;
 
-    void process(const aiScene* scene);
+    bool process(const aiScene* scene);
 
 public:
     Scene();

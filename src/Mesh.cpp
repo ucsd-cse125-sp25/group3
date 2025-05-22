@@ -39,8 +39,7 @@ void Mesh::setColor(glm::vec3 color){
 
 bool Mesh::setMesh(const aiMesh* mesh) {
     vertices.reserve(mesh->mNumVertices);
-    verticesRaw.reserve(mesh->mNumVertices);
-
+    // verticesRaw.reserve(mesh->mNumVertices);
     for (int i = 0; i < mesh->mNumVertices; i++){
         Vertex v;
 
@@ -97,18 +96,30 @@ void Mesh::setSkel(Skeleton* skel){
 }
 
 void Mesh::setJointVals(const aiMesh* mesh){
-    std::cout << mesh->mNumBones << std::endl;
+
+    // std::cout << mesh->mNumBones << std::endl;
     for (int i = 0; i < mesh->mNumBones; i++) {
         int id = -1;
         std::string name = mesh->mBones[i]->mName.C_Str();
+        
         if (invBMats.find(name) == invBMats.end()) {
             invBMatInfo newInvBMat;
             id = invBMats.size();
+
             newInvBMat.id = id;
+            // if (name == "mixamorig:LeftArm"){
+            //     std::cout << "offsetmat" << std::endl;
+            // }
             newInvBMat.invBMat = aiMatToGLM(mesh->mBones[i]->mOffsetMatrix);
+            // if (name == "mixamorig:LeftArm"){
+            //     std::cout << "done" << std::endl;
+            // }
             invBMats[name] = newInvBMat;
         } else {
             id = invBMats[name].id;
+            // if (name == "mixamorig:LeftArm"){
+            //     std::cout << "done" << std::endl;
+            // }
         }
 
         assert(id != -1);
@@ -122,21 +133,26 @@ void Mesh::setJointVals(const aiMesh* mesh){
             assert(vid < vertices.size());
 
             int sz = vertices[vid].numJoints;
-            vertices[vid].jointIDs[sz] = id;
-            vertices[vid].weights[sz] = weights[wid].mWeight;
+            if (sz < MAX_JOINT_INFLUENCE){
+                vertices[vid].jointIDs[sz] = id;
+                vertices[vid].weights[sz] = (float) weights[wid].mWeight;
 
-            vertices[vid].numJoints += 1;
+                vertices[vid].numJoints += 1;
+            } else {
+                std::cout << sz << std::endl;
+                std::cout << "exceeded" << std::endl;
+            }
         }
     }
-    
+
 }
 
 void Mesh::setDefaultJointVal(Vertex &v){
     for (int i = 0; i < MAX_JOINT_INFLUENCE; i++) {
         v.jointIDs[i] = -1;
         v.weights[i] = 0.0f;
-        v.numJoints = 0;
     }
+    v.numJoints = 0;
 }
 
 void Mesh::setMMat(glm::mat4 model){
@@ -174,13 +190,29 @@ void Mesh::setupBuf(){
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 
+    // //jointIDs
+    // glEnableVertexAttribArray(2);
+    // glVertexAttribIPointer(2, MAX_JOINT_INFLUENCE, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, jointIDs));
+
+    // //weights
+    // glEnableVertexAttribArray(3);
+    // glVertexAttribPointer(3, MAX_JOINT_INFLUENCE, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
+
     //jointIDs
     glEnableVertexAttribArray(2);
-    glVertexAttribIPointer(2, MAX_JOINT_INFLUENCE, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, jointIDs));
+    glVertexAttribIPointer(2, MAX_JOINT_INFLUENCE/2, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, jointIDs));
 
     //weights
     glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, MAX_JOINT_INFLUENCE, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
+    glVertexAttribPointer(3, MAX_JOINT_INFLUENCE/2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
+
+    //jointIDs2
+    glEnableVertexAttribArray(5);
+    glVertexAttribIPointer(5, MAX_JOINT_INFLUENCE/2, GL_INT, sizeof(Vertex), (void*)(offsetof(Vertex, jointIDs) + (4 * sizeof(int))));
+
+    //weights2
+    glEnableVertexAttribArray(6);
+    glVertexAttribPointer(6, MAX_JOINT_INFLUENCE/2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, weights) + (4 * sizeof(float))));
 
     // Bind to the second VBO - We will use it to store the uvs
     glBindBuffer(GL_ARRAY_BUFFER, VBO_uv);
@@ -230,6 +262,7 @@ void Mesh::update(){
             mMat[id] = skel->getWorldMatrix(it->first) * it->second.invBMat;
         }
 
+        // std::cout << glm::to_string(mMat[3]) << std::endl;
         // std::cout << "start" << std::endl;
         // for(glm::mat4 m : mMat){
         //     if (m != glm::mat4(1.0f)){
@@ -243,9 +276,13 @@ void Mesh::update(){
             for(int i = 0; i < MAX_JOINT_INFLUENCE; i++){
                 // std::cout << v.weights[i] << std::endl;
                 if (v.jointIDs[i] == -1)
+                {
+                    // std::cout << "gr" << std::endl;
                     continue;
+                }
                 if (v.jointIDs[i] >= MAX_JOINTS)
                 {
+                    std::cout << "hmm" << std::endl;
                     totalPos = glm::vec4(v.position, 1.0f);
                     totalNorm = glm::vec4(v.normal, 0.0f);
                     break;
@@ -259,14 +296,14 @@ void Mesh::update(){
             totalNorm = normalize(totalNorm);
             // std::cout << glm::to_string(totalNorm) << std::endl;
             // std::cout << glm::to_string(totalPos) << std::endl;
-            Vertex v;
-            v.position = totalPos;
-            v.normal = totalNorm;
-            // if (id == 50){
-            //     std::cout << glm::to_string(totalPos) << std::endl;
-            // }
+            // Vertex v;
+            // v.position = totalPos;
+            // v.normal = totalNorm;
+            if (totalPos == glm::vec4(v.position, 1.0f)){
+                std::cout << glm::to_string(totalPos) << std::endl;
+            }
             // id++;
-            verticesRaw.push_back(v);
+            // verticesRaw.push_back(v);
         }
 
         // //newadd

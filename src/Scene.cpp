@@ -17,7 +17,7 @@ Scene::~Scene(){
     }
 }
 
-void Scene::process(const aiScene* scene) {
+bool Scene::process(const aiScene* scene) {
     if (scene->HasMeshes()){
         models.reserve(scene->mNumMeshes);
         for (int i = 0; i < scene->mNumMeshes; i++){
@@ -26,9 +26,13 @@ void Scene::process(const aiScene* scene) {
                 Model* model = new Model();
                 model->addMesh(mesh);
                 models.push_back(model);
-            };
+            } else {
+                return false;
+            }
         }
     }
+
+    return true;
 }
 
 bool Scene::load(const std::string& file){
@@ -43,9 +47,7 @@ bool Scene::load(const std::string& file){
         return false;
     }
 
-    process(scene);
-
-    return true;
+    return process(scene);
 }
 
 void Scene::addModel(Model* model){

@@ -56,7 +56,7 @@ bool Window::initializeProgram() {
         return false;
     }
 
-    shaderProgram_anim = LoadShaders("../shaders/anim_shader.vert", "../shaders/shader_uv.frag", true);
+    shaderProgram_anim = LoadShaders("../shaders/anim_shader_multi.vert", "../shaders/anim_shader.frag", true);
 
     if (!shaderProgram_uv) {
         std::cerr << "Failed to initialize shader program with uvs" << std::endl;
@@ -74,12 +74,14 @@ bool Window::initializeObjects() {
     // Create a cube
     cube = new Cube();
 
-    animationPlayer->loadAnims("../models/spider.fbx");
+    animationPlayer->loadAnims("../models/characters/female_thief.fbx");
     Model* bro = new Model();
-    if (!bro->load("../models/spider.fbx")){
+    if (!bro->load("../models/characters/female_thief.fbx")){
         std::cerr << "Failed to load fbx model" << std::endl;
         return false;
     }
+    //bro->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)));
+    //bro->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.0001f)));
     bro->setSkel(animationPlayer->getSkel());
 
     scene = new Scene();

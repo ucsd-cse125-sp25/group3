@@ -8,7 +8,7 @@
 #include "utils.h"
 #include "Skeleton.h"
 
-#define MAX_JOINT_INFLUENCE 4
+#define MAX_JOINT_INFLUENCE 8
 #define MAX_JOINTS 100
 
 struct Vertex {
@@ -36,7 +36,7 @@ private:
     glm::vec3 color;
 
     std::vector<Vertex> vertices;
-    std::vector<Vertex> verticesRaw;
+    // std::vector<Vertex> verticesRaw;
 
     std::vector<glm::vec2> uvs;
 

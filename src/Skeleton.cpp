@@ -10,9 +10,7 @@ Skeleton::~Skeleton() {
 bool Skeleton::load(const aiNode* node) {
     // Parse tree
     root = new Joint();
-    root -> load(node);
-
-    return true;
+    return (root -> load(node));
 }
 
 //call immediately after load
