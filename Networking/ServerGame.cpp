@@ -250,6 +250,7 @@ void ServerGame::sendStateUpdate() {
         if (player.initialized) {
             auto playerPacket = std::make_unique<InitPlayerPacket>();
             playerPacket->packet_type = INIT_PLAYER;
+            playerPacket->clientID = iter->first;
             playerPacket->altDown = player.altDown;
 
             player.cube.saveToPacket(*playerPacket);
