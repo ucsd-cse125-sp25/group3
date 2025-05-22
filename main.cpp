@@ -458,11 +458,11 @@ ImGui::End();
         if (!miniGameInitialized) {
             miniGame.init(window);
             miniGameInitialized = true;
-            std::cout << "minigame NOT initialized" << std::endl;
+            std::cout << "minigame initialized" << std::endl;
 
         }
 
-            std::cout << "minigame initialized" << std::endl;
+            //std::cout << "minigame initialized" << std::endl;
 
 
            

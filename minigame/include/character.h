@@ -4,6 +4,9 @@
 #include <GLFW/glfw3.h>
 #include <string>
 #include "platform.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class Character {
 public:
@@ -16,6 +19,8 @@ public:
     float getY() const;
     float getWidth() const;
     float getHeight() const;
+
+    GLuint getShader() const;
 
 
 private:
@@ -34,6 +39,13 @@ private:
     unsigned int currentTexture;
 
     unsigned int loadTexture(const std::string& path);
+
+    GLuint characterVAO = 0;
+    GLuint characterVBO = 0;
+    GLuint characterShader = 0;
+    void initRenderer();
+    
+    
 
     int width, height;
 };

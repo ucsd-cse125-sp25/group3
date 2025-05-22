@@ -1,7 +1,14 @@
-// minigame/MiniGame.cpp
 #include "minigame.h"
 #include "include/stb_image.h"
-#include <iostream>
+#include "shader_utils.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+
+GLuint quadVAO = 0, quadVBO = 0;
+GLuint quadShader = 0;
+GLuint characterShader = 0;
 
 MiniGame::MiniGame() 
     : player(nullptr), backgroundTex(0), windowWidth(0), windowHeight(0), finished(false) {}
@@ -24,14 +31,18 @@ void MiniGame::init(GLFWwindow* window) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    backgroundTex = loadTexture("minigame/assets/background.png");
+    backgroundTex = loadTexture("../minigame/assets/background.png");
     if (backgroundTex == 0) {
+        std::cerr << "[MiniGame] Failed to load background!" << std::endl;
         finished = true;
         return;
     }
 
+    initQuadRenderer();
+    characterShader = quadShader;
+
     int charW, charH, ch;
-    unsigned char* data = stbi_load("minigame/assets/thief1_right.png", &charW, &charH, &ch, 4);
+    unsigned char* data = stbi_load("../minigame/assets/thief1_right.png", &charW, &charH, &ch, 4);
     if (!data) {
         std::cerr << "Failed to load character texture!\n";
         finished = true;
@@ -46,8 +57,8 @@ void MiniGame::init(GLFWwindow* window) {
     float posY = windowHeight - drawH;
 
     player = new Character(posX, posY, 
-        "minigame/assets/thief1_right.png", 
-        "minigame/assets/thief1_left.png");
+        "../minigame/assets/thief1_right.png", 
+        "../minigame/assets/thief1_left.png");
 
     // Add platforms (same as your original main)
     platforms.emplace_back(270, 1552, 170, 27, 0);//1
@@ -63,6 +74,7 @@ void MiniGame::init(GLFWwindow* window) {
 }
 
 void MiniGame::update(GLFWwindow* window) {
+    //std::cout << "[MiniGame] rendering frame" << std::endl;
     if (!player) return;
 
     player->handleInput(window);
@@ -90,12 +102,30 @@ void MiniGame::update(GLFWwindow* window) {
 }
 
 void MiniGame::render() {
+    //std::cout << "[MiniGame] rendering frame" << std::endl;
     glClear(GL_COLOR_BUFFER_BIT);
     renderQuad(backgroundTex, 0, 0, windowWidth, windowHeight);
 
-    if (player) player->draw();
+    
+    // glUseProgram(characterShader);
+    // glm::mat4 projection = glm::ortho(0.0f, (float)windowWidth, (float)windowHeight, 0.0f, -1.0f, 1.0f);
+    // GLuint projLoc = glGetUniformLocation(characterShader, "uProjection");
+    // glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+    
+
+    if (player) 
+    {
+        GLuint shader = player->getShader();
+        glm::mat4 projection = glm::ortho(0.0f, (float)windowWidth, (float)windowHeight, 0.0f, -1.0f, 1.0f);
+        GLuint projLoc = glGetUniformLocation(shader, "uProjection");
+        glUseProgram(shader);
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+        player->draw();
+
+    }
     for (const auto& p : platforms)
-        p.draw();
+        p.draw(quadShader);
 }
 
 void MiniGame::cleanup() {
@@ -106,6 +136,9 @@ void MiniGame::cleanup() {
         glDeleteTextures(1, &backgroundTex);
         backgroundTex = 0;
     }
+    glDeleteVertexArrays(1, &quadVAO);
+    glDeleteBuffers(1, &quadVBO);
+    glDeleteProgram(quadShader);
 }
 
 bool MiniGame::isFinished() const {
@@ -133,13 +166,54 @@ GLuint MiniGame::loadTexture(const char* path) {
 }
 
 void MiniGame::renderQuad(GLuint texture, float x, float y, float width, float height) {
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glUseProgram(quadShader);
 
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex2f(x, y);
-    glTexCoord2f(1, 0); glVertex2f(x + width, y);
-    glTexCoord2f(1, 1); glVertex2f(x + width, y + height);
-    glTexCoord2f(0, 1); glVertex2f(x, y + height);
-    glEnd();
+    glm::mat4 projection = glm::ortho(0.0f, (float)windowWidth, (float)windowHeight, 0.0f, -1.0f, 1.0f);
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0.0f));
+    model = glm::scale(model, glm::vec3(width, height, 1.0f));
+
+    glUniformMatrix4fv(glGetUniformLocation(quadShader, "uProjection"), 1, GL_FALSE, glm::value_ptr(projection));
+    glUniformMatrix4fv(glGetUniformLocation(quadShader, "uModel"), 1, GL_FALSE, glm::value_ptr(model));
+
+    glBindVertexArray(quadVAO);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glUniform1i(glGetUniformLocation(quadShader, "backgroundTex"), 0);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glBindVertexArray(0);
+}
+
+
+void MiniGame::initQuadRenderer() {
+    float quadVertices[] = {
+        // positions   // texCoords
+        0.f,  0.f,    0.0f, 0.0f,
+        1.f,  0.f,    1.0f, 0.0f,
+        1.f,  1.f,    1.0f, 1.0f,
+
+        0.f,  0.f,    0.0f, 0.0f,
+        1.f,  1.f,    1.0f, 1.0f,
+        0.f,  1.f,    0.0f, 1.0f
+    };
+
+    glGenVertexArrays(1, &quadVAO);
+    glGenBuffers(1, &quadVBO);
+    glBindVertexArray(quadVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+
+    GLuint vs = compileShader("minigame/shaders/quad.vert", GL_VERTEX_SHADER);
+    GLuint fs = compileShader("minigame/shaders/quad.frag", GL_FRAGMENT_SHADER);
+    quadShader = glCreateProgram();
+    glAttachShader(quadShader, vs);
+    glAttachShader(quadShader, fs);
+    glLinkProgram(quadShader);
+    glDeleteShader(vs);
+    glDeleteShader(fs);
 }

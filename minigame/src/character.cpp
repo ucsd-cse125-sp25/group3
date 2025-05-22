@@ -1,13 +1,19 @@
 #include <GL/glew.h>
 #include "character.h"
 #include "stb_image.h"
+#include "shader_utils.h"
 #include <iostream>
+#include <fstream> 
+#include <sstream>
+#include <string>
+
 
 Character::Character(float x, float y, const std::string& leftTex, const std::string& rightTex)
     : x(x), y(y), vx(0.f), speed(300.f), facingRight(true) {
     textureLeft = loadTexture(leftTex);
     textureRight = loadTexture(rightTex);
     currentTexture = textureLeft;
+    initRenderer();
 }
 
 unsigned int Character::loadTexture(const std::string& path) {
@@ -30,6 +36,48 @@ unsigned int Character::loadTexture(const std::string& path) {
     stbi_image_free(data);
     return tex;
 }
+
+GLuint Character::getShader() const {
+    return characterShader;
+}
+
+void Character::initRenderer() {
+    float vertices[] = {
+        // positions    // tex coords
+         0.f,  0.f,      0.0f, 0.0f,
+         1.f,  0.f,      1.0f, 0.0f,
+         1.f,  1.f,      1.0f, 1.0f,
+
+         0.f,  0.f,      0.0f, 0.0f,
+         1.f,  1.f,      1.0f, 1.0f,
+         0.f,  1.f,      0.0f, 1.0f
+    };
+
+    glGenVertexArrays(1, &characterVAO);
+    glGenBuffers(1, &characterVBO);
+    glBindVertexArray(characterVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, characterVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glBindVertexArray(0);
+
+    GLuint vs = compileShader("minigame/shaders/quad.vert", GL_VERTEX_SHADER);
+    GLuint fs = compileShader("minigame/shaders/quad.frag", GL_FRAGMENT_SHADER);
+    characterShader = glCreateProgram();
+    glAttachShader(characterShader, vs);
+    glAttachShader(characterShader, fs);
+    glLinkProgram(characterShader);
+    glDeleteShader(vs);
+    glDeleteShader(fs);
+}
+
+
+
 
 void Character::handleInput(GLFWwindow* window) {
     vx = 0.f;
@@ -118,16 +166,27 @@ void Character::update(float dt, int windowHeight, int windowWidth, const std::v
 }
 
 void Character::draw() {
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, currentTexture);
+    glUseProgram(characterShader);
+    glBindVertexArray(characterVAO);
 
-    float w = width/4, h = height/4;
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex2f(x, y);
-    glTexCoord2f(1, 0); glVertex2f(x + w, y);
-    glTexCoord2f(1, 1); glVertex2f(x + w, y + h);
-    glTexCoord2f(0, 1); glVertex2f(x, y + h);
-    glEnd();
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, currentTexture);
+    glUniform1i(glGetUniformLocation(characterShader, "backgroundTex"), 0); 
+
+    float scale = 1.0f / 4.0f;
+    float w = width * scale;
+    float h = height * scale;
+
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(x, y, 0.0f));
+    model = glm::scale(model, glm::vec3(w, h, 1.0f));
+
+    GLuint modelLoc = glGetUniformLocation(characterShader, "uModel");
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glBindVertexArray(0);
 }
 
 float Character::getX() const {

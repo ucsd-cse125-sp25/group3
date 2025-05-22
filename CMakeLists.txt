@@ -70,8 +70,16 @@ link_directories(
 # Add executable
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${IMGUI_SOURCES} ${MINIGAME_SOURCES})
 
+#minigame shaders
+add_custom_target(CopyMiniGameShaders ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_SOURCE_DIR}/minigame/shaders"
+    "${CMAKE_BINARY_DIR}/minigame/shaders"
+)
+add_dependencies(menv CopyMiniGameShaders)
 
 # Link libraries
+
 
 # target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32s.lib glfw3)
 # Set include and lib dirs (platform-specific)
@@ -97,6 +105,11 @@ if (APPLE)
         PATH_SUFFIXES include
         NO_DEFAULT_PATH
     )
+    find_path(GLM_INCLUDE_DIR glm/glm.hpp
+        PATHS ${CUSTOM_PATHS}
+        PATH_SUFFIXES include
+        NO_DEFAULT_PATH
+)
 
     # Find libraries
     find_library(GLEW_LIBRARY GLEW
