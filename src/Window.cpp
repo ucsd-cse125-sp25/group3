@@ -11,7 +11,9 @@ const char* Window::windowTitle = "Model Environment";
 // Objects to render
 Cube* Window::cube;
 Cube* Window::floor;
+Cube* Window::artifact;
 std::map<unsigned int, Cube*> Window::cubes;
+NPCs* Window::NPC;
 
 // Camera Properties
 Camera* Cam;
@@ -26,6 +28,11 @@ GLuint Window::shaderProgram;
 
 bool Window::altDown = false;
 bool Window::firstMouse = true;
+
+// // for show-on-map ability 
+bool Window::showOthersOnMiniMap = false;
+bool Window::radarActive = false;
+std::chrono::steady_clock::time_point Window::radarStartTime;
 
 // Constructors and desctructors
 bool Window::initializeProgram() {
@@ -44,8 +51,12 @@ bool Window::initializeProgram() {
 bool Window::initializeObjects() {
     // Create a cube
     cube = new Cube();
-    // cube = new Cube(glm::vec3(-1, 0, -2), glm::vec3(1, 1, 1));
+    artifact = new Cube(glm::vec3(-0.5, 0, -1), glm::vec3(0, 0.5, 1));
+    artifact->setColor(glm::vec3(0.0f, 0.6f, 1.0f));
+    artifact->setBaseModel(glm::translate(glm::mat4(1.0f), glm::vec3(7.0f, 0.0f, 2.0f)));
+    cube->setCarriedArtifact(artifact);
     floor = new Cube(glm::vec3(-8, -2.03, -8), glm::vec3(8, -2.01, 8));
+    NPC = new NPCs(new Cube(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1)));
 
     return true;
 }
@@ -53,6 +64,7 @@ bool Window::initializeObjects() {
 void Window::cleanUp() {
     // Deallcoate the objects.
     delete cube;
+    delete artifact;
     delete floor;
     delete Cam;
     delete MiniMapCam;
@@ -99,17 +111,16 @@ GLFWwindow* Window::createWindow(int width, int height) {
 
     // set up the camera
     Cam = new Camera();
-    // Cam->SetAspect(float(width) / float(height));
-
-    //for minimap
-    MiniMapCam = new Camera();
-    // MiniMapCam->SetOrtho(-10, 10, -10, 10, 0.1f, 100.0f); 
-    // MiniMapCam->SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
-
-
+    Cam->SetAspect(float(width) / float(height));
+    // MiniMapCam = new Camera();
     // initialize the interaction variables
     LeftDown = RightDown = false;
     MouseX = MouseY = 0;
+
+    //for minimap
+    MiniMapCam = new Camera();
+    MiniMapCam->SetOrtho(-10, 10, -10, 10, 0.1f, 100.0f); 
+    MiniMapCam->SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
 
     // Call the resize callback to make sure things get drawn immediately.
     #ifdef __APPLE__
@@ -143,13 +154,38 @@ void Window::resizeCallback(GLFWwindow* window, int width, int height) {
     Cam->SetAspect(float(width) / float(height));
 }
 
+void Window::activateRadarAbility() {
+    showOthersOnMiniMap = true; 
+    radarActive = true;        
+    radarStartTime = std::chrono::steady_clock::now(); 
+}
+
+void Window::updateRadarAbility() {
+    if (radarActive) {
+        auto now = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - radarStartTime);
+
+        if (elapsed.count() > radarDuration) {
+            showOthersOnMiniMap = false;  
+            radarActive = false;
+        }
+    }
+}
+
 // update and draw functions
 void Window::idleCallback() {
     // Perform any updates as necessary.
     // Cam->Update();
+    Cam->Update(cube->getPosition());
 
     cube->update();
-    Cam->Update(cube->getPosition());
+    NPC->update();
+
+    if (cube->didUseRadarAbility()) {
+        activateRadarAbility();
+    }
+
+    updateRadarAbility();
 }
 
 void Window::displayCallback(GLFWwindow* window) {
@@ -166,8 +202,6 @@ void Window::displayCallback(GLFWwindow* window) {
     }
     // Clear the color and depth buffers.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // Render the object.
     #ifdef __APPLE__
         int fbWidth, fbHeight;
         glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
@@ -175,9 +209,12 @@ void Window::displayCallback(GLFWwindow* window) {
     #else
         glViewport(0, 0, Window::width, Window::height);
     #endif
-    //glViewport(0, 0, Window::width, Window::height);
+
+    // Render the object.
     cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
     floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
+    NPC->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
+    artifact->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
 
     int miniMapSize = 256;
     //glViewport(0, Window::height - miniMapSize, miniMapSize, miniMapSize); 
@@ -189,7 +226,16 @@ void Window::displayCallback(GLFWwindow* window) {
     #endif
     glm::mat4 viewProj_miniMap = MiniMapCam->GetViewProjectMtx();
     cube->draw(viewProj_miniMap, shaderProgram, false);
+    artifact->draw(viewProj_miniMap, shaderProgram, false);
     floor->draw(viewProj_miniMap, shaderProgram, true);
+
+    if (showOthersOnMiniMap){
+        /*
+        Drawing npc for test only, for multiplayer with networking, can do draw others here 
+        something like for each cube in cubePtr, draw it ish
+        */
+        NPC->draw(viewProj_miniMap, Window::shaderProgram);
+    }
 
     // Gets events, including input such as keyboard and mouse or window resizing.
     glfwPollEvents();

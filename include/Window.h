@@ -4,6 +4,7 @@
 #include "Cube.h"
 #include "Shader.h"
 #include "core.h"
+#include "NPCs.h"
 #include <map>
 #include "../packets/StateUpdatePacket.h"
 #include "../packets/InitPlayerPacket.h"
@@ -23,6 +24,8 @@ public:
     static Cube* cube;
     static std::map<unsigned int, Cube*> cubes;
     static Cube* floor;
+    static NPCs* NPC;
+    static Cube* artifact;
 
     // Shader Program
     static GLuint shaderProgram;
@@ -58,4 +61,12 @@ public:
     static void removeClient(unsigned int client);
     static void setInitState(const InitPlayerPacket& packet);
     static void applyServerState(const StateUpdatePacket& packet);
+
+    // for show-on-map ability 
+    static void updateRadarAbility();
+    static void activateRadarAbility() ;
+    static bool showOthersOnMiniMap;
+    static bool radarActive;
+    static std::chrono::steady_clock::time_point radarStartTime;
+    static const int radarDuration = 5;
 };

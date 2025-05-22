@@ -21,7 +21,6 @@ private:
     std::vector<unsigned int> indices;
 
 public:
-
     bool isLocalPlayer = true;
 
     bool isJumping = false;
@@ -47,6 +46,16 @@ public:
     float invisibleStartTime = 0.0f;
     float invisibleDuration = 5.0f;
     bool eWasPressed = false;
+
+    //to set different color of cube
+    void setColor(const glm::vec3& change_color);
+    void setBaseModel(const glm::mat4& change_model);
+    void setBaseAndModel(const glm::mat4& mtx);
+    //interact with artifact
+    bool isCarryingArtifact = false;
+    void attemptGrabArtifact();
+    Cube* carriedArtifact = nullptr;
+    void setCarriedArtifact(Cube* artifact);
 
     // for "changing apperance"
     glm::vec3 colorAlt = glm::vec3(0.2f, 0.8f, 1.0f); 
@@ -79,4 +88,8 @@ public:
         std::cout << "base model:" << std::endl;
         std::cout << glm::to_string(baseModel) << std::endl;
     }
+    
+    // for show-on-map ability 
+    bool didUseRadarAbility();
+    bool radarUsed = false; 
 };

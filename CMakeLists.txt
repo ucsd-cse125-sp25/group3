@@ -30,6 +30,7 @@ set(
     Networking/NetworkServices.cpp
     Networking/ClientGame.cpp 
     Networking/ClientNetwork.cpp
+    src/NPCs.cpp
 )
 
 # Add header files
@@ -56,6 +57,7 @@ set(
     Networking/NetworkServices.h
     Networking/ClientGame.h 
     Networking/ClientNetwork.h
+    include/NPCs.h
 )
 
 # GoogleTest requires at least C++14
