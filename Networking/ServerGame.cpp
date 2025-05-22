@@ -217,6 +217,7 @@ void ServerGame::sendInitPlayerState(unsigned int client_id) {
     InitPlayerPacket packet;
     packet.packet_type = INIT_PLAYER;
 
+    packet.clientID = client_id;
     packet.altDown = player.altDown;
 
     player.cube.saveToPacket(packet);
@@ -253,7 +254,7 @@ void ServerGame::sendStateUpdate() {
 
             player.cube.saveToPacket(*playerPacket);
             player.camera.saveToPacket(*playerPacket, false);
-            player.camera.saveToPacket(*playerPacket, true);
+            player.miniMapCam.saveToPacket(*playerPacket, true);
 
             packet.clientPackets.push_back(std::move(playerPacket));
             numClients++;

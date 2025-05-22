@@ -105,6 +105,7 @@ void ClientGame::update()
                 printf("client recieved state update from server\n");
                 StateUpdatePacket* statePacket = dynamic_cast<StateUpdatePacket*>(packet.get());
                 // printf("payload size: %d\n", packet.length);
+                std::cout << "Window init: " << Window::initialized << std::endl;
                 if (Window::initialized) Window::applyServerState(*statePacket);
                 // Window::render(window);
                 // Window::cube->update();

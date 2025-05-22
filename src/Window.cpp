@@ -383,7 +383,9 @@ void Window::applyServerState(const StateUpdatePacket& packet) {
                 }
                 Cube* cube = cubes[currClient];
                 cube->updateFromPacket(*initPacket);
+                printf("my id: %u\n", client_id);
                 if (currClient == client_id) {
+                    printf("HERE\n");
                     Cam->updateFromPacket(*initPacket, false);
                     MiniMapCam->updateFromPacket(*initPacket, true);
                     altDown = initPacket->altDown;
@@ -443,8 +445,8 @@ void Window::render(GLFWwindow* window) {
     } else {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
-    cube->update();
-    Cam->Update(cube->getPosition());
+    /* cube->update();
+    Cam->Update(cube->getPosition()); */
 }
 
 void Window::setClientID(const InitPlayerPacket& packet) {
@@ -469,6 +471,7 @@ void Window::removeClient(unsigned int client) {
 
 void Window::setInitState(const InitPlayerPacket& packet) {
     client_id = packet.clientID;
+    printf("client id init as %d\n", client_id);
     addClient(packet.clientID);
     cubes[packet.clientID]->updateFromPacket(packet);
     Cam->updateFromPacket(packet, false);

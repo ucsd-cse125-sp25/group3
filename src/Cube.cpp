@@ -306,7 +306,7 @@ void Cube::handleContinuousInput(GLFWwindow* window, const glm::vec3& forwardDir
 }
 
 void Cube::updateFromPacket(const InitPlayerPacket& packet) {
-    memcpy(&baseModel, packet.model, sizeof(packet.model));
+    memcpy(&model, packet.model, sizeof(packet.model));
     isInvisible = packet.isInvisible;
     printState();
 }
@@ -317,7 +317,7 @@ void Cube::spin(float deg) {
 }
 
 glm::vec3 Cube::getPosition() const {
-    return glm::vec3(model[3]);  // extract translation from matrix
+    return glm::vec3(baseModel[3]);  // extract translation from matrix
 }
 
 void Cube::setColor(const glm::vec3& change_color) {
