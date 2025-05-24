@@ -5,6 +5,7 @@
 #include "CursorPacket.h"
 #include "EndGamePacket.h"
 #include "InitPlayerPacket.h"
+#include "NPCPacket.h"
 
 #ifndef PACKETFACTORY_H // include guard
 #define PACKETFACTORY_H

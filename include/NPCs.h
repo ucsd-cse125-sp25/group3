@@ -4,6 +4,8 @@
 #include "core.h"
 #include "Cube.h"
 #include <chrono>
+#include "../packets/NPCPacket.h"
+#include <glm/gtc/type_ptr.hpp>
 
 class NPCs {
 private:
@@ -40,4 +42,6 @@ public:
 
     glm::vec3 generatePosition();
     glm::vec3 generateRandomTarget();
+
+    void updateFromPacket(const NPCPacket& npcPacket);
 };

@@ -15,11 +15,13 @@ set(
     packets/EndGamePacket.cpp
     packets/InitPacket.cpp
     packets/InitPlayerPacket.cpp
+    packets/NPCPacket.cpp
     packets/KeyPacket.cpp
     packets/StateUpdatePacket.cpp
     packets/PacketFactory.cpp
     src/Camera.cpp
     src/Cube.cpp
+    src/NPCs.cpp
     src/Shader.cpp
     src/Tokenizer.cpp
     src/Window.cpp
@@ -30,7 +32,6 @@ set(
     Networking/NetworkServices.cpp
     Networking/ClientGame.cpp 
     Networking/ClientNetwork.cpp
-    src/NPCs.cpp
 )
 
 # Add header files
@@ -41,12 +42,14 @@ set(
     packets/EndGamePacket.h
     packets/InitPacket.h
     packets/InitPlayerPacket.h
+    packets/NPCPacket.h
     packets/KeyPacket.h
     packets/StateUpdatePacket.h
     packets/PacketFactory.h
     include/core.h
     include/Camera.h
     include/Cube.h
+    include/NPCs.h
     include/Shader.h
     include/Tokenizer.h
     include/Window.h
@@ -57,7 +60,6 @@ set(
     Networking/NetworkServices.h
     Networking/ClientGame.h 
     Networking/ClientNetwork.h
-    include/NPCs.h
 )
 
 # GoogleTest requires at least C++14

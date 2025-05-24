@@ -14,6 +14,7 @@ Cube* Window::floor;
 Cube* Window::artifact;
 std::map<unsigned int, Cube*> Window::cubes;
 NPCs* Window::NPC;
+std::map<unsigned int, NPCs*> Window::npcs;
 
 // Camera Properties
 Camera* Cam;
@@ -371,21 +372,22 @@ void Window::applyServerState(char * data) {
 
 void Window::applyServerState(const StateUpdatePacket& packet) {
     int numClients = packet.numClients;
-    printf("num clients is %d\n", numClients);
+    
     for (const auto& clientPacketPtr : packet.clientPackets) {
         if (clientPacketPtr) {
             const InitPlayerPacket* initPacket = dynamic_cast<const InitPlayerPacket*>(clientPacketPtr.get());
+            
             if (initPacket) {
                 unsigned int currClient = initPacket->clientID;
                 printf("curr client is %u\n", currClient);
+                
                 if (cubes.find(currClient) == cubes.end()) {
                     addClient(currClient);
                 }
                 Cube* cube = cubes[currClient];
                 cube->updateFromPacket(*initPacket);
-                printf("my id: %u\n", client_id);
+                
                 if (currClient == client_id) {
-                    printf("HERE\n");
                     Cam->updateFromPacket(*initPacket, false);
                     MiniMapCam->updateFromPacket(*initPacket, true);
                     altDown = initPacket->altDown;
@@ -393,6 +395,24 @@ void Window::applyServerState(const StateUpdatePacket& packet) {
             }
         }
     }
+
+    for (const auto& npcPacketPtr : packet.npcPackets) {
+
+        if (npcPacketPtr) {
+            const NPCPacket* npcPacket = dynamic_cast<const NPCPacket*>(npcPacketPtr.get());
+
+            if (npcPacket) {
+                unsigned int npcID = npcPacket->npcID;
+                printf("curr npc is %u\n", npcID);
+                
+                if (npcs.find(npcID) == npcs.end()) {
+                    addNPC(npcID);
+                }
+                NPCs* npc = npcs[npcID];
+                npc->updateFromPacket(*npcPacket);
+            }
+        }
+    }   
 }
 
 void Window::render(GLFWwindow* window) {
@@ -409,11 +429,18 @@ void Window::render(GLFWwindow* window) {
     #else
         glViewport(0, 0, Window::width, Window::height);
     #endif
-    std::map<unsigned int, Cube*>::iterator iter;
+    std::map<unsigned int, Cube*>::iterator playerIter;
 
-    for (iter = cubes.begin(); iter != cubes.end(); iter++) {
+    for (playerIter = cubes.begin(); playerIter != cubes.end(); playerIter++) {
         //printf("rendering cube for client %u\n", iter->first);
-        iter->second->draw(Cam->GetViewProjectMtx(), Window::shaderProgram, false);
+        playerIter->second->draw(Cam->GetViewProjectMtx(), Window::shaderProgram, false);
+    }
+
+    std::map<unsigned int, NPCs*>::iterator npcIter;
+
+    for (npcIter = npcs.begin(); npcIter != npcs.end(); npcIter++) {
+        //printf("rendering cube for client %u\n", iter->first);
+        npcIter->second->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
     }
 
    //cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
@@ -429,8 +456,8 @@ void Window::render(GLFWwindow* window) {
     #endif
     glm::mat4 viewProj_miniMap = MiniMapCam->GetViewProjectMtx();
     //cube->draw(viewProj_miniMap, Window::shaderProgram, false);
-    for (iter = cubes.begin(); iter != cubes.end(); iter++) {
-        iter->second->draw(viewProj_miniMap, Window::shaderProgram, false);
+    for (playerIter=cubes.begin(); playerIter != cubes.end(); playerIter++) {
+        playerIter->second->draw(viewProj_miniMap, Window::shaderProgram, false);
     }
     floor->draw(viewProj_miniMap, Window::shaderProgram, true);
 
@@ -461,7 +488,14 @@ void Window::addClient(unsigned int client) {
     printf("init cube for client %u\n", client);
 }
 
+void Window::addNPC(unsigned int npc) {
+    NPCs* npcPtr = new NPCs(new Cube(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1)));
+    npcs.insert(std::pair<unsigned int, NPCs*>(npc, npcPtr));
+    // printf("init cube for client %u\n", client);
+}
+
 void Window::removeClient(unsigned int client) {
+
     if (cubes.find(client) != cubes.end()) {
         Cube* cubePtr = cubes[client];
         delete cubePtr;

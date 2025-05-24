@@ -312,3 +312,73 @@ void PlayerData::saveToPacket(unsigned int client_id, InitPlayerPacket& packet) 
     miniMapCam.saveToPacket(packet, true); 
     packet.altDown = altDown;
 }
+
+NPCState::NPCState(){
+    npcModel = CubeState(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1));
+    glm::vec3 startPos = glm::vec3(2.0f, 0.0f, -3.0f);
+    glm::mat4 newModel = glm::mat4(1.0f);
+    newModel = glm::translate(newModel, startPos);
+
+    npcModel.model = newModel;
+    currentTarget = generateRandomTarget();
+}
+
+void NPCState::update(){
+    
+    // float random_num = static_cast <float> (rand())/ (static_cast <float> (RAND_MAX ));
+
+    // // std::cout<< random_num << std::endl;
+    // if (random_num < 0.5 ){
+    //     // std::cout<< "stop" << std::endl;
+
+    //     return;
+    // }
+
+    using namespace std::chrono;
+
+    if (isWaiting) {
+        auto now = steady_clock::now();
+        auto elapsed = duration_cast<duration<float>>(now - waitStartTime).count();
+
+        if (elapsed >= waitDuration) {
+            isWaiting = false;
+            currentTarget = generateRandomTarget();  
+        } else {
+            return;  
+        }
+    }
+    glm::vec3 currPos = npcModel.getPosition();
+
+    glm::vec3 direction = currentTarget - currPos;
+
+    if (glm::length(direction) < 0.05f) {
+        float random_num = static_cast <float> (rand())/ (static_cast <float> (RAND_MAX ));
+
+        if (random_num < 0.5 ){
+            isWaiting = true;
+        }
+        waitStartTime = std::chrono::steady_clock::now();
+        currentTarget = generateRandomTarget(); 
+        return;
+    }
+    glm::vec3 movement = glm::normalize(direction) * speed;
+    npcModel.baseModel = glm::translate(npcModel.baseModel, movement);
+    npcModel.model = npcModel.baseModel;
+    // npcModel->setBaseAndModel(glm::translate(npcModel->baseModel, movement));
+}
+
+glm::vec3 NPCState::generateRandomTarget() {
+    float x = -8.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (16.0f))); // [-8, 8]
+    float z = -8.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (16.0f))); // [-8, 8]
+    // std::cout<< x << "   " << z << std::endl;
+    return glm::vec3(x, 0.0f, z);
+}
+
+void NPCState::saveToPacket(NPCPacket& packet) {
+
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            packet.model[i][j] = npcModel.model[i][j];
+        }
+    }
+}

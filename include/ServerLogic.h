@@ -56,6 +56,39 @@ class CubeState {
         void saveToPacket(InitPlayerPacket& packet);
 };
 
+class NPCState {
+    private:
+        glm::vec3 pointA = glm::vec3(-3.0f, 0.0f, 0.0f);
+        glm::vec3 pointB = glm::vec3(3.0f, 0.0f, 0.0f);
+        bool goingToA = false; 
+        float speed = 0.03f;
+
+        bool isWaiting = false;
+        std::chrono::steady_clock::time_point waitStartTime;
+        float waitDuration = 2.0f; 
+
+    public:
+
+        NPCState();
+
+        CubeState npcModel;
+
+        enum State {
+            IDLE,
+            WALKING
+        };
+        State currentState;
+
+        glm::vec3 nextPos;
+        glm::vec3 currPos;
+        glm::vec3 currentTarget;
+
+        void update();
+        glm::vec3 generatePosition();
+        glm::vec3 generateRandomTarget();
+        void saveToPacket(NPCPacket& packet);
+};
+
 class PlayerData {
     public:
         CubeState cube;

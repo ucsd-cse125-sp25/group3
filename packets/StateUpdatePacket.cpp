@@ -1,7 +1,13 @@
 #include "StateUpdatePacket.h"
 void StateUpdatePacket::updateLength() {
     length = sizeof(numClients);
+    
     for (const auto& packet : clientPackets) {
+        length += packet->getSize();
+    }
+    length += sizeof(numNPCs);
+
+    for (const auto& packet : npcPackets) {
         length += packet->getSize();
     }
 }
@@ -9,6 +15,7 @@ void StateUpdatePacket::updateLength() {
 StateUpdatePacket::StateUpdatePacket(){
     length = 0;
     numClients = 0;
+    numNPCs = 0;
 }
 
 unsigned int StateUpdatePacket::getSize() {
@@ -32,6 +39,14 @@ int StateUpdatePacket::serializePayload(char* data) {
         offset += packet->getSize();
     }
 
+    std::memcpy(data + offset, &numNPCs, sizeof(numNPCs));
+    offset += sizeof(numNPCs);
+
+    for (const auto& packet : npcPackets) {
+        packet->serialize(data + offset);
+        offset += packet->getSize();
+    }
+
     return offset;
 }
 
@@ -50,7 +65,16 @@ int StateUpdatePacket::deserializePayload(char* data) {
 
         clientPackets.push_back(std::move(packet));
     }
+    std::memcpy(&numNPCs, data + offset, sizeof(numNPCs));
+    offset += sizeof(numNPCs);
+    npcPackets.clear();
 
+    for (unsigned int i = 0; i < numNPCs; ++i) {
+        auto packet = std::make_unique<NPCPacket>();
+        packet->deserialize(data + offset);
+        offset += packet->getSize();
+        npcPackets.push_back(std::move(packet));
+    }
     updateLength();
     return offset;
 }

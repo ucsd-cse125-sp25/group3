@@ -308,7 +308,7 @@ void Cube::handleContinuousInput(GLFWwindow* window, const glm::vec3& forwardDir
 void Cube::updateFromPacket(const InitPlayerPacket& packet) {
     memcpy(&model, packet.model, sizeof(packet.model));
     isInvisible = packet.isInvisible;
-    printState();
+    // printState();
 }
 
 void Cube::spin(float deg) {

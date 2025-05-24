@@ -25,6 +25,7 @@ public:
     static std::map<unsigned int, Cube*> cubes;
     static Cube* floor;
     static NPCs* NPC;
+    static std::map<unsigned int, NPCs*> npcs;
     static Cube* artifact;
 
     // Shader Program
@@ -58,6 +59,7 @@ public:
     static void render(GLFWwindow* window);
     static void setClientID(const InitPlayerPacket& packet);
     static void addClient(unsigned int client);
+    static void addNPC(unsigned int npc);
     static void removeClient(unsigned int client);
     static void setInitState(const InitPlayerPacket& packet);
     static void applyServerState(const StateUpdatePacket& packet);

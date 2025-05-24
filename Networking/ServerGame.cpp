@@ -18,7 +18,10 @@ ServerGame::ServerGame(void)
     // set up the server network to listen 
     network = new ServerNetwork(); 
 
-    // printf("%lu", sizeof(CubeState));
+    for (unsigned int i=0; i<NUM_NPC; i++) {
+        NPCState npc = NPCState();
+        npcData.insert(pair<unsigned int, NPCState>(i, npc));
+    }
 }
 
 void ServerGame::update()
@@ -100,6 +103,7 @@ void ServerGame::receiveFromClients() {
                     printf("player is character %d\n", initPacket->character);
                     playersData[iter->first] = player;
                     sendInitPlayerState(iter->first);
+                    //sendInitNPCState(iter->first);
                     break;
                 }
                 case ACTION_EVENT: {
@@ -158,6 +162,13 @@ void ServerGame::receiveFromClients() {
             playersData[iter->first] = player;
             iter++;
         }
+    }
+    std::map<unsigned int, NPCState>::iterator npcIter;
+
+    for (npcIter=npcData.begin(); npcIter!=npcData.end(); npcIter++) {
+        NPCState npc = npcData[npcIter->first];
+        npc.update();
+        npcData[npcIter->first] = npc;
     }
     sendStateUpdate();
     auto orig_diff = std::chrono::steady_clock::now() - start;
@@ -236,21 +247,42 @@ void ServerGame::sendInitPlayerState(unsigned int client_id) {
     // }
 }
 
+//ideally would send game state to all clients at same time, probably at game start
+void ServerGame::sendInitNPCState(unsigned int client_id) {
+//     printf("Sending initial NPC state");
+//     PlayerData& player = playersData[client_id];
+
+//     InitPlayerPacket packet;
+//     packet.packet_type = INIT_PLAYER;
+
+//     packet.clientID = client_id;
+//     packet.altDown = player.altDown;
+
+//     player.cube.saveToPacket(packet);
+//     player.camera.saveToPacket(packet, false);
+//     player.camera.saveToPacket(packet, true);
+
+//     const unsigned int packet_size = packet.getSize();
+//     std::vector<char> packet_data(packet_size);
+//     packet.serialize(packet_data.data());
+
+//     network->sendToOne(client_id, packet_data.data(), packet_size);
+}
 
 void ServerGame::sendStateUpdate() {
-    std::map<unsigned int, PlayerData>::iterator iter;
+    std::map<unsigned int, PlayerData>::iterator playerIter;
     StateUpdatePacket packet;
     packet.packet_type = STATE_UPDATE;
 
     unsigned int numClients = 0;
     
-    for (iter = playersData.begin(); iter != playersData.end(); iter++) {
-        PlayerData player = iter->second;
+    for (playerIter = playersData.begin(); playerIter != playersData.end(); playerIter++) {
+        PlayerData player = playerIter->second;
 
         if (player.initialized) {
             auto playerPacket = std::make_unique<InitPlayerPacket>();
             playerPacket->packet_type = INIT_PLAYER;
-            playerPacket->clientID = iter->first;
+            playerPacket->clientID = playerIter->first;
             playerPacket->altDown = player.altDown;
 
             player.cube.saveToPacket(*playerPacket);
@@ -262,6 +294,19 @@ void ServerGame::sendStateUpdate() {
         }
     }
     packet.numClients = numClients;
+    std::map<unsigned int, NPCState>::iterator npcIter;
+
+    for (npcIter = npcData.begin(); npcIter != npcData.end(); npcIter++) {
+        NPCState npc = npcIter->second;
+        auto npcPacket = std::make_unique<NPCPacket>();
+        npcPacket->packet_type = NPC_STATE;
+        npcPacket->npcID = npcIter->first;
+        npc.saveToPacket(*npcPacket);
+        // npcPacket->npcID = npcIter->first;
+        // npc.cube.saveToPacket(*npcPacket);
+        packet.npcPackets.push_back(std::move(npcPacket));
+    }
+    packet.numNPCs = NUM_NPC;
     const unsigned int packet_size = packet.getSize();
     std::vector<char> packet_data(packet_size);
     packet.serialize(packet_data.data());

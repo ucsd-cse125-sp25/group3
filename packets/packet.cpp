@@ -16,7 +16,7 @@ int Packet::serializeHeader(char * data) {
     memcpy(data + offset, &length, sizeof(length));
     offset += sizeof(length);
 
-    if (getSize() > MAX_PACKET_SIZE) throw std::runtime_error("Packet size is greater than maximum size permitted");
+    if (getSize() > MAX_PACKET_SIZE) throw std::runtime_error("serialize header: packet size is greater than maximum size permitted: " + std::to_string(getSize()));
 
     return offset;
 }
@@ -41,7 +41,7 @@ int Packet::deserializeHeader(char * data) {
     memcpy(&packet_type, data, sizeof(packet_type));
     offset += sizeof(packet_type);
     memcpy(&length, data + offset, sizeof(length));
-    if (length > MAX_PACKET_SIZE - offset) throw std::runtime_error("Packet size is greater than maximum size permitted");
+    if (length > MAX_PACKET_SIZE - offset) throw std::runtime_error("deserialize header: packet size is greater than maximum size permitted: " + std::to_string(getSize()));
     return offset;
 }
 

@@ -25,11 +25,13 @@ std::unique_ptr<Packet> PacketFactory::createFromBuffer(char* data) {
         case INIT_PLAYER:
             packet = std::make_unique<InitPlayerPacket>();
             break;
+        case NPC_STATE:
+            packet = std::make_unique<NPCPacket>();
+            break;
         default:
             printf("Unknown packet type passed to PacketFactory: %d \n", packet->packet_type);
             return nullptr;
     }
-
     packet->deserialize(data);
 
     return packet;
