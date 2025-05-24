@@ -217,22 +217,26 @@ void ServerNetwork::sendToAll(char * packets, int totalSize)
 
     for (iter = sessions.begin(); iter != sessions.end(); iter++)
     {
+        int totSent = 0;
         currentSocket = iter->second;
-        iSendResult = NetworkServices::sendMessage(currentSocket, packets, totalSize);
-        
-        #ifdef _WIN32
-        if (iSendResult == SOCKET_ERROR) {
-            printf("send failed with error: %d\n", WSAGetLastError());
-            closesocket(currentSocket);
-            exit(1);
-        }
+
+        while (totSent != totalSize) {
+            iSendResult = NetworkServices::sendMessage(currentSocket, packets + totSent, totalSize - totSent);
+            
+            #ifdef _WIN32
+            if (iSendResult == SOCKET_ERROR) {
+                printf("send failed with error: %d\n", WSAGetLastError());
+                closesocket(currentSocket);
+                exit(1);
+            }
             #else
-        if (iSendResult < 0) {
-            printf("sendToAll failed");
-            close(currentSocket);
+            if (iSendResult < 0) {
+                printf("sendToAll failed");
+                close(currentSocket);
+            }
+            #endif
+            totSent += iSendResult;
         }
-        #endif
-        
     }
 }
 
