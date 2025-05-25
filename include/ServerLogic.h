@@ -99,6 +99,10 @@ class PlayerData {
         bool initialized = false;
         bool firstMouse;
         bool altDown;
+        bool radarActive;
+        std::chrono::steady_clock::time_point radarStartTime;
+        int radarDuration = 5;
+
         // PlayerData();
         // ~PlayerData();
         void init(InitPacket* packet);
@@ -106,5 +110,7 @@ class PlayerData {
         void handleCursor(double currX, double currY);
         void resetCamera();
         void saveToPacket(unsigned int client_id, InitPlayerPacket& packet);
+        void updateRadarAbility();
+        void update();
 };
 

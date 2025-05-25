@@ -121,7 +121,7 @@ void ServerGame::receiveFromClients() {
                 }
                 case KEY_INPUT: {
                     KeyPacket* keyPacket = dynamic_cast<KeyPacket*>(packet.get());
-                    printf("server recieved key input packet from client\n");
+                    // printf("server recieved key input packet from client\n");
                     if (keyPacket) {
                         player.calculateNewPos(keyPacket->key_type);
                         //playersData[iter->first] = player;
@@ -157,8 +157,9 @@ void ServerGame::receiveFromClients() {
             printf("Client %d has disconnected\n", iter->first);
             iter = network->sessions.erase(iter);
         } else {
-            player.camera.Update(player.cube.getPosition()); 
-            player.cube.update();
+            player.update();
+            // player.camera.Update(player.cube.getPosition()); 
+            // player.cube.update();
             playersData[iter->first] = player;
             iter++;
         }
@@ -230,6 +231,7 @@ void ServerGame::sendInitPlayerState(unsigned int client_id) {
 
     packet.clientID = client_id;
     packet.altDown = player.altDown;
+    packet.radarActive = player.radarActive;
 
     player.cube.saveToPacket(packet);
     player.camera.saveToPacket(packet, false);
@@ -284,6 +286,7 @@ void ServerGame::sendStateUpdate() {
             playerPacket->packet_type = INIT_PLAYER;
             playerPacket->clientID = playerIter->first;
             playerPacket->altDown = player.altDown;
+            playerPacket->radarActive = player.radarActive;
 
             player.cube.saveToPacket(*playerPacket);
             player.camera.saveToPacket(*playerPacket, false);

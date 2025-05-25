@@ -391,6 +391,7 @@ void Window::applyServerState(const StateUpdatePacket& packet) {
                     Cam->updateFromPacket(*initPacket, false);
                     MiniMapCam->updateFromPacket(*initPacket, true);
                     altDown = initPacket->altDown;
+                    radarActive = initPacket->radarActive;
                 }
             }
         }
@@ -461,6 +462,14 @@ void Window::render(GLFWwindow* window) {
     }
     floor->draw(viewProj_miniMap, Window::shaderProgram, true);
 
+    if (radarActive){
+
+        for (npcIter = npcs.begin(); npcIter != npcs.end(); npcIter++) {
+            //printf("rendering cube for client %u\n", iter->first);
+            npcIter->second->draw(viewProj_miniMap, Window::shaderProgram);
+        }
+        // NPC->draw(viewProj_miniMap, Window::shaderProgram);
+    }
 
     // Gets events, including input such as keyboard and mouse or window resizing.
     // glfwPollEvents();

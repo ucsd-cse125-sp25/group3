@@ -8,6 +8,7 @@ public:
     unsigned int clientID;
     // actions
     bool altDown;
+    bool radarActive;
 
     // cube
     float model[4][4];

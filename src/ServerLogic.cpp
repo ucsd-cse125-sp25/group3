@@ -242,6 +242,11 @@ void PlayerData::calculateNewPos(KeyType key) {
                 }
                 case CHARACTER_4: {
                     
+                    if (!radarActive) {
+                        printf("radar activated\n");
+                        radarActive = true; 
+                        radarStartTime = std::chrono::steady_clock::now(); 
+                    }
                     break;
                 }
             }
@@ -256,6 +261,7 @@ void PlayerData::init(InitPacket* packet) {
     initialized = true;
     firstMouse = true;
     altDown = false;
+    radarActive = false;
     miniMapCam.SetOrtho(-10, 10, -10, 10, 0.1f, 100.0f); 
     miniMapCam.SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
     cube.type = packet->character;
@@ -311,6 +317,24 @@ void PlayerData::saveToPacket(unsigned int client_id, InitPlayerPacket& packet) 
     camera.saveToPacket(packet, false);
     miniMapCam.saveToPacket(packet, true); 
     packet.altDown = altDown;
+}
+
+void PlayerData::updateRadarAbility() {
+
+    if (radarActive) {
+        auto now = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - radarStartTime);
+
+        if (elapsed.count() > radarDuration) {
+            radarActive = false;
+        }
+    }
+}
+
+void PlayerData::update() {
+    updateRadarAbility();
+    camera.Update(cube.getPosition()); 
+    cube.update();
 }
 
 NPCState::NPCState(){

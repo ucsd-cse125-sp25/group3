@@ -1,7 +1,7 @@
 #include "InitPlayerPacket.h"
 
 InitPlayerPacket::InitPlayerPacket(){
-    length = sizeof(clientID) + sizeof(uint8_t) + sizeof(model) + sizeof(viewProjectMtx) + sizeof(eye) + sizeof(center) + sizeof(azimuth) + sizeof(incline) + sizeof(aspect) + sizeof(miniViewProjectMtx) + sizeof(miniEye) + sizeof(miniCenter) + sizeof(miniAzimuth) + sizeof(miniIncline) + sizeof(miniAspect) + sizeof(uint8_t);
+    length = sizeof(clientID) + sizeof(uint8_t) + sizeof(uint8_t) + sizeof(model) + sizeof(viewProjectMtx) + sizeof(eye) + sizeof(center) + sizeof(azimuth) + sizeof(incline) + sizeof(aspect) + sizeof(miniViewProjectMtx) + sizeof(miniEye) + sizeof(miniCenter) + sizeof(miniAzimuth) + sizeof(miniIncline) + sizeof(miniAspect) + sizeof(uint8_t);
 }
 
 unsigned int InitPlayerPacket::getSize() {
@@ -17,6 +17,10 @@ int InitPlayerPacket::serializePayload(char* data) {
     uint8_t altDownByte = altDown ? 1 : 0;
     std::memcpy(data + offset, &altDownByte, sizeof(altDownByte));
     offset += sizeof(altDownByte);
+
+    uint8_t radarActiveByte = radarActive ? 1 : 0;
+    std::memcpy(data + offset, &radarActiveByte, sizeof(radarActiveByte));
+    offset += sizeof(radarActiveByte);
 
     std::memcpy(data + offset, &model, sizeof(model));
     offset += sizeof(model);
@@ -74,6 +78,11 @@ int InitPlayerPacket::deserializePayload(char* data) {
     std::memcpy(&altDownByte, data + offset, sizeof(altDownByte));
     altDown = (altDownByte == 1);
     offset += sizeof(altDownByte);
+
+    uint8_t radarActiveByte;
+    std::memcpy(&radarActiveByte, data + offset, sizeof(radarActiveByte));
+    radarActive = (radarActiveByte == 1);
+    offset += sizeof(radarActiveByte);
 
     std::memcpy(&model, data + offset, sizeof(model));
     offset += sizeof(model);
