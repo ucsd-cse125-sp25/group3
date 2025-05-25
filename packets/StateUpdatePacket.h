@@ -13,6 +13,8 @@ public:
     unsigned int numNPCs;
     std::vector<std::unique_ptr<NPCPacket>> npcPackets;
 
+    float artifactModel[4][4];
+
     StateUpdatePacket();
 
     unsigned int getSize() override;

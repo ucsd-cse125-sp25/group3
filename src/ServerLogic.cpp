@@ -165,7 +165,7 @@ void CubeState::saveToPacket(InitPlayerPacket& packet) {
 //     delete cube;
 //     delete camera;
 // }
-void PlayerData::calculateNewPos(KeyType key) {
+void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact) {
     glm::vec3 forwardDir = camera.GetForwardVector();
     forwardDir.y = 0.0f;  
     forwardDir = glm::normalize(forwardDir);
@@ -204,6 +204,10 @@ void PlayerData::calculateNewPos(KeyType key) {
             cube.isGrounded = false;   
             cube.jumpVelocity = cube.initialJumpVelocity;
         }
+    }
+
+    if (key == KeyType::KEY_F) {
+        artifact->attemptGrab(&cube);
     }
 
     // if (key == KeyType::KEY_T)
@@ -403,6 +407,46 @@ void NPCState::saveToPacket(NPCPacket& packet) {
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             packet.model[i][j] = npcModel.model[i][j];
+        }
+    }
+}
+
+ArtifactState::ArtifactState() {
+    holder = nullptr;
+    artifactModel = CubeState(glm::vec3(-0.5, 0, -1), glm::vec3(0, 0.5, 1));
+    artifactModel.model = glm::translate(glm::mat4(1.0f), glm::vec3(7.0f, 0.0f, 2.0f));
+}
+
+void ArtifactState::update() {
+
+    if (holder != nullptr) {
+        glm::vec3 offset(1.0f, 1.0f, 0.0f);
+        glm::mat4 newBaseModel = glm::translate(holder->baseModel, offset);
+        artifactModel.model = newBaseModel;
+    }
+}
+
+void ArtifactState::attemptGrab(CubeState * player) {
+    //for now, don't allow someone to grab artifact if already held by someone else
+    printf("attempting grab by player %d\n", player->type);
+    if (holder == nullptr) {
+        glm::vec3 playerPos = player->getPosition();
+        glm::vec3 artifactPos = artifactModel.getPosition();
+        float distance = glm::length(playerPos - artifactPos);
+        // std::cout << "Distance = " << distance << std::endl;
+printf("distance: %f\n", distance);
+        if (distance < 1.5f) {
+            holder = player;
+            printf("artifact picked up\n");
+        }
+    }
+}
+
+void ArtifactState::saveToPacket(StateUpdatePacket& packet) {
+    
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            packet.artifactModel[i][j] = artifactModel.model[i][j];
         }
     }
 }

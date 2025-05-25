@@ -123,7 +123,7 @@ void ServerGame::receiveFromClients() {
                     KeyPacket* keyPacket = dynamic_cast<KeyPacket*>(packet.get());
                     // printf("server recieved key input packet from client\n");
                     if (keyPacket) {
-                        player.calculateNewPos(keyPacket->key_type);
+                        player.calculateNewPos(keyPacket->key_type, &artifact);
                         //playersData[iter->first] = player;
                         //sendPlayerState(iter->first);
                     } else {
@@ -171,6 +171,7 @@ void ServerGame::receiveFromClients() {
         npc.update();
         npcData[npcIter->first] = npc;
     }
+    artifact.update();
     sendStateUpdate();
     auto orig_diff = std::chrono::steady_clock::now() - start;
     auto milli_diff = std::chrono::duration_cast<std::chrono::milliseconds>(orig_diff);
@@ -310,6 +311,7 @@ void ServerGame::sendStateUpdate() {
         packet.npcPackets.push_back(std::move(npcPacket));
     }
     packet.numNPCs = NUM_NPC;
+    artifact.saveToPacket(packet);
     const unsigned int packet_size = packet.getSize();
     std::vector<char> packet_data(packet_size);
     packet.serialize(packet_data.data());

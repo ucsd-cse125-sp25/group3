@@ -414,6 +414,9 @@ void Window::applyServerState(const StateUpdatePacket& packet) {
             }
         }
     }   
+    glm::mat4 artifactModel;
+    memcpy(glm::value_ptr(artifactModel), packet.artifactModel, sizeof(packet.artifactModel));
+    artifact->setBaseModel(artifactModel);
 }
 
 void Window::render(GLFWwindow* window) {
@@ -446,6 +449,7 @@ void Window::render(GLFWwindow* window) {
 
    //cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
     floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
+    artifact->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
 
     int miniMapSize = 256;
     //glViewport(0, Window::height - miniMapSize, miniMapSize, miniMapSize); 
@@ -461,6 +465,7 @@ void Window::render(GLFWwindow* window) {
         playerIter->second->draw(viewProj_miniMap, Window::shaderProgram, false);
     }
     floor->draw(viewProj_miniMap, Window::shaderProgram, true);
+    artifact->draw(viewProj_miniMap, shaderProgram, false);
 
     if (radarActive){
 

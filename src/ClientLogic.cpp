@@ -59,7 +59,6 @@ KeyType client_logic::handleUserInput(GLFWwindow* window) {
     
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         key = KeyType::KEY_E;
-    // return key;
 
     if (key != KeyType::NONE) {
         auto packet = std::make_unique<KeyPacket>();
@@ -119,6 +118,13 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
                     // cube->userInput(key);
                     //cube->handleContinuousInput(window);
                 
+                break;
+            }
+            case GLFW_KEY_F: {
+                auto packet = std::make_unique<KeyPacket>();
+                packet->packet_type = KEY_INPUT;
+                packet->key_type = KEY_F;
+                pendingPackets.push_back(std::move(packet));
                 break;
             }
             default:

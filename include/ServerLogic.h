@@ -89,6 +89,16 @@ class NPCState {
         void saveToPacket(NPCPacket& packet);
 };
 
+class ArtifactState {
+    public:
+        CubeState* holder;
+        CubeState artifactModel;
+        ArtifactState();
+        void update();
+        void attemptGrab(CubeState * player);
+        void saveToPacket(StateUpdatePacket& packet);
+};
+
 class PlayerData {
     public:
         CubeState cube;
@@ -106,7 +116,7 @@ class PlayerData {
         // PlayerData();
         // ~PlayerData();
         void init(InitPacket* packet);
-        void calculateNewPos(KeyType key);
+        void calculateNewPos(KeyType key, ArtifactState* artifact);
         void handleCursor(double currX, double currY);
         void resetCamera();
         void saveToPacket(unsigned int client_id, InitPlayerPacket& packet);
@@ -114,3 +124,9 @@ class PlayerData {
         void update();
 };
 
+// class ServerLogic {
+//     public:
+//         CubeState artifact;
+//         static void updateArtifact();
+
+// };

@@ -32,6 +32,7 @@ private:
     // data buffer
     char network_data[MAX_PACKET_SIZE];
 
+    ArtifactState artifact;
     std::map<unsigned int, PlayerData> playersData;
     std::map<unsigned int, NPCState> npcData;
 };
