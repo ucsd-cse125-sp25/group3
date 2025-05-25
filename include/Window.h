@@ -9,6 +9,12 @@
 #include "../packets/StateUpdatePacket.h"
 #include "../packets/InitPlayerPacket.h"
 
+enum class AbilityType {
+    NONE,
+    INVISIBILITY,
+    SPEED_UP
+};
+
 class Window {
 public:
     static unsigned int client_id;
@@ -20,6 +26,8 @@ public:
     static const char* windowTitle;
     //static Camera* MiniMapCam;
 
+    static AbilityType currentAbility;
+
     // Objects to render
     static Cube* cube;
     static std::map<unsigned int, Cube*> cubes;
@@ -27,6 +35,7 @@ public:
     static NPCs* NPC;
     static std::map<unsigned int, NPCs*> npcs;
     static Cube* artifact;
+
 
     // Shader Program
     static GLuint shaderProgram;

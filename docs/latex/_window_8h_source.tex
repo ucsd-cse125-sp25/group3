@@ -1,0 +1,52 @@
+\doxysection{Window.\+h}
+\hypertarget{_window_8h_source}{}\label{_window_8h_source}\index{include/Window.h@{include/Window.h}}
+\mbox{\hyperlink{_window_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_camera_8h}{Camera.h}}"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_cube_8h}{Cube.h}}"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_shader_8h}{Shader.h}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{core_8h}{core.h}}"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_window}{Window}}\ \{}
+\DoxyCodeLine{00009\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{comment}{//\ Window\ Properties}}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_window_af5b1c436782cc9752d386493fbc5dc8c}{width}};}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_window_af0ac1732ca6b79a6f6b78aa344140514}{height}};}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{class_window_a60ed0cec16973dd2dfe2bb9fbe23ab4b}{windowTitle}};}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{comment}{//\ Objects\ to\ render}}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_cube}{Cube}}*\ \mbox{\hyperlink{class_window_a8ccbdccc21190770f5b6a43fff471581}{cube}};}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_cube}{Cube}}*\ \mbox{\hyperlink{class_window_aa153d745fce1bcba9e36cdca73ef7b25}{floor}};}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{comment}{//\ Shader\ Program}}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{glew_8h_aa311c7f0d6ec4f1a33f9235c3651b86b}{GLuint}}\ \mbox{\hyperlink{class_window_a50316b7395f871f6e2aaadd7522b4605}{shaderProgram}};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{comment}{//track\ the\ mouse}}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_window_af2cd7055996a44ffab3634b6b1e4f71e}{altDown}};}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_window_a3de06200e32388598381cdc5e945b765}{firstMouse}};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{comment}{//\ Act\ as\ Constructors\ and\ desctructors}}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_window_a64153941f71da68175f89170cd41d08f}{initializeProgram}}();}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_window_a4ea12cbf06c5e53244cb95ffb3ad32f7}{initializeObjects}}();}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_window_a67aa17a1206fac5155419b2190a92f79}{cleanUp}}();}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{comment}{//\ for\ the\ Window}}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{group__window_ga3c96d80d363e67d13a41b5d1821f3242}{GLFWwindow}}*\ \mbox{\hyperlink{class_window_aa8a1709b60bb79152fa6ef6549bd42a1}{createWindow}}(\textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_window_af5b1c436782cc9752d386493fbc5dc8c}{width}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_window_af0ac1732ca6b79a6f6b78aa344140514}{height}});}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_window_a8bde7a3cc94b8b213f76159a728976bf}{resizeCallback}}(\mbox{\hyperlink{group__window_ga3c96d80d363e67d13a41b5d1821f3242}{GLFWwindow}}*\ window,\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_window_af5b1c436782cc9752d386493fbc5dc8c}{width}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_window_af0ac1732ca6b79a6f6b78aa344140514}{height}});}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{comment}{//\ update\ and\ draw\ functions}}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_window_a910ba6b9a49804a0f2dbd056b610f658}{idleCallback}}();}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_window_a2e8153c2820a1cd2266ffdc1f7c36cb9}{displayCallback}}(\mbox{\hyperlink{group__window_ga3c96d80d363e67d13a41b5d1821f3242}{GLFWwindow}}*);}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{comment}{//\ helper\ to\ reset\ the\ camera}}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_window_a5e29b1031f9e61ff4dd86492de801f7a}{resetCamera}}();}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{comment}{//\ callbacks\ -\/\ for\ interaction}}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_window_af94a21e30da77f755e3fa70a0d01d9c4}{keyCallback}}(\mbox{\hyperlink{group__window_ga3c96d80d363e67d13a41b5d1821f3242}{GLFWwindow}}*\ window,\ \textcolor{keywordtype}{int}\ key,\ \textcolor{keywordtype}{int}\ scancode,\ \textcolor{keywordtype}{int}\ action,\ \textcolor{keywordtype}{int}\ mods);}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_window_aadc26532a481bd90b729f6b9f77f6ed7}{mouse\_callback}}(\mbox{\hyperlink{group__window_ga3c96d80d363e67d13a41b5d1821f3242}{GLFWwindow}}*\ window,\ \textcolor{keywordtype}{int}\ button,\ \textcolor{keywordtype}{int}\ action,\ \textcolor{keywordtype}{int}\ mods);}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_window_a479d0dfd4f441137a57aaf3c45449502}{cursor\_callback}}(\mbox{\hyperlink{group__window_ga3c96d80d363e67d13a41b5d1821f3242}{GLFWwindow}}*\ window,\ \textcolor{keywordtype}{double}\ currX,\ \textcolor{keywordtype}{double}\ currY);}
+\DoxyCodeLine{00046\ \};}
+
+\end{DoxyCode}

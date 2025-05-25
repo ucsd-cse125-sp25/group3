@@ -1,0 +1,22 @@
+\doxysection{matrix\+\_\+common.\+inl}
+\hypertarget{matrix__common_8inl_source}{}\label{matrix__common_8inl_source}\index{include/glm/ext/matrix\_common.inl@{include/glm/ext/matrix\_common.inl}}
+\mbox{\hyperlink{matrix__common_8inl}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{matrix_8hpp}{../matrix.hpp}}"{}}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceglm}{glm}}}
+\DoxyCodeLine{00004\ \{}
+\DoxyCodeLine{00005\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ C,\ length\_t\ R,\ \textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ U,\ qualifier\ Q>}
+\DoxyCodeLine{00006\ \ \ \ \ \mbox{\hyperlink{setup_8hpp_a33fdea6f91c5f834105f7415e2a64407}{GLM\_FUNC\_QUALIFIER}}\ \mbox{\hyperlink{structglm_1_1mat}{mat<C,\ R,\ T,\ Q>}}\ \mbox{\hyperlink{group__core__func__common_ga8e93f374aae27d1a88b921860351f8d4}{mix}}(\mbox{\hyperlink{structglm_1_1mat}{mat<C,\ R,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x,\ \mbox{\hyperlink{structglm_1_1mat}{mat<C,\ R,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ y,\ U\ a)}
+\DoxyCodeLine{00007\ \ \ \ \ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1mat}{mat<C,\ R,\ U,\ Q>}}(x)\ *\ (\textcolor{keyword}{static\_cast<}U\textcolor{keyword}{>}(1)\ -\/\ a)\ +\ \mbox{\hyperlink{structglm_1_1mat}{mat<C,\ R,\ U,\ Q>}}(y)\ *\ a;}
+\DoxyCodeLine{00009\ \ \ \ \ \}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ C,\ length\_t\ R,\ \textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ U,\ qualifier\ Q>}
+\DoxyCodeLine{00012\ \ \ \ \ \mbox{\hyperlink{setup_8hpp_a33fdea6f91c5f834105f7415e2a64407}{GLM\_FUNC\_QUALIFIER}}\ \mbox{\hyperlink{structglm_1_1mat}{mat<C,\ R,\ T,\ Q>}}\ \mbox{\hyperlink{group__core__func__common_ga8e93f374aae27d1a88b921860351f8d4}{mix}}(\mbox{\hyperlink{structglm_1_1mat}{mat<C,\ R,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x,\ \mbox{\hyperlink{structglm_1_1mat}{mat<C,\ R,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ y,\ \mbox{\hyperlink{structglm_1_1mat}{mat<C,\ R,\ U,\ Q>}}\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00013\ \ \ \ \ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__core__func__matrix_ga24628d844879cc9d0a77ede181e5925e}{matrixCompMult}}(\mbox{\hyperlink{structglm_1_1mat}{mat<C,\ R,\ U,\ Q>}}(x),\ \textcolor{keyword}{static\_cast<}U\textcolor{keyword}{>}(1)\ -\/\ a)\ +\ \mbox{\hyperlink{group__core__func__matrix_ga24628d844879cc9d0a77ede181e5925e}{matrixCompMult}}(\mbox{\hyperlink{structglm_1_1mat}{mat<C,\ R,\ U,\ Q>}}(y),\ a);}
+\DoxyCodeLine{00015\ \ \ \ \ \}}
+\DoxyCodeLine{00016\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

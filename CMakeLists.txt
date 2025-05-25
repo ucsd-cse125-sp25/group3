@@ -74,6 +74,24 @@ FetchContent_Declare(
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
+# Add mini-game files
+file(GLOB MINIGAME_SOURCES
+    "minigame/*.cpp"
+    "minigame/src/*.cpp"
+)
+
+set(IMGUI_DIR ${CMAKE_SOURCE_DIR}/external/imgui)
+
+set(IMGUI_SOURCES
+    ${IMGUI_DIR}/imgui.cpp
+    ${IMGUI_DIR}/imgui_demo.cpp
+    ${IMGUI_DIR}/imgui_draw.cpp
+    ${IMGUI_DIR}/imgui_tables.cpp
+    ${IMGUI_DIR}/imgui_widgets.cpp
+    ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
+    ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+
+)
 
 # Require GL
 find_package(OpenGL REQUIRED)
@@ -81,6 +99,8 @@ find_package(OpenGL REQUIRED)
 # Add include directories
 include_directories(
     include
+    minigame
+    minigame/include
 )
 
 # Add library directories
@@ -89,14 +109,29 @@ link_directories(
 )
 
 # Add executable
-add_executable(${PROJECT_NAME} main.cpp ${SOURCES} ${HEADERS})
-add_executable(server Networking/server.cpp ${SOURCES} ${HEADERS})
-add_executable(client Networking/client.cpp ${SOURCES} ${HEADERS})
+add_executable(server Networking/server.cpp ${SOURCES} ${HEADERS} ${IMGUI_SOURCES} ${MINIGAME_SOURCES})
+add_executable(client Networking/client.cpp ${SOURCES} ${HEADERS} ${IMGUI_SOURCES} ${MINIGAME_SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${IMGUI_SOURCES} ${MINIGAME_SOURCES} main.cpp)
+
+#minigame shaders
+add_custom_target(CopyMiniGameShaders ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_SOURCE_DIR}/minigame/shaders"
+    "${CMAKE_BINARY_DIR}/minigame/shaders"
+)
+add_dependencies(menv CopyMiniGameShaders)
+
 # Link libraries
+
 
 # target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32s.lib glfw3)
 # Set include and lib dirs (platform-specific)
 include_directories(include)
+include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends)
+include_directories(
+    external
+)
+
 
 if (APPLE)
     message(STATUS "Building on macOS (ARM)")
@@ -113,6 +148,11 @@ if (APPLE)
         PATH_SUFFIXES include
         NO_DEFAULT_PATH
     )
+    find_path(GLM_INCLUDE_DIR glm/glm.hpp
+        PATHS ${CUSTOM_PATHS}
+        PATH_SUFFIXES include
+        NO_DEFAULT_PATH
+)
 
     # Find libraries
     find_library(GLEW_LIBRARY GLEW

@@ -82,7 +82,7 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
             // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); // 显示鼠标
             auto packet = std::make_unique<KeyPacket>();
             packet->packet_type = KEY_INPUT;
-            packet->key_type = KEY_ALT_PRESS;
+            packet->key_type = KeyType::KEY_ALT_PRESS;
             pendingPackets.push_back(std::move(packet));
         }
 
@@ -103,14 +103,14 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
                 // resetCamera();
                 auto packet = std::make_unique<KeyPacket>();
                 packet->packet_type = KEY_INPUT;
-                packet->key_type = KEY_R;
+                packet->key_type = KeyType::KEY_R;
                 pendingPackets.push_back(std::move(packet));
                 break;
             }
             case GLFW_KEY_SPACE: {
                 auto packet = std::make_unique<KeyPacket>();
                 packet->packet_type = KEY_INPUT;
-                packet->key_type = KEY_SPACE;
+                packet->key_type = KeyType::KEY_SPACE;
                 pendingPackets.push_back(std::move(packet));
                 
                 // pendingKeys.push_back(KeyType::KEY_SPACE);
@@ -123,7 +123,7 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
             case GLFW_KEY_F: {
                 auto packet = std::make_unique<KeyPacket>();
                 packet->packet_type = KEY_INPUT;
-                packet->key_type = KEY_F;
+                packet->key_type = KeyType::KEY_F;
                 pendingPackets.push_back(std::move(packet));
                 break;
             }
@@ -140,7 +140,7 @@ void client_logic::keyCallBack(GLFWwindow* window, int key, int scancode, int ac
             // firstMouse = true;
             auto packet = std::make_unique<KeyPacket>();
             packet->packet_type = KEY_INPUT;
-            packet->key_type = KEY_ALT_RELEASE;
+            packet->key_type = KeyType::KEY_ALT_RELEASE;
             pendingPackets.push_back(std::move(packet));
         }
     }
