@@ -132,7 +132,7 @@ void CubeState::update() {
 }
 
 glm::vec3 CubeState::getPosition() {
-    return glm::vec3(baseModel[3]);  // extract translation from matrix
+    return glm::vec3(model[3]);  // extract translation from matrix
 }
 
 void CubeState::updateFromPacket(const InitPlayerPacket& packet) {
@@ -305,8 +305,8 @@ void PlayerData::handleCursor(double currX, double currY) {
     camera.SetAzimuth(newAzimuth);
     camera.SetIncline(newIncline);
     
-    cube.update();
-    camera.Update(cube.getPosition()); 
+    // cube.update();
+    // camera.Update(cube.getPosition()); 
 }
 
 void PlayerData::resetCamera() {
@@ -337,8 +337,8 @@ void PlayerData::updateRadarAbility() {
 
 void PlayerData::update() {
     updateRadarAbility();
-    camera.Update(cube.getPosition()); 
     cube.update();
+    camera.Update(cube.getPosition()); 
 }
 
 NPCState::NPCState(){
