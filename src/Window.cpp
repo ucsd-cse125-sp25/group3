@@ -379,7 +379,7 @@ void Window::applyServerState(const StateUpdatePacket& packet) {
             
             if (initPacket) {
                 unsigned int currClient = initPacket->clientID;
-                printf("curr client is %u\n", currClient);
+                // printf("curr client is %u\n", currClient);
                 
                 if (cubes.find(currClient) == cubes.end()) {
                     addClient(currClient);
@@ -404,7 +404,7 @@ void Window::applyServerState(const StateUpdatePacket& packet) {
 
             if (npcPacket) {
                 unsigned int npcID = npcPacket->npcID;
-                printf("curr npc is %u\n", npcID);
+                // printf("curr npc is %u\n", npcID);
                 
                 if (npcs.find(npcID) == npcs.end()) {
                     addNPC(npcID);

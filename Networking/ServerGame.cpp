@@ -29,8 +29,8 @@ void ServerGame::update()
     // get new clients
    if(network->acceptNewClient(client_id))
    {
-        PlayerData player;
-        playersData.insert( pair<unsigned int, PlayerData>(client_id, player) );
+        PlayerData* player = new PlayerData();
+        playersData.insert( pair<unsigned int, PlayerData*>(client_id, player) );
         printf("client %d has been connected to the server\n",client_id);
         client_id++;
    }
@@ -55,7 +55,7 @@ void ServerGame::receiveFromClients() {
             printf("Client %d does not have associated player data\n", iter->first);
             continue;
         } 
-        PlayerData player = playersData[iter->first];
+        PlayerData* player = playersData[iter->first];
 
         while (packetsDone == ONGOING) {
             int headerSize = Packet::getHeaderSize();
@@ -99,9 +99,9 @@ void ServerGame::receiveFromClients() {
                 case INIT_CONNECTION: {
                     InitPacket* initPacket = dynamic_cast<InitPacket*>(packet.get());
                     printf("server received init packet from client\n");
-                    player.init(initPacket);
+                    player->init(initPacket);
                     printf("player is character %d\n", initPacket->character);
-                    playersData[iter->first] = player;
+                    // playersData[iter->first] = player;
                     sendInitPlayerState(iter->first);
                     //sendInitNPCState(iter->first);
                     break;
@@ -123,7 +123,7 @@ void ServerGame::receiveFromClients() {
                     KeyPacket* keyPacket = dynamic_cast<KeyPacket*>(packet.get());
                     // printf("server recieved key input packet from client\n");
                     if (keyPacket) {
-                        player.calculateNewPos(keyPacket->key_type, &artifact);
+                        player->calculateNewPos(keyPacket->key_type, &artifact);
                         //playersData[iter->first] = player;
                         //sendPlayerState(iter->first);
                     } else {
@@ -142,8 +142,8 @@ void ServerGame::receiveFromClients() {
                 }
                 case CURSOR_EVENT: {
                     CursorPacket* cursorPacket = dynamic_cast<CursorPacket*>(packet.get());
-                    printf("server recieved cursor event packet from client\n");
-                    player.handleCursor(cursorPacket->currX, cursorPacket->currY);
+                    // printf("server recieved cursor event packet from client\n");
+                    player->handleCursor(cursorPacket->currX, cursorPacket->currY);
                     break;
                 }
                 default: {
@@ -157,10 +157,10 @@ void ServerGame::receiveFromClients() {
             printf("Client %d has disconnected\n", iter->first);
             iter = network->sessions.erase(iter);
         } else {
-            player.update();
+            player->update();
             // player.camera.Update(player.cube.getPosition()); 
             // player.cube.update();
-            playersData[iter->first] = player;
+            // playersData[iter->first] = player;
             iter++;
         }
     }
@@ -225,18 +225,18 @@ void ServerGame::sendEchoPackets(std::string response) {
 //then camera floats
 void ServerGame::sendInitPlayerState(unsigned int client_id) {
     printf("Sending initial player state");
-    PlayerData& player = playersData[client_id];
+    PlayerData* player = playersData[client_id];
 
     InitPlayerPacket packet;
     packet.packet_type = INIT_PLAYER;
 
     packet.clientID = client_id;
-    packet.altDown = player.altDown;
-    packet.radarActive = player.radarActive;
+    packet.altDown = player->altDown;
+    packet.radarActive = player->radarActive;
 
-    player.cube.saveToPacket(packet);
-    player.camera.saveToPacket(packet, false);
-    player.camera.saveToPacket(packet, true);
+    player->cube.saveToPacket(packet);
+    player->camera.saveToPacket(packet, false);
+    player->camera.saveToPacket(packet, true);
 
     const unsigned int packet_size = packet.getSize();
     std::vector<char> packet_data(packet_size);
@@ -273,25 +273,25 @@ void ServerGame::sendInitNPCState(unsigned int client_id) {
 }
 
 void ServerGame::sendStateUpdate() {
-    std::map<unsigned int, PlayerData>::iterator playerIter;
+    std::map<unsigned int, PlayerData*>::iterator playerIter;
     StateUpdatePacket packet;
     packet.packet_type = STATE_UPDATE;
 
     unsigned int numClients = 0;
     
     for (playerIter = playersData.begin(); playerIter != playersData.end(); playerIter++) {
-        PlayerData player = playerIter->second;
+        PlayerData* player = playerIter->second;
 
-        if (player.initialized) {
+        if (player->initialized) {
             auto playerPacket = std::make_unique<InitPlayerPacket>();
             playerPacket->packet_type = INIT_PLAYER;
             playerPacket->clientID = playerIter->first;
-            playerPacket->altDown = player.altDown;
-            playerPacket->radarActive = player.radarActive;
+            playerPacket->altDown = player->altDown;
+            playerPacket->radarActive = player->radarActive;
 
-            player.cube.saveToPacket(*playerPacket);
-            player.camera.saveToPacket(*playerPacket, false);
-            player.miniMapCam.saveToPacket(*playerPacket, true);
+            player->cube.saveToPacket(*playerPacket);
+            player->camera.saveToPacket(*playerPacket, false);
+            player->miniMapCam.saveToPacket(*playerPacket, true);
 
             packet.clientPackets.push_back(std::move(playerPacket));
             numClients++;
