@@ -5,6 +5,7 @@
 #include <chrono>
 #include <thread>
 #include <cassert>
+#include <set>
 #include <vector>
 #define TICK 30 //in ms
 
@@ -50,6 +51,7 @@ void ServerGame::receiveFromClients() {
     
     for(iter = network->sessions.begin(); iter != network->sessions.end();) {
         ClientStatus packetsDone = ONGOING;
+        std::set<KeyType> recievedMovementKeys;
 
         if (playersData.find(iter->first) == playersData.end()) {
             printf("Client %d does not have associated player data\n", iter->first);
@@ -123,7 +125,9 @@ void ServerGame::receiveFromClients() {
                     KeyPacket* keyPacket = dynamic_cast<KeyPacket*>(packet.get());
                     // printf("server recieved key input packet from client\n");
                     if (keyPacket) {
-                        player->calculateNewPos(keyPacket->key_type, &artifact);
+
+                        if (ServerLogic::processMovement(recievedMovementKeys, keyPacket->key_type))
+                            player->calculateNewPos(keyPacket->key_type, &artifact);
                         //playersData[iter->first] = player;
                         //sendPlayerState(iter->first);
                     } else {
@@ -157,6 +161,7 @@ void ServerGame::receiveFromClients() {
             printf("Client %d has disconnected\n", iter->first);
             iter = network->sessions.erase(iter);
         } else {
+            // player->calculateNewPos(recievedKeys, &artifact);
             player->update();
             // player.camera.Update(player.cube.getPosition()); 
             // player.cube.update();

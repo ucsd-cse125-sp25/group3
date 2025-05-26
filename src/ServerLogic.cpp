@@ -165,6 +165,7 @@ void CubeState::saveToPacket(InitPlayerPacket& packet) {
 //     delete cube;
 //     delete camera;
 // }
+
 void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact) {
     glm::vec3 forwardDir = camera.GetForwardVector();
     forwardDir.y = 0.0f;  
@@ -428,13 +429,13 @@ void ArtifactState::update() {
 
 void ArtifactState::attemptGrab(CubeState * player) {
     //for now, don't allow someone to grab artifact if already held by someone else
-    printf("attempting grab by player %d\n", player->type);
+    // printf("attempting grab by player %d\n", player->type);
     if (holder == nullptr) {
         glm::vec3 playerPos = player->getPosition();
         glm::vec3 artifactPos = artifactModel.getPosition();
         float distance = glm::length(playerPos - artifactPos);
         // std::cout << "Distance = " << distance << std::endl;
-printf("distance: %f\n", distance);
+        // printf("distance: %f\n", distance);
         if (distance < 1.5f) {
             holder = player;
             printf("artifact picked up\n");
@@ -449,4 +450,13 @@ void ArtifactState::saveToPacket(StateUpdatePacket& packet) {
             packet.artifactModel[i][j] = artifactModel.model[i][j];
         }
     }
+}
+
+bool ServerLogic::processMovement(std::set<KeyType>& recievedMovementKeys, KeyType key) {
+
+    if (recievedMovementKeys.find(key) == recievedMovementKeys.end()) {
+        recievedMovementKeys.insert(key);
+        return true;
+    }
+    return false;
 }

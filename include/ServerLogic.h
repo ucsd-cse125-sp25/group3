@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include <cstdio>
 #include <chrono>
+#include <set>
 
 enum ClientStatus {
     ONGOING,
@@ -40,8 +41,8 @@ class CubeState {
         int invisibleDuration = 5;
         
         //for speed boost ability
-        float normalSpeed = 0.02f;
-        float boostedSpeed = 0.06f;
+        float normalSpeed = 0.2f;
+        float boostedSpeed = 0.5f;
         float speed = normalSpeed;
         bool isSpeedBoosted = false;
         std::chrono::time_point<std::chrono::steady_clock> speedBoostStartTime;
@@ -124,9 +125,8 @@ class PlayerData {
         void update();
 };
 
-// class ServerLogic {
-//     public:
-//         CubeState artifact;
-//         static void updateArtifact();
+class ServerLogic {
+    public:
+        static bool processMovement(std::set<KeyType>& recievedMovementKeys, KeyType key);
 
-// };
+};
