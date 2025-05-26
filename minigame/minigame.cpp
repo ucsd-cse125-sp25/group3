@@ -107,11 +107,6 @@ void MiniGame::render() {
     renderQuad(backgroundTex, 0, 0, windowWidth, windowHeight);
 
     
-    // glUseProgram(characterShader);
-    // glm::mat4 projection = glm::ortho(0.0f, (float)windowWidth, (float)windowHeight, 0.0f, -1.0f, 1.0f);
-    // GLuint projLoc = glGetUniformLocation(characterShader, "uProjection");
-    // glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-    
 
     if (player) 
     {
