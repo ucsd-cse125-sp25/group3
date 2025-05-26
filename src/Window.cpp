@@ -74,14 +74,14 @@ bool Window::initializeObjects() {
     // Create a cube
     cube = new Cube();
 
-    animationPlayer->loadAnims("../models/characters/female_thief.fbx");
+    animationPlayer->loadAnims("../models/characters/security_guard.fbx");
     Model* bro = new Model();
-    if (!bro->load("../models/characters/female_thief.fbx")){
+    if (!bro->load("../models/characters/security_guard.fbx")){
         std::cerr << "Failed to load fbx model" << std::endl;
         return false;
     }
-    //bro->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)));
-    //bro->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.0001f)));
+    bro->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)));
+    // bro->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.0001f)));
     bro->setSkel(animationPlayer->getSkel());
 
     scene = new Scene();

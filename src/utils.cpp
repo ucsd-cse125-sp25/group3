@@ -1,5 +1,9 @@
 #include "utils.h"
 
+glm::vec3 aiColToGLM(const aiColor3D& v){
+    return glm::vec3(v.r, v.g, v.b);
+}
+
 glm::vec3 aiVecToGLM(const aiVector3D& v){
     return glm::vec3(v.x, v.y, v.z);
 }

@@ -22,7 +22,7 @@ void Model::process(const aiScene* scene) {
         meshes.reserve(scene->mNumMeshes);
         for (int i = 0; i < scene->mNumMeshes; i++){
             Mesh* m = new Mesh();
-            if (m->setMesh(scene->mMeshes[i])){
+            if (m->setMesh(scene->mMeshes[i], scene)){
                 meshes.push_back(m);
             };
         }

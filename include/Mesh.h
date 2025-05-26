@@ -11,6 +11,12 @@
 #define MAX_JOINT_INFLUENCE 8
 #define MAX_JOINTS 100
 
+enum RenderMode {
+    NONE,
+    BASE,
+    TEXTURE
+};
+
 struct Vertex {
     glm::vec3 position;
     glm::vec3 normal;
@@ -26,10 +32,14 @@ struct invBMatInfo{
 
 class Mesh {
 private:
+
     GLuint VAO;
     GLuint VBO_pn, VBO_uv, EBO;
 
     GLuint tex;
+
+    enum RenderMode renderMode;
+    bool animated;
 
     Skeleton* skel;
     glm::mat4 model;
@@ -56,8 +66,6 @@ public:
     Mesh(glm::vec3 color);
     ~Mesh();
 
-    bool load(const std::string & file);
-
     /*
     Sets the UV Texture corresponding to the Mesh.
     */
@@ -67,7 +75,9 @@ public:
 
     void setColor(glm::vec3 color);
 
-    bool setMesh(const aiMesh* mesh);
+    bool setMesh(const aiMesh* mesh, const aiScene* scene);
+
+    void setMaterials(const aiMesh* mesh, const aiScene *scene);
 
     void setSkel(Skeleton* skel);
 

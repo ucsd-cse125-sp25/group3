@@ -5,6 +5,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include "utils.h"
 
 
 Mesh::Mesh(){
@@ -37,7 +38,7 @@ void Mesh::setColor(glm::vec3 color){
     this->color = color;
 }
 
-bool Mesh::setMesh(const aiMesh* mesh) {
+bool Mesh::setMesh(const aiMesh* mesh, const aiScene* scene) {
     vertices.reserve(mesh->mNumVertices);
     // verticesRaw.reserve(mesh->mNumVertices);
     for (int i = 0; i < mesh->mNumVertices; i++){
@@ -84,12 +85,30 @@ bool Mesh::setMesh(const aiMesh* mesh) {
         }
     }
 
+    setMaterials(mesh, scene);
+
     if (mesh->HasBones()){
         setJointVals(mesh);
     }
 
     return true;
 }
+
+void Mesh::setMaterials(const aiMesh* mesh, const aiScene *scene) {
+    aiColor3D diffuse_color;
+    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+    aiMaterialProperty** properties = material->mProperties;
+    for (int i = 0; i < material->mNumProperties; i++){
+        std::cout << properties[i]->mKey.C_Str() << std::endl;
+    }
+    if (AI_SUCCESS != material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse_color)){
+        // std::cout << "couldn't get base color";
+    } else {
+        std::cout << "base color retrieved" << std::endl;
+        color = aiColToGLM(diffuse_color);
+    }
+}
+
 
 void Mesh::setSkel(Skeleton* skel){
     this->skel = skel;
