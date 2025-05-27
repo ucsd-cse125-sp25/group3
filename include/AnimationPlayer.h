@@ -5,32 +5,36 @@
 #include "Skeleton.h"
 #include "core.h"
 #include <map>
-#include "CharState.h"
+#include <unordered_map>
+#include "ModelType.h"
+#include "AnimState.h"
 
 class AnimationPlayer {
 private:
-    Animation* anim;
-    Skeleton* skel;
-    double time;
+    std::unordered_map<ModelType, std::unordered_map<AnimState, Animation*>> animMap;
+    std::unordered_map<ModelType, Skeleton*> skelMap;
+    float time;
     std::map<std::string, glm::mat4> pose;
+    Animation* currAnim;
+    Skeleton* currSkel;
 
 public:
     AnimationPlayer();
     ~AnimationPlayer();
     
     //loads in a new animation and skeleton from a file.
-    void loadAnims(const std::string& file);
-    void setAnim(Animation* anim);
-    void setSkel(Skeleton* skel);
+    bool loadAnims(ModelType modelType, AnimState animState, const std::string& file);
+    void setAnim(ModelType modelType, AnimState animState, Animation* anim);
+    void setSkel(ModelType modelType, Skeleton* skel);
 
-    Skeleton* getSkel();
+    Skeleton* getSkel(ModelType modelType);
 
     //call after anim is set
-    void AnimationPlayer::initPose();
+    bool AnimationPlayer::setCurr(ModelType modelType, AnimState animState);
 
-    void AnimationPlayer::draw(glm::mat4 viewProjMat, GLuint shader);
+    // void AnimationPlayer::draw(glm::mat4 viewProjMat, GLuint shader);
 
-    void fullUpdate();
-    void update();
+    void fullUpdate(float start_time);
+    void update(float start_time);
     void poseSkel();
 };

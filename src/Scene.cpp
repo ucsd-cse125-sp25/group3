@@ -1,5 +1,4 @@
 #include "Scene.h"
-#include "Mesh.h"
 #include <iostream>
 #include <string>
 #include "glm/gtx/string_cast.hpp"
@@ -12,75 +11,35 @@ Scene::Scene(){
 }
 
 Scene::~Scene(){
-    for (Model* m : models){
-        delete m;
+    for (AnInstance* i : instances){
+        delete i;
     }
 }
 
-bool Scene::process(const aiScene* scene) {
-    if (scene->HasMeshes()){
-        models.reserve(scene->mNumMeshes);
-        for (int i = 0; i < scene->mNumMeshes; i++){
-            Mesh* mesh = new Mesh();
-            if (mesh->setMesh(scene->mMeshes[i], scene)){
-                Model* model = new Model();
-                model->addMesh(mesh);
-                models.push_back(model);
-            } else {
-                return false;
-            }
-        }
-    }
-
-    return true;
-}
-
-bool Scene::load(const std::string& file){
-    Assimp::Importer importer;
-
-    const aiScene* scene = importer.ReadFile(file, 
-        aiProcess_JoinIdenticalVertices |
-        aiProcess_Triangulate |
-        aiProcess_GenNormals);
-
-    if (nullptr == scene) {
-        return false;
-    }
-
-    return process(scene);
-}
-
-void Scene::addModel(Model* model){
-    if (model != nullptr){
-        models.push_back(model);
+void Scene::addInstance(AnInstance* inst){
+    if (inst != nullptr){
+        instances.push_back(inst);
     }
 }
 
-std::vector<Model*>* Scene::getModels(){
-    return &models;
-}
-
-Model* Scene::getModel(int i){
-    if (0 <= i && i < models.size()){
-        return models[i];
-    }
-    return nullptr;
-}
-
-void Scene::setupBufAll(){
-    for (int i = 0; i < models.size(); i++){
-        models[i]->setupBuf();
+void Scene::addInstances(std::vector<AnInstance*>& insts){
+    for (AnInstance* i : insts){
+        addInstance(i);
     }
 }
 
-void Scene::draw(const glm::mat4& viewProjMtx, GLuint shader){
-    for (int i = 0; i < models.size(); i++){
-        models[i]->draw(viewProjMtx, shader);
+std::vector<AnInstance*>* Scene::getInstances(){
+    return &instances;
+}
+
+void Scene::draw(const glm::mat4& viewProjMtx, ShaderManager* shaderManager){
+    for (int i = 0; i < instances.size(); i++){
+        instances[i]->draw(viewProjMtx, shaderManager);
     }
 }
 
-void Scene::update(){
-    for (int i = 0; i < models.size(); i++){
-        models[i]->update();
+void Scene::update(AnimationPlayer* animPlayer){
+    for (int i = 0; i < instances.size(); i++){
+        instances[i]->update(animPlayer);
     }
 }

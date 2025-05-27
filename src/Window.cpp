@@ -1,6 +1,7 @@
 #include "Window.h"
 #include "Mesh.h"
 #include "TextureManager.h"
+#include "AnInstance.h"
 // #include <assimp/cimport.h>
 // #include <assimp/scene.h>
 // #include <assimp/postprocess.h>
@@ -17,7 +18,6 @@ Cube* Window::floor;
 Character* Window::character;
 
 Scene* Window::scene;
-Model* Window::model;
 
 AnimationPlayer* Window::animationPlayer;
 
@@ -28,10 +28,12 @@ Camera* Cam;
 bool LeftDown, RightDown;
 int MouseX, MouseY;
 
-// The shader program id
-GLuint Window::shaderProgram;
-GLuint Window::shaderProgram_uv;
-GLuint Window::shaderProgram_anim;
+// // The shader program id
+// GLuint Window::shaderProgram;
+// GLuint Window::shaderProgram_uv;
+// GLuint Window::shaderProgram_anim;
+ShaderManager* shaderManager;
+ModelManager* modelManager;
 
 TextureManager* textureManager;
 
@@ -40,28 +42,31 @@ bool Window::firstMouse = true;
 
 // Constructors and desctructors
 bool Window::initializeProgram() {
-    // Create a shader program with a vertex shader and a fragment shader.
-    shaderProgram = LoadShaders("../shaders/shader.vert", "../shaders/shader.frag", false);
+    // // Create a shader program with a vertex shader and a fragment shader.
+    // shaderProgram = LoadShaders("../shaders/shader.vert", "../shaders/shader.frag", false);
 
-    // Check the shader program.
-    if (!shaderProgram) {
-        std::cerr << "Failed to initialize shader program" << std::endl;
-        return false;
-    }
+    // // Check the shader program.
+    // if (!shaderProgram) {
+    //     std::cerr << "Failed to initialize shader program" << std::endl;
+    //     return false;
+    // }
 
-    shaderProgram_uv = LoadShaders("../shaders/shader_uv.vert", "../shaders/shader_uv.frag", true);
+    // shaderProgram_uv = LoadShaders("../shaders/shader_uv.vert", "../shaders/shader_uv.frag", true);
 
-    if (!shaderProgram_uv) {
-        std::cerr << "Failed to initialize shader program with uvs" << std::endl;
-        return false;
-    }
+    // if (!shaderProgram_uv) {
+    //     std::cerr << "Failed to initialize shader program with uvs" << std::endl;
+    //     return false;
+    // }
 
-    shaderProgram_anim = LoadShaders("../shaders/anim_shader_multi.vert", "../shaders/anim_shader.frag", true);
+    // shaderProgram_anim = LoadShaders("../shaders/anim_shader_multi.vert", "../shaders/anim_shader.frag", true);
 
-    if (!shaderProgram_uv) {
-        std::cerr << "Failed to initialize shader program with uvs" << std::endl;
-        return false;
-    }
+    // if (!shaderProgram_uv) {
+    //     std::cerr << "Failed to initialize shader program with uvs" << std::endl;
+    //     return false;
+    // }
+    shaderManager = new ShaderManager();
+
+    modelManager = new ModelManager();
 
     textureManager = new TextureManager();
 
@@ -74,42 +79,22 @@ bool Window::initializeObjects() {
     // Create a cube
     cube = new Cube();
 
-    animationPlayer->loadAnims("../models/characters/security_guard.fbx");
-    Model* bro = new Model();
-    if (!bro->load("../models/characters/security_guard.fbx")){
-        std::cerr << "Failed to load fbx model" << std::endl;
-        return false;
-    }
-    bro->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)));
-    // bro->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.0001f)));
-    bro->setSkel(animationPlayer->getSkel());
-
     scene = new Scene();
 
-    // if (!scene->load("../models/bunny.ply")){
-    //     std::cerr << "Failed to load ply: Bunny" << std::endl;
-    //     return false;
-    // };
-    // Model* m = scene->getModel(0);
-    // Mesh* mesh = m->getMesh(0);
-    // mesh->setColor(glm::vec3(1.0f, 0.0f, 1.0f));
-    // mesh->setTex(textureManager->LoadTexture("../textures/wall.jpg"));
-    // m->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(20.0f)));
+    animationPlayer->loadAnims(ModelType::SecurityGuard, AnimState::Walk, "../models/characters/security_guard.fbx");
+    Model* securityGuard = new Model(ModelType::SecurityGuard, "../models/characters/security_guard.fbx");
+    securityGuard->setSkel(animationPlayer);
+    modelManager->addModel(securityGuard);
 
-    scene->addModel(bro);
+    AnInstance* bro = new AnInstance(securityGuard);
+    bro->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)));
+    scene->addInstance(bro);
 
-    scene -> update();
-    scene-> setupBufAll();
+    Model* buddha = new Model(ModelType::Buddha, "../models/buddha.ply");
+    modelManager->addModel(buddha);
 
-    model = new Model();
+    AnInstance* model = new AnInstance(buddha);
     model->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
-    if (!model->load("../models/buddha.ply")){
-        std::cerr << "Failed to load ply: Buddha" << std::endl;
-        return false;
-    }
-    model->getMesh(0)->setTex(textureManager->LoadTexture("../textures/wall.jpg"));
-    model -> update();
-    model -> setupBuf();
 
     character = new Character(model);
     // cube = new Cube(glm::vec3(-1, 0, -2), glm::vec3(1, 1, 1));
@@ -124,7 +109,6 @@ void Window::cleanUp() {
 
     delete floor;
     delete scene;
-    delete model;
     delete character;
 
     delete textureManager;
@@ -132,9 +116,11 @@ void Window::cleanUp() {
     delete animationPlayer;
 
     // Delete the shader program.
-    glDeleteProgram(shaderProgram);
-    glDeleteProgram(shaderProgram_uv);
-    glDeleteProgram(shaderProgram_anim);
+    // glDeleteProgram(shaderProgram);
+    // glDeleteProgram(shaderProgram_uv);
+    // glDeleteProgram(shaderProgram_anim);
+    delete shaderManager;
+    delete modelManager;
 }
 
 // for the Window
@@ -218,11 +204,11 @@ void Window::idleCallback() {
     // Cam->Update();
     Cam->Update(cube->getPosition());
 
-    animationPlayer->fullUpdate();
+    // animationPlayer->fullUpdate();
     // cube->update();
-    character->update();
+    character->update(animationPlayer);
 
-    scene->update();
+    scene->update(animationPlayer);
     // model->update();
 }
 
@@ -257,11 +243,12 @@ void Window::displayCallback(GLFWwindow* window) {
     // // cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
     // floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
 
-    scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_anim);
+    scene->draw(Cam->GetViewProjectMtx(), shaderManager);
+    // scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_anim);
     // scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
     // scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
     // // model->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
-    // character->draw(Cam->GetViewProjectMtx(),shaderProgram_uv);
+    character->draw(Cam->GetViewProjectMtx(), shaderManager);
 
     // Gets events, including input such as keyboard and mouse or window resizing.
     glfwPollEvents();

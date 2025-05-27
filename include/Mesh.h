@@ -7,15 +7,10 @@
 #include <map>
 #include "utils.h"
 #include "Skeleton.h"
+#include "ShaderManager.h"
 
 #define MAX_JOINT_INFLUENCE 8
 #define MAX_JOINTS 100
-
-enum RenderMode {
-    NONE,
-    BASE,
-    TEXTURE
-};
 
 struct Vertex {
     glm::vec3 position;
@@ -39,7 +34,6 @@ private:
     GLuint tex;
 
     enum RenderMode renderMode;
-    bool animated;
 
     Skeleton* skel;
     glm::mat4 model;
@@ -55,7 +49,7 @@ private:
 
     std::map<std::string, invBMatInfo> invBMats;
 
-    std::vector<glm::mat4> mMat;
+    // std::vector<glm::mat4> mMat;
 
     int numJoints;
 
@@ -85,6 +79,7 @@ public:
     
     void setupBuf();
 
-    void draw(const glm::mat4& viewProjMtx, GLuint shader);
-    void update();
+    void draw(std::vector<glm::mat4>& mMat, const glm::mat4& viewProjMtx, ShaderManager* shaderManager);
+    void update(std::vector<glm::mat4>& mMat);
+    
 };

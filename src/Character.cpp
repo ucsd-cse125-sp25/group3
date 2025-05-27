@@ -16,7 +16,7 @@
 //     }
 // }
 
-Character::Character(Model* model)
+Character::Character(AnInstance* model)
     : useModel(true), model(model)
 {
     // model->setMMat(baseModel);  // 设置初始位置
@@ -33,7 +33,7 @@ Character::~Character() {
     }
 }
 
-void Character::update() {
+void Character::update(AnimationPlayer* animationPlayer) {
     // 跳跃逻辑
     if (isJumping) {
         jumpVelocity += gravity;
@@ -59,7 +59,7 @@ void Character::update() {
 
     if (useModel) {
         model->setMMat(modelMatrix);
-        model->update();
+        model->update(animationPlayer);
     } else {
         cube->baseModel = modelMatrix;
         cube->update();
@@ -67,12 +67,12 @@ void Character::update() {
 }
 
 
-void Character::draw(const glm::mat4& viewProjMtx, GLuint shader) {
+void Character::draw(const glm::mat4& viewProjMtx, ShaderManager* shaderManager) {
     if (useModel) {
-        model->draw(viewProjMtx, shader);
+        model->draw(viewProjMtx, shaderManager);
         // std::cout<< "yes use model draw" <<std::endl;
     } else {
-        cube->draw(viewProjMtx, shader, false);
+        cube->draw(viewProjMtx, shaderManager->getShader(RenderMode::BASE, false), false);
     }
 }
 

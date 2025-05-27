@@ -12,10 +12,10 @@ Mesh::Mesh(){
     skel = NULL;
     model = glm::mat4(1.0f);
     color = glm::vec3(1.0f, 0.95f, 0.1f);
-    mMat.reserve(MAX_JOINTS);
-    for (int i = 0; i < MAX_JOINTS; i++){
-        mMat.push_back(glm::mat4(1.0f));
-    }
+    // mMat.reserve(MAX_JOINTS);
+    // for (int i = 0; i < MAX_JOINTS; i++){
+    //     mMat.push_back(glm::mat4(1.0f));
+    // }
 }
 
 Mesh::Mesh(glm::vec3 color){
@@ -87,9 +87,7 @@ bool Mesh::setMesh(const aiMesh* mesh, const aiScene* scene) {
 
     setMaterials(mesh, scene);
 
-    if (mesh->HasBones()){
-        setJointVals(mesh);
-    }
+    setJointVals(mesh);
 
     return true;
 }
@@ -115,6 +113,10 @@ void Mesh::setSkel(Skeleton* skel){
 }
 
 void Mesh::setJointVals(const aiMesh* mesh){
+    if (!(mesh->HasBones())){
+        std::cout << "no bones" << std::endl;
+        return;
+    }
 
     // std::cout << mesh->mNumBones << std::endl;
     for (int i = 0; i < mesh->mNumBones; i++) {
@@ -250,7 +252,10 @@ void Mesh::setupBuf(){
 
 }
     
-void Mesh::draw(const glm::mat4& viewProjMtx, GLuint shader){
+void Mesh::draw(std::vector<glm::mat4>& mMat, const glm::mat4& viewProjMtx, ShaderManager* shaderManager){
+    bool animated = (skel != nullptr);
+    GLuint shader = shaderManager->getShader(renderMode, animated);
+    
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, tex);
     
@@ -274,7 +279,7 @@ void Mesh::draw(const glm::mat4& viewProjMtx, GLuint shader){
     glUseProgram(0);
 }
 
-void Mesh::update(){
+void Mesh::update(std::vector<glm::mat4>& mMat){
     if (skel != NULL){
         for (auto it = invBMats.begin(); it != invBMats.end(); ++it){
             int id = it->second.id;
@@ -289,41 +294,41 @@ void Mesh::update(){
         //     }
         // }
         // int id = 0;
-        for(Vertex v : vertices){
-            glm::vec4 totalPos = glm::vec4(0.0f);
-            glm::vec4 totalNorm = glm::vec4(0.0f);
-            for(int i = 0; i < MAX_JOINT_INFLUENCE; i++){
-                // std::cout << v.weights[i] << std::endl;
-                if (v.jointIDs[i] == -1)
-                {
-                    // std::cout << "gr" << std::endl;
-                    continue;
-                }
-                if (v.jointIDs[i] >= MAX_JOINTS)
-                {
-                    std::cout << "hmm" << std::endl;
-                    totalPos = glm::vec4(v.position, 1.0f);
-                    totalNorm = glm::vec4(v.normal, 0.0f);
-                    break;
-                }
-                glm::vec4 localPos = mMat[v.jointIDs[i]] * glm::vec4(v.position, 1.0f);
-                //assumes no scale or skew
-                glm::vec4 localNorm = mMat[v.jointIDs[i]]* glm::vec4(v.normal, 0.0f);
-                totalPos += v.weights[i] * localPos;
-                totalNorm += v.weights[i] * localNorm;
-            }
-            totalNorm = normalize(totalNorm);
-            // std::cout << glm::to_string(totalNorm) << std::endl;
-            // std::cout << glm::to_string(totalPos) << std::endl;
-            // Vertex v;
-            // v.position = totalPos;
-            // v.normal = totalNorm;
-            if (totalPos == glm::vec4(v.position, 1.0f)){
-                std::cout << glm::to_string(totalPos) << std::endl;
-            }
-            // id++;
-            // verticesRaw.push_back(v);
-        }
+        // for(Vertex v : vertices){
+        //     glm::vec4 totalPos = glm::vec4(0.0f);
+        //     glm::vec4 totalNorm = glm::vec4(0.0f);
+        //     for(int i = 0; i < MAX_JOINT_INFLUENCE; i++){
+        //         // std::cout << v.weights[i] << std::endl;
+        //         if (v.jointIDs[i] == -1)
+        //         {
+        //             // std::cout << "gr" << std::endl;
+        //             continue;
+        //         }
+        //         if (v.jointIDs[i] >= MAX_JOINTS)
+        //         {
+        //             std::cout << "hmm" << std::endl;
+        //             totalPos = glm::vec4(v.position, 1.0f);
+        //             totalNorm = glm::vec4(v.normal, 0.0f);
+        //             break;
+        //         }
+        //         glm::vec4 localPos = mMat[v.jointIDs[i]] * glm::vec4(v.position, 1.0f);
+        //         //assumes no scale or skew
+        //         glm::vec4 localNorm = mMat[v.jointIDs[i]]* glm::vec4(v.normal, 0.0f);
+        //         totalPos += v.weights[i] * localPos;
+        //         totalNorm += v.weights[i] * localNorm;
+        //     }
+        //     totalNorm = normalize(totalNorm);
+        //     // std::cout << glm::to_string(totalNorm) << std::endl;
+        //     // std::cout << glm::to_string(totalPos) << std::endl;
+        //     // Vertex v;
+        //     // v.position = totalPos;
+        //     // v.normal = totalNorm;
+        //     if (totalPos == glm::vec4(v.position, 1.0f)){
+        //         std::cout << glm::to_string(totalPos) << std::endl;
+        //     }
+        //     // id++;
+        //     // verticesRaw.push_back(v);
+        // }
 
         // //newadd
         // glBindBuffer(GL_ARRAY_BUFFER, VBO_pn);

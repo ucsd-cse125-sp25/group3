@@ -1,3 +1,4 @@
+#include "AnimationPlayer.h"
 #include "Model.h"
 #include <iostream>
 #include <string>
@@ -7,14 +8,25 @@
 #include <assimp/postprocess.h>
 
 
-Model::Model(){
-    model = glm::mat4(1.0f);
+Model::Model(ModelType mType, const std::string & file){
+    // model = glm::mat4(1.0f);
+    modelType = mType;
+
+    load(file);
+
+    setupBuf();
 }
 
 Model::~Model(){
     for (Mesh* m : meshes){
         delete m;
     }
+
+    delete skel;
+}
+
+ModelType Model::getModelType() {
+    return modelType;
 }
 
 void Model::process(const aiScene* scene) {
@@ -38,6 +50,7 @@ bool Model::load(const std::string& file){
         aiProcess_GenNormals);
 
     if (nullptr == scene) {
+        std::cerr << "Failed to load model" << file << std::endl;
         return false;
     }
 
@@ -46,9 +59,13 @@ bool Model::load(const std::string& file){
     return true;
 }
 
-void Model::setMMat(glm::mat4 mMat){
-    model = mMat;
+void Model::setModelType(ModelType mType){
+    modelType = mType;
 }
+
+// void Model::setMMat(glm::mat4 mMat){
+//     model = mMat;
+// }
 
 void Model::addMesh(Mesh* mesh){
     if (mesh != nullptr){
@@ -56,10 +73,20 @@ void Model::addMesh(Mesh* mesh){
     }
 }
 
-void Model::setSkel(Skeleton* skel){
-    for (int i = 0; i < meshes.size(); i++){
-        meshes[i]->setSkel(skel);
+void Model::setSkel(AnimationPlayer* animPlayer){
+    Skeleton* sk = animPlayer->getSkel(this->modelType);
+    if (sk != nullptr){
+        this->skel = skel;
+        for (int i = 0; i < meshes.size(); i++){
+            meshes[i]->setSkel(skel);
+        }   
+    } else {
+        std::cout << "no matching skeleton found" << std::endl;
     }
+}
+
+int Model::getNumMeshes(){
+    return meshes.size();
 }
 
 std::vector<Mesh*>* Model::getMeshes() {
@@ -83,44 +110,44 @@ void Model::setupBuf(){
     }
 }
 
-void Model::draw(const glm::mat4& viewProjMtx, GLuint shader){
+void Model::draw(const glm::mat4& model, std::vector<std::vector<glm::mat4>>& jointMats, const glm::mat4& viewProjMtx, ShaderManager* shaderManager){
     glm::mat4 VPMmMtx = viewProjMtx * model;
     for (int i = 0; i < meshes.size(); i++){
         // meshes[i]->setMMat(model);
-        meshes[i]->draw(VPMmMtx, shader);
+        meshes[i]->draw(jointMats[i], VPMmMtx, shaderManager);
     }
 }
 
-void Model::update(){
+void Model::update(std::vector<std::vector<glm::mat4>>& jointMats){
     for (int i = 0; i < meshes.size(); i++){
-        meshes[i]->update();
+        meshes[i]->update(jointMats[i]);
     }
 }
 
-void Model::handleInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir) {
-    glm::vec3 movement(0.0f);
-    float speed = 0.02f;
+// void Model::handleInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir) {
+//     glm::vec3 movement(0.0f);
+//     float speed = 0.02f;
 
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        movement += forwardDir;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        movement -= forwardDir;
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        movement += rightDir;
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        movement -= rightDir;
+//     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+//         movement += forwardDir;
+//     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+//         movement -= forwardDir;
+//     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+//         movement += rightDir;
+//     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+//         movement -= rightDir;
 
-    if (glm::length(movement) > 0.0f) {
-        movement = glm::normalize(movement) * speed;
-        model = glm::translate(model, movement);
-    }
+//     if (glm::length(movement) > 0.0f) {
+//         movement = glm::normalize(movement) * speed;
+//         model = glm::translate(model, movement);
+//     }
 
-    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
-        model = glm::translate(model, glm::vec3(0, 0.005f, 0));
-    if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
-        model = glm::translate(model, glm::vec3(0, -0.005f, 0));
-    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
-        model = glm::rotate(model, 0.02f, glm::vec3(0, 1, 0));
-    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
-        model = glm::rotate(model, -0.02f, glm::vec3(0, 1, 0));
-}
+//     if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+//         model = glm::translate(model, glm::vec3(0, 0.005f, 0));
+//     if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
+//         model = glm::translate(model, glm::vec3(0, -0.005f, 0));
+//     if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+//         model = glm::rotate(model, 0.02f, glm::vec3(0, 1, 0));
+//     if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+//         model = glm::rotate(model, -0.02f, glm::vec3(0, 1, 0));
+// }
