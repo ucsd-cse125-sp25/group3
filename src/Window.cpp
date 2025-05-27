@@ -26,6 +26,9 @@ Camera* Cam;
 bool LeftDown, RightDown;
 int MouseX, MouseY;
 
+// collision
+std::unordered_map<std::string, AABB> sceneAABBs;  
+
 // The shader program id
 GLuint Window::shaderProgram;
 GLuint Window::shaderProgram_uv;
@@ -67,6 +70,15 @@ bool Window::initializeObjects() {
         std::cerr << "Failed to load ply: Bunny" << std::endl;
         return false;
     };
+
+    const aiScene* assimpScene = scene->getAiScene();
+    auto mapBoxes = AABB::fromSceneMeshes(assimpScene);
+
+    for (const auto& [name, box] : mapBoxes) {
+        std::cout << "Wall or object: " << name << std::endl;
+        box.print();
+    }
+
     Model* m = scene->getModel(0);
     Mesh* mesh = m->getMesh(0);
     mesh->setColor(glm::vec3(1.0f, 0.0f, 1.0f));
@@ -88,6 +100,8 @@ bool Window::initializeObjects() {
     character = new Character(model);
     // cube = new Cube(glm::vec3(-1, 0, -2), glm::vec3(1, 1, 1));
     floor = new Cube(glm::vec3(-8, -2.03, -8), glm::vec3(8, -2.01, 8));
+
+    
 
     return true;
 }
@@ -196,6 +210,27 @@ void Window::idleCallback() {
     // model->update();
 }
 
+AABB transformAABB_window(const AABB& box, const glm::mat4& M) {
+    glm::vec3 corners[8] = {
+        {box.min.x, box.min.y, box.min.z},
+        {box.max.x, box.min.y, box.min.z},
+        {box.max.x, box.max.y, box.min.z},
+        {box.min.x, box.max.y, box.min.z},
+        {box.min.x, box.min.y, box.max.z},
+        {box.max.x, box.min.y, box.max.z},
+        {box.max.x, box.max.y, box.max.z},
+        {box.min.x, box.max.y, box.max.z}
+    };
+
+    AABB result;
+    for (int i = 0; i < 8; ++i) {
+        glm::vec4 worldPos = M * glm::vec4(corners[i], 1.0f);
+        result.expandToInclude(glm::vec3(worldPos));
+    }
+
+    return result;
+}
+
 void Window::displayCallback(GLFWwindow* window) {
 
     // if (cube != nullptr) {
@@ -216,7 +251,7 @@ void Window::displayCallback(GLFWwindow* window) {
     
         glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
     
-        character->handleInput(window, forward, right);
+        character->handleInput(window, forward, right, sceneAABBs);
     }
     
     // Clear the color and depth buffers.
@@ -228,7 +263,31 @@ void Window::displayCallback(GLFWwindow* window) {
 
     scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
     // model->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
-    character->draw(Cam->GetViewProjectMtx(),shaderProgram_uv);
+    character->draw(Cam->GetViewProjectMtx(),Window::shaderProgram_uv);
+
+    const aiScene* assimpScene = scene->getAiScene();
+    sceneAABBs = AABB::fromSceneMeshes(scene->getAiScene());
+
+
+    int i = 0;
+    for (const auto& [name, localBox] : sceneAABBs) {
+        if (i < sceneAABBs.size()) {
+            glm::mat4 M = glm::scale(glm::mat4(1.0f), glm::vec3(20.0f));
+            sceneAABBs[name] = transformAABB_window(localBox, M);
+        }
+        ++i;
+    }
+
+    auto mapBoxes = AABB::fromScene(assimpScene);
+    glm::mat4 modelMat = glm::scale(glm::mat4(1.0f), glm::vec3(20.0f)); 
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  
+    mapBoxes.draw(Cam->GetViewProjectMtx()* modelMat,Window::shaderProgram_uv);
+
+    character->getBoundingBox().draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
+    // AABB debugBox;
+    // debugBox.min = glm::vec3(-1.0f);
+    // debugBox.max = glm::vec3(1.0f);
+    // debugBox.draw(Cam->GetViewProjectMtx(),shaderProgram);
 
     // Gets events, including input such as keyboard and mouse or window resizing.
     glfwPollEvents();

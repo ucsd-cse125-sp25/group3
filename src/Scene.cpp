@@ -32,18 +32,16 @@ void Scene::process(const aiScene* scene) {
 }
 
 bool Scene::load(const std::string& file){
-    Assimp::Importer importer;
-
-    const aiScene* scene = importer.ReadFile(file, 
+    rawScene = importer.ReadFile(file, 
         aiProcess_JoinIdenticalVertices |
         aiProcess_Triangulate |
         aiProcess_GenNormals);
 
-    if (nullptr == scene) {
+    if (nullptr == rawScene) {
         return false;
     }
 
-    process(scene);
+    process(rawScene);
 
     return true;
 }

@@ -20,8 +20,13 @@ Character::Character(Model* model)
     : useModel(true), model(model)
 {
     // model->setMMat(baseModel);  // 设置初始位置
+    baseModel = glm::translate(baseModel, glm::vec3(0.0f, 0.0f, -5.0f));
     baseModel = glm::scale(baseModel, glm::vec3(0.01f));
+    // baseModel = glm::rotate(baseModel, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     model->setMMat(baseModel);
+
+    characterAABB_local = AABB::fromScene(model->getAiScene());
+
 }
 
 
@@ -34,7 +39,6 @@ Character::~Character() {
 }
 
 void Character::update() {
-    // 跳跃逻辑
     if (isJumping) {
         jumpVelocity += gravity;
         jumpHeight += jumpVelocity;
@@ -46,7 +50,6 @@ void Character::update() {
         }
     }
 
-    // // 生成变换矩阵
     // // glm::mat4 modelMatrix = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
     
 
@@ -68,22 +71,56 @@ void Character::update() {
 
 
 void Character::draw(const glm::mat4& viewProjMtx, GLuint shader) {
+
+    
     if (useModel) {
         model->draw(viewProjMtx, shader);
-        std::cout<< "yes use model draw" <<std::endl;
+        // std::cout<< "yes use model draw" <<std::endl;
     } else {
         cube->draw(viewProjMtx, shader, false);
     }
 }
 
-void Character::handleInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir) {
+bool isColliding(const AABB& a, const AABB& b) {
+    return (
+        a.max.x > b.min.x && a.min.x < b.max.x &&
+        a.max.y > b.min.y && a.min.y < b.max.y &&
+        a.max.z > b.min.z && a.min.z < b.max.z
+    );
+}
+
+
+AABB transformAABB(const AABB& box, const glm::mat4& M) {
+    glm::vec3 corners[8] = {
+        {box.min.x, box.min.y, box.min.z},
+        {box.max.x, box.min.y, box.min.z},
+        {box.max.x, box.max.y, box.min.z},
+        {box.min.x, box.max.y, box.min.z},
+        {box.min.x, box.min.y, box.max.z},
+        {box.max.x, box.min.y, box.max.z},
+        {box.max.x, box.max.y, box.max.z},
+        {box.min.x, box.max.y, box.max.z}
+    };
+
+    AABB result;
+    for (int i = 0; i < 8; ++i) {
+        glm::vec4 worldPos = M * glm::vec4(corners[i], 1.0f);
+        result.expandToInclude(glm::vec3(worldPos));
+    }
+
+    return result;
+}
+
+
+void Character::handleInput(GLFWwindow* window, const glm::vec3& forwardDir, 
+        const glm::vec3& rightDir, const std::unordered_map<std::string, AABB>& sceneAABBs) {
     // if (useModel) {
     //     model->handleInput(window, forwardDir, rightDir);
     // } else {
     //     cube->handleContinuousInput(window, forwardDir, rightDir);
     // }
     glm::vec3 movement(0.0f);
-    float speed = 0.5f;
+    float speed = 0.8f;
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         movement += forwardDir;
@@ -96,23 +133,40 @@ void Character::handleInput(GLFWwindow* window, const glm::vec3& forwardDir, con
 
     if (glm::length(movement) > 0.0f) {
         movement = glm::normalize(movement) * speed;
-        baseModel = glm::translate(baseModel, movement);
+        // baseModel = glm::translate(baseModel, movement);
 
-        lastMoveDir = glm::normalize(movement);
+        // lastMoveDir = glm::normalize(movement);
+        glm::mat4 futureModel = glm::translate(baseModel, movement);
+        AABB futureBox = transformAABB(characterAABB_local, futureModel);
+
+        bool collided = false;
+        for (const auto& [name, sceneBox] : sceneAABBs) {
+            if (isColliding(futureBox, sceneBox)) {
+                collided = true;
+                break;
+            }
+        }
+
+        if (!collided) {
+            baseModel = futureModel;
+            lastMoveDir = glm::normalize(movement);
+        } else {
+            // std::cout << "collision " << movement.x << std::endl; 
+        }
     }
 
-    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
-        baseModel = glm::translate(baseModel, glm::vec3(0, 0.005f, 0));
-    if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
-        baseModel = glm::translate(baseModel, glm::vec3(0, -0.005f, 0));
-    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
-        baseModel = glm::rotate(baseModel, 0.02f, glm::vec3(0, 1, 0));
-    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
-        baseModel = glm::rotate(baseModel, -0.02f, glm::vec3(0, 1, 0));
+    // if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+    //     baseModel = glm::translate(baseModel, glm::vec3(0, 0.005f, 0));
+    // if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
+    //     baseModel = glm::translate(baseModel, glm::vec3(0, -0.005f, 0));
+    // if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+    //     baseModel = glm::rotate(baseModel, 0.02f, glm::vec3(0, 1, 0));
+    // if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+    //     baseModel = glm::rotate(baseModel, -0.02f, glm::vec3(0, 1, 0));
 
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && isGrounded) {
-        triggerJump();
-    }
+    // if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && isGrounded) {
+    //     triggerJump();
+    // }
 
     
     
@@ -129,4 +183,9 @@ void Character::triggerJump() {
 
 glm::vec3 Character::getPosition() const {
     return glm::vec3(baseModel[3]);
+}
+
+
+AABB Character::getBoundingBox() const {
+    return transformAABB(characterAABB_local, baseModel);
 }

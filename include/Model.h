@@ -22,6 +22,9 @@ private:
 
     void process(const aiScene* scene);
 
+    Assimp::Importer importer;
+    const aiScene* rawScene = nullptr;
+
 public:
 
     /*
@@ -94,4 +97,5 @@ public:
 
     void handleInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir);
 
+    const aiScene* getAiScene() const { return rawScene; }
 };

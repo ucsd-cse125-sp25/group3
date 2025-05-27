@@ -11,6 +11,9 @@ private:
     std::vector<Model*> models;
 
     void process(const aiScene* scene);
+    
+    const aiScene* rawScene = nullptr;
+    Assimp::Importer importer; 
 
 public:
     Scene();
@@ -27,4 +30,6 @@ public:
 
     void draw(const glm::mat4& viewProjMtx, GLuint shader);
     void update();
+
+    const aiScene* getAiScene() const { return rawScene; }
 };

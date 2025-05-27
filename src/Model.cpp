@@ -30,18 +30,17 @@ void Model::process(const aiScene* scene) {
 }
 
 bool Model::load(const std::string& file){
-    Assimp::Importer importer;
-
-    const aiScene* scene = importer.ReadFile(file, 
+    rawScene = importer.ReadFile(file,
         aiProcess_JoinIdenticalVertices |
         aiProcess_Triangulate |
         aiProcess_GenNormals);
 
-    if (nullptr == scene) {
+    if (!rawScene) {
+        std::cerr << "Failed to load model: " << file << std::endl;
         return false;
     }
 
-    process(scene);
+    process(rawScene);
 
     return true;
 }
