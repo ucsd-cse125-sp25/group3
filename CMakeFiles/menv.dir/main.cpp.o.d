@@ -1123,4 +1123,30 @@ CMakeFiles/menv.dir/main.cpp.o: /Users/jessieouyang/group3/main.cpp \
   /Users/jessieouyang/group3/minigame/minigame.h \
   /Users/jessieouyang/group3/minigame/include/character.h \
   /Users/jessieouyang/group3/minigame/include/platform.h \
+  /Users/jessieouyang/group3/include/glm/gtc/matrix_transform.hpp \
+  /Users/jessieouyang/group3/include/glm/gtc/type_ptr.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../gtc/quaternion.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../gtc/vec1.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../ext/vector_bool1.hpp \
+  /Users/jessieouyang/group3/include/glm/./ext/../detail/type_vec1.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../ext/vector_bool1_precision.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../ext/vector_float1.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../ext/vector_float1_precision.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../ext/vector_double1.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../ext/vector_double1_precision.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../ext/vector_int1.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../ext/vector_int1_sized.hpp \
+  /Users/jessieouyang/group3/include/glm/./ext/../ext/vector_int1.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../ext/vector_uint1.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../ext/vector_uint1_sized.hpp \
+  /Users/jessieouyang/group3/include/glm/./ext/../ext/vector_uint1.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../mat2x2.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../mat2x3.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../mat2x4.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../mat3x2.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../mat3x3.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../mat3x4.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../mat4x2.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/../mat4x3.hpp \
+  /Users/jessieouyang/group3/include/glm/gtx/../gtc/type_ptr.inl \
   /Users/jessieouyang/group3/minigame/include/stb_image.h

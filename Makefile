@@ -130,6 +130,19 @@ menv/fast:
 .PHONY : menv/fast
 
 #=============================================================================
+# Target rules for targets named CopyMiniGameShaders
+
+# Build rule for target.
+CopyMiniGameShaders: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CopyMiniGameShaders
+.PHONY : CopyMiniGameShaders
+
+# fast build rule for target.
+CopyMiniGameShaders/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CopyMiniGameShaders.dir/build.make CMakeFiles/CopyMiniGameShaders.dir/build
+.PHONY : CopyMiniGameShaders/fast
+
+#=============================================================================
 # Target rules for targets named CopyShaders
 
 # Build rule for target.
@@ -419,6 +432,30 @@ minigame/src/platform.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/menv.dir/build.make CMakeFiles/menv.dir/minigame/src/platform.cpp.s
 .PHONY : minigame/src/platform.cpp.s
 
+minigame/src/shader_utils.o: minigame/src/shader_utils.cpp.o
+.PHONY : minigame/src/shader_utils.o
+
+# target to build an object file
+minigame/src/shader_utils.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/menv.dir/build.make CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o
+.PHONY : minigame/src/shader_utils.cpp.o
+
+minigame/src/shader_utils.i: minigame/src/shader_utils.cpp.i
+.PHONY : minigame/src/shader_utils.i
+
+# target to preprocess a source file
+minigame/src/shader_utils.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/menv.dir/build.make CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.i
+.PHONY : minigame/src/shader_utils.cpp.i
+
+minigame/src/shader_utils.s: minigame/src/shader_utils.cpp.s
+.PHONY : minigame/src/shader_utils.s
+
+# target to generate assembly for a file
+minigame/src/shader_utils.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/menv.dir/build.make CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.s
+.PHONY : minigame/src/shader_utils.cpp.s
+
 minigame/src/stb_image_impl.o: minigame/src/stb_image_impl.cpp.o
 .PHONY : minigame/src/stb_image_impl.o
 
@@ -442,30 +479,6 @@ minigame/src/stb_image_impl.s: minigame/src/stb_image_impl.cpp.s
 minigame/src/stb_image_impl.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/menv.dir/build.make CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.s
 .PHONY : minigame/src/stb_image_impl.cpp.s
-
-minigame/src/window.o: minigame/src/window.cpp.o
-.PHONY : minigame/src/window.o
-
-# target to build an object file
-minigame/src/window.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/menv.dir/build.make CMakeFiles/menv.dir/minigame/src/window.cpp.o
-.PHONY : minigame/src/window.cpp.o
-
-minigame/src/window.i: minigame/src/window.cpp.i
-.PHONY : minigame/src/window.i
-
-# target to preprocess a source file
-minigame/src/window.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/menv.dir/build.make CMakeFiles/menv.dir/minigame/src/window.cpp.i
-.PHONY : minigame/src/window.cpp.i
-
-minigame/src/window.s: minigame/src/window.cpp.s
-.PHONY : minigame/src/window.s
-
-# target to generate assembly for a file
-minigame/src/window.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/menv.dir/build.make CMakeFiles/menv.dir/minigame/src/window.cpp.s
-.PHONY : minigame/src/window.cpp.s
 
 src/Camera.o: src/Camera.cpp.o
 .PHONY : src/Camera.o
@@ -595,6 +608,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... CopyMiniGameShaders"
 	@echo "... CopyShaders"
 	@echo "... doc_doxygen"
 	@echo "... menv"
@@ -631,12 +645,12 @@ help:
 	@echo "... minigame/src/platform.o"
 	@echo "... minigame/src/platform.i"
 	@echo "... minigame/src/platform.s"
+	@echo "... minigame/src/shader_utils.o"
+	@echo "... minigame/src/shader_utils.i"
+	@echo "... minigame/src/shader_utils.s"
 	@echo "... minigame/src/stb_image_impl.o"
 	@echo "... minigame/src/stb_image_impl.i"
 	@echo "... minigame/src/stb_image_impl.s"
-	@echo "... minigame/src/window.o"
-	@echo "... minigame/src/window.i"
-	@echo "... minigame/src/window.s"
 	@echo "... src/Camera.o"
 	@echo "... src/Camera.i"
 	@echo "... src/Camera.s"

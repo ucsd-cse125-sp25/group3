@@ -64,6 +64,7 @@ CMAKE_BINARY_DIR = /Users/jessieouyang/group3
 
 # The main recursive "all" target.
 all: CMakeFiles/menv.dir/all
+all: CMakeFiles/CopyMiniGameShaders.dir/all
 all: CMakeFiles/CopyShaders.dir/all
 .PHONY : all
 
@@ -73,6 +74,7 @@ preinstall:
 
 # The main recursive "clean" target.
 clean: CMakeFiles/menv.dir/clean
+clean: CMakeFiles/CopyMiniGameShaders.dir/clean
 clean: CMakeFiles/CopyShaders.dir/clean
 clean: CMakeFiles/doc_doxygen.dir/clean
 .PHONY : clean
@@ -81,6 +83,7 @@ clean: CMakeFiles/doc_doxygen.dir/clean
 # Target rules for target CMakeFiles/menv.dir
 
 # All Build rule for target.
+CMakeFiles/menv.dir/all: CMakeFiles/CopyMiniGameShaders.dir/all
 CMakeFiles/menv.dir/all: CMakeFiles/CopyShaders.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/menv.dir/build.make CMakeFiles/menv.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/menv.dir/build.make CMakeFiles/menv.dir/build
@@ -102,6 +105,32 @@ menv: CMakeFiles/menv.dir/rule
 CMakeFiles/menv.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/menv.dir/build.make CMakeFiles/menv.dir/clean
 .PHONY : CMakeFiles/menv.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/CopyMiniGameShaders.dir
+
+# All Build rule for target.
+CMakeFiles/CopyMiniGameShaders.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CopyMiniGameShaders.dir/build.make CMakeFiles/CopyMiniGameShaders.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CopyMiniGameShaders.dir/build.make CMakeFiles/CopyMiniGameShaders.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num= "Built target CopyMiniGameShaders"
+.PHONY : CMakeFiles/CopyMiniGameShaders.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/CopyMiniGameShaders.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 0
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/CopyMiniGameShaders.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 0
+.PHONY : CMakeFiles/CopyMiniGameShaders.dir/rule
+
+# Convenience name for target.
+CopyMiniGameShaders: CMakeFiles/CopyMiniGameShaders.dir/rule
+.PHONY : CopyMiniGameShaders
+
+# clean rule for target.
+CMakeFiles/CopyMiniGameShaders.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CopyMiniGameShaders.dir/build.make CMakeFiles/CopyMiniGameShaders.dir/clean
+.PHONY : CMakeFiles/CopyMiniGameShaders.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/CopyShaders.dir
