@@ -12,6 +12,7 @@ Mesh::Mesh(){
     skel = NULL;
     model = glm::mat4(1.0f);
     color = glm::vec3(1.0f, 0.95f, 0.1f);
+    renderMode = RenderMode::BASE;
     // mMat.reserve(MAX_JOINTS);
     // for (int i = 0; i < MAX_JOINTS; i++){
     //     mMat.push_back(glm::mat4(1.0f));
@@ -97,7 +98,7 @@ void Mesh::setMaterials(const aiMesh* mesh, const aiScene *scene) {
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
     aiMaterialProperty** properties = material->mProperties;
     for (int i = 0; i < material->mNumProperties; i++){
-        std::cout << properties[i]->mKey.C_Str() << std::endl;
+        // std::cout << properties[i]->mKey.C_Str() << std::endl;
     }
     if (AI_SUCCESS != material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse_color)){
         // std::cout << "couldn't get base color";
@@ -281,11 +282,20 @@ void Mesh::draw(std::vector<glm::mat4>& mMat, const glm::mat4& viewProjMtx, Shad
 
 void Mesh::update(std::vector<glm::mat4>& mMat){
     if (skel != NULL){
+        // std::cout << "yoyo" << std::endl;
         for (auto it = invBMats.begin(); it != invBMats.end(); ++it){
+            // std::cout << "id" << std::endl;
             int id = it->second.id;
+            // std::cout << id << std::endl;
+
+            // std::cout << glm::to_string(it->second.invBMat) << std::endl;
+            // std::cout << glm::to_string(mMat[id]) << std::endl;
+            // if (skel == nullptr){
+            //     std::cout << "breh" << std::endl;
+            // }
             mMat[id] = skel->getWorldMatrix(it->first) * it->second.invBMat;
         }
-
+        // std::cout << "brorbo" << std::endl;
         // std::cout << glm::to_string(mMat[3]) << std::endl;
         // std::cout << "start" << std::endl;
         // for(glm::mat4 m : mMat){

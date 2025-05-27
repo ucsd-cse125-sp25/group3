@@ -60,13 +60,18 @@ bool AnimationPlayer::loadAnims(ModelType modelType, AnimState animState, const 
     // }
 }
 
-bool AnimationPlayer::setCurr(ModelType modelType, AnimState animState){
+void AnimationPlayer::setCurr(ModelType modelType, AnimState animState){
     
+    assert(animMap.find(modelType) != animMap.end());
+    assert(animMap[modelType].find(animState) != animMap[modelType].end());
+    assert(skelMap.find(modelType) != skelMap.end());
+
     currAnim = animMap[modelType][animState];
     pose.clear();
     for(std::string name : currAnim->getNames()){
         pose[name] = glm::mat4(1.0f);
     }
+    currSkel = skelMap[modelType];
     // anim -> evaluate(3.0f, pose);    
 }
 
@@ -88,8 +93,11 @@ Skeleton* AnimationPlayer::getSkel(ModelType modelType){
 
 void AnimationPlayer::fullUpdate(float start_time){
     update(start_time);
+    // std::cout << "pose start" << std::endl;
     poseSkel();
+    // std::cout << "pose done" << std::endl;
     currSkel->update();
+    // std::cout << "update done" << std::endl;
 }
 
 /*evaluates the local matrices for each channel*/
@@ -98,6 +106,7 @@ void AnimationPlayer::update(float start_time){
     time = time - start_time;
     // std::cout << time << std::endl;
     currAnim -> evaluate(time, pose);
+    // std::cout << "evaldone" << std::endl;
 }
 
 /*Sets the local matrices of the skeleton*/

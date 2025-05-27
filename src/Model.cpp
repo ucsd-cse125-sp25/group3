@@ -12,6 +12,8 @@ Model::Model(ModelType mType, const std::string & file){
     // model = glm::mat4(1.0f);
     modelType = mType;
 
+    skel = NULL;
+
     load(file);
 
     setupBuf();
@@ -75,10 +77,13 @@ void Model::addMesh(Mesh* mesh){
 
 void Model::setSkel(AnimationPlayer* animPlayer){
     Skeleton* sk = animPlayer->getSkel(this->modelType);
+    // if (this->modelType == ModelType::SecurityGuard){
+    //     std::cout << "securityguard" << std::endl;
+    // }
     if (sk != nullptr){
-        this->skel = skel;
+        this->skel = sk;
         for (int i = 0; i < meshes.size(); i++){
-            meshes[i]->setSkel(skel);
+            meshes[i]->setSkel(sk);
         }   
     } else {
         std::cout << "no matching skeleton found" << std::endl;

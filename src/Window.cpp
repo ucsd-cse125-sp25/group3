@@ -32,10 +32,10 @@ int MouseX, MouseY;
 // GLuint Window::shaderProgram;
 // GLuint Window::shaderProgram_uv;
 // GLuint Window::shaderProgram_anim;
-ShaderManager* shaderManager;
-ModelManager* modelManager;
+ShaderManager* Window::shaderManager;
+ModelManager* Window::modelManager;
 
-TextureManager* textureManager;
+TextureManager* Window::textureManager;
 
 bool Window::altDown = false;
 bool Window::firstMouse = true;
@@ -81,14 +81,20 @@ bool Window::initializeObjects() {
 
     scene = new Scene();
 
-    animationPlayer->loadAnims(ModelType::SecurityGuard, AnimState::Walk, "../models/characters/security_guard.fbx");
+    if (!animationPlayer->loadAnims(ModelType::SecurityGuard, AnimState::Walk, "../models/characters/security_guard.fbx")) {
+        std::cout << "animation loading failed" << std::endl;
+    }
     Model* securityGuard = new Model(ModelType::SecurityGuard, "../models/characters/security_guard.fbx");
     securityGuard->setSkel(animationPlayer);
     modelManager->addModel(securityGuard);
+    std::cout << "modelManager" << std::endl;
 
     AnInstance* bro = new AnInstance(securityGuard);
     bro->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)));
+    bro->setState(AnimState::Walk);
     scene->addInstance(bro);
+
+    std::cout << "instance" << std::endl;
 
     Model* buddha = new Model(ModelType::Buddha, "../models/buddha.ply");
     modelManager->addModel(buddha);

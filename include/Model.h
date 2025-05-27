@@ -8,6 +8,7 @@
 #include <map>
 #include "ModelType.h"
 #include "ShaderManager.h"
+#include "AnimationPlayer.h"
 
 /*
 The Model class should handle everything about a 3D model.

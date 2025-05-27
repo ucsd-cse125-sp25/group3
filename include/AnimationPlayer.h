@@ -30,7 +30,7 @@ public:
     Skeleton* getSkel(ModelType modelType);
 
     //call after anim is set
-    bool AnimationPlayer::setCurr(ModelType modelType, AnimState animState);
+    void AnimationPlayer::setCurr(ModelType modelType, AnimState animState);
 
     // void AnimationPlayer::draw(glm::mat4 viewProjMat, GLuint shader);
 
