@@ -120,12 +120,14 @@ void Character::update(float dt, int windowHeight, int windowWidth, const std::v
     }
 
     for (const auto& p : platforms) {
+
+        const float margin = 20.0f;
         
         bool isFalling = vy >= 0.f;
         bool isJumping = vy < 0.f;
 
         bool horizontalOverlap = (nextX + drawW > p.x) && (nextX < p.x + p.width);
-        bool verticalContact = (y + drawH <= p.y) && (nextY + drawH >= p.y);
+        bool verticalContact = (y + drawH <= p.y + margin) && (nextY + drawH >= p.y);
 
         if (isFalling && horizontalOverlap && verticalContact) {
             nextY = p.y - drawH;

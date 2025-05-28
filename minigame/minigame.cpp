@@ -61,16 +61,16 @@ void MiniGame::init(GLFWwindow* window) {
         "../minigame/assets/thief1_left.png");
 
     // Add platforms (same as your original main)
-    platforms.emplace_back(270, 1552, 170, 27, 0);//1
-    platforms.emplace_back(0, 1350, 220, 27, 0);//2
-    platforms.emplace_back(0, 1452, 300, 27, 0);//3
-    platforms.emplace_back(380, 1102, 285, 40, 0);//4
-    platforms.emplace_back(990, 970, 428, 44, 0);//5
-    platforms.emplace_back(1550, 1165, 330, 45, 0);//6
-    platforms.emplace_back(2100, 850, 260, 45, 0);//7
-    platforms.emplace_back(420, 680, 330, 40, 0);//8
-    platforms.emplace_back(1148, 505, 400, 43, 0);//9
-    platforms.emplace_back(1850, 470, 400, 30, 0);//10
+    platforms.emplace_back(330, 1700, 200, 27, 0);//1
+    platforms.emplace_back(0, 1475, 270, 27, 0);//2
+    platforms.emplace_back(0, 1595, 360, 32, 0);//3
+    platforms.emplace_back(468, 1212, 360, 43, 0);//4
+    platforms.emplace_back(1205, 1060, 520, 62, 0);//5
+    platforms.emplace_back(1890, 1268, 408, 58, 0);//6
+    platforms.emplace_back(2570, 930, 320, 55, 0);//7
+    platforms.emplace_back(520, 750, 410, 54, 0);//8
+    platforms.emplace_back(1400, 555, 480, 55, 0);//9
+    platforms.emplace_back(2270, 510, 480, 37, 0);//10
 }
 
 void MiniGame::update(GLFWwindow* window) {
@@ -96,8 +96,17 @@ void MiniGame::update(GLFWwindow* window) {
     py + ph >= ly && py + ph <= ly + 15 &&  
     px + pw >= lx && px <= lx + lw;
 
-    if (onPlatform) {
-        finished = true;
+    if (onPlatform) 
+    {
+        timeOnLastPlatform += 1.0f / 60.0f; 
+        if (timeOnLastPlatform >= 2.0f) 
+        {
+            finished = true;
+        }
+    } 
+    else 
+    {
+        timeOnLastPlatform = 0.0f;
     }
 }
 

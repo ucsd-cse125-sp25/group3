@@ -17,6 +17,8 @@ public:
     void update(GLFWwindow* window);
     void render();
     void cleanup();
+
+    float timeOnLastPlatform = 0.0f;
     bool isFinished() const;
 
 private:
