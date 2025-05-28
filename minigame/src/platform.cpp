@@ -38,27 +38,7 @@ void Platform::initRenderer() {
     initialized = true;
 }
 
-void Platform::draw(GLuint shader) const{
-    // glEnable(GL_TEXTURE_2D);
-    // glBindTexture(GL_TEXTURE_2D, texture);
-    // glBegin(GL_QUADS);
-    // glTexCoord2f(0, 0); glVertex2f(x, y);
-    // glTexCoord2f(1, 0); glVertex2f(x + width, y);
-    // glTexCoord2f(1, 1); glVertex2f(x + width, y + height);
-    // glTexCoord2f(0, 1); glVertex2f(x, y + height);
-    // glEnd();
-    // glDisable(GL_TEXTURE_2D); 
-
-    // glColor3f(1.0f, 0.0f, 0.0f); 
-    // glBegin(GL_QUADS);
-    // glVertex2f(x, y);
-    // glVertex2f(x + width, y);
-    // glVertex2f(x + width, y + height);
-    // glVertex2f(x, y + height);
-    // glEnd();
-
-    // glColor3f(1.0f, 1.0f, 1.0f); 
-    // glEnable(GL_TEXTURE_2D);  
+void Platform::draw(GLuint shader) const{ 
     if (!initialized)
         initRenderer();
 
@@ -77,24 +57,6 @@ void Platform::draw(GLuint shader) const{
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);  
-    // glDisable(GL_TEXTURE_2D); 
-
-    // glEnable(GL_BLEND);
-    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    // glColor4f(1.0f, 0.0f, 0.0f, 0.0f);
-
-    // glBegin(GL_QUADS);
-    // glVertex2f(x, y);
-    // glVertex2f(x + width, y);
-    // glVertex2f(x + width, y + height);
-    // glVertex2f(x, y + height);
-    // glEnd();
-
-    // //glDisable(GL_BLEND); 
-    // glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-    // glEnable(GL_TEXTURE_2D);
-
 }
 
 float Platform::getX() const {
