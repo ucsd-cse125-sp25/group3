@@ -318,7 +318,7 @@ void Cube::spin(float deg) {
 }
 
 glm::vec3 Cube::getPosition() const {
-    return glm::vec3(baseModel[3]);  // extract translation from matrix
+    return glm::vec3(model[3]);  // extract translation from matrix
 }
 
 void Cube::setColor(const glm::vec3& change_color) {
@@ -340,7 +340,7 @@ void Cube::attemptGrabArtifact() {
         glm::vec3 cubePos = getPosition();
         glm::vec3 artifactPos = carriedArtifact->getPosition();
         float distance = glm::length(cubePos - artifactPos);
-        // std::cout << "Distance = " << distance << std::endl;
+        std::cout << "Distance = " << distance << std::endl;
 
         if (distance < 1.5f) {
             isCarryingArtifact = true;

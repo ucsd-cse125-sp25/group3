@@ -325,7 +325,7 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     
     static float lastX = Window::width / 2.0f;
     static float lastY = Window::height / 2.0f;
-    std::cout << Window::width << std::endl;
+    //std::cout << Window::width << std::endl;
 
     float sensitivity = 0.1f;
 
