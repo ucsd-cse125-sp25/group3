@@ -14,6 +14,8 @@ private:
     /* model matrix instance is animated with */
     glm::mat4 mMat;
 
+    // glm::mat4 VPMmMtx;
+
     /* The state the instance is animated in 
      stop = no animation, idle = currently also stop, walk = walks? */
     AnimState state;
@@ -22,6 +24,8 @@ private:
 
     /* Internal state of when we changed to this animation state */
     float start_time;
+
+    void AnInstance::resetJointMats();
 
 public:
     AnInstance(Model* model);
@@ -37,6 +41,8 @@ public:
     */
 
     void setState(AnimState state);
+
+    AnimState getState();
 
     void update(AnimationPlayer* animPlayer);
     

@@ -24,6 +24,8 @@ AnimationPlayer* Window::animationPlayer;
 // Camera Properties
 Camera* Cam;
 
+AnInstance* bro2;
+
 // Interaction Variables
 bool LeftDown, RightDown;
 int MouseX, MouseY;
@@ -85,17 +87,25 @@ bool Window::initializeObjects() {
         std::cout << "animation loading failed" << std::endl;
     }
     Model* securityGuard = new Model(ModelType::SecurityGuard, "../models/characters/security_guard.fbx");
+    securityGuard->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)));
     securityGuard->setSkel(animationPlayer);
     modelManager->addModel(securityGuard);
     std::cout << "modelManager" << std::endl;
 
     AnInstance* bro = new AnInstance(securityGuard);
-    bro->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)));
+    // bro->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)));
     bro->setState(AnimState::Walk);
     scene->addInstance(bro);
 
     std::cout << "instance" << std::endl;
 
+    bro2 = new AnInstance(securityGuard);
+    bro2->setMMat(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
+    scene->addInstance(bro2);
+
+    std::cout << "instance2" << std::endl;
+
+    // Model* buddha = new Model(ModelType::Buddha, "../models/buddha.ply");
     Model* buddha = new Model(ModelType::Buddha, "../models/buddha.ply");
     modelManager->addModel(buddha);
 
@@ -212,7 +222,10 @@ void Window::idleCallback() {
 
     // animationPlayer->fullUpdate();
     // cube->update();
-    character->update(animationPlayer);
+    // character->update(animationPlayer);
+    if ((bro2->getState() != AnimState::Walk) && (float) glfwGetTime() > 10){
+        bro2->setState(AnimState::Walk);
+    }
 
     scene->update(animationPlayer);
     // model->update();
@@ -247,14 +260,16 @@ void Window::displayCallback(GLFWwindow* window) {
     // // animationPlayer->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
     // // Render the object.
     // // cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
-    // floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
+
+    floor->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false), true);
 
     scene->draw(Cam->GetViewProjectMtx(), shaderManager);
     // scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_anim);
     // scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
     // scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
     // // model->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
-    character->draw(Cam->GetViewProjectMtx(), shaderManager);
+
+    // character->draw(Cam->GetViewProjectMtx(), shaderManager);
 
     // Gets events, including input such as keyboard and mouse or window resizing.
     glfwPollEvents();

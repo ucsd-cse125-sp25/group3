@@ -21,6 +21,8 @@ private:
 
     std::vector<Mesh*> meshes;
 
+    glm::mat4 model;
+
     Skeleton* skel;
 
     void process(const aiScene* scene);
@@ -52,13 +54,13 @@ public:
 
     void setModelType(ModelType mType);
 
-    // /*
-    // Sets 'model', the model matrix, of the Model.
+    /*
+    Sets 'model', the model matrix, of the Model.
 
-    // Through the matrix, the position, scale, and rotation of the 
-    // model (all meshes stored in the model) will be changed together. 
-    // */
-    // void setMMat(glm::mat4 mMat);
+    Through the matrix, the position, scale, and rotation of the 
+    model (all meshes stored in the model) will be changed together. 
+    */
+    void setMMat(glm::mat4 mMat);
 
     /*
     mesh will now be moved by the model matrix of the Model.
@@ -100,7 +102,7 @@ public:
     Draws the meshes connected to this model using the shader in the current state.
     */
 
-    void draw(const glm::mat4& model, std::vector<std::vector<glm::mat4>>& jointMats, const glm::mat4& viewProjMtx, ShaderManager* shaderManager);
+    void draw(std::vector<std::vector<glm::mat4>>& jointMats, const glm::mat4& viewProjMtx, ShaderManager* shaderManager);
     
     /*
     Updates matrices of meshes in model to match animation.

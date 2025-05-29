@@ -65,9 +65,9 @@ void Model::setModelType(ModelType mType){
     modelType = mType;
 }
 
-// void Model::setMMat(glm::mat4 mMat){
-//     model = mMat;
-// }
+void Model::setMMat(glm::mat4 mMat){
+    model = mMat;
+}
 
 void Model::addMesh(Mesh* mesh){
     if (mesh != nullptr){
@@ -115,10 +115,10 @@ void Model::setupBuf(){
     }
 }
 
-void Model::draw(const glm::mat4& model, std::vector<std::vector<glm::mat4>>& jointMats, const glm::mat4& viewProjMtx, ShaderManager* shaderManager){
-    glm::mat4 VPMmMtx = viewProjMtx * model;
+void Model::draw(std::vector<std::vector<glm::mat4>>& jointMats, const glm::mat4& viewProjMtx, ShaderManager* shaderManager){
     for (int i = 0; i < meshes.size(); i++){
         // meshes[i]->setMMat(model);
+        glm::mat4 VPMmMtx = viewProjMtx * model;
         meshes[i]->draw(jointMats[i], VPMmMtx, shaderManager);
     }
 }
