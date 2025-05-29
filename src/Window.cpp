@@ -34,6 +34,7 @@ bool Window::firstMouse = true;
 bool Window::showOthersOnMiniMap = false;
 bool Window::radarActive = false;
 std::chrono::steady_clock::time_point Window::radarStartTime;
+AbilityType Window::currentAbility = AbilityType::NONE;
 
 // Constructors and desctructors
 bool Window::initializeProgram() {
@@ -76,6 +77,8 @@ void Window::cleanUp() {
 // for the Window
 GLFWwindow* Window::createWindow(int width, int height) {
     // Initialize GLFW.
+    
+
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
         return NULL;
@@ -94,6 +97,16 @@ GLFWwindow* Window::createWindow(int width, int height) {
 
     GLFWwindow* window = glfwCreateWindow(width, height, windowTitle, NULL, NULL);
 
+    #ifdef __APPLE__
+        int fbWidth, fbHeight;
+        glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+        Window::width = fbWidth;
+        Window::height = fbHeight;
+    #else
+        Window::width = width;
+        Window::height = height;
+    #endif
+
     // Check if the window could not be created.
     if (!window) {
         std::cerr << "Failed to open GLFW window." << std::endl;
@@ -107,8 +120,8 @@ GLFWwindow* Window::createWindow(int width, int height) {
     // Initialize GLEW
     glewInit();
 
-    // Set swap interval to 1.
-    glfwSwapInterval(0);
+    // Set swap interval to 1 to stop flickering.
+    glfwSwapInterval(1);
 
     // set up the camera
     Cam = new Camera();
@@ -124,24 +137,17 @@ GLFWwindow* Window::createWindow(int width, int height) {
     MiniMapCam->SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
 
     // Call the resize callback to make sure things get drawn immediately.
+
     #ifdef __APPLE__
         // macOS: Use framebuffer size to handle Retina displays correctly
-        int fbWidth, fbHeight;
         glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
         glViewport(0, 0, fbWidth, fbHeight);
         // Cam->SetAspect(float(fbWidth) / float(fbHeight));
         Window::width = fbWidth;
         Window::height = fbHeight;
     #else
-        // Windows or others: Use default logic-pixel-based callback
         Window::resizeCallback(window, width, height);
     #endif
-
-
-    // Window::resizeCallback(window, width, height);
-
-
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     return window;
 }
@@ -177,6 +183,10 @@ void Window::updateRadarAbility() {
 void Window::idleCallback() {
     // Perform any updates as necessary.
     // Cam->Update();
+    if (Window::currentAbility == AbilityType::INVISIBILITY) {
+        // Apply invisibility logic
+    }   
+
     Cam->Update(cube->getPosition());
 
     cube->update();
@@ -239,9 +249,9 @@ void Window::displayCallback(GLFWwindow* window) {
     }
 
     // Gets events, including input such as keyboard and mouse or window resizing.
-    glfwPollEvents();
+    // glfwPollEvents();
     // Swap buffers.
-    glfwSwapBuffers(window);
+    // glfwSwapBuffers(window);
 }
 
 // helper to reset the camera
@@ -275,6 +285,10 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
             case GLFW_KEY_R:
                 resetCamera();
                 break;
+
+            // if (key == GLFW_KEY_P && currentState == PLAYING) {
+            //     currentState = IN_MINIGAME;
+            // }
 
 
             default:
@@ -311,7 +325,8 @@ void Window::cursor_callback(GLFWwindow* window, double currX, double currY) {
     
     static float lastX = Window::width / 2.0f;
     static float lastY = Window::height / 2.0f;
-    
+    std::cout << Window::width << std::endl;
+
     float sensitivity = 0.1f;
 
     if (firstMouse) {

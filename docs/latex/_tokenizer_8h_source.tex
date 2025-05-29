@@ -1,0 +1,55 @@
+\doxysection{Tokenizer.\+h}
+\hypertarget{_tokenizer_8h_source}{}\label{_tokenizer_8h_source}\index{include/Tokenizer.h@{include/Tokenizer.h}}
+\mbox{\hyperlink{_tokenizer_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Tokenizer.h}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <cctype>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <cstring>}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{core_8h}{core.h}}"{}}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ The\ Tokenizer\ class\ for\ reading\ simple\ ascii\ data\ files.\ The\ GetToken\ function}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ just\ grabs\ tokens\ separated\ by\ whitespace,\ but\ the\ GetInt\ and\ GetFloat\ functions}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ specifically\ parse\ integers\ and\ floating\ point\ numbers.\ SkipLine\ will\ skip\ to}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ the\ next\ carraige\ return.\ FindToken\ searches\ for\ a\ specific\ token\ and\ returns}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ true\ if\ it\ found\ it.}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_tokenizer_a2a6c04ea8c784f66bebcb6df7073769c}{Tokenizer}}\ \{}
+\DoxyCodeLine{00022\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{class_tokenizer_a2a6c04ea8c784f66bebcb6df7073769c}{Tokenizer}}();}
+\DoxyCodeLine{00024\ \ \ \ \ \mbox{\hyperlink{class_tokenizer_a3f60f887953edf0f95ba5f36102f7017}{\string~Tokenizer}}();}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_tokenizer_a0b4ba9a72b2f31660c95b39f879e1fbf}{Open}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file);}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_tokenizer_a014bed36cfed5d1a5fdcdcb221d9a1f7}{Close}}();}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_tokenizer_a7475acc838fb9729bbc7752b75f92a88}{Abort}}(\textcolor{keywordtype}{char}\ *error);\ \ \textcolor{comment}{//\ Prints\ error\ \&\ closes\ file,\ and\ always\ returns\ false}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{comment}{//\ Tokenization}}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{class_tokenizer_ab95b6f1e85dbdc1448b4bb70b296fce4}{GetChar}}();}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{class_tokenizer_aef69f2c5159f0665d67597bd48ba6240}{CheckChar}}();}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_tokenizer_a7c93306e68a0c216657cee14af99b243}{GetInt}}();}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_tokenizer_ac73b9bc0f49cca9f33b7fc7531172b8f}{GetFloat}}();}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_tokenizer_a3dd3f19501cb23c69143d2b1c19eeb2e}{GetToken}}(\textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_tokenizer_a423e338248242d78f7796ee123051a46}{FindToken}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *tok);}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_tokenizer_ab50e4f484e0d637211585940726a6b3d}{SkipWhitespace}}();}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_tokenizer_ae8af2eacfd6cb98637df0c30e5ce8f2b}{SkipLine}}();}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_tokenizer_a8fab01188fb836efb11ecd0b3d927536}{Reset}}();}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{comment}{//\ Access\ functions}}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{class_tokenizer_a6155f39fbb3910fcdd9621eb47d1eacb}{GetFileName}}()\ \{\ \textcolor{keywordflow}{return}\ FileName;\ \}}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_tokenizer_a62007f83fee053baedfea4bc886b9a6c}{GetLineNum}}()\ \{\ \textcolor{keywordflow}{return}\ LineNum;\ \}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{void}\ *File;}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{char}\ FileName[256];}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{int}\ LineNum;}
+\DoxyCodeLine{00050\ \};}
+
+\end{DoxyCode}

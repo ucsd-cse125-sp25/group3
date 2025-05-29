@@ -1,0 +1,25 @@
+var type__mat4x4_8inl =
+[
+    [ "glm::operator!=", "namespaceglm.html#ae03f4496a0725bb705dbfccd4daebae1", null ],
+    [ "glm::operator*", "namespaceglm.html#a093881257a2c380332a5d1af45209116", null ],
+    [ "glm::operator*", "namespaceglm.html#abc4128bfe7236a92b3db85e045273fca", null ],
+    [ "glm::operator*", "namespaceglm.html#a52248a5a835104647d42239e93e9079a", null ],
+    [ "glm::operator*", "namespaceglm.html#a68a7b522d420b88db535ace1aea85320", null ],
+    [ "glm::operator*", "namespaceglm.html#a4450baa33816b31ef5d060545a6ccb9a", null ],
+    [ "glm::operator*", "namespaceglm.html#a7a884d3531f1fa8bb50bd3c629a3f2a2", null ],
+    [ "glm::operator*", "namespaceglm.html#a64c37edeb1e935d971b89cd7005fdd8b", null ],
+    [ "glm::operator+", "namespaceglm.html#acd010bf12dfe0b6598f29b72bb66fc96", null ],
+    [ "glm::operator+", "namespaceglm.html#ad7afbb93b23cacdc89dd45130d70d42a", null ],
+    [ "glm::operator+", "namespaceglm.html#aadcc7b1d52d971ff349cc239f2624ac4", null ],
+    [ "glm::operator+", "namespaceglm.html#af296723ff7975a00c92d55e97566a1a4", null ],
+    [ "glm::operator-", "namespaceglm.html#a173fee3f418cd561bf562a345c7bc958", null ],
+    [ "glm::operator-", "namespaceglm.html#a51c28c86227e770887c2d7db84d1be07", null ],
+    [ "glm::operator-", "namespaceglm.html#ab815a4087124712b574edcf6ff8d9ce7", null ],
+    [ "glm::operator-", "namespaceglm.html#a86c049cb815bb4df3266c45a6b34face", null ],
+    [ "glm::operator/", "namespaceglm.html#a5c5095723cf95f8cc7c6fa00727dc532", null ],
+    [ "glm::operator/", "namespaceglm.html#a9e3ad19b9b333b9f71a75df2cc34d21b", null ],
+    [ "glm::operator/", "namespaceglm.html#ad61c56c8222e0acb81a684116259d843", null ],
+    [ "glm::operator/", "namespaceglm.html#ac17a9de965ef16fe33a6eba416f87d4d", null ],
+    [ "glm::operator/", "namespaceglm.html#acfd613dd37b2ee5e0bad2eac4cebde7c", null ],
+    [ "glm::operator==", "namespaceglm.html#a8bcfe7feeeb780a7ea48046ae4c6cd57", null ]
+];

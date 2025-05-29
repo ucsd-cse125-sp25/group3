@@ -2,7 +2,7 @@
 #ifndef KEYPACKET_H // include guard
 #define KEYPACKET_H
 
-enum KeyType {
+enum class KeyType {
     NONE = 0,
     KEY_W = 1,
     KEY_S = 2,
