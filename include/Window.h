@@ -19,6 +19,8 @@ class Window {
 public:
     static unsigned int client_id;
     static bool initialized;
+    static GameState currentState;
+    static bool stateChanged;
 
     // Window Properties
     static int width;

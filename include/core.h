@@ -8,6 +8,7 @@
 #include "glm/gtx/string_cast.hpp"
 
 enum GameState {
+    INIT,
     START_MENU,
     CHARACTER_SELECTION,
     PLAYING,

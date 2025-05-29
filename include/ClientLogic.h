@@ -5,6 +5,12 @@
 #include "core.h"
 #include <vector>
 #include "../packets/PacketFactory.h"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+#include "../minigame/minigame.h"
+// #include <GL/glew.h>
+#include "../minigame/include/stb_image.h"
 
 #ifndef OS_TYPES
 #define OS_TYPES
@@ -18,6 +24,8 @@ enum class OSType: uint8_t {
 #define CLIENT_LOGIC
 class client_logic {
     public:
+        static ImFont* handwritingFont;
+
         static std::vector<std::unique_ptr<Packet>> pendingPackets;
 
         static void error_callback(int error, const char* description);
@@ -26,10 +34,16 @@ class client_logic {
 
         static void setup_callbacks(GLFWwindow* window);
 
-        static KeyType handleUserInput(GLFWwindow* window);
+        static void handleUserInput(GLFWwindow* window);
 
         static void keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods);
 
         static void cursor_callback(GLFWwindow* window, double currX, double currY);
+        
+        static bool LoadTextureFromMemory(const void* data, size_t data_size, GLuint* out_texture, int* out_width, int* out_height);
+
+        static bool LoadTextureFromFile(const char* file_name, GLuint* out_texture, int* out_width, int* out_height);
+
+        static void setStartPage();
 };
 #endif

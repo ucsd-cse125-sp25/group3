@@ -2,6 +2,8 @@
 
 unsigned int Window::client_id;
 bool Window::initialized = false;
+GameState Window::currentState = PLAYING;
+bool Window::stateChanged = false;
 
 // Window Properties
 int Window::width;
@@ -494,7 +496,7 @@ void Window::render(GLFWwindow* window) {
     // Gets events, including input such as keyboard and mouse or window resizing.
     // glfwPollEvents();
     // Swap buffers.
-    glfwSwapBuffers(window);
+    // glfwSwapBuffers(window);
     
     if (altDown) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

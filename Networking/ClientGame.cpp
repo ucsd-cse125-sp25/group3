@@ -19,7 +19,36 @@ ClientGame::ClientGame(CharacterType character)
     if (!Window::initializeProgram()) exit(EXIT_FAILURE);
     // Initialize objects/pointers for rendering; exit if initialization fails.
     if (!Window::initializeObjects()) exit(EXIT_FAILURE);
-  
+    
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+
+    io.Fonts->AddFontFromFileTTF("../external/style/fonts/Junicode-Bold.ttf", 32.0f);
+    client_logic::handwritingFont = io.Fonts->AddFontFromFileTTF("../external/style/fonts/HomemadeApple-Regular.ttf", 28.0f);
+
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.Colors[ImGuiCol_WindowBg] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f); // Opaque background
+    style.Colors[ImGuiCol_Button] = ImVec4(0.7f, 0.6f, 0.2f, 1.0f);
+    style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.8f, 0.7f, 0.3f, 1.0f);
+    style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.9f, 0.8f, 0.4f, 1.0f);
+    style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 0.98f, 0.9f, 1.0f);
+    style.FrameRounding = 12.0f;
+    style.WindowRounding = 16.0f;
+    style.FramePadding = ImVec2(14, 10);
+    style.ItemSpacing = ImVec2(16, 12);
+
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+
+    
+    int my_image_width = 0;
+    int my_image_height = 0;
+    GLuint my_image_texture = 0;
+    bool ret = client_logic::LoadTextureFromFile("../external/images/HeistAtTheMuseumTitle.png", &my_image_texture, &my_image_width, &my_image_height);
+    IM_ASSERT(ret);
+
     // send init packet
     //std::cout << "Sending Init Packet\n";
     sendInitPacket(character);
@@ -66,7 +95,19 @@ void ClientGame::update()
 {
     glfwPollEvents();
 
-    KeyType input = client_logic::handleUserInput(window);
+    if (Window::currentState == START_MENU || Window::currentState == CHARACTER_SELECTION) {
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    } else {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+    if (Window::currentState == START_MENU) {
+        // client_logic::setStartPage();
+    } else if (Window::currentState == PLAYING) {
+        client_logic::handleUserInput(window);
+    }
+    
     sendPendingPackets();
 
     while (true) {
@@ -133,7 +174,13 @@ void ClientGame::update()
                 break;
         }
     }
+    // if (Window::currentState != IN_MINIGAME ){
+    //     ImGui::Render();
+    //     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    // }
+    
     Window::render(window);
+    glfwSwapBuffers(window);
     // Window::updateRest(packet.payload.data());
     // Window::applyRest(packet.payload.data(), , packet.length);
     // Window::cube->update();
