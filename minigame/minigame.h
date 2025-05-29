@@ -17,7 +17,6 @@ public:
     void update(GLFWwindow* window);
     void render();
     void cleanup();
-
     float timeOnLastPlatform = 0.0f;
     bool isFinished() const;
 
@@ -31,7 +30,7 @@ private:
 
     GLuint quadVAO = 0, quadVBO = 0;
     GLuint quadShader = 0;
-
+    
     GLuint loadTexture(const char* path);
     void renderQuad(GLuint texture, float x, float y, float width, float height);
     void initQuadRenderer();

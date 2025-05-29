@@ -60,7 +60,7 @@ void MiniGame::init(GLFWwindow* window) {
         "../minigame/assets/thief1_right.png", 
         "../minigame/assets/thief1_left.png");
 
-    // Add platforms (same as your original main)
+    // Add platforms
     platforms.emplace_back(330, 1700, 200, 27, 0);//1
     platforms.emplace_back(0, 1475, 270, 27, 0);//2
     platforms.emplace_back(0, 1595, 360, 32, 0);//3
@@ -96,16 +96,12 @@ void MiniGame::update(GLFWwindow* window) {
     py + ph >= ly && py + ph <= ly + 15 &&  
     px + pw >= lx && px <= lx + lw;
 
-    if (onPlatform) 
-    {
+    if (onPlatform) {
         timeOnLastPlatform += 1.0f / 60.0f; 
-        if (timeOnLastPlatform >= 2.0f) 
-        {
+        if (timeOnLastPlatform >= 2.0f) {
             finished = true;
         }
-    } 
-    else 
-    {
+    } else {
         timeOnLastPlatform = 0.0f;
     }
 }
@@ -115,11 +111,6 @@ void MiniGame::render() {
     glClear(GL_COLOR_BUFFER_BIT);
     renderQuad(backgroundTex, 0, 0, windowWidth, windowHeight);
 
-    
-    // glUseProgram(characterShader);
-    // glm::mat4 projection = glm::ortho(0.0f, (float)windowWidth, (float)windowHeight, 0.0f, -1.0f, 1.0f);
-    // GLuint projLoc = glGetUniformLocation(characterShader, "uProjection");
-    // glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
     
 
     if (player) 

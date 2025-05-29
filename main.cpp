@@ -17,8 +17,8 @@ static bool miniGameInitialized = false;
 
 const char* GameStateToString(GameState state) {
     switch (state) {
-        case START_MENU: return "START_MENU";
-        case CHARACTER_SELECTION: return "CHARACTER_SELECTION";
+        case START_MENU: return "START MENU";
+        case CHARACTER_SELECTION: return "CHARACTER SELECTION";
         case PLAYING: return "PLAYING";
         case IN_MINIGAME: return "IN MINIGAME";
         default: return "UNKNOWN";
@@ -130,6 +130,8 @@ int main(void) {
     // Font and style setup
     // https://github.com/Fromager/junicode
     io.Fonts->AddFontFromFileTTF("../external/style/fonts/Junicode-Bold.ttf", 32.0f);
+    ImFont* handwritingFont = io.Fonts->AddFontFromFileTTF("../external/style/fonts/HomemadeApple-Regular.ttf", 28.0f);
+
     ImGuiStyle& style = ImGui::GetStyle();
     style.Colors[ImGuiCol_WindowBg] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f); // Opaque background
     style.Colors[ImGuiCol_Button] = ImVec4(0.7f, 0.6f, 0.2f, 1.0f);
@@ -252,107 +254,187 @@ ImGui::End();
         ImVec2 windowSize = ImGui::GetIO().DisplaySize;
         
         if (currentState == START_MENU) {
-// // Start ImGui frame
-//         ImGui_ImplOpenGL3_NewFrame();
-//         ImGui_ImplGlfw_NewFrame();
-//         ImGui::NewFrame();
-
-//             ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar |
-//                                             ImGuiWindowFlags_NoResize |
-//                                             ImGuiWindowFlags_NoMove |
-//                                             ImGuiWindowFlags_NoCollapse |
-//                                             ImGuiWindowFlags_NoBringToFrontOnFocus |
-//                                             ImGuiWindowFlags_NoBackground;
-           
-
-//             // [Your menu UI code here]
-//             ImVec2 windowSize = io.DisplaySize;
-
-//     ImGui::SetNextWindowPos(ImVec2(0, 0));
-//     ImGui::SetNextWindowSize(windowSize);
-//     ImGui::Begin("StartMenu", nullptr, window_flags);
-
-//     float centerX = windowSize.x * 0.5f;
-
-//     ImGui::SetCursorPos(ImVec2(centerX - 250, 120));
-//     ImGui::PushFont(io.Fonts->Fonts[0]);
-//     ImGui::Text("HEUM");
-//     ImGui::PopFont();
-
-//     ImGui::SetCursorPos(ImVec2(centerX - 120, 200));
-
-//     ImGui::SetCursorPos(ImVec2(centerX - 70, 260));
-//     if (ImGui::Button("Start Game", ImVec2(160, 50))) {
-//         currentState = CHARACTER_SELECTION;
-//     }
-
-//     ImGui::SetCursorPos(ImVec2(centerX - 70, 330));
-//     if (ImGui::Button("Quit", ImVec2(160, 50))) {
-//         glfwSetWindowShouldClose(window, true);
-//     }
-
-            
-//             ImGui::End(); 
-
-// Assuming you have initialized ImGui and OpenGL context
-
-// Load the title image once during initialization
-// Load the title image once during initialization
 
 
-// Start the ImGui frame
+// // Start the ImGui frame
+// ImGui_ImplOpenGL3_NewFrame();
+// ImGui_ImplGlfw_NewFrame();
+// ImGui::NewFrame();
+
+// // Set window flags
+// ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar |
+//                                 ImGuiWindowFlags_NoResize |
+//                                 ImGuiWindowFlags_NoMove |
+//                                 ImGuiWindowFlags_NoCollapse |
+//                                 ImGuiWindowFlags_NoBringToFrontOnFocus |
+//                                 ImGuiWindowFlags_NoBackground;
+
+// ImVec2 windowSize = io.DisplaySize;
+// ImGui::SetNextWindowPos(ImVec2(0, 0));
+// ImGui::SetNextWindowSize(windowSize);
+// ImGui::Begin("StartMenu", nullptr, window_flags);
+
+// float maxDisplayWidth = windowSize.x * 0.5f;
+// float maxDisplayHeight = windowSize.y * 0.5f;
+
+// // Calculate the scaling factor based on the smaller dimension
+// float scale = std::min(maxDisplayWidth / my_image_width, maxDisplayHeight / my_image_height);
+
+// // Compute the new image dimensions
+// float displayWidth = my_image_width * scale;
+// float displayHeight = my_image_height * scale;
+
+// // Calculate position to center the image
+// float posX = (windowSize.x - displayWidth) * 0.5f;
+// float posY = (windowSize.y - displayHeight) * 0.5f;
+
+// // Set cursor position and render the image
+// ImGui::SetCursorPos(ImVec2(posX, posY));
+
+// ImGui::Image((ImTextureID)(intptr_t)my_image_texture, ImVec2(displayWidth, displayHeight));
+// float centerX = windowSize.x * 0.5f;
+
+
+// // Start Game button
+// ImGui::SetCursorPos(ImVec2(centerX - 8, 430));
+// if (ImGui::Button("Start Game", ImVec2(160, 50))) {
+//     currentState = CHARACTER_SELECTION;
+// }
+
+// // Quit button
+// ImGui::SetCursorPos(ImVec2(centerX - 200, 430));
+// if (ImGui::Button("Quit", ImVec2(160, 50))) {
+//     glfwSetWindowShouldClose(window, true);
+// }
+
+// ImGui::End();
+// Load your parchment background
+GLuint parchmentTexture;
+int parchmentWidth, parchmentHeight;
+bool ok = LoadTextureFromFile("../external/images/parchment_scroll.png", &parchmentTexture, &parchmentWidth, &parchmentHeight);
+IM_ASSERT(ok);
+
+// Load a handwriting-style font
+
+// In your render loop:
 ImGui_ImplOpenGL3_NewFrame();
 ImGui_ImplGlfw_NewFrame();
 ImGui::NewFrame();
 
-// Set window flags
-ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar |
-                                ImGuiWindowFlags_NoResize |
-                                ImGuiWindowFlags_NoMove |
-                                ImGuiWindowFlags_NoCollapse |
-                                ImGuiWindowFlags_NoBringToFrontOnFocus |
-                                ImGuiWindowFlags_NoBackground;
+ImVec2 screenSize = ImGui::GetIO().DisplaySize;
 
-ImVec2 windowSize = io.DisplaySize;
-ImGui::SetNextWindowPos(ImVec2(0, 0));
-ImGui::SetNextWindowSize(windowSize);
-ImGui::Begin("StartMenu", nullptr, window_flags);
+// Target width is 40% of the window width (adjust as needed)
+float scaleFactor = 0.4f;
+float parchmentTargetWidth = screenSize.x * scaleFactor;
 
-float maxDisplayWidth = windowSize.x * 0.5f;
-float maxDisplayHeight = windowSize.y * 0.5f;
+// Maintain aspect ratio of the parchment image
+float aspectRatio = (float)parchmentHeight / (float)parchmentWidth;
+float parchmentTargetHeight = parchmentTargetWidth * aspectRatio;
 
-// Calculate the scaling factor based on the smaller dimension
-float scale = std::min(maxDisplayWidth / my_image_width, maxDisplayHeight / my_image_height);
+ImVec2 parchmentSize = ImVec2(parchmentTargetWidth, parchmentTargetHeight);
 
-// Compute the new image dimensions
-float displayWidth = my_image_width * scale;
-float displayHeight = my_image_height * scale;
+// Position it aligned to the center of the left half
+ImVec2 parchmentPos = ImVec2(
+    (screenSize.x * 0.25f) - (parchmentTargetWidth * 0.5f), // left center
+    (screenSize.y - parchmentTargetHeight) * 0.5f           // vertically center
+);
 
-// Calculate position to center the image
-float posX = (windowSize.x - displayWidth) * 0.5f;
-float posY = (windowSize.y - displayHeight) * 0.5f;
+// Set up the window
+ImGui::SetNextWindowPos(parchmentPos);
+ImGui::SetNextWindowSize(parchmentSize);
+ImGui::Begin("Parchment", nullptr,
+    ImGuiWindowFlags_NoTitleBar |
+    ImGuiWindowFlags_NoResize |
+    ImGuiWindowFlags_NoMove |
+    ImGuiWindowFlags_NoScrollbar |
+    ImGuiWindowFlags_NoBackground);
 
-// Set cursor position and render the image
-ImGui::SetCursorPos(ImVec2(posX, posY));
+// Draw the image
+ImGui::SetCursorPos(ImVec2(0, 0));
+ImGui::Image((ImTextureID)(intptr_t)parchmentTexture, parchmentSize);
 
-ImGui::Image((ImTextureID)(intptr_t)my_image_texture, ImVec2(displayWidth, displayHeight));
-float centerX = windowSize.x * 0.5f;
+// Overlay the buttons
+ImGui::SetCursorPos(ImVec2(parchmentSize.x * 0.3f, parchmentSize.y * 0.2f));
+ImGui::PushFont(handwritingFont);
+
+ImGui::Text("Main Menu");
 
 
-// Start Game button
-ImGui::SetCursorPos(ImVec2(centerX - 8, 430));
-if (ImGui::Button("Start Game", ImVec2(160, 50))) {
+// Overlay the buttons
+// ImGui::PushFont(handwritingFont);
+
+const char* title = "Main Menu";
+ImVec2 textSize = ImGui::CalcTextSize(title);
+
+// Get current window width
+float windowWidth = ImGui::GetWindowSize().x;
+
+// Center the text by moving the cursor
+ImGui::SetCursorPosX((windowWidth - textSize.x) * 0.5f);
+
+// Render the text
+ImGui::Text("%s", title);
+
+
+
+
+// Define text colors
+ImVec4 normalColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f); // black
+ImVec4 hoverColor  = ImVec4(1.0f, 1.0f, 1.0f, 1.0f); // white
+
+// Get draw list for custom rendering
+ImDrawList* draw_list = ImGui::GetWindowDrawList();
+
+// --- Button 1: Start Game ---
+const char* startLabel = "Start Game";
+ImVec2 startSize = ImGui::CalcTextSize(startLabel);
+ImGui::SetCursorPosX((ImGui::GetWindowSize().x - startSize.x) * 0.5f);
+
+if (ImGui::InvisibleButton("##start", startSize)) {
+    // Handle start game action
     currentState = CHARACTER_SELECTION;
 }
+ImVec2 startPos = ImGui::GetItemRectMin();
+ImVec4 startColor = ImGui::IsItemHovered() ? hoverColor : normalColor;
+draw_list->AddText(startPos, ImGui::ColorConvertFloat4ToU32(startColor), startLabel);
 
-// Quit button
-ImGui::SetCursorPos(ImVec2(centerX - 200, 430));
-if (ImGui::Button("Quit", ImVec2(160, 50))) {
+// --- Spacing ---
+ImGui::Dummy(ImVec2(0.0f, 20.0f)); // vertical space between buttons
+
+// --- Button 2: Options ---
+const char* optionsLabel = "Options";
+ImVec2 optionsSize = ImGui::CalcTextSize(optionsLabel);
+ImGui::SetCursorPosX((ImGui::GetWindowSize().x - optionsSize.x) * 0.5f);
+
+if (ImGui::InvisibleButton("##options", optionsSize)) {
+    // Handle options click
+}
+ImVec2 optionsPos = ImGui::GetItemRectMin();
+ImVec4 optionsColor = ImGui::IsItemHovered() ? hoverColor : normalColor;
+draw_list->AddText(optionsPos, ImGui::ColorConvertFloat4ToU32(optionsColor), optionsLabel);
+
+// --- Spacing ---
+ImGui::Dummy(ImVec2(0.0f, 20.0f));
+
+// --- Button 3: Quit ---
+const char* quitLabel = "Quit";
+ImVec2 quitSize = ImGui::CalcTextSize(quitLabel);
+
+ImGui::SetCursorPosX((ImGui::GetWindowSize().x - quitSize.x) * 0.5f);
+
+
+if (ImGui::InvisibleButton("##quit", quitSize)) {
     glfwSetWindowShouldClose(window, true);
 }
+ImVec2 quitPos = ImGui::GetItemRectMin();
+ImVec4 quitColor = ImGui::IsItemHovered() ? hoverColor : normalColor;
+draw_list->AddText(quitPos, ImGui::ColorConvertFloat4ToU32(quitColor), quitLabel);
+
+
+
+ImGui::PopFont();
 
 ImGui::End();
-
 
              // Mandatory ImGui frame termination
              ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
@@ -372,78 +454,92 @@ ImGui::End();
             //     ImGuiWindowFlags_NoTitleBar |
             //     ImGuiWindowFlags_NoResize |
             //     ImGuiWindowFlags_NoMove);
+ImGuiWindowFlags sidePanelFlags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
 
-            ImGui::Begin("Character Customization", nullptr, ImGuiWindowFlags_NoResize);
-            if (ImGui::Button("Confirm", ImVec2(120, 40))) {
-        currentState = PLAYING;
-        stateChanged = true; // Flag for state transition
-        glfwPostEmptyEvent(); // Force frame refresh
-    }
-            ImGui::End();
+ImVec2 windowSize = io.DisplaySize;
+float panelWidth = 360.0f;  // adjust width to your liking
+float panelHeight = windowSize.y;
 
+// Fix position to right side
+ImGui::SetNextWindowPos(ImVec2(windowSize.x - panelWidth, 0));
+ImGui::SetNextWindowSize(ImVec2(panelWidth, panelHeight));
 
-//             ImGui::Begin("Character Customization", nullptr, ImGuiWindowFlags_NoResize);
+// This window can collapse, but can't be moved or resized
+// ImGui::Begin("Character Customization", nullptr, sidePanelFlags);
 
-// ImGui::Text("🧍 Customize Your Character");
-// ImGui::Separator();
-// ImGui::Spacing();
-
-// ImGui::Columns(2, nullptr, false);
-
-// // === Left Column ===
-// ImGui::BeginChild("Preview", ImVec2(350, 500), true, ImGuiWindowFlags_AlwaysUseWindowPadding);
-// ImGui::Text("🖼 Character Preview");
-// ImGui::Dummy(ImVec2(300, 400));
-// ImGui::Text("Render goes here");
-// ImGui::EndChild();
-
-// ImGui::NextColumn();
-
-// // === Right Column ===
-// ImGui::BeginChild("Options", ImVec2(0, 500), true, ImGuiWindowFlags_AlwaysUseWindowPadding);
-
-// const char* tabs[] = { "👔 Outfit", "🎩 Hat", "🎒 Accessory" };
-// static int tab = 0;
-// for (int i = 0; i < 3; ++i) {
-//     if (i > 0) ImGui::SameLine();
-//     if (ImGui::Selectable(tabs[i], tab == i)) tab = i;
-// }
-// ImGui::Separator();
-
-// const char* outfitOptions[] = { "Casual", "Stealth", "Fancy", "Rugged" };
-// const char* hatOptions[] = { "None", "Cap", "Hood", "Crown" };
-// const char* accessoryOptions[] = { "Backpack", "Cape", "Glasses" };
-
-// const char** options = nullptr;
-// int count = 0;
-// if (tab == 0) { options = outfitOptions; count = IM_ARRAYSIZE(outfitOptions); }
-// else if (tab == 1) { options = hatOptions; count = IM_ARRAYSIZE(hatOptions); }
-// else { options = accessoryOptions; count = IM_ARRAYSIZE(accessoryOptions); }
-
-// for (int i = 0; i < count; ++i) {
-//     if (ImGui::Button(options[i], ImVec2(200, 40))) {
-//         // Handle selection
-//     }
-// }
-
-// ImGui::EndChild();
-
-// ImGui::Spacing();
-// if (ImGui::Button("◀ Back")) currentState = START_MENU;
-// ImGui::SameLine();
-// if (ImGui::Button("Randomize")) { /* randomize logic */ }
-// ImGui::SameLine();
-// // if (ImGui::Button("Confirm")) {currentState = PLAYING;}
-// if (ImGui::Button("Confirm", ImVec2(120, 40))) {
+//             if (ImGui::Button("Confirm", ImVec2(120, 40))) {
 //         currentState = PLAYING;
 //         stateChanged = true; // Flag for state transition
 //         glfwPostEmptyEvent(); // Force frame refresh
 //     }
+//             ImGui::End();
+
+
+            ImGui::Begin("Character Customization", nullptr, ImGuiWindowFlags_NoResize);
+
+ImGui::Text("🧍 Customize Your Character");
+ImGui::PushStyleColor(ImGuiCol_Button,        ImVec4(0.43f, 0.35f, 0.27f, 1.00f));
+ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.55f, 0.44f, 0.32f, 1.00f));
+ImGui::PushStyleColor(ImGuiCol_ButtonActive,  ImVec4(0.37f, 0.29f, 0.21f, 1.00f));
+ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.98f, 0.92f, 0.84f, 1.00f));
+ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 6.0f);
+ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(14, 10));
+ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(12, 14));
+
+
+ImGui::Separator();
+ImGui::Spacing();
+
+// === Left Column ===
+
+
+// === Right Column ===
+ImGui::BeginChild("Options", ImVec2(0, 500), true, ImGuiWindowFlags_AlwaysUseWindowPadding);
+
+const char* tabs[] = { "👔 Outfit", "🎩 Hat", "🎒 Accessory" };
+static int tab = 0;
+for (int i = 0; i < 3; ++i) {
+    if (i > 0) ImGui::SameLine();
+    if (ImGui::Selectable(tabs[i], tab == i)) tab = i;
+}
+ImGui::Separator();
+
+const char* outfitOptions[] = { "Casual", "Stealth", "Fancy", "Rugged" };
+const char* hatOptions[] = { "None", "Cap", "Hood", "Crown" };
+const char* accessoryOptions[] = { "Backpack", "Cape", "Glasses" };
+
+const char** options = nullptr;
+int count = 0;
+if (tab == 0) { options = outfitOptions; count = IM_ARRAYSIZE(outfitOptions); }
+else if (tab == 1) { options = hatOptions; count = IM_ARRAYSIZE(hatOptions); }
+else { options = accessoryOptions; count = IM_ARRAYSIZE(accessoryOptions); }
+
+for (int i = 0; i < count; ++i) {
+    if (ImGui::Button(options[i], ImVec2(200, 40))) {
+        // Handle selection
+    }
+}
+
+ImGui::EndChild();
+
+ImGui::Spacing();
+if (ImGui::Button("◀ Back")) currentState = START_MENU;
+ImGui::SameLine();
+if (ImGui::Button("Randomize")) { /* randomize logic */ }
+ImGui::SameLine();
+// if (ImGui::Button("Confirm")) {currentState = PLAYING;}
+if (ImGui::Button("Confirm", ImVec2(120, 40))) {
+        currentState = PLAYING;
+        stateChanged = true; // Flag for state transition
+        glfwPostEmptyEvent(); // Force frame refresh
+    }
+ImGui::PopStyleVar(3);
+ImGui::PopStyleColor(4);
 
 // ImGui::End();
+ImGui::End();
 
             
-//             ImGui::End(); // Crucial for proper frame ending
 
              // Mandatory ImGui frame termination
              ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);

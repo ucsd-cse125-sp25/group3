@@ -122,7 +122,7 @@ void Character::update(float dt, int windowHeight, int windowWidth, const std::v
     for (const auto& p : platforms) {
 
         const float margin = 20.0f;
-        
+
         bool isFalling = vy >= 0.f;
         bool isJumping = vy < 0.f;
 

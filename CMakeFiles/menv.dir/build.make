@@ -293,10 +293,24 @@ CMakeFiles/menv.dir/minigame/src/platform.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/minigame/src/platform.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/minigame/src/platform.cpp -o CMakeFiles/menv.dir/minigame/src/platform.cpp.s
 
+CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o: minigame/src/shader_utils.cpp
+CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o -MF CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o.d -o CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o -c /Users/jessieouyang/group3/minigame/src/shader_utils.cpp
+
+CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/minigame/src/shader_utils.cpp > CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.i
+
+CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/minigame/src/shader_utils.cpp -o CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.s
+
 CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o: CMakeFiles/menv.dir/flags.make
 CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o: minigame/src/stb_image_impl.cpp
 CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o -MF CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o.d -o CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o -c /Users/jessieouyang/group3/minigame/src/stb_image_impl.cpp
 
 CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.i: cmake_force
@@ -306,20 +320,6 @@ CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.i: cmake_force
 CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/minigame/src/stb_image_impl.cpp -o CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.s
-
-CMakeFiles/menv.dir/minigame/src/window.cpp.o: CMakeFiles/menv.dir/flags.make
-CMakeFiles/menv.dir/minigame/src/window.cpp.o: minigame/src/window.cpp
-CMakeFiles/menv.dir/minigame/src/window.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/menv.dir/minigame/src/window.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/minigame/src/window.cpp.o -MF CMakeFiles/menv.dir/minigame/src/window.cpp.o.d -o CMakeFiles/menv.dir/minigame/src/window.cpp.o -c /Users/jessieouyang/group3/minigame/src/window.cpp
-
-CMakeFiles/menv.dir/minigame/src/window.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/minigame/src/window.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/minigame/src/window.cpp > CMakeFiles/menv.dir/minigame/src/window.cpp.i
-
-CMakeFiles/menv.dir/minigame/src/window.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/minigame/src/window.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/minigame/src/window.cpp -o CMakeFiles/menv.dir/minigame/src/window.cpp.s
 
 # Object files for target menv
 menv_OBJECTS = \
@@ -339,8 +339,8 @@ menv_OBJECTS = \
 "CMakeFiles/menv.dir/minigame/minigame.cpp.o" \
 "CMakeFiles/menv.dir/minigame/src/character.cpp.o" \
 "CMakeFiles/menv.dir/minigame/src/platform.cpp.o" \
-"CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o" \
-"CMakeFiles/menv.dir/minigame/src/window.cpp.o"
+"CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o" \
+"CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o"
 
 # External object files for target menv
 menv_EXTERNAL_OBJECTS =
@@ -361,8 +361,8 @@ menv: CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_opengl3.cpp.o
 menv: CMakeFiles/menv.dir/minigame/minigame.cpp.o
 menv: CMakeFiles/menv.dir/minigame/src/character.cpp.o
 menv: CMakeFiles/menv.dir/minigame/src/platform.cpp.o
+menv: CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o
 menv: CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o
-menv: CMakeFiles/menv.dir/minigame/src/window.cpp.o
 menv: CMakeFiles/menv.dir/build.make
 menv: /usr/local/lib/libGLEW.dylib
 menv: /usr/local/lib/libglfw.dylib
