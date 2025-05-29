@@ -11,6 +11,7 @@ project(menv)
 set(
     SOURCES
     packets/Packet.cpp
+    packets/GuiUpdatePacket.cpp
     packets/CursorPacket.cpp
     packets/EndGamePacket.cpp
     packets/InitPacket.cpp
@@ -38,6 +39,7 @@ set(
 set(
     HEADERS
     packets/Packet.h
+    packets/GuiUpdatePacket.h
     packets/CursorPacket.h
     packets/EndGamePacket.h
     packets/InitPacket.h

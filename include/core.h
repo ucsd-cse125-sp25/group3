@@ -11,6 +11,7 @@ enum GameState {
     INIT,
     START_MENU,
     CHARACTER_SELECTION,
+    WAITING,
     PLAYING,
     IN_MINIGAME
 };

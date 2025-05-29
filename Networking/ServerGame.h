@@ -20,6 +20,7 @@ public:
     void sendInitNPCState(unsigned int client_id);
     void sendStateUpdate();
     void disconnectClient(unsigned int client_id);
+    void sendGuiUpdate();
 
 private:
 

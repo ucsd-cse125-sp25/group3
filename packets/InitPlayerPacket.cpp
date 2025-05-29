@@ -1,7 +1,7 @@
 #include "InitPlayerPacket.h"
 
 InitPlayerPacket::InitPlayerPacket(){
-    length = sizeof(clientID) + sizeof(uint8_t) + sizeof(uint8_t) + sizeof(model) + sizeof(viewProjectMtx) + sizeof(eye) + sizeof(center) + sizeof(azimuth) + sizeof(incline) + sizeof(aspect) + sizeof(miniViewProjectMtx) + sizeof(miniEye) + sizeof(miniCenter) + sizeof(miniAzimuth) + sizeof(miniIncline) + sizeof(miniAspect) + sizeof(uint8_t);
+    length = sizeof(clientID) + sizeof(currentState) + sizeof(uint8_t) + sizeof(uint8_t) + sizeof(model) + sizeof(viewProjectMtx) + sizeof(eye) + sizeof(center) + sizeof(azimuth) + sizeof(incline) + sizeof(aspect) + sizeof(miniViewProjectMtx) + sizeof(miniEye) + sizeof(miniCenter) + sizeof(miniAzimuth) + sizeof(miniIncline) + sizeof(miniAspect) + sizeof(uint8_t);
 }
 
 unsigned int InitPlayerPacket::getSize() {
@@ -13,6 +13,9 @@ int InitPlayerPacket::serializePayload(char* data) {
 
     std::memcpy(data + offset, &clientID, sizeof(clientID));
     offset += sizeof(clientID);
+
+    std::memcpy(data + offset, &currentState, sizeof(currentState));
+    offset += sizeof(currentState);
 
     uint8_t altDownByte = altDown ? 1 : 0;
     std::memcpy(data + offset, &altDownByte, sizeof(altDownByte));
@@ -73,6 +76,9 @@ int InitPlayerPacket::deserializePayload(char* data) {
 
     std::memcpy(&clientID, data + offset, sizeof(clientID));
     offset += sizeof(clientID);
+
+    std::memcpy(&currentState, data + offset, sizeof(currentState));
+    offset += sizeof(currentState);
 
     uint8_t altDownByte;
     std::memcpy(&altDownByte, data + offset, sizeof(altDownByte));

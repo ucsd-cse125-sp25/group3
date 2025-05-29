@@ -2,7 +2,7 @@
 
 unsigned int Window::client_id;
 bool Window::initialized = false;
-GameState Window::currentState = PLAYING;
+GameState Window::currentState = START_MENU;
 bool Window::stateChanged = false;
 
 // Window Properties
@@ -409,6 +409,7 @@ void Window::applyServerState(const StateUpdatePacket& packet) {
                     MiniMapCam->updateFromPacket(*initPacket, true);
                     altDown = initPacket->altDown;
                     radarActive = initPacket->radarActive;
+                    currentState = initPacket->currentState;
                 }
             }
         }
@@ -543,4 +544,5 @@ void Window::setInitState(const InitPlayerPacket& packet) {
     MiniMapCam->updateFromPacket(packet, true);
     altDown = packet.altDown;
     initialized = true;
+    currentState = packet.currentState;
 }

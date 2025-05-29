@@ -1,6 +1,9 @@
 #include "ClientLogic.h" 
 
+ImVec2 client_logic::displaySize;
+ImGuiIO* client_logic::io;
 ImFont* client_logic::handwritingFont;
+// ImGuiIO& client_logic::io;
 std::vector<std::unique_ptr<Packet>> client_logic::pendingPackets;
 
 void client_logic::error_callback(int error, const char* description) {
@@ -202,16 +205,6 @@ bool client_logic::LoadTextureFromFile(const char* file_name, GLuint* out_textur
     return ret;
 }
 
-const char* GameStateToString(GameState state) {
-    switch (state) {
-        case START_MENU: return "START MENU";
-        case CHARACTER_SELECTION: return "CHARACTER SELECTION";
-        case PLAYING: return "PLAYING";
-        case IN_MINIGAME: return "IN MINIGAME";
-        default: return "UNKNOWN";
-    }
-}
-
 void client_logic::setStartPage() {
     GLuint parchmentTexture;
     int parchmentWidth, parchmentHeight;
@@ -219,6 +212,7 @@ void client_logic::setStartPage() {
     IM_ASSERT(ok);
 
     // Load a handwriting-style font
+    // ImFont* handwritingFont = io.Fonts->AddFontFromFileTTF("../external/style/fonts/HomemadeApple-Regular.ttf", 28.0f);
 
     // In your render loop:
     ImGui_ImplOpenGL3_NewFrame();
@@ -296,7 +290,7 @@ void client_logic::setStartPage() {
         // currentState = CHARACTER_SELECTION;
         auto packet = std::make_unique<KeyPacket>();
         packet->packet_type = KEY_INPUT;
-        packet->key_type = KeyType::KEY_START;
+        packet->key_type = KeyType::MENU_START;
         pendingPackets.push_back(std::move(packet));
     }
     ImVec2 startPos = ImGui::GetItemRectMin();
@@ -344,5 +338,218 @@ void client_logic::setStartPage() {
     // Mandatory ImGui frame termination
     ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
     ImGui::Text("Current Game State: %s", "START MENU");
+    ImGui::End();
+}
+
+void client_logic::setCharacterSelectPage() {
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    // ImGui::Begin("CharacterSelect", nullptr,
+    //     ImGuiWindowFlags_NoTitleBar |
+    //     ImGuiWindowFlags_NoResize |
+    //     ImGuiWindowFlags_NoMove);
+    ImGuiWindowFlags sidePanelFlags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
+
+    ImVec2 windowSize = io->DisplaySize;
+    float panelWidth = 360.0f;  // adjust width to your liking
+    float panelHeight = windowSize.y;
+
+    // Fix position to right side
+    ImGui::SetNextWindowPos(ImVec2(windowSize.x - panelWidth, 0));
+    ImGui::SetNextWindowSize(ImVec2(panelWidth, panelHeight));
+    
+    ImGui::Begin("Toolbar", nullptr,
+        ImGuiWindowFlags_NoTitleBar |
+        ImGuiWindowFlags_NoResize |
+        ImGuiWindowFlags_NoMove |
+        ImGuiWindowFlags_NoCollapse |
+        ImGuiWindowFlags_NoScrollbar |
+        ImGuiWindowFlags_NoBackground);
+
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
+
+    static int selectedSlot = 0;
+    const char* abilities[] = { "Thief 1", "Thief 2", "Thief 3", "Security Guard" };
+    int slotCount = IM_ARRAYSIZE(abilities);
+    static CharacterType selCharacter;
+
+    for (int i = 0; i < slotCount; ++i) {
+        if (i > 0) ImGui::SameLine();
+
+        if (i == selectedSlot) {
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.3f, 0.7f, 0.3f, 1.0f)); // highlight
+        } else {
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
+        }
+
+        std::string label = "[" + std::string(abilities[i]) + "]";
+        ImGui::BeginDisabled(false);
+        if (ImGui::Button(label.c_str(), ImVec2(64, 64))) {
+            selectedSlot = i;
+            selCharacter = static_cast<CharacterType>(i); // your own enum
+        }
+        ImGui::EndDisabled();
+        ImGui::PopStyleColor();
+    }
+
+    ImGui::PopStyleVar(2);
+    ImGui::End();
+    // This window can collapse, but can't be moved or resized
+    // ImGui::Begin("Character Customization", nullptr, sidePanelFlags);
+
+    //             if (ImGui::Button("Confirm", ImVec2(120, 40))) {
+    //         currentState = PLAYING;
+    //         stateChanged = true; // Flag for state transition
+    //         glfwPostEmptyEvent(); // Force frame refresh
+    //     }
+    //             ImGui::End();
+
+
+    // ImGui::Begin("Character Customization", nullptr, ImGuiWindowFlags_NoResize);
+    ImGui::Begin("OPTIONS PLACEHOLDER", nullptr, ImGuiWindowFlags_NoResize);
+    ImGui::Text("🧍 Customize Your Character");
+    ImGui::PushStyleColor(ImGuiCol_Button,        ImVec4(0.43f, 0.35f, 0.27f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.55f, 0.44f, 0.32f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive,  ImVec4(0.37f, 0.29f, 0.21f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.98f, 0.92f, 0.84f, 1.00f));
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 6.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(14, 10));
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(12, 14));
+
+
+    // ImGui::Separator();
+    // ImGui::Spacing();
+
+    // === Left Column ===
+
+
+    // === Right Column ===
+    // ImGui::BeginChild("Options", ImVec2(0, 500), true, ImGuiWindowFlags_AlwaysUseWindowPadding);
+
+    // const char* tabs[] = { "👔 Outfit", "🎩 Hat", "🎒 Accessory" };
+    // static int tab = 0;
+    // for (int i = 0; i < 3; ++i) {
+    //     if (i > 0) ImGui::SameLine();
+    //     if (ImGui::Selectable(tabs[i], tab == i)) tab = i;
+    // }
+    // ImGui::Separator();
+
+    // const char* outfitOptions[] = { "Casual", "Stealth", "Fancy", "Rugged" };
+    // const char* hatOptions[] = { "None", "Cap", "Hood", "Crown" };
+    // const char* accessoryOptions[] = { "Backpack", "Cape", "Glasses" };
+
+    // const char** options = nullptr;
+    // int count = 0;
+    // if (tab == 0) { options = outfitOptions; count = IM_ARRAYSIZE(outfitOptions); }
+    // else if (tab == 1) { options = hatOptions; count = IM_ARRAYSIZE(hatOptions); }
+    // else { options = accessoryOptions; count = IM_ARRAYSIZE(accessoryOptions); }
+
+    // for (int i = 0; i < count; ++i) {
+    //     if (ImGui::Button(options[i], ImVec2(200, 40))) {
+    //         // Handle selection
+    //     }
+    // }
+
+    // ImGui::EndChild();
+
+    // ImGui::Spacing();
+    
+        
+    if (ImGui::Button("◀ Back")) {
+        auto packet = std::make_unique<KeyPacket>();
+        packet->packet_type = KEY_INPUT;
+        packet->key_type = KeyType::CHAR_SEL_BACK;
+        pendingPackets.push_back(std::move(packet));
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Randomize")) { /* randomize logic */ }
+    ImGui::SameLine();
+    // if (ImGui::Button("Confirm")) {currentState = PLAYING;}
+    if (ImGui::Button("Confirm", ImVec2(120, 40))) {
+        // currentState = PLAYING;
+        // stateChanged = true; // Flag for state transition
+        // glfwPostEmptyEvent(); // Force frame refresh
+        auto packet = std::make_unique<InitPacket>();
+        packet->packet_type = INIT_CONNECTION;
+        packet->character = selCharacter;
+        packet->windowWidth = Window::width;
+        packet->windowHeight = Window::height;
+        pendingPackets.push_back(std::move(packet));
+    }
+    ImGui::PopStyleVar(3);
+    ImGui::PopStyleColor(4);
+
+    // ImGui::End();
+    ImGui::End();
+
+    // Mandatory ImGui frame termination
+    ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::Text("Current Game State: %s", "Character Select");
+    ImGui::End();
+}
+
+void client_logic::setMainGameWindow(GLFWwindow* window, bool waiting) {
+    ImVec2 windowSize = io->DisplaySize;
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+    Window::render(window);
+    // Window::displayCallback(window);
+
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x / 2 - 200, ImGui::GetIO().DisplaySize.y - 100));
+    ImGui::SetNextWindowSize(ImVec2(400, 80));
+
+    // ImGui::Begin("Toolbar", nullptr,
+    //     ImGuiWindowFlags_NoTitleBar |
+    //     ImGuiWindowFlags_NoResize |
+    //     ImGuiWindowFlags_NoMove |
+    //     ImGuiWindowFlags_NoCollapse |
+    //     ImGuiWindowFlags_NoScrollbar |
+    //     ImGuiWindowFlags_NoBackground);
+
+    // ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
+    // ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
+
+    // static int selectedSlot = 0;
+    // const char* abilities[] = { "None", "Invisibility", "Speed", "Trap", "Scan" };
+    // int slotCount = IM_ARRAYSIZE(abilities);
+
+    // for (int i = 0; i < slotCount; ++i) {
+    //     if (i > 0) ImGui::SameLine();
+
+    //     if (i == selectedSlot) {
+    //         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.3f, 0.7f, 0.3f, 1.0f)); // highlight
+    //     } else {
+    //         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
+    //     }
+
+    //     std::string label = "[" + std::string(abilities[i]) + "]";
+    //     if (ImGui::Button(label.c_str(), ImVec2(64, 64))) {
+    //         selectedSlot = i;
+    //         Window::currentAbility = static_cast<AbilityType>(i); // your own enum
+    //     }
+
+    //     ImGui::PopStyleColor();
+    // }
+
+    // ImGui::PopStyleVar(2);
+    // ImGui::End();
+
+    ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::Text("Current Game State: %s", "Playing");
+    ImGui::End();
+
+    ImGui::Begin("MINIGAME PLACEHOLDER", nullptr, ImGuiWindowFlags_NoResize);
+    
+    if (ImGui::Button("I DIED", ImVec2(120, 40))) {
+        // currentState = IN_MINIGAME;
+        // stateChanged = true; // Flag for state transition
+        // glfwPostEmptyEvent(); // Force frame refresh
+    }
     ImGui::End();
 }

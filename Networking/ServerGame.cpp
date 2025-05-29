@@ -105,6 +105,7 @@ void ServerGame::receiveFromClients() {
                     printf("player is character %d\n", initPacket->character);
                     // playersData[iter->first] = player;
                     sendInitPlayerState(iter->first);
+                    ServerLogic::gameStarted = true;
                     //sendInitNPCState(iter->first);
                     break;
                 }
@@ -125,11 +126,12 @@ void ServerGame::receiveFromClients() {
                     KeyPacket* keyPacket = dynamic_cast<KeyPacket*>(packet.get());
                     // printf("server recieved key input packet from client\n");
                     if (keyPacket) {
-
-                        if (ServerLogic::processMovement(recievedMovementKeys, keyPacket->key_type))
+                        
+                        if (ServerLogic::gameStarted && ServerLogic::processMovement(recievedMovementKeys, keyPacket->key_type)) {
                             player->calculateNewPos(keyPacket->key_type, &artifact);
-                        //playersData[iter->first] = player;
-                        //sendPlayerState(iter->first);
+                        } else if (player->currentState != PLAYING) {
+                            player->handleGuiInput(keyPacket->key_type);
+                        }
                     } else {
                         printf("Error: Failed to cast to KeyPacket\n");
                     }
@@ -163,6 +165,7 @@ void ServerGame::receiveFromClients() {
         } else {
             // player->calculateNewPos(recievedKeys, &artifact);
             player->update();
+
             // player.camera.Update(player.cube.getPosition()); 
             // player.cube.update();
             // playersData[iter->first] = player;
@@ -177,7 +180,14 @@ void ServerGame::receiveFromClients() {
         npcData[npcIter->first] = npc;
     }
     artifact.update();
-    sendStateUpdate();
+
+    
+    if (ServerLogic::gameStarted) {
+        sendStateUpdate();
+    } else {
+        sendGuiUpdate();
+    }
+    
     auto orig_diff = std::chrono::steady_clock::now() - start;
     auto milli_diff = std::chrono::duration_cast<std::chrono::milliseconds>(orig_diff);
     auto wait = std::chrono::milliseconds(TICK) - milli_diff;
@@ -236,6 +246,7 @@ void ServerGame::sendInitPlayerState(unsigned int client_id) {
     packet.packet_type = INIT_PLAYER;
 
     packet.clientID = client_id;
+    packet.currentState = player->currentState;
     packet.altDown = player->altDown;
     packet.radarActive = player->radarActive;
 
@@ -248,11 +259,6 @@ void ServerGame::sendInitPlayerState(unsigned int client_id) {
     packet.serialize(packet_data.data());
 
     network->sendToOne(client_id, packet_data.data(), packet_size);
-
-    // printf("done sending\n");
-    // for (int i=0; i<64; i++) {
-    //     printf("elem %d: %hhx\n", i, (unsigned char) packet.payload[i]);
-    // }
 }
 
 //ideally would send game state to all clients at same time, probably at game start
@@ -291,6 +297,7 @@ void ServerGame::sendStateUpdate() {
             auto playerPacket = std::make_unique<InitPlayerPacket>();
             playerPacket->packet_type = INIT_PLAYER;
             playerPacket->clientID = playerIter->first;
+            playerPacket->currentState = player->currentState;
             playerPacket->altDown = player->altDown;
             playerPacket->radarActive = player->radarActive;
 
@@ -321,4 +328,21 @@ void ServerGame::sendStateUpdate() {
     std::vector<char> packet_data(packet_size);
     packet.serialize(packet_data.data());
     network->sendToAll(packet_data.data(), packet_size);
+}
+
+void ServerGame::sendGuiUpdate() {
+    std::map<unsigned int, PlayerData*>::iterator playerIter;
+
+    //for now just send current state every loop
+    for (playerIter = playersData.begin(); playerIter != playersData.end(); playerIter++) {
+        PlayerData* player = playerIter->second;
+        GuiUpdatePacket packet;
+        packet.packet_type = GUI_UPDATE;
+        packet.currentState = player->currentState;
+        const unsigned int packet_size = packet.getSize();
+        std::vector<char> packet_data(packet_size);
+        packet.serialize(packet_data.data());
+        // printf("sending state: %d\n", player->currentState);
+        network->sendToOne(playerIter->first, packet_data.data(), packet_size);
+    }
 }

@@ -24,6 +24,8 @@ enum class OSType: uint8_t {
 #define CLIENT_LOGIC
 class client_logic {
     public:
+        static ImGuiIO* io;
+        static ImVec2 displaySize;
         static ImFont* handwritingFont;
 
         static std::vector<std::unique_ptr<Packet>> pendingPackets;
@@ -45,5 +47,9 @@ class client_logic {
         static bool LoadTextureFromFile(const char* file_name, GLuint* out_texture, int* out_width, int* out_height);
 
         static void setStartPage();
+
+        static void setCharacterSelectPage();
+
+        static void setMainGameWindow(GLFWwindow* window, bool waiting);
 };
 #endif

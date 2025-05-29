@@ -19,7 +19,8 @@ enum class KeyType {
     KEY_ALT_PRESS = 13,
     KEY_ALT_RELEASE = 14,
     KEY_F = 15,
-    KEY_START,
+    MENU_START = 16,
+    CHAR_SEL_BACK = 17,
 };
 
 class KeyPacket : public Packet {

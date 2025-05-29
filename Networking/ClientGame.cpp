@@ -23,6 +23,7 @@ ClientGame::ClientGame(CharacterType character)
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
+    client_logic::io = &io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
     io.Fonts->AddFontFromFileTTF("../external/style/fonts/Junicode-Bold.ttf", 32.0f);
@@ -41,7 +42,6 @@ ClientGame::ClientGame(CharacterType character)
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
-
     
     int my_image_width = 0;
     int my_image_height = 0;
@@ -51,7 +51,7 @@ ClientGame::ClientGame(CharacterType character)
 
     // send init packet
     //std::cout << "Sending Init Packet\n";
-    sendInitPacket(character);
+    // sendInitPacket(character);
     //std::cout << "Init Packet sent\n";
 }
 
@@ -103,9 +103,14 @@ void ClientGame::update()
     }
 
     if (Window::currentState == START_MENU) {
-        // client_logic::setStartPage();
+        client_logic::setStartPage();
+    } else if (Window::currentState == CHARACTER_SELECTION){
+        client_logic::setCharacterSelectPage();
     } else if (Window::currentState == PLAYING) {
         client_logic::handleUserInput(window);
+        client_logic::setMainGameWindow(window, false);
+    } else if (Window::currentState == WAITING) {
+        client_logic::setMainGameWindow(window, true);
     }
     
     sendPendingPackets();
@@ -135,9 +140,12 @@ void ClientGame::update()
                 Window::setInitState(*initPlayerPacket);
                 break;
             }
-            case ACTION_EVENT:
-                printf("client received action event packet from server\n");
+            case GUI_UPDATE: {
+                // printf("recieved gui update packet from server\n");
+                GuiUpdatePacket* guiPacket = dynamic_cast<GuiUpdatePacket*>(packet.get());
+                Window::currentState = guiPacket->currentState;
                 break;
+            }
             case ECHO_EVENT:
                 printf("client recieved echo event packet from server\n");
                 break;
@@ -174,12 +182,12 @@ void ClientGame::update()
                 break;
         }
     }
-    // if (Window::currentState != IN_MINIGAME ){
-    //     ImGui::Render();
-    //     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    // }
+    if (Window::currentState != IN_MINIGAME ){
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    }
     
-    Window::render(window);
+    // Window::render(window);
     glfwSwapBuffers(window);
     // Window::updateRest(packet.payload.data());
     // Window::applyRest(packet.payload.data(), , packet.length);

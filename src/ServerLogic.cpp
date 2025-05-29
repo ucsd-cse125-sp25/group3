@@ -1,5 +1,7 @@
 #include "ServerLogic.h"
 
+bool ServerLogic::gameStarted = false;
+
 CubeState::CubeState(glm::vec3 cubeMin, glm::vec3 cubeMax) {
     // Model matrix.
     model = glm::mat4(1.0f);
@@ -166,6 +168,21 @@ void CubeState::saveToPacket(InitPlayerPacket& packet) {
 //     delete camera;
 // }
 
+void PlayerData::handleGuiInput(KeyType key) {
+
+    if (currentState == START_MENU) {
+
+        if (key == KeyType::MENU_START) {
+            currentState = CHARACTER_SELECTION;
+        }
+    } else if (currentState == CHARACTER_SELECTION) {
+
+        if (key == KeyType::CHAR_SEL_BACK) {
+            currentState = START_MENU;
+        }
+    }
+}
+
 void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact) {
     glm::vec3 forwardDir = camera.GetForwardVector();
     forwardDir.y = 0.0f;  
@@ -272,7 +289,8 @@ void PlayerData::init(InitPacket* packet) {
     cube.type = packet->character;
     windowWidth = packet->windowWidth;
     windowHeight = packet->windowHeight;
-    printf("character: %d, width: %d, height: %d\n", cube.type, windowWidth, windowHeight);
+    currentState = PLAYING;
+    // printf("character: %d, width: %d, height: %d\n", cube.type, windowWidth, windowHeight);
 }
 
 void PlayerData::handleCursor(double currX, double currY) {
@@ -337,6 +355,9 @@ void PlayerData::updateRadarAbility() {
 }
 
 void PlayerData::update() {
+
+    if (!initialized) return;
+
     updateRadarAbility();
     cube.update();
     camera.Update(cube.getPosition()); 

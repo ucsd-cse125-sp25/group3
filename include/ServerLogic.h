@@ -102,6 +102,8 @@ class ArtifactState {
 
 class PlayerData {
     public:
+        bool stateChanged = false;
+        GameState currentState = START_MENU;
         CubeState cube;
         Camera camera;
         Camera miniMapCam;
@@ -123,10 +125,12 @@ class PlayerData {
         void saveToPacket(unsigned int client_id, InitPlayerPacket& packet);
         void updateRadarAbility();
         void update();
+
+        void handleGuiInput(KeyType key);
 };
 
 class ServerLogic {
     public:
+        static bool gameStarted;
         static bool processMovement(std::set<KeyType>& recievedMovementKeys, KeyType key);
-
 };
