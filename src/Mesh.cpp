@@ -119,9 +119,8 @@ void Mesh::setMaterials(TextureManager* textureManager, const aiMesh* mesh, cons
         tex = textureManager->LoadTexture(path);
         if (tex != 0){
             renderMode = RenderMode::TEXTURE;
-        }
-        if ((path.compare("../textures/Museum Map.fbm/Fork.png") == 0)){
-            std::cout << tex << std::endl;
+        } else {
+            std::cout << "texture set to 0" << std::endl;
         }
     }
 
