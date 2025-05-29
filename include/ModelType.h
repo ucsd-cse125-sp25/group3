@@ -1,4 +1,7 @@
 #pragma once
+#include "core.h"
+#include <iostream>
+#include <string>
 
 enum class ModelType {
     SecurityGuard, 
@@ -9,3 +12,5 @@ enum class ModelType {
     Bunny,
     Cube
 };
+
+std::string modelToString(ModelType model);

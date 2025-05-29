@@ -8,6 +8,7 @@
 #include "utils.h"
 #include "Skeleton.h"
 #include "ShaderManager.h"
+#include "TextureManager.h"
 
 #define MAX_JOINT_INFLUENCE 8
 #define MAX_JOINTS 100
@@ -69,9 +70,9 @@ public:
 
     void setColor(glm::vec3 color);
 
-    bool setMesh(const aiMesh* mesh, const aiScene* scene);
+    bool setMesh(TextureManager* textureManager, const aiMesh* mesh, const aiScene* scene);
 
-    void setMaterials(const aiMesh* mesh, const aiScene *scene);
+    void setMaterials(TextureManager* textureManager, const aiMesh* mesh, const aiScene *scene);
 
     void setSkel(Skeleton* skel);
 

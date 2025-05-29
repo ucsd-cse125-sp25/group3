@@ -9,6 +9,7 @@
 #include "ModelType.h"
 #include "ShaderManager.h"
 #include "AnimationPlayer.h"
+#include "TextureManager.h"
 
 /*
 The Model class should handle everything about a 3D model.
@@ -25,7 +26,7 @@ private:
 
     Skeleton* skel;
 
-    void process(const aiScene* scene);
+    void process(const aiScene* scene, TextureManager* textureManager);
 
 public:
 
@@ -36,7 +37,7 @@ public:
 
     Call update(), then call setupBuf() once at the beginning.
     */
-    Model(ModelType mType, const std::string & file);
+    Model(ModelType mType, const std::string & file, TextureManager* textureManager);
 
     /*
     Deletes all meshes controlled by the Model.
@@ -50,7 +51,7 @@ public:
 
     @param file A file containing a 3D model.
     */
-    bool load(const std::string & file);
+    bool load(const std::string & file, TextureManager* textureManager);
 
     void setModelType(ModelType mType);
 

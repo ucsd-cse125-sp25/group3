@@ -8,13 +8,15 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 
 #include "core.h"
 
 class TextureManager {
 private:
 
-    std::vector<GLuint> textures;
+    // std::vector<GLuint> textures;
+    std::map<std::string, GLuint> textures;
 
 public:
 
@@ -27,7 +29,5 @@ public:
     */
     ~TextureManager();
 
-    GLuint LoadTexture(const char* texture_file_path);
-
-    GLuint getTexture(int id);
+    GLuint LoadTexture(std::string texture_file_path);
 };

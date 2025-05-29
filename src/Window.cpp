@@ -86,7 +86,7 @@ bool Window::initializeObjects() {
     if (!animationPlayer->loadAnims(ModelType::SecurityGuard, AnimState::Walk, "../models/characters/security_guard.fbx")) {
         std::cout << "animation loading failed" << std::endl;
     }
-    Model* securityGuard = new Model(ModelType::SecurityGuard, "../models/characters/security_guard.fbx");
+    Model* securityGuard = new Model(ModelType::SecurityGuard, "../models/characters/security_guard.fbx", textureManager);
     securityGuard->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)));
     securityGuard->setSkel(animationPlayer);
     modelManager->addModel(securityGuard);
@@ -105,8 +105,14 @@ bool Window::initializeObjects() {
 
     std::cout << "instance2" << std::endl;
 
-    // Model* buddha = new Model(ModelType::Buddha, "../models/buddha.ply");
-    Model* buddha = new Model(ModelType::Buddha, "../models/buddha.ply");
+    Model* museum = new Model(ModelType::Museum, "../models/map/museum.fbx", textureManager);
+    museum->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
+    modelManager->addModel(museum);
+    AnInstance* museumInstance = new AnInstance(museum);
+    scene->addInstance(museumInstance);
+
+    Model* buddha = new Model(ModelType::Buddha, "../models/buddha.ply", textureManager);
+    // Model* buddha = new Model(ModelType::Museum, "../models/map/museum.fbx", textureManager);
     modelManager->addModel(buddha);
 
     AnInstance* model = new AnInstance(buddha);
@@ -218,11 +224,12 @@ void Window::resizeCallback(GLFWwindow* window, int width, int height) {
 void Window::idleCallback() {
     // Perform any updates as necessary.
     // Cam->Update();
-    Cam->Update(cube->getPosition());
+    // Cam->Update(cube->getPosition());
+    Cam->Update(character->getPosition());
 
     // animationPlayer->fullUpdate();
     // cube->update();
-    // character->update(animationPlayer);
+    character->update(animationPlayer);
     if ((bro2->getState() != AnimState::Walk) && (float) glfwGetTime() > 10){
         bro2->setState(AnimState::Walk);
     }
@@ -269,7 +276,7 @@ void Window::displayCallback(GLFWwindow* window) {
     // scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
     // // model->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
 
-    // character->draw(Cam->GetViewProjectMtx(), shaderManager);
+    character->draw(Cam->GetViewProjectMtx(), shaderManager);
 
     // Gets events, including input such as keyboard and mouse or window resizing.
     glfwPollEvents();

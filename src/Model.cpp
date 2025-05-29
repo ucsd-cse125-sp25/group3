@@ -8,13 +8,14 @@
 #include <assimp/postprocess.h>
 
 
-Model::Model(ModelType mType, const std::string & file){
-    // model = glm::mat4(1.0f);
+Model::Model(ModelType mType, const std::string & file, TextureManager* textureManager){
+    model = glm::mat4(1.0f);
+    
     modelType = mType;
 
     skel = NULL;
 
-    load(file);
+    load(file, textureManager);
 
     setupBuf();
 }
@@ -31,19 +32,19 @@ ModelType Model::getModelType() {
     return modelType;
 }
 
-void Model::process(const aiScene* scene) {
+void Model::process(const aiScene* scene, TextureManager* textureManager) {
     if (scene->HasMeshes()){
         meshes.reserve(scene->mNumMeshes);
         for (int i = 0; i < scene->mNumMeshes; i++){
             Mesh* m = new Mesh();
-            if (m->setMesh(scene->mMeshes[i], scene)){
+            if (m->setMesh(textureManager, scene->mMeshes[i], scene)){
                 meshes.push_back(m);
             };
         }
     }
 }
 
-bool Model::load(const std::string& file){
+bool Model::load(const std::string& file, TextureManager* textureManager){
     Assimp::Importer importer;
 
     const aiScene* scene = importer.ReadFile(file, 
@@ -56,7 +57,7 @@ bool Model::load(const std::string& file){
         return false;
     }
 
-    process(scene);
+    process(scene, textureManager);
 
     return true;
 }

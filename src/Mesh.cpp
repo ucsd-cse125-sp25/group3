@@ -39,7 +39,7 @@ void Mesh::setColor(glm::vec3 color){
     this->color = color;
 }
 
-bool Mesh::setMesh(const aiMesh* mesh, const aiScene* scene) {
+bool Mesh::setMesh(TextureManager* textureManager, const aiMesh* mesh, const aiScene* scene) {
     vertices.reserve(mesh->mNumVertices);
     // verticesRaw.reserve(mesh->mNumVertices);
     for (int i = 0; i < mesh->mNumVertices; i++){
@@ -86,20 +86,45 @@ bool Mesh::setMesh(const aiMesh* mesh, const aiScene* scene) {
         }
     }
 
-    setMaterials(mesh, scene);
+    setMaterials(textureManager, mesh, scene);
 
     setJointVals(mesh);
 
     return true;
 }
 
-void Mesh::setMaterials(const aiMesh* mesh, const aiScene *scene) {
+void Mesh::setMaterials(TextureManager* textureManager, const aiMesh* mesh, const aiScene *scene) {
+    if (mesh->mMaterialIndex < 0){
+        std::cout << "no material linked" << std::endl;
+        return;
+    }
+    
     aiColor3D diffuse_color;
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-    aiMaterialProperty** properties = material->mProperties;
-    for (int i = 0; i < material->mNumProperties; i++){
-        // std::cout << properties[i]->mKey.C_Str() << std::endl;
+    // aiMaterialProperty** properties = material->mProperties;
+
+    // for (int i = 0; i < material->mNumProperties; i++){
+    //     // std::cout << properties[i]->mKey.C_Str() << std::endl;
+    // }
+
+    aiTextureType texDiffuse = aiTextureType_DIFFUSE;
+
+    std::cout << "texture count" << material->GetTextureCount(texDiffuse) << std::endl;
+    if (material->GetTextureCount(texDiffuse) > 0){
+        aiString texName;
+        material->GetTexture(texDiffuse, 0, &texName);
+
+        std::string path = "../textures/"+std::string(texName.C_Str());
+        std::cout << path << std::endl;
+        tex = textureManager->LoadTexture(path);
+        if (tex != 0){
+            renderMode = RenderMode::TEXTURE;
+        }
+        if ((path.compare("../textures/Museum Map.fbm/Fork.png") == 0)){
+            std::cout << tex << std::endl;
+        }
     }
+
     if (AI_SUCCESS != material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse_color)){
         // std::cout << "couldn't get base color";
     } else {
