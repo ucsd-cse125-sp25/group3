@@ -73,6 +73,21 @@ GLuint TextureManager::LoadEmbeddedTexture(const aiTexture* texture, std::string
     return texID;
 }
 
+bool exrToPng(std::string &str) {
+    std::string exr = ".exr";
+    std::string png = ".png";
+    if (str.length() >= exr.length()){
+        if (0 == str.compare(str.length() - exr.length(), exr.length(), exr)) {
+            str.replace(str.length() - png.length(), png.length(), png);
+            std::cout << str << std::endl;
+            return true;
+        }
+        return false;
+    } else {
+        return false;
+    }
+}
+
 GLuint TextureManager::LoadTexture(std::string name){
 
     if (textures.find(name) != textures.end()){
@@ -86,10 +101,12 @@ GLuint TextureManager::LoadTexture(std::string name){
         texture_file_path = "../textures/Museum Map.fbm/Screenshot 2025-05-18 at.png";
     }
 
-    if (texture_file_path.compare("../textures/security guard.fbm/body_color.001.exr") == 0){
-        texture_file_path = "../textures/security guard.fbm/body_color_001.png";
-    }
+    // if (texture_file_path.compare("../textures/security guard.fbm/body_color.001.exr") == 0){
+    //     texture_file_path = "../textures/security guard.fbm/body_color_001.png";
+    // }
 
+    exrToPng(texture_file_path);
+    
     // load image
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
