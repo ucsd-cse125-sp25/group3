@@ -142,6 +142,7 @@ void ClientGame::update()
                 // printf("recieved gui update packet from server\n");
                 GuiUpdatePacket* guiPacket = dynamic_cast<GuiUpdatePacket*>(packet.get());
                 Window::applyGuiUpdate(*guiPacket);
+                client_logic::updateAvailableChars(*guiPacket);
                 // Window::currentState = guiPacket->currentState;
                 break;
             }

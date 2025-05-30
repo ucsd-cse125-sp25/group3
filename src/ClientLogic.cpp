@@ -3,8 +3,17 @@
 ImVec2 client_logic::displaySize;
 ImGuiIO* client_logic::io;
 ImFont* client_logic::handwritingFont;
+bool client_logic::availableChars[4];
 // ImGuiIO& client_logic::io;
 std::vector<std::unique_ptr<Packet>> client_logic::pendingPackets;
+
+
+void client_logic::updateAvailableChars(GuiUpdatePacket& packet) {
+
+    for (int i=0; i<4; i++) {
+        availableChars[i] = packet.availableChars[i];
+    }
+}
 
 void client_logic::error_callback(int error, const char* description) {
     // Print error.
@@ -363,7 +372,9 @@ void client_logic::setCharacterSelectPage(GameState currState) {
     // Fix position to right side
     ImGui::SetNextWindowPos(ImVec2(windowSize.x - panelWidth, 0));
     ImGui::SetNextWindowSize(ImVec2(panelWidth, panelHeight));
-    
+
+    ImGui::BeginDisabled(currState == WAITING);
+
     ImGui::Begin("Toolbar", nullptr,
         ImGuiWindowFlags_NoTitleBar |
         ImGuiWindowFlags_NoResize |
@@ -379,6 +390,7 @@ void client_logic::setCharacterSelectPage(GameState currState) {
     const char* abilities[] = { "Thief 1", "Thief 2", "Thief 3", "Security Guard" };
     int slotCount = IM_ARRAYSIZE(abilities);
     static CharacterType selCharacter;
+    // ImGui::EndDisabled();
 
     for (int i = 0; i < slotCount; ++i) {
         if (i > 0) ImGui::SameLine();
@@ -390,7 +402,7 @@ void client_logic::setCharacterSelectPage(GameState currState) {
         }
 
         std::string label = "[" + std::string(abilities[i]) + "]";
-        ImGui::BeginDisabled(currState == WAITING);
+        ImGui::BeginDisabled(!availableChars[i]);
         if (ImGui::Button(label.c_str(), ImVec2(64, 64))) {
             selectedSlot = i;
             selCharacter = static_cast<CharacterType>(i); // your own enum
@@ -401,6 +413,7 @@ void client_logic::setCharacterSelectPage(GameState currState) {
 
     ImGui::PopStyleVar(2);
     ImGui::End();
+    
     // This window can collapse, but can't be moved or resized
     // ImGui::Begin("Character Customization", nullptr, sidePanelFlags);
 
@@ -413,6 +426,8 @@ void client_logic::setCharacterSelectPage(GameState currState) {
 
 
     // ImGui::Begin("Character Customization", nullptr, ImGuiWindowFlags_NoResize);
+    // ImGui::BeginDisabled(currState == WAITING);
+
     ImGui::Begin("OPTIONS PLACEHOLDER", nullptr, ImGuiWindowFlags_NoResize);
     ImGui::Text("🧍 Customize Your Character");
     ImGui::PushStyleColor(ImGuiCol_Button,        ImVec4(0.43f, 0.35f, 0.27f, 1.00f));
@@ -461,7 +476,7 @@ void client_logic::setCharacterSelectPage(GameState currState) {
 
     // ImGui::Spacing();
     
-    ImGui::BeginDisabled(currState == WAITING);
+    
         
     if (ImGui::Button("◀ Back")) {
         auto packet = std::make_unique<KeyPacket>();
@@ -484,13 +499,13 @@ void client_logic::setCharacterSelectPage(GameState currState) {
         packet->windowHeight = Window::height;
         pendingPackets.push_back(std::move(packet));
     }
-    ImGui::EndDisabled();
+    // ImGui::EndDisabled();
     ImGui::PopStyleVar(3);
     ImGui::PopStyleColor(4);
 
     // ImGui::End();
     ImGui::End();
-
+    ImGui::EndDisabled();
     // Mandatory ImGui frame termination
     ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
     ImGui::Text("Current Game State: %s", "Character Select");

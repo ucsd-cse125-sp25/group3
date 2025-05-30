@@ -27,8 +27,11 @@ class client_logic {
         static ImGuiIO* io;
         static ImVec2 displaySize;
         static ImFont* handwritingFont;
+        static bool availableChars[4];
 
         static std::vector<std::unique_ptr<Packet>> pendingPackets;
+
+        static void updateAvailableChars(GuiUpdatePacket& packet);
 
         static void error_callback(int error, const char* description);
 

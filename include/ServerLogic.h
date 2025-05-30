@@ -134,7 +134,7 @@ class PlayerData {
 class ServerLogic {
     public:
         static bool gameStarted;
-        static bool charSelected[4];
+        static bool availableChars[4];
         static bool processMovement(std::set<KeyType>& recievedMovementKeys, KeyType key);
         static void attemptGameStart(std::map<unsigned int, PlayerData*>& playersData);
 };

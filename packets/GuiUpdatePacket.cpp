@@ -1,7 +1,7 @@
 #include "GuiUpdatePacket.h"
 
 GuiUpdatePacket::GuiUpdatePacket(){
-    length = sizeof(currentState);
+    length = sizeof(currentState) + sizeof(availableChars);
 }
 
 unsigned int GuiUpdatePacket::getSize() {
@@ -14,7 +14,8 @@ int GuiUpdatePacket::serializePayload(char* data) {
     std::memcpy(data + offset, &currentState, sizeof(currentState));
     offset += sizeof(currentState);
 
-    
+    std::memcpy(data + offset, &availableChars, sizeof(availableChars));
+    offset += sizeof(availableChars);
 
     return offset;
 }
@@ -24,6 +25,9 @@ int GuiUpdatePacket::deserializePayload(char* data) {
 
     std::memcpy(&currentState, data + offset, sizeof(currentState));
     offset += sizeof(currentState);
+
+    std::memcpy(&availableChars, data + offset, sizeof(availableChars));
+    offset += sizeof(availableChars);
 
     return offset;
 }

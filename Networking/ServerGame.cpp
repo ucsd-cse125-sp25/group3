@@ -226,7 +226,7 @@ void ServerGame::disconnectClient(unsigned int client_id) {
     std::vector<char> packet_data(packet_size);
     packet.serialize(packet_data.data());
     network->sendToAll(packet_data.data(), packet_size);
-    ServerLogic::charSelected[playersData[client_id]->cube.type] = false;
+    ServerLogic::availableChars[playersData[client_id]->cube.type] = true;
     playersData.erase(client_id);
 }
 
@@ -361,6 +361,10 @@ void ServerGame::sendGuiUpdate(unsigned int client_id) {
         GuiUpdatePacket packet;
         packet.packet_type = GUI_UPDATE;
         packet.currentState = player->currentState;
+
+        for (int i=0; i<4; i++) {
+            packet.availableChars[i] = ServerLogic::availableChars[i];
+        }
         const unsigned int packet_size = packet.getSize();
         std::vector<char> packet_data(packet_size);
         packet.serialize(packet_data.data());

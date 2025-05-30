@@ -1,7 +1,7 @@
 #include "ServerLogic.h"
 
 bool ServerLogic::gameStarted = false;
-bool ServerLogic::charSelected[4] = {false};
+bool ServerLogic::availableChars[4] = {true, true, true, true};
 
 CubeState::CubeState(glm::vec3 cubeMin, glm::vec3 cubeMax) {
     // Model matrix.
@@ -293,7 +293,7 @@ bool PlayerData::init(InitPacket* packet) {
         return false;
     } else {
 
-        if (ServerLogic::charSelected[packet->character]) {
+        if (!ServerLogic::availableChars[packet->character]) {
             printf("character already taken\n");
             return false;
         }
@@ -304,7 +304,7 @@ bool PlayerData::init(InitPacket* packet) {
         miniMapCam.SetOrtho(-10, 10, -10, 10, 0.1f, 100.0f); 
         miniMapCam.SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
         cube.type = packet->character;
-        ServerLogic::charSelected[packet->character] = true;
+        ServerLogic::availableChars[packet->character] = false;
         currentState = WAITING;
         return true;
     }

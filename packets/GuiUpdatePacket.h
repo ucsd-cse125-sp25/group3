@@ -6,7 +6,7 @@
 class GuiUpdatePacket : public Packet {
     public:
         GameState currentState; 
-        // CharacterType selChar;
+        bool availableChars[4];
 
         GuiUpdatePacket();
     
