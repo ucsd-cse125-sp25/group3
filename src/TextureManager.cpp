@@ -40,7 +40,7 @@ GLuint TextureManager::LoadTexture(std::string texture_file_path){
     unsigned char *data = stbi_load(texture_file_path.c_str(), &width, &height, &nrChannels, 0);
     if (data)
     {
-        std::cout << nrChannels << std::endl;
+        // std::cout << nrChannels << std::endl;
         if (nrChannels == 3){
             std::cout << "no transparency" << std::endl;
             // set texture to be image data

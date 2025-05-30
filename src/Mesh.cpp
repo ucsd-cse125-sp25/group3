@@ -73,7 +73,7 @@ bool Mesh::setMesh(TextureManager* textureManager, const aiMesh* mesh, const aiS
     if (mesh->HasTextureCoords(0)){
         uvs.reserve(mesh->mNumVertices);
 
-        std::cout << "has texture coordinates" << std::endl;
+        // std::cout << "has texture coordinates" << std::endl;
     
         int dim = mesh->mNumUVComponents[0];
         if (dim != 2){
@@ -109,7 +109,7 @@ void Mesh::setMaterials(TextureManager* textureManager, const aiMesh* mesh, cons
 
     aiTextureType texDiffuse = aiTextureType_DIFFUSE;
 
-    std::cout << "texture count" << material->GetTextureCount(texDiffuse) << std::endl;
+    // std::cout << "texture count" << material->GetTextureCount(texDiffuse) << std::endl;
     if (material->GetTextureCount(texDiffuse) > 0){
         aiString texName;
         material->GetTexture(texDiffuse, 0, &texName);
@@ -117,6 +117,7 @@ void Mesh::setMaterials(TextureManager* textureManager, const aiMesh* mesh, cons
         std::string path = "../textures/"+std::string(texName.C_Str());
         std::cout << path << std::endl;
         tex = textureManager->LoadTexture(path);
+        std::cout << tex << std::endl;
         if (tex != 0){
             renderMode = RenderMode::TEXTURE;
         } else {
@@ -127,7 +128,7 @@ void Mesh::setMaterials(TextureManager* textureManager, const aiMesh* mesh, cons
     if (AI_SUCCESS != material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse_color)){
         // std::cout << "couldn't get base color";
     } else {
-        std::cout << "base color retrieved" << std::endl;
+        // std::cout << "base color retrieved" << std::endl;
         color = aiColToGLM(diffuse_color);
     }
 }
@@ -139,7 +140,7 @@ void Mesh::setSkel(Skeleton* skel){
 
 void Mesh::setJointVals(const aiMesh* mesh){
     if (!(mesh->HasBones())){
-        std::cout << "no bones" << std::endl;
+        // std::cout << "no bones" << std::endl;
         return;
     }
 
