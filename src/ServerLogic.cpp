@@ -1,5 +1,8 @@
 #include "ServerLogic.h"
 
+bool ServerLogic::gameStarted = false;
+bool ServerLogic::availableChars[4] = {true, true, true, true};
+
 CubeState::CubeState(glm::vec3 cubeMin, glm::vec3 cubeMax) {
     // Model matrix.
     model = glm::mat4(1.0f);
@@ -166,6 +169,21 @@ void CubeState::saveToPacket(InitPlayerPacket& packet) {
 //     delete camera;
 // }
 
+void PlayerData::handleGuiInput(KeyType key) {
+
+    if (currentState == START_MENU) {
+
+        if (key == KeyType::MENU_START) {
+            currentState = CHARACTER_SELECTION;
+        }
+    } else if (currentState == CHARACTER_SELECTION) {
+
+        if (key == KeyType::CHAR_SEL_BACK) {
+            currentState = START_MENU;
+        }
+    }
+}
+
 void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact) {
     glm::vec3 forwardDir = camera.GetForwardVector();
     forwardDir.y = 0.0f;  
@@ -254,6 +272,9 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact) {
                     }
                     break;
                 }
+                default: {
+                    break;
+                }
             }
             cube.eWasPressed = true;
         } else {
@@ -262,17 +283,42 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact) {
     }
 }
 
-void PlayerData::init(InitPacket* packet) {
-    initialized = true;
-    firstMouse = true;
-    altDown = false;
-    radarActive = false;
-    miniMapCam.SetOrtho(-10, 10, -10, 10, 0.1f, 100.0f); 
-    miniMapCam.SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
-    cube.type = packet->character;
-    windowWidth = packet->windowWidth;
-    windowHeight = packet->windowHeight;
-    printf("character: %d, width: %d, height: %d\n", cube.type, windowWidth, windowHeight);
+bool PlayerData::init(InitPacket* packet) {
+
+    
+    if (packet->character == NONE) {
+        windowWidth = packet->windowWidth;
+        windowHeight = packet->windowHeight;
+        currentState = START_MENU;
+        return false;
+    } else {
+
+        if (!ServerLogic::availableChars[packet->character]) {
+            printf("character already taken\n");
+            return false;
+        }
+        initialized = true;
+        firstMouse = true;
+        altDown = false;
+        radarActive = false;
+        miniMapCam.SetOrtho(-10, 10, -10, 10, 0.1f, 100.0f); 
+        miniMapCam.SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
+        cube.type = packet->character;
+        ServerLogic::availableChars[packet->character] = false;
+        currentState = WAITING;
+        return true;
+    }
+    // initialized = false;
+    // firstMouse = true;
+    // altDown = false;
+    // radarActive = false;
+    // miniMapCam.SetOrtho(-10, 10, -10, 10, 0.1f, 100.0f); 
+    // miniMapCam.SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
+    // // cube.type = packet->character;
+    // // ServerLogic::charSelected[packet->character] = true;
+    
+    // return true;
+    // printf("character: %d, width: %d, height: %d\n", cube.type, windowWidth, windowHeight);
 }
 
 void PlayerData::handleCursor(double currX, double currY) {
@@ -337,6 +383,9 @@ void PlayerData::updateRadarAbility() {
 }
 
 void PlayerData::update() {
+
+    if (!initialized) return;
+
     updateRadarAbility();
     cube.update();
     camera.Update(cube.getPosition()); 
@@ -459,4 +508,32 @@ bool ServerLogic::processMovement(std::set<KeyType>& recievedMovementKeys, KeyTy
         return true;
     }
     return false;
+}
+
+void ServerLogic::attemptGameStart(std::map<unsigned int, PlayerData*>& playersData) {
+    std::map<unsigned int, PlayerData*>::iterator playerIter;
+    int numPlayers = 0;
+
+    if (!gameStarted) {
+        printf("trying to start game\n");
+        for (playerIter=playersData.begin(); playerIter!=playersData.end(); playerIter++) {
+
+            if (playerIter->second->currentState != WAITING) {
+                return;
+            }
+            numPlayers++;
+        }
+
+        if (numPlayers != TOTAL_PLAYERS) {
+            return;
+        }
+    }
+    printf("starting\n");
+    for (playerIter=playersData.begin(); playerIter!=playersData.end(); playerIter++) {
+        
+        if (playerIter->second->currentState == WAITING) {
+            playerIter->second->currentState = PLAYING;
+        }
+    }
+    gameStarted = true;
 }

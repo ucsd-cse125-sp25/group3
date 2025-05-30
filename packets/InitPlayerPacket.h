@@ -1,11 +1,14 @@
 #include <vector>
 #include "Packet.h"
+#include "../include/core.h"
 #ifndef INITPLAYER_H // include guard
 #define INITPLAYER_H
 
 class InitPlayerPacket : public Packet {
 public:
     unsigned int clientID;
+    GameState currentState;
+
     // actions
     bool altDown;
     bool radarActive;

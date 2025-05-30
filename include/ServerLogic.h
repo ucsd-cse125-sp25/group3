@@ -5,6 +5,9 @@
 #include <cstdio>
 #include <chrono>
 #include <set>
+#include <map>
+//#define TOTAL_PLAYERS 4
+#define TOTAL_PLAYERS 1
 
 enum ClientStatus {
     ONGOING,
@@ -32,7 +35,7 @@ class CubeState {
         bool isGrounded = true;
 
         //for character abilities
-        CharacterType type = CHARACTER_1;  // default
+        CharacterType type = NONE;  // default
         bool eWasPressed = false;
 
         // for invisible ability
@@ -102,6 +105,8 @@ class ArtifactState {
 
 class PlayerData {
     public:
+        bool stateChanged = false;
+        GameState currentState = INIT;
         CubeState cube;
         Camera camera;
         Camera miniMapCam;
@@ -116,17 +121,21 @@ class PlayerData {
 
         // PlayerData();
         // ~PlayerData();
-        void init(InitPacket* packet);
+        bool init(InitPacket* packet);
         void calculateNewPos(KeyType key, ArtifactState* artifact);
         void handleCursor(double currX, double currY);
         void resetCamera();
         void saveToPacket(unsigned int client_id, InitPlayerPacket& packet);
         void updateRadarAbility();
         void update();
+
+        void handleGuiInput(KeyType key);
 };
 
 class ServerLogic {
     public:
+        static bool gameStarted;
+        static bool availableChars[4];
         static bool processMovement(std::set<KeyType>& recievedMovementKeys, KeyType key);
-
+        static void attemptGameStart(std::map<unsigned int, PlayerData*>& playersData);
 };

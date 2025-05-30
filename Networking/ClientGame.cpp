@@ -1,7 +1,7 @@
 
 #include "ClientGame.h" 
 
-ClientGame::ClientGame(CharacterType character)
+ClientGame::ClientGame()
 {
     //std::cout << "Starting process of creating ClientGame\n";
     network = new ClientNetwork();
@@ -19,10 +19,39 @@ ClientGame::ClientGame(CharacterType character)
     if (!Window::initializeProgram()) exit(EXIT_FAILURE);
     // Initialize objects/pointers for rendering; exit if initialization fails.
     if (!Window::initializeObjects()) exit(EXIT_FAILURE);
-  
+    
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    client_logic::io = &io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+
+    io.Fonts->AddFontFromFileTTF("../external/style/fonts/Junicode-Bold.ttf", 32.0f);
+    client_logic::handwritingFont = io.Fonts->AddFontFromFileTTF("../external/style/fonts/HomemadeApple-Regular.ttf", 28.0f);
+
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.Colors[ImGuiCol_WindowBg] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f); // Opaque background
+    style.Colors[ImGuiCol_Button] = ImVec4(0.7f, 0.6f, 0.2f, 1.0f);
+    style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.8f, 0.7f, 0.3f, 1.0f);
+    style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.9f, 0.8f, 0.4f, 1.0f);
+    style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 0.98f, 0.9f, 1.0f);
+    style.FrameRounding = 12.0f;
+    style.WindowRounding = 16.0f;
+    style.FramePadding = ImVec2(14, 10);
+    style.ItemSpacing = ImVec2(16, 12);
+
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+    
+    int my_image_width = 0;
+    int my_image_height = 0;
+    GLuint my_image_texture = 0;
+    bool ret = client_logic::LoadTextureFromFile("../external/images/HeistAtTheMuseumTitle.png", &my_image_texture, &my_image_width, &my_image_height);
+    IM_ASSERT(ret);
+
     // send init packet
     //std::cout << "Sending Init Packet\n";
-    sendInitPacket(character);
+    sendInitPacket();
     //std::cout << "Init Packet sent\n";
 }
 
@@ -31,15 +60,15 @@ void ClientGame::sendPacket(Packet& packet) {
 
     std::vector<char> packet_data(packet_size);  
     packet.serialize(packet_data.data());
-    printf("Packet of size %d\n", packet_size);
+    // printf("Packet of size %d\n", packet_size);
 
     NetworkServices::sendMessage(network->ConnectSocket, packet_data.data(), packet_size);
 }
 
-void ClientGame::sendInitPacket(CharacterType character) {
+void ClientGame::sendInitPacket() {
     InitPacket packet;
     packet.packet_type = INIT_CONNECTION;
-    packet.character = character;
+    packet.character = NONE;
     packet.windowWidth = Window::width;
     packet.windowHeight = Window::height;
     sendPacket(packet);
@@ -66,7 +95,22 @@ void ClientGame::update()
 {
     glfwPollEvents();
 
-    KeyType input = client_logic::handleUserInput(window);
+    if (Window::currentState == START_MENU || Window::currentState == CHARACTER_SELECTION) {
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    } else {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+    if (Window::currentState == START_MENU || Window::currentState == INIT) {
+        client_logic::setStartPage(Window::currentState);
+    } else if (Window::currentState == CHARACTER_SELECTION || Window::currentState == WAITING){
+        client_logic::setCharacterSelectPage(Window::currentState);
+    } else if (Window::currentState == PLAYING) {
+        client_logic::handleUserInput(window);
+        client_logic::setMainGameWindow(window);
+    } 
+    
     sendPendingPackets();
 
     while (true) {
@@ -94,19 +138,26 @@ void ClientGame::update()
                 Window::setInitState(*initPlayerPacket);
                 break;
             }
-            case ACTION_EVENT:
-                printf("client received action event packet from server\n");
+            case GUI_UPDATE: {
+                // printf("recieved gui update packet from server\n");
+                GuiUpdatePacket* guiPacket = dynamic_cast<GuiUpdatePacket*>(packet.get());
+                Window::applyGuiUpdate(*guiPacket);
+                client_logic::updateAvailableChars(*guiPacket);
+                // Window::currentState = guiPacket->currentState;
                 break;
+            }
             case ECHO_EVENT:
                 printf("client recieved echo event packet from server\n");
                 break;
-            case STATE_UPDATE:
-            {
+            case STATE_UPDATE: {
                 // printf("client recieved state update from server\n");
                 StateUpdatePacket* statePacket = dynamic_cast<StateUpdatePacket*>(packet.get());
                 // printf("payload size: %d\n", packet.length);
                 // std::cout << "Window init: " << Window::initialized << std::endl;
-                if (Window::initialized) Window::applyServerState(*statePacket);
+                if (Window::initialized) {
+                    // printf("processinfg\n");
+                    Window::applyServerState(*statePacket);
+                }
                 // Window::render(window);
                 // Window::cube->update();
                 break;
@@ -133,7 +184,14 @@ void ClientGame::update()
                 break;
         }
     }
-    Window::render(window);
+//   printf("curr state: %d\n", Window::currentState);
+    if (Window::currentState != IN_MINIGAME){
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    }
+    
+    // Window::render(window);
+    glfwSwapBuffers(window);
     // Window::updateRest(packet.payload.data());
     // Window::applyRest(packet.payload.data(), , packet.length);
     // Window::cube->update();

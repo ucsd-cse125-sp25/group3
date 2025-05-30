@@ -8,6 +8,7 @@
 #include <map>
 #include "../packets/StateUpdatePacket.h"
 #include "../packets/InitPlayerPacket.h"
+#include "../packets/GuiUpdatePacket.h"
 
 enum class AbilityType {
     NONE,
@@ -19,6 +20,8 @@ class Window {
 public:
     static unsigned int client_id;
     static bool initialized;
+    static GameState currentState;
+    static bool stateChanged;
 
     // Window Properties
     static int width;
@@ -72,6 +75,7 @@ public:
     static void removeClient(unsigned int client);
     static void setInitState(const InitPlayerPacket& packet);
     static void applyServerState(const StateUpdatePacket& packet);
+    static void applyGuiUpdate(const GuiUpdatePacket& guiPacket);
 
     // for show-on-map ability 
     static void updateRadarAbility();

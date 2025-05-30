@@ -9,17 +9,18 @@
 #include "ClientLogic.h"
 #include "../packets/PacketFactory.h"
 
+
 class ClientGame
 {
 
 public:
 
-    ClientGame(CharacterType character);
+    ClientGame();
     GLFWwindow* window;
     ClientNetwork* network; 
     void sendPendingPackets();
     void sendPacket(Packet& packet);
-    void sendInitPacket(CharacterType character);
+    void sendInitPacket();
     void sendKeyPacket(KeyType);
     char network_data[MAX_PACKET_SIZE];
     void update();

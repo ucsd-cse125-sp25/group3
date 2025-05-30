@@ -14,17 +14,17 @@ ClientGame * client;
 
 int main()
 {   
-    int choice;
-    std::cout << "Choose your character:\n";
-    std::cout << "0 - thief one\n";
-    std::cout << "1 - thief two\n";
-    std::cout << "2 - thief three\n";
-    std::cout << "3 - security guard\n";
-    std::cin >> choice;
+    // int choice;
+    // std::cout << "Choose your character:\n";
+    // std::cout << "0 - thief one\n";
+    // std::cout << "1 - thief two\n";
+    // std::cout << "2 - thief three\n";
+    // std::cout << "3 - security guard\n";
+    // std::cin >> choice;
 
-    // initialize the client
-    std::cout << "Choice passed in\n";
-    client = new ClientGame((CharacterType) choice);
+    // // initialize the client
+    // std::cout << "Choice passed in\n";
+    client = new ClientGame();
     //ClientGame tempClient((CharacterType) choice);
     std::cout << "Client game created\n";
     clientLoop();

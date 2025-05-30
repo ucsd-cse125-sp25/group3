@@ -6,6 +6,7 @@
 #include "EndGamePacket.h"
 #include "InitPlayerPacket.h"
 #include "NPCPacket.h"
+#include "GuiUpdatePacket.h"
 
 #ifndef PACKETFACTORY_H // include guard
 #define PACKETFACTORY_H
