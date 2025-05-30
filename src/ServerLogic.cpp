@@ -528,7 +528,7 @@ void ServerLogic::attemptGameStart(std::map<unsigned int, PlayerData*>& playersD
             return;
         }
     }
-
+    printf("starting\n");
     for (playerIter=playersData.begin(); playerIter!=playersData.end(); playerIter++) {
         
         if (playerIter->second->currentState == WAITING) {

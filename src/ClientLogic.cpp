@@ -386,7 +386,11 @@ void client_logic::setCharacterSelectPage(GameState currState) {
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
 
-    static int selectedSlot = 0;
+    static int selectedSlot = -1;
+
+    if (selectedSlot != -1 && !availableChars[selectedSlot]) {
+        selectedSlot = -1;
+    }
     const char* abilities[] = { "Thief 1", "Thief 2", "Thief 3", "Security Guard" };
     int slotCount = IM_ARRAYSIZE(abilities);
     static CharacterType selCharacter;

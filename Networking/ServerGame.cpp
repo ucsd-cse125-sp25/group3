@@ -372,6 +372,6 @@ void ServerGame::sendGuiUpdate(unsigned int client_id, bool sendAll) {
         std::vector<char> packet_data(packet_size);
         packet.serialize(packet_data.data());
         // printf("sending state: %d\n", player->currentState);
-        network->sendToOne(client_id, packet_data.data(), packet_size);
+        network->sendToOne(playerIter->first, packet_data.data(), packet_size);
     }
 }
