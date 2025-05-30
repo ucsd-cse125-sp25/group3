@@ -106,7 +106,7 @@ void ServerGame::receiveFromClients() {
                     if (!player->initialized) {
                         sendInitPlayerState(iter->first);
                     } else {
-                        sendGuiUpdate(iter->first);
+                        sendGuiUpdate(iter->first, true);
                     }
                     ServerLogic::attemptGameStart(playersData);
                     // if (player->initialized) {
@@ -141,7 +141,7 @@ void ServerGame::receiveFromClients() {
                         if (player->currentState != PLAYING) {
                             printf("recieved gui input\n");
                             player->handleGuiInput(keyPacket->key_type);
-                            sendGuiUpdate(iter->first);
+                            sendGuiUpdate(iter->first, false);
                         } else if (ServerLogic::processMovement(recievedMovementKeys, keyPacket->key_type)) {
                             player->calculateNewPos(keyPacket->key_type, &artifact);
                         } 
@@ -349,12 +349,15 @@ void ServerGame::sendStateUpdate() {
     network->sendToAll(packet_data.data(), packet_size);
 }
 
-void ServerGame::sendGuiUpdate(unsigned int client_id) {
-    // std::map<unsigned int, PlayerData*>::iterator playerIter;
+void ServerGame::sendGuiUpdate(unsigned int client_id, bool sendAll) {
+    std::map<unsigned int, PlayerData*>::iterator playerIter;
 
     //for now just send current state every loop
-    // for (playerIter = playersData.begin(); playerIter != playersData.end(); playerIter++) {
-        PlayerData* player = playersData[client_id];
+    for (playerIter = playersData.begin(); playerIter != playersData.end(); playerIter++) {
+
+        if (!sendAll && playerIter->first != client_id) continue;
+
+        PlayerData* player = playersData[playerIter->first];
 
         // if (player->currentState == PLAYING || player->currentState == IN_MINIGAME) return;
 
@@ -370,5 +373,5 @@ void ServerGame::sendGuiUpdate(unsigned int client_id) {
         packet.serialize(packet_data.data());
         // printf("sending state: %d\n", player->currentState);
         network->sendToOne(client_id, packet_data.data(), packet_size);
-    // }
+    }
 }
