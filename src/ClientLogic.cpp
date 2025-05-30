@@ -205,7 +205,7 @@ bool client_logic::LoadTextureFromFile(const char* file_name, GLuint* out_textur
     return ret;
 }
 
-void client_logic::setStartPage() {
+void client_logic::setStartPage(GameState currState) {
     GLuint parchmentTexture;
     int parchmentWidth, parchmentHeight;
     bool ok = LoadTextureFromFile("../external/images/parchment_scroll.png", &parchmentTexture, &parchmentWidth, &parchmentHeight);
@@ -218,6 +218,8 @@ void client_logic::setStartPage() {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+
+    if (currState == INIT) return;
 
     ImVec2 screenSize = ImGui::GetIO().DisplaySize;
 
@@ -341,7 +343,7 @@ void client_logic::setStartPage() {
     ImGui::End();
 }
 
-void client_logic::setCharacterSelectPage() {
+void client_logic::setCharacterSelectPage(GameState currState) {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
@@ -388,7 +390,7 @@ void client_logic::setCharacterSelectPage() {
         }
 
         std::string label = "[" + std::string(abilities[i]) + "]";
-        ImGui::BeginDisabled(false);
+        ImGui::BeginDisabled(currState == WAITING);
         if (ImGui::Button(label.c_str(), ImVec2(64, 64))) {
             selectedSlot = i;
             selCharacter = static_cast<CharacterType>(i); // your own enum
@@ -459,6 +461,7 @@ void client_logic::setCharacterSelectPage() {
 
     // ImGui::Spacing();
     
+    ImGui::BeginDisabled(currState == WAITING);
         
     if (ImGui::Button("◀ Back")) {
         auto packet = std::make_unique<KeyPacket>();
@@ -481,6 +484,7 @@ void client_logic::setCharacterSelectPage() {
         packet->windowHeight = Window::height;
         pendingPackets.push_back(std::move(packet));
     }
+    ImGui::EndDisabled();
     ImGui::PopStyleVar(3);
     ImGui::PopStyleColor(4);
 
@@ -493,7 +497,7 @@ void client_logic::setCharacterSelectPage() {
     ImGui::End();
 }
 
-void client_logic::setMainGameWindow(GLFWwindow* window, bool waiting) {
+void client_logic::setMainGameWindow(GLFWwindow* window) {
     ImVec2 windowSize = io->DisplaySize;
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();

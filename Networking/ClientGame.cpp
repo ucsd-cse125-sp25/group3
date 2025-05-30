@@ -1,7 +1,7 @@
 
 #include "ClientGame.h" 
 
-ClientGame::ClientGame(CharacterType character)
+ClientGame::ClientGame()
 {
     //std::cout << "Starting process of creating ClientGame\n";
     network = new ClientNetwork();
@@ -51,7 +51,7 @@ ClientGame::ClientGame(CharacterType character)
 
     // send init packet
     //std::cout << "Sending Init Packet\n";
-    // sendInitPacket(character);
+    sendInitPacket();
     //std::cout << "Init Packet sent\n";
 }
 
@@ -60,15 +60,15 @@ void ClientGame::sendPacket(Packet& packet) {
 
     std::vector<char> packet_data(packet_size);  
     packet.serialize(packet_data.data());
-    printf("Packet of size %d\n", packet_size);
+    // printf("Packet of size %d\n", packet_size);
 
     NetworkServices::sendMessage(network->ConnectSocket, packet_data.data(), packet_size);
 }
 
-void ClientGame::sendInitPacket(CharacterType character) {
+void ClientGame::sendInitPacket() {
     InitPacket packet;
     packet.packet_type = INIT_CONNECTION;
-    packet.character = character;
+    packet.character = NONE;
     packet.windowWidth = Window::width;
     packet.windowHeight = Window::height;
     sendPacket(packet);
@@ -102,16 +102,14 @@ void ClientGame::update()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    if (Window::currentState == START_MENU) {
-        client_logic::setStartPage();
-    } else if (Window::currentState == CHARACTER_SELECTION){
-        client_logic::setCharacterSelectPage();
+    if (Window::currentState == START_MENU || Window::currentState == INIT) {
+        client_logic::setStartPage(Window::currentState);
+    } else if (Window::currentState == CHARACTER_SELECTION || Window::currentState == WAITING){
+        client_logic::setCharacterSelectPage(Window::currentState);
     } else if (Window::currentState == PLAYING) {
         client_logic::handleUserInput(window);
-        client_logic::setMainGameWindow(window, false);
-    } else if (Window::currentState == WAITING) {
-        client_logic::setMainGameWindow(window, true);
-    }
+        client_logic::setMainGameWindow(window);
+    } 
     
     sendPendingPackets();
 
@@ -143,19 +141,22 @@ void ClientGame::update()
             case GUI_UPDATE: {
                 // printf("recieved gui update packet from server\n");
                 GuiUpdatePacket* guiPacket = dynamic_cast<GuiUpdatePacket*>(packet.get());
-                Window::currentState = guiPacket->currentState;
+                Window::applyGuiUpdate(*guiPacket);
+                // Window::currentState = guiPacket->currentState;
                 break;
             }
             case ECHO_EVENT:
                 printf("client recieved echo event packet from server\n");
                 break;
-            case STATE_UPDATE:
-            {
+            case STATE_UPDATE: {
                 // printf("client recieved state update from server\n");
                 StateUpdatePacket* statePacket = dynamic_cast<StateUpdatePacket*>(packet.get());
                 // printf("payload size: %d\n", packet.length);
                 // std::cout << "Window init: " << Window::initialized << std::endl;
-                if (Window::initialized) Window::applyServerState(*statePacket);
+                if (Window::initialized) {
+                    // printf("processinfg\n");
+                    Window::applyServerState(*statePacket);
+                }
                 // Window::render(window);
                 // Window::cube->update();
                 break;
@@ -182,7 +183,8 @@ void ClientGame::update()
                 break;
         }
     }
-    if (Window::currentState != IN_MINIGAME ){
+//   printf("curr state: %d\n", Window::currentState);
+    if (Window::currentState != IN_MINIGAME){
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }

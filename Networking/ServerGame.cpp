@@ -102,10 +102,21 @@ void ServerGame::receiveFromClients() {
                     InitPacket* initPacket = dynamic_cast<InitPacket*>(packet.get());
                     printf("server received init packet from client\n");
                     player->init(initPacket);
-                    printf("player is character %d\n", initPacket->character);
+
+                    if (!player->initialized) {
+                        sendInitPlayerState(iter->first);
+                    } else {
+                        sendGuiUpdate(iter->first);
+                    }
+                    ServerLogic::attemptGameStart(playersData);
+                    // if (player->initialized) {
+                    //     ServerLogic::attemptGameStart(playersData);
+                    // }
+                    // printf("player is character %d\n", initPacket->character);
                     // playersData[iter->first] = player;
-                    sendInitPlayerState(iter->first);
-                    ServerLogic::gameStarted = true;
+                    // sendInitPlayerState(iter->first);
+                    // 
+                    // ServerLogic::gameStarted = true;
                     //sendInitNPCState(iter->first);
                     break;
                 }
@@ -124,14 +135,16 @@ void ServerGame::receiveFromClients() {
                 }
                 case KEY_INPUT: {
                     KeyPacket* keyPacket = dynamic_cast<KeyPacket*>(packet.get());
-                    // printf("server recieved key input packet from client\n");
+                    printf("server recieved key input packet from client\n");
                     if (keyPacket) {
                         
-                        if (ServerLogic::gameStarted && ServerLogic::processMovement(recievedMovementKeys, keyPacket->key_type)) {
-                            player->calculateNewPos(keyPacket->key_type, &artifact);
-                        } else if (player->currentState != PLAYING) {
+                        if (player->currentState != PLAYING) {
+                            printf("recieved gui input\n");
                             player->handleGuiInput(keyPacket->key_type);
-                        }
+                            sendGuiUpdate(iter->first);
+                        } else if (ServerLogic::processMovement(recievedMovementKeys, keyPacket->key_type)) {
+                            player->calculateNewPos(keyPacket->key_type, &artifact);
+                        } 
                     } else {
                         printf("Error: Failed to cast to KeyPacket\n");
                     }
@@ -149,7 +162,7 @@ void ServerGame::receiveFromClients() {
                 case CURSOR_EVENT: {
                     CursorPacket* cursorPacket = dynamic_cast<CursorPacket*>(packet.get());
                     // printf("server recieved cursor event packet from client\n");
-                    player->handleCursor(cursorPacket->currX, cursorPacket->currY);
+                    if (player->currentState == PLAYING) player->handleCursor(cursorPacket->currX, cursorPacket->currY);
                     break;
                 }
                 default: {
@@ -180,12 +193,17 @@ void ServerGame::receiveFromClients() {
         npcData[npcIter->first] = npc;
     }
     artifact.update();
-
     
+    // sendGuiUpdate();
+
+    // if (!ServerLogic::gameStarted) {
+    // } 
+    //     sendStateUpdate();
+    // } else {
+    //     sendGuiUpdate();
+    // }
     if (ServerLogic::gameStarted) {
         sendStateUpdate();
-    } else {
-        sendGuiUpdate();
     }
     
     auto orig_diff = std::chrono::steady_clock::now() - start;
@@ -208,6 +226,7 @@ void ServerGame::disconnectClient(unsigned int client_id) {
     std::vector<char> packet_data(packet_size);
     packet.serialize(packet_data.data());
     network->sendToAll(packet_data.data(), packet_size);
+    ServerLogic::charSelected[playersData[client_id]->cube.type] = false;
     playersData.erase(client_id);
 }
 
@@ -330,12 +349,15 @@ void ServerGame::sendStateUpdate() {
     network->sendToAll(packet_data.data(), packet_size);
 }
 
-void ServerGame::sendGuiUpdate() {
-    std::map<unsigned int, PlayerData*>::iterator playerIter;
+void ServerGame::sendGuiUpdate(unsigned int client_id) {
+    // std::map<unsigned int, PlayerData*>::iterator playerIter;
 
     //for now just send current state every loop
-    for (playerIter = playersData.begin(); playerIter != playersData.end(); playerIter++) {
-        PlayerData* player = playerIter->second;
+    // for (playerIter = playersData.begin(); playerIter != playersData.end(); playerIter++) {
+        PlayerData* player = playersData[client_id];
+
+        // if (player->currentState == PLAYING || player->currentState == IN_MINIGAME) return;
+
         GuiUpdatePacket packet;
         packet.packet_type = GUI_UPDATE;
         packet.currentState = player->currentState;
@@ -343,6 +365,6 @@ void ServerGame::sendGuiUpdate() {
         std::vector<char> packet_data(packet_size);
         packet.serialize(packet_data.data());
         // printf("sending state: %d\n", player->currentState);
-        network->sendToOne(playerIter->first, packet_data.data(), packet_size);
-    }
+        network->sendToOne(client_id, packet_data.data(), packet_size);
+    // }
 }

@@ -2,7 +2,7 @@
 
 unsigned int Window::client_id;
 bool Window::initialized = false;
-GameState Window::currentState = START_MENU;
+GameState Window::currentState = INIT;
 bool Window::stateChanged = false;
 
 // Window Properties
@@ -396,7 +396,7 @@ void Window::applyServerState(const StateUpdatePacket& packet) {
             
             if (initPacket) {
                 unsigned int currClient = initPacket->clientID;
-                // printf("curr client is %u\n", currClient);
+                // printf("curr client is %u\n", client_id);
                 
                 if (cubes.find(currClient) == cubes.end()) {
                     addClient(currClient);
@@ -538,11 +538,23 @@ void Window::removeClient(unsigned int client) {
 void Window::setInitState(const InitPlayerPacket& packet) {
     client_id = packet.clientID;
     printf("client id init as %d\n", client_id);
-    addClient(packet.clientID);
-    cubes[packet.clientID]->updateFromPacket(packet);
-    Cam->updateFromPacket(packet, false);
-    MiniMapCam->updateFromPacket(packet, true);
-    altDown = packet.altDown;
-    initialized = true;
+    // addClient(packet.clientID);
+    // cubes[packet.clientID]->updateFromPacket(packet);
+    // Cam->updateFromPacket(packet, false);
+    // MiniMapCam->updateFromPacket(packet, true);
+    // altDown = packet.altDown;
+    // initialized = true;
     currentState = packet.currentState;
+
+    // if (currentState == WAITING) {
+    //     initialized = true;
+    // }
+}
+
+void Window::applyGuiUpdate(const GuiUpdatePacket& guiPacket) {
+    currentState = guiPacket.currentState;
+
+    if (currentState == WAITING) {
+        initialized = true;
+    }
 }

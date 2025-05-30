@@ -14,6 +14,8 @@ int GuiUpdatePacket::serializePayload(char* data) {
     std::memcpy(data + offset, &currentState, sizeof(currentState));
     offset += sizeof(currentState);
 
+    
+
     return offset;
 }
 

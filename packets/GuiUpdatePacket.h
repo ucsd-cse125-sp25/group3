@@ -6,7 +6,8 @@
 class GuiUpdatePacket : public Packet {
     public:
         GameState currentState; 
-        
+        // CharacterType selChar;
+
         GuiUpdatePacket();
     
         unsigned int getSize() override;

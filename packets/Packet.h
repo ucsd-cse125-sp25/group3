@@ -31,6 +31,7 @@ enum PacketTypes {
     NPC_STATE = 8,
 
     GUI_UPDATE = 9,
+
 }; 
 
 // Packet structure will be type (4 bytes), length (4 bytes), data (N bytes) 

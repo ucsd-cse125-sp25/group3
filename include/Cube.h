@@ -65,7 +65,8 @@ public:
         CHARACTER_1,
         CHARACTER_2,
         CHARACTER_3,
-        CHARACTER_4
+        CHARACTER_4,
+        
     };
     
     CharacterType type = CHARACTER_1;  // default
