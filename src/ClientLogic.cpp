@@ -4,12 +4,24 @@ ImVec2 client_logic::displaySize;
 ImGuiIO* client_logic::io;
 ImFont* client_logic::handwritingFont;
 bool client_logic::availableChars[4];
+MiniGame client_logic::miniGame;
+bool client_logic::miniGameInitialized = false;
+std::vector<Platform> client_logic::miniGamePlatforms;
 // ImGuiIO& client_logic::io;
 std::vector<std::unique_ptr<Packet>> client_logic::pendingPackets;
 
+void client_logic::setMinigamePlatforms(const InitMinigamePacket& initMinigamePacket) {
+    miniGamePlatforms.clear();
+    for(int i = 0; i < initMinigamePacket.numPlatforms; i++) {
+        // TODO: Add tex value
+        Platform plat = Platform(initMinigamePacket.platformX[i], initMinigamePacket.platformY[i], initMinigamePacket.platformWidth[i], initMinigamePacket.platformHeight[i], 0);
+        miniGamePlatforms.emplace_back(plat);
+        std::cout << "Added platform: " << initMinigamePacket.platformX[i] << ", " << initMinigamePacket.platformY[i] << ", " << initMinigamePacket.platformWidth[i] << ", " << initMinigamePacket.platformHeight[i] << std::endl;
+    }
+}
 
 void client_logic::updateAvailableChars(GuiUpdatePacket& packet) {
-
+    std::cout << "Updating available characters" << std::endl;
     for (int i=0; i<4; i++) {
         availableChars[i] = packet.availableChars[i];
     }
@@ -570,9 +582,9 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
     ImGui::Begin("MINIGAME PLACEHOLDER", nullptr, ImGuiWindowFlags_NoResize);
     
     if (ImGui::Button("I DIED", ImVec2(120, 40))) {
-        // currentState = IN_MINIGAME;
-        // stateChanged = true; // Flag for state transition
-        // glfwPostEmptyEvent(); // Force frame refresh
+        std::cout << "I DIED clicked on" << std::endl;
+        Window::currentState = IN_MINIGAME;
+        glfwPostEmptyEvent(); // Force frame refresh
     }
     ImGui::End();
 }

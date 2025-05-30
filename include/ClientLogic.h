@@ -9,6 +9,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "../minigame/minigame.h"
+#include "../minigame/include/platform.h"
 // #include <GL/glew.h>
 #include "../minigame/include/stb_image.h"
 
@@ -28,10 +29,15 @@ class client_logic {
         static ImVec2 displaySize;
         static ImFont* handwritingFont;
         static bool availableChars[4];
+        static MiniGame miniGame;
+        static bool miniGameInitialized;  
+        static std::vector<Platform> miniGamePlatforms;
 
         static std::vector<std::unique_ptr<Packet>> pendingPackets;
 
         static void updateAvailableChars(GuiUpdatePacket& packet);
+
+        static void setMinigamePlatforms(const InitMinigamePacket& initMinigamePacket);
 
         static void error_callback(int error, const char* description);
 

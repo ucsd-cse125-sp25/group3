@@ -23,6 +23,19 @@ ServerGame::ServerGame(void)
         NPCState npc = NPCState();
         npcData.insert(pair<unsigned int, NPCState>(i, npc));
     }
+
+    ServerGame::minigamePlatforms.clear();
+    // texture is not sent by server; client determines this.
+    minigamePlatforms.emplace_back(330, 1700, 200, 27, 0);//1
+    minigamePlatforms.emplace_back(0, 1475, 270, 27, 0);//2
+    minigamePlatforms.emplace_back(0, 1595, 360, 32, 0);//3
+    minigamePlatforms.emplace_back(468, 1212, 360, 43, 0);//4
+    minigamePlatforms.emplace_back(1205, 1060, 520, 62, 0);//5
+    minigamePlatforms.emplace_back(1890, 1268, 408, 58, 0);//6
+    minigamePlatforms.emplace_back(2570, 930, 320, 55, 0);//7
+    minigamePlatforms.emplace_back(520, 750, 410, 54, 0);//8
+    minigamePlatforms.emplace_back(1400, 555, 480, 55, 0);//9
+    minigamePlatforms.emplace_back(2270, 510, 480, 37, 0);//10
 }
 
 void ServerGame::update()
@@ -108,6 +121,7 @@ void ServerGame::receiveFromClients() {
                     } else {
                         sendGuiUpdate(iter->first, true);
                     }
+                    sendInitMinigamePacket(iter->first);
                     ServerLogic::attemptGameStart(playersData);
                     // if (player->initialized) {
                     //     ServerLogic::attemptGameStart(playersData);
@@ -272,6 +286,29 @@ void ServerGame::sendInitPlayerState(unsigned int client_id) {
     player->cube.saveToPacket(packet);
     player->camera.saveToPacket(packet, false);
     player->camera.saveToPacket(packet, true);
+
+    const unsigned int packet_size = packet.getSize();
+    std::vector<char> packet_data(packet_size);
+    packet.serialize(packet_data.data());
+
+    network->sendToOne(client_id, packet_data.data(), packet_size);
+}
+
+void ServerGame::sendInitMinigamePacket(unsigned int client_id) {
+    printf("Sending initial minigame state");
+
+    InitMinigamePacket packet;
+    packet.packet_type = INIT_MINIGAME;
+
+    packet.numPlatforms = minigamePlatforms.size();
+
+    for(int i = 0; i < packet.numPlatforms; i++) {
+        std::cout << "Sending platform: " << minigamePlatforms[i].x << ", " << minigamePlatforms[i].y << ", " << minigamePlatforms[i].width << ", " << minigamePlatforms[i].height << std::endl;
+        packet.platformX.push_back(minigamePlatforms[i].x);
+        packet.platformY.push_back(minigamePlatforms[i].y);
+        packet.platformWidth.push_back(minigamePlatforms[i].width);
+        packet.platformHeight.push_back(minigamePlatforms[i].height);
+    }
 
     const unsigned int packet_size = packet.getSize();
     std::vector<char> packet_data(packet_size);

@@ -21,6 +21,7 @@ public:
     void sendStateUpdate();
     void disconnectClient(unsigned int client_id);
     void sendGuiUpdate(unsigned int client_id, bool sendAll);
+    void sendInitMinigamePacket(unsigned int client_id);
 
 private:
 
@@ -36,4 +37,6 @@ private:
     ArtifactState artifact;
     std::map<unsigned int, PlayerData*> playersData;
     std::map<unsigned int, NPCState> npcData;
+
+    std::vector<Platform> minigamePlatforms;
 };

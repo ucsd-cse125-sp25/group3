@@ -13,7 +13,7 @@ public:
     MiniGame();
     ~MiniGame();
 
-    void init(GLFWwindow* window);
+    void init(GLFWwindow* window, std::vector<Platform> platformsToInit);
     void update(GLFWwindow* window);
     void render();
     void cleanup();

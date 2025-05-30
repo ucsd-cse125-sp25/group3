@@ -288,11 +288,6 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
                 resetCamera();
                 break;
 
-            // if (key == GLFW_KEY_P && currentState == PLAYING) {
-            //     currentState = IN_MINIGAME;
-            // }
-
-
             default:
                 if (cube != nullptr) {
                     cube->userInput(key);
@@ -557,4 +552,5 @@ void Window::applyGuiUpdate(const GuiUpdatePacket& guiPacket) {
     if (currentState == WAITING) {
         initialized = true;
     }
+    std::cout << "Applying GUI update: " << currentState << std::endl;
 }

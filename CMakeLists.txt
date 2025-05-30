@@ -16,6 +16,7 @@ set(
     packets/EndGamePacket.cpp
     packets/InitPacket.cpp
     packets/InitPlayerPacket.cpp
+    packets/InitMinigamePacket.cpp
     packets/NPCPacket.cpp
     packets/KeyPacket.cpp
     packets/StateUpdatePacket.cpp
@@ -44,6 +45,7 @@ set(
     packets/EndGamePacket.h
     packets/InitPacket.h
     packets/InitPlayerPacket.h
+    packets/InitMinigamePacket.h
     packets/NPCPacket.h
     packets/KeyPacket.h
     packets/StateUpdatePacket.h

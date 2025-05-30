@@ -9,15 +9,14 @@
 #include "ClientLogic.h"
 #include "../packets/PacketFactory.h"
 
-
 class ClientGame
 {
 
 public:
-
-    ClientGame();
     GLFWwindow* window;
     ClientNetwork* network; 
+
+    ClientGame();
     void sendPendingPackets();
     void sendPacket(Packet& packet);
     void sendInitPacket();

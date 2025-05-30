@@ -532,7 +532,9 @@ void ServerLogic::attemptGameStart(std::map<unsigned int, PlayerData*>& playersD
     for (playerIter=playersData.begin(); playerIter!=playersData.end(); playerIter++) {
         
         if (playerIter->second->currentState == WAITING) {
-            playerIter->second->currentState = PLAYING;
+            //playerIter->second->currentState = PLAYING;
+            // TODO: REMOVE THIS LINE WHEN DONE TESTING
+            playerIter->second->currentState = IN_MINIGAME;
         }
     }
     gameStarted = true;

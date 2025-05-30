@@ -109,7 +109,22 @@ void ClientGame::update()
     } else if (Window::currentState == PLAYING) {
         client_logic::handleUserInput(window);
         client_logic::setMainGameWindow(window);
-    } 
+    } else if (Window::currentState == IN_MINIGAME) {
+        if (!client_logic::miniGameInitialized) {
+            client_logic::miniGame.init(window, client_logic::miniGamePlatforms);
+            client_logic::miniGameInitialized = true;
+            std::cout << "minigame initialized" << std::endl;
+        }
+        client_logic::miniGame.update(window);
+        client_logic::miniGame.render();
+
+        if (client_logic::miniGame.isFinished()) {
+            std::cout << "minigame finished" << std::endl;
+            client_logic::miniGame.cleanup();
+            Window::currentState = PLAYING; 
+            client_logic::miniGameInitialized = false;
+        }
+    }
     
     sendPendingPackets();
 
@@ -132,14 +147,19 @@ void ClientGame::update()
         switch (temp.packet_type) {
             case INIT_PLAYER: {
                 InitPlayerPacket* initPlayerPacket = dynamic_cast<InitPlayerPacket*>(packet.get());
-                // TODO: Make this work with packet class
                 printf("recieved init player packet from server\n");
                 /*Window::setClientID(packet.payload.data());*/
                 Window::setInitState(*initPlayerPacket);
                 break;
             }
+            case INIT_MINIGAME: {
+                InitMinigamePacket* initMinigamePacket = dynamic_cast<InitMinigamePacket*>(packet.get());
+                printf("recieved init minigame packet from server\n");
+                client_logic::setMinigamePlatforms(*initMinigamePacket);
+                break;
+            }
             case GUI_UPDATE: {
-                // printf("recieved gui update packet from server\n");
+                printf("recieved gui update packet from server\n");
                 GuiUpdatePacket* guiPacket = dynamic_cast<GuiUpdatePacket*>(packet.get());
                 Window::applyGuiUpdate(*guiPacket);
                 client_logic::updateAvailableChars(*guiPacket);

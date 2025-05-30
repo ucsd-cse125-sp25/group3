@@ -17,7 +17,7 @@ MiniGame::~MiniGame() {
     cleanup();
 }
 
-void MiniGame::init(GLFWwindow* window) {
+void MiniGame::init(GLFWwindow* window, std::vector<Platform> platformsToInit) {
     // Get framebuffer size (in case window was resized)
     glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
 
@@ -60,21 +60,13 @@ void MiniGame::init(GLFWwindow* window) {
         "../minigame/assets/thief1_right.png", 
         "../minigame/assets/thief1_left.png");
 
-    // Add platforms
-    platforms.emplace_back(330, 1700, 200, 27, 0);//1
-    platforms.emplace_back(0, 1475, 270, 27, 0);//2
-    platforms.emplace_back(0, 1595, 360, 32, 0);//3
-    platforms.emplace_back(468, 1212, 360, 43, 0);//4
-    platforms.emplace_back(1205, 1060, 520, 62, 0);//5
-    platforms.emplace_back(1890, 1268, 408, 58, 0);//6
-    platforms.emplace_back(2570, 930, 320, 55, 0);//7
-    platforms.emplace_back(520, 750, 410, 54, 0);//8
-    platforms.emplace_back(1400, 555, 480, 55, 0);//9
-    platforms.emplace_back(2270, 510, 480, 37, 0);//10
+    for (int i = 0; i < platformsToInit.size(); i++) {
+        platforms.emplace_back(platformsToInit[i]);
+    }
 }
 
 void MiniGame::update(GLFWwindow* window) {
-    //std::cout << "[MiniGame] rendering frame" << std::endl;
+    std::cout << "[MiniGame] rendering frame" << std::endl;
     if (!player) return;
 
     player->handleInput(window);
