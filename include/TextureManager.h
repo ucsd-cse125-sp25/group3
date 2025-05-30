@@ -10,6 +10,9 @@
 #include <vector>
 #include <map>
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+
 #include "core.h"
 
 class TextureManager {
@@ -17,6 +20,8 @@ private:
 
     // std::vector<GLuint> textures;
     std::map<std::string, GLuint> textures;
+
+    GLuint createTexture(unsigned char* data, int channels, int width, int height, std::string name);
 
 public:
 
@@ -29,5 +34,7 @@ public:
     */
     ~TextureManager();
 
-    GLuint LoadTexture(std::string texture_file_path);
+    GLuint LoadEmbeddedTexture(const aiTexture* texture, std::string name);
+
+    GLuint LoadTexture(std::string name);
 };

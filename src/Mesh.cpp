@@ -73,7 +73,7 @@ bool Mesh::setMesh(TextureManager* textureManager, const aiMesh* mesh, const aiS
     if (mesh->HasTextureCoords(0)){
         uvs.reserve(mesh->mNumVertices);
 
-        // std::cout << "has texture coordinates" << std::endl;
+        std::cout << "has texture coordinates" << std::endl;
     
         int dim = mesh->mNumUVComponents[0];
         if (dim != 2){
@@ -114,9 +114,14 @@ void Mesh::setMaterials(TextureManager* textureManager, const aiMesh* mesh, cons
         aiString texName;
         material->GetTexture(texDiffuse, 0, &texName);
 
-        std::string path = "../textures/"+std::string(texName.C_Str());
-        std::cout << path << std::endl;
-        tex = textureManager->LoadTexture(path);
+        if (auto texture = scene->GetEmbeddedTexture(texName.C_Str())) {
+            std::cout << "embedded: " << texName.C_Str() << std::endl;
+            tex = textureManager->LoadEmbeddedTexture(texture, std::string(texName.C_Str()));
+        } else {
+            std::cout << "raw: " << texName.C_Str() << std::endl;
+            tex = textureManager->LoadTexture(std::string(texName.C_Str()));
+        }
+
         std::cout << tex << std::endl;
         if (tex != 0){
             renderMode = RenderMode::TEXTURE;

@@ -2,6 +2,8 @@
 
 enum class AnimState {
     Stop,
-    Idle,
-    Walk
+    Run,
+    Walk,
+    SG_Equip_Weapon,
+    SG_Shooting_Gun,
 };
