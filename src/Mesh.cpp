@@ -10,7 +10,7 @@
 
 Mesh::Mesh(){
     skel = NULL;
-    model = glm::mat4(1.0f);
+    // model = glm::mat4(1.0f);
     color = glm::vec3(1.0f, 0.95f, 0.1f);
     renderMode = RenderMode::BASE;
     // mMat.reserve(MAX_JOINTS);
@@ -201,9 +201,9 @@ void Mesh::setDefaultJointVal(Vertex &v){
     v.numJoints = 0;
 }
 
-void Mesh::setMMat(glm::mat4 model){
-    this->model = model;
-}
+// void Mesh::setMMat(glm::mat4 model){
+//     this->model = model;
+// }
 
 void Mesh::setupBuf(){
     // Generate a vertex array (VAO) and two vertex buffer objects (VBO).
@@ -277,7 +277,7 @@ void Mesh::setupBuf(){
 
 }
     
-void Mesh::draw(std::vector<glm::mat4>& mMat, const glm::mat4& viewProjMtx, ShaderManager* shaderManager){
+void Mesh::draw(glm::mat4 model, std::vector<glm::mat4>& mMat, const glm::mat4& viewProjMtx, ShaderManager* shaderManager){
     bool animated = (skel != nullptr);
     GLuint shader = shaderManager->getShader(renderMode, animated);
     

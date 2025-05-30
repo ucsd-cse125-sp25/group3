@@ -10,6 +10,7 @@
 #include "ShaderManager.h"
 #include "AnimationPlayer.h"
 #include "TextureManager.h"
+#include "MeshInstance.h"
 
 /*
 The Model class should handle everything about a 3D model.
@@ -22,11 +23,22 @@ private:
 
     std::vector<Mesh*> meshes;
 
+    std::vector<MeshInstance*> meshInstances;
+
     glm::mat4 model;
 
     Skeleton* skel;
 
     void process(const aiScene* scene, TextureManager* textureManager);
+
+    void recLoad(const aiNode* node, glm::mat4 parent);
+
+    /*
+    mesh will now be moved by the model matrix of the Model.
+
+    The mesh will also be deleted when the model is deleted.
+    */
+    void addMesh(Mesh* mesh);
 
 public:
 
@@ -64,16 +76,14 @@ public:
     void setMMat(glm::mat4 mMat);
 
     /*
-    mesh will now be moved by the model matrix of the Model.
-
-    The mesh will also be deleted when the model is deleted.
-    */
-    void addMesh(Mesh* mesh);
-
-    /*
     Gets all meshes controlled by this model as a list
     */
     int getNumMeshes();
+
+    /*
+    Gets all mesh instances controlled by this model as a list
+    */
+    int getNumMeshInstances();
 
     /*
     Gets all meshes controlled by this model as a list
@@ -84,13 +94,6 @@ public:
     Gets a mesh located at index i in the list of meshes controlled by this model
     */
     Mesh* getMesh(int i);
-
-    /*
-    Removes (but does not delete) the mesh located at index i in the list of meshes controlled by this model
-
-    Once removed, the mesh will no longer be deleted when the model is deleted.
-    */
-    void removeMesh(int i);
 
     void setSkel(AnimationPlayer* animPlayer);
 

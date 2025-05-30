@@ -21,6 +21,10 @@ Model::Model(ModelType mType, const std::string & file, TextureManager* textureM
 }
 
 Model::~Model(){
+    for (MeshInstance* mi : meshInstances){
+        delete mi;
+    }
+
     for (Mesh* m : meshes){
         delete m;
     }
@@ -32,8 +36,22 @@ ModelType Model::getModelType() {
     return modelType;
 }
 
+void Model::recLoad(const aiNode* node, glm::mat4 parent){
+    glm::mat4 currMat = parent * aiMatToGLM(node->mTransformation);
+
+    for (int i = 0; i < node->mNumMeshes; i++){
+        MeshInstance* mi = new MeshInstance(meshes[node->mMeshes[i]], currMat);
+        meshInstances.push_back(mi);
+    }
+
+    for (int i = 0; i < node->mNumChildren; i++){
+        recLoad(node->mChildren[i], currMat);
+    }
+}
+
 void Model::process(const aiScene* scene, TextureManager* textureManager) {
     if (scene->HasMeshes()){
+        
         meshes.reserve(scene->mNumMeshes);
         for (int i = 0; i < scene->mNumMeshes; i++){
             Mesh* m = new Mesh();
@@ -41,6 +59,8 @@ void Model::process(const aiScene* scene, TextureManager* textureManager) {
                 meshes.push_back(m);
             };
         }
+
+        recLoad(scene->mRootNode, glm::mat4(1.0f));
     }
 }
 
@@ -95,6 +115,10 @@ int Model::getNumMeshes(){
     return meshes.size();
 }
 
+int Model::getNumMeshInstances(){
+    return meshInstances.size();
+}
+
 std::vector<Mesh*>* Model::getMeshes() {
     return &meshes;
 }
@@ -106,10 +130,6 @@ Mesh* Model::getMesh(int i){
     return nullptr;
 }
 
-void Model::removeMesh(int i){
-    meshes.erase(meshes.begin() + i);
-}
-
 void Model::setupBuf(){
     for (int i = 0; i < meshes.size(); i++){
         meshes[i]->setupBuf();
@@ -117,16 +137,16 @@ void Model::setupBuf(){
 }
 
 void Model::draw(std::vector<std::vector<glm::mat4>>& jointMats, const glm::mat4& viewProjMtx, ShaderManager* shaderManager){
-    for (int i = 0; i < meshes.size(); i++){
+    glm::mat4 VPMmMtx = viewProjMtx * model;
+    for (int i = 0; i < meshInstances.size(); i++){
         // meshes[i]->setMMat(model);
-        glm::mat4 VPMmMtx = viewProjMtx * model;
-        meshes[i]->draw(jointMats[i], VPMmMtx, shaderManager);
+        meshInstances[i]->draw(jointMats[i], VPMmMtx, shaderManager);
     }
 }
 
 void Model::update(std::vector<std::vector<glm::mat4>>& jointMats){
-    for (int i = 0; i < meshes.size(); i++){
-        meshes[i]->update(jointMats[i]);
+    for (int i = 0; i < meshInstances.size(); i++){
+        meshInstances[i]->update(jointMats[i]);
     }
 }
 

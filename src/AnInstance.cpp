@@ -17,7 +17,7 @@ void AnInstance::setModel(Model* model){
     jointMats.clear();
     
     this->model = model;
-    int numMesh = model->getNumMeshes();
+    int numMesh = model->getNumMeshInstances();
 
     jointMats.reserve(numMesh);
     for (int i = 0; i < numMesh; i++){

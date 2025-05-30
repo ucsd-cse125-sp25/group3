@@ -37,7 +37,7 @@ private:
     enum RenderMode renderMode;
 
     Skeleton* skel;
-    glm::mat4 model;
+    // glm::mat4 model;
     glm::vec3 color;
 
     std::vector<Vertex> vertices;
@@ -76,11 +76,11 @@ public:
 
     void setSkel(Skeleton* skel);
 
-    void setMMat(glm::mat4 model);
+    // void setMMat(glm::mat4 model);
     
     void setupBuf();
 
-    void draw(std::vector<glm::mat4>& mMat, const glm::mat4& viewProjMtx, ShaderManager* shaderManager);
+    void draw(glm::mat4 model, std::vector<glm::mat4>& mMat, const glm::mat4& viewProjMtx, ShaderManager* shaderManager);
     void update(std::vector<glm::mat4>& mMat);
     
 };
