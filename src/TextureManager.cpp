@@ -17,6 +17,10 @@ GLuint TextureManager::LoadTexture(std::string texture_file_path){
         return textures[texture_file_path];
     }
 
+    if (texture_file_path.compare("../textures/Museum Map.fbm/Screenshot 2025-05-18 at 9.01.32 PM.png") == 0){
+        texture_file_path = "../textures/Museum Map.fbm/Screenshot 2025-05-18 at.png";
+    }
+
     GLuint texID;
 
     glGenTextures(1, &texID);
