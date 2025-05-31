@@ -40,4 +40,5 @@ void main()
 	// fragColor = vec4(fragNormal, 1);
 
 	vec3 temp = fragPos; 
+	vec2 temp2 = uv;
 }

@@ -40,6 +40,7 @@ void Mesh::setColor(glm::vec3 color){
 }
 
 bool Mesh::setMesh(TextureManager* textureManager, const aiMesh* mesh, const aiScene* scene) {
+    std::cout << mesh->mName.C_Str() << std::endl;
     vertices.reserve(mesh->mNumVertices);
     // verticesRaw.reserve(mesh->mNumVertices);
     for (int i = 0; i < mesh->mNumVertices; i++){
@@ -145,7 +146,7 @@ void Mesh::setSkel(Skeleton* skel){
 
 void Mesh::setJointVals(const aiMesh* mesh){
     if (!(mesh->HasBones())){
-        // std::cout << "no bones" << std::endl;
+        std::cout << "no bones" << std::endl;
         return;
     }
 

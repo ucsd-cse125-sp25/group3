@@ -20,7 +20,7 @@ Character::Character(AnInstance* model)
     : useModel(true), model(model)
 {
     // model->setMMat(baseModel);  // 设置初始位置
-    baseModel = glm::scale(baseModel, glm::vec3(0.01f));
+    // baseModel = glm::scale(baseModel, glm::vec3(0.01f));
     model->setMMat(baseModel);
 }
 
@@ -83,7 +83,7 @@ void Character::handleInput(GLFWwindow* window, const glm::vec3& forwardDir, con
     //     cube->handleContinuousInput(window, forwardDir, rightDir);
     // }
     glm::vec3 movement(0.0f);
-    float speed = 0.5f;
+    float speed = 0.04f;
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         movement += forwardDir;

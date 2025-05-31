@@ -25,7 +25,7 @@ private:
     /* Internal state of when we changed to this animation state */
     float start_time;
 
-    void AnInstance::resetJointMats();
+    void resetJointMats();
 
 public:
     AnInstance(Model* model);

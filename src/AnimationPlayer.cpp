@@ -2,6 +2,8 @@
 #include <iostream>
 
 AnimationPlayer::AnimationPlayer(){
+
+
 }
 
 AnimationPlayer::~AnimationPlayer(){
@@ -26,7 +28,8 @@ void AnimationPlayer::setAnim(ModelType modelType, AnimState animState, Animatio
     // this->anim = anim;
 }
 
-bool AnimationPlayer::loadAnims(ModelType modelType, AnimState animState, const std::string& file){
+bool AnimationPlayer::loadAnims(ModelType modelType, std::map<std::string, AnimState> import, const std::string& file){
+    
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(file, 
         aiProcess_Triangulate);
@@ -42,14 +45,27 @@ bool AnimationPlayer::loadAnims(ModelType modelType, AnimState animState, const 
     }
     skel->log();
     skel->update();
+    
+    for (int i = 0; i < scene->mNumAnimations; i++){
+        aiString name = scene->mAnimations[i]->mName;
 
-    Animation* anim = new Animation();
-    if (!anim->load(scene->mAnimations[0])){
-        return false;
+        std::cout << name.C_Str() << std::endl;
+
+        if (import.find(name.C_Str()) != import.end()){
+            std::cout << "importing" << std::endl;
+
+            AnimState state = import[name.C_Str()];
+
+            Animation* anim = new Animation();
+
+            if (!anim->load(scene->mAnimations[i])){
+                return false;
+            }
+
+            setAnim(modelType, state, anim);
+        }
     }
 
-
-    setAnim(modelType, animState, anim);
     setSkel(modelType, skel);
 
     return true;
@@ -62,6 +78,7 @@ bool AnimationPlayer::loadAnims(ModelType modelType, AnimState animState, const 
 
 void AnimationPlayer::setCurr(ModelType modelType, AnimState animState){
     
+    // These will throw an error if you try to access an animation that doesn't exist
     assert(animMap.find(modelType) != animMap.end());
     assert(animMap[modelType].find(animState) != animMap[modelType].end());
     assert(skelMap.find(modelType) != skelMap.end());

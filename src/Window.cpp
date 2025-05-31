@@ -83,24 +83,50 @@ bool Window::initializeObjects() {
 
     scene = new Scene();
 
-    if (!animationPlayer->loadAnims(ModelType::SecurityGuard, AnimState::Walk, "../models/characters/security_guard.fbx")) {
+    //load in all thief related things
+
+    std::map<std::string, AnimState> female_thief_animations = {
+        {"Armature.002|Holding Item", AnimState::FT_Hold_Item}, 
+        {"Armature.002|Idle", AnimState::FT_Idle},
+        {"Armature.002|Looking Around", AnimState::FT_Look_Around},
+        {"Armature.002|Picking Up Item", AnimState::FT_Pick_Up},
+        {"Armature.002|Running", AnimState::Run},
+        {"Armature.002|Walking", AnimState::FT_Walk}
+    };
+
+    if (!animationPlayer->loadAnims(ModelType::FemaleThief, female_thief_animations, "../models/characters/female_thief1.fbx")) {
+        std::cout << "animation loading failed" << std::endl;
+    }
+    Model* femaleThief = new Model(ModelType::FemaleThief, "../models/characters/female_thief1.fbx", textureManager);
+    femaleThief->setMMat(glm::rotate(glm::scale(glm::mat4(1.0f), glm::vec3(0.002f)), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+    femaleThief->setSkel(animationPlayer);
+    modelManager->addModel(femaleThief);
+
+    // load in all security guard related things
+
+    std::map<std::string, AnimState> security_guard_animations = {
+        {"Armature.003|Running.004", AnimState::Run}, 
+        {"Armature.003|Shooting Gun", AnimState::SG_Shooting_Gun},
+        {"Armature.003|Throw", AnimState::SG_Throw}
+    };
+
+    if (!animationPlayer->loadAnims(ModelType::SecurityGuard, security_guard_animations, "../models/characters/security_guard.fbx")) {
         std::cout << "animation loading failed" << std::endl;
     }
     Model* securityGuard = new Model(ModelType::SecurityGuard, "../models/characters/security_guard.fbx", textureManager);
-    securityGuard->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)));
+    securityGuard->setMMat(glm::rotate(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
     securityGuard->setSkel(animationPlayer);
     modelManager->addModel(securityGuard);
-    std::cout << "modelManager" << std::endl;
 
     AnInstance* bro = new AnInstance(securityGuard);
-    // bro->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)));
-    bro->setState(AnimState::Walk);
+    bro->setState(AnimState::Run);
     scene->addInstance(bro);
 
     std::cout << "instance" << std::endl;
 
-    bro2 = new AnInstance(securityGuard);
-    bro2->setMMat(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
+    bro2 = new AnInstance(modelManager->getModel(ModelType::FemaleThief));
+    bro2->setMMat(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 1.0f)));
+    bro2->setState(AnimState::FT_Idle);
     scene->addInstance(bro2);
 
     std::cout << "instance2" << std::endl;
@@ -111,12 +137,13 @@ bool Window::initializeObjects() {
     AnInstance* museumInstance = new AnInstance(museum);
     scene->addInstance(museumInstance);
 
-    Model* buddha = new Model(ModelType::Buddha, "../models/buddha.ply", textureManager);
-    // Model* buddha = new Model(ModelType::Museum, "../models/map/museum.fbx", textureManager);
-    modelManager->addModel(buddha);
+    // Model* buddha = new Model(ModelType::Buddha, "../models/buddha.ply", textureManager);
+    // // Model* buddha = new Model(ModelType::Museum, "../models/map/museum.fbx", textureManager);
+    // modelManager->addModel(buddha);
 
-    AnInstance* model = new AnInstance(buddha);
-    model->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
+    AnInstance* model = new AnInstance(modelManager->getModel(ModelType::SecurityGuard));
+    //currently no idle state for the security guard
+    model->setState(AnimState::Run);
 
     character = new Character(model);
     // cube = new Cube(glm::vec3(-1, 0, -2), glm::vec3(1, 1, 1));
@@ -230,9 +257,9 @@ void Window::idleCallback() {
     // animationPlayer->fullUpdate();
     // cube->update();
     character->update(animationPlayer);
-    if ((bro2->getState() != AnimState::Walk) && (float) glfwGetTime() > 10){
-        bro2->setState(AnimState::Walk);
-    }
+    // if ((bro2->getState() != AnimState::FT_Walk) && (float) glfwGetTime() > 10){
+    //     bro2->setState(AnimState::FT_Walk);
+    // }
 
     scene->update(animationPlayer);
     // model->update();

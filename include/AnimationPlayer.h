@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include "ModelType.h"
 #include "AnimState.h"
+#include <string>
 
 class AnimationPlayer {
 private:
@@ -23,14 +24,14 @@ public:
     ~AnimationPlayer();
     
     //loads in a new animation and skeleton from a file.
-    bool loadAnims(ModelType modelType, AnimState animState, const std::string& file);
+    bool loadAnims(ModelType modelType, std::map<std::string, AnimState> import, const std::string& file);
     void setAnim(ModelType modelType, AnimState animState, Animation* anim);
     void setSkel(ModelType modelType, Skeleton* skel);
 
     Skeleton* getSkel(ModelType modelType);
 
     //call after anim is set
-    void AnimationPlayer::setCurr(ModelType modelType, AnimState animState);
+    void setCurr(ModelType modelType, AnimState animState);
 
     // void AnimationPlayer::draw(glm::mat4 viewProjMat, GLuint shader);
 
