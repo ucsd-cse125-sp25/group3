@@ -1,4 +1,11 @@
 #include "Window.h"
+#include "Mesh.h"
+#include "TextureManager.h"
+#include "AnInstance.h"
+// #include <assimp/cimport.h>
+// #include <assimp/scene.h>
+// #include <assimp/postprocess.h>
+#include <string>
 
 unsigned int Window::client_id;
 bool Window::initialized = false;
@@ -17,17 +24,30 @@ Cube* Window::artifact;
 std::map<unsigned int, Cube*> Window::cubes;
 NPCs* Window::NPC;
 std::map<unsigned int, NPCs*> Window::npcs;
+Character* Window::character;
+
+Scene* Window::scene;
+
+AnimationPlayer* Window::animationPlayer;
 
 // Camera Properties
 Camera* Cam;
 Camera* MiniMapCam;
 
+AnInstance* bro2;
+
 // Interaction Variables
 bool LeftDown, RightDown;
 int MouseX, MouseY;
 
-// The shader program id
-GLuint Window::shaderProgram;
+// // The shader program id
+// GLuint Window::shaderProgram;
+// GLuint Window::shaderProgram_uv;
+// GLuint Window::shaderProgram_anim;
+ShaderManager* Window::shaderManager;
+ModelManager* Window::modelManager;
+
+TextureManager* Window::textureManager;
 
 bool Window::altDown = false;
 bool Window::firstMouse = true;
@@ -40,14 +60,35 @@ AbilityType Window::currentAbility = AbilityType::NONE;
 
 // Constructors and desctructors
 bool Window::initializeProgram() {
-    // Create a shader program with a vertex shader and a fragment shader.
-    shaderProgram = LoadShaders("shaders/shader.vert", "shaders/shader.frag");
+    // // Create a shader program with a vertex shader and a fragment shader.
+    // shaderProgram = LoadShaders("../shaders/shader.vert", "../shaders/shader.frag", false);
 
-    // Check the shader program.
-    if (!shaderProgram) {
-        std::cerr << "Failed to initialize shader program" << std::endl;
-        return false;
-    }
+    // // Check the shader program.
+    // if (!shaderProgram) {
+    //     std::cerr << "Failed to initialize shader program" << std::endl;
+    //     return false;
+    // }
+
+    // shaderProgram_uv = LoadShaders("../shaders/shader_uv.vert", "../shaders/shader_uv.frag", true);
+
+    // if (!shaderProgram_uv) {
+    //     std::cerr << "Failed to initialize shader program with uvs" << std::endl;
+    //     return false;
+    // }
+
+    // shaderProgram_anim = LoadShaders("../shaders/anim_shader_multi.vert", "../shaders/anim_shader.frag", true);
+
+    // if (!shaderProgram_uv) {
+    //     std::cerr << "Failed to initialize shader program with uvs" << std::endl;
+    //     return false;
+    // }
+    shaderManager = new ShaderManager();
+
+    modelManager = new ModelManager();
+
+    textureManager = new TextureManager();
+
+    animationPlayer = new AnimationPlayer();
 
     return true;
 }
@@ -62,6 +103,75 @@ bool Window::initializeObjects() {
     floor = new Cube(glm::vec3(-8, -2.03, -8), glm::vec3(8, -2.01, 8));
     NPC = new NPCs(new Cube(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1)));
 
+
+    scene = new Scene();
+
+    //load in all thief related things
+
+    std::map<std::string, AnimState> female_thief_animations = {
+        {"Armature.002|Holding Item", AnimState::FT_Hold_Item}, 
+        {"Armature.002|Idle", AnimState::FT_Idle},
+        {"Armature.002|Looking Around", AnimState::FT_Look_Around},
+        {"Armature.002|Picking Up Item", AnimState::FT_Pick_Up},
+        {"Armature.002|Running", AnimState::Run},
+        {"Armature.002|Walking", AnimState::FT_Walk}
+    };
+
+    if (!animationPlayer->loadAnims(ModelType::FemaleThief, female_thief_animations, "../models/characters/female_thief1.fbx")) {
+        std::cout << "animation loading failed" << std::endl;
+    }
+    Model* femaleThief = new Model(ModelType::FemaleThief, "../models/characters/female_thief1.fbx", textureManager);
+    femaleThief->setMMat(glm::rotate(glm::scale(glm::mat4(1.0f), glm::vec3(0.002f)), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+    femaleThief->setSkel(animationPlayer);
+    modelManager->addModel(femaleThief);
+
+    // load in all security guard related things
+
+    std::map<std::string, AnimState> security_guard_animations = {
+        {"Armature.003|Running.004", AnimState::Run}, 
+        {"Armature.003|Shooting Gun", AnimState::SG_Shooting_Gun},
+        {"Armature.003|Throw", AnimState::SG_Throw}
+    };
+
+    if (!animationPlayer->loadAnims(ModelType::SecurityGuard, security_guard_animations, "../models/characters/security_guard.fbx")) {
+        std::cout << "animation loading failed" << std::endl;
+    }
+    Model* securityGuard = new Model(ModelType::SecurityGuard, "../models/characters/security_guard.fbx", textureManager);
+    securityGuard->setMMat(glm::rotate(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+    securityGuard->setSkel(animationPlayer);
+    modelManager->addModel(securityGuard);
+
+    AnInstance* bro = new AnInstance(securityGuard);
+    bro->setState(AnimState::Run);
+    scene->addInstance(bro);
+
+    std::cout << "instance" << std::endl;
+
+    AnInstance* bro2 = new AnInstance(modelManager->getModel(ModelType::FemaleThief));
+    bro2->setMMat(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 1.0f)));
+    bro2->setState(AnimState::FT_Idle);
+    scene->addInstance(bro2);
+
+    std::cout << "instance2" << std::endl;
+
+    Model* museum = new Model(ModelType::Museum, "../models/map/museum.fbx", textureManager);
+    museum->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
+    modelManager->addModel(museum);
+    AnInstance* museumInstance = new AnInstance(museum);
+    scene->addInstance(museumInstance);
+
+    // Model* buddha = new Model(ModelType::Buddha, "../models/buddha.ply", textureManager);
+    // // Model* buddha = new Model(ModelType::Museum, "../models/map/museum.fbx", textureManager);
+    // modelManager->addModel(buddha);
+
+    AnInstance* model = new AnInstance(modelManager->getModel(ModelType::SecurityGuard));
+    //currently no idle state for the security guard
+    model->setState(AnimState::Run);
+
+    character = new Character(model);
+    // cube = new Cube(glm::vec3(-1, 0, -2), glm::vec3(1, 1, 1));
+    // floor = new Cube(glm::vec3(-8, -2.03, -8), glm::vec3(8, -2.01, 8));
+    
     return true;
 }
 
@@ -72,8 +182,19 @@ void Window::cleanUp() {
     delete floor;
     delete Cam;
     delete MiniMapCam;
+    delete scene;
+    delete character;
+
+    delete textureManager;
+    
+    delete animationPlayer;
+
     // Delete the shader program.
-    glDeleteProgram(shaderProgram);
+    // glDeleteProgram(shaderProgram);
+    // glDeleteProgram(shaderProgram_uv);
+    // glDeleteProgram(shaderProgram_anim);
+    delete shaderManager;
+    delete modelManager;
 }
 
 // for the Window
@@ -185,34 +306,70 @@ void Window::updateRadarAbility() {
 void Window::idleCallback() {
     // Perform any updates as necessary.
     // Cam->Update();
-    if (Window::currentAbility == AbilityType::INVISIBILITY) {
-        // Apply invisibility logic
-    }   
+    // if (Window::currentAbility == AbilityType::INVISIBILITY) {
+    //     // Apply invisibility logic
+    // }   
 
-    Cam->Update(cube->getPosition());
+    if (character != nullptr) {
+     
+        Cam->Update(character->getPosition());
 
-    cube->update();
+        character->update(animationPlayer);
+    }
+    // Cam->Update(cube->getPosition());
+
+    // cube->update();
     NPC->update();
 
-    if (cube->didUseRadarAbility()) {
-        activateRadarAbility();
-    }
+    // if (cube->didUseRadarAbility()) {
+    //     activateRadarAbility();
+    // }
 
-    updateRadarAbility();
+    // updateRadarAbility();
+    scene->update(animationPlayer);
 }
 
-void Window::displayCallback(GLFWwindow* window) {
+// void Window::displayCallback(GLFWwindow* window) {
     
-    if (cube != nullptr) {
-        // cube->handleContinuousInput(window);
+    // if (cube != nullptr) {
+    //     // cube->handleContinuousInput(window);
+    // // Cam->Update(cube->getPosition());
+    // Cam->Update(character->getPosition());
+
+    // // animationPlayer->fullUpdate();
+    // // cube->update();
+    // character->update(animationPlayer);
+    // // if ((bro2->getState() != AnimState::FT_Walk) && (float) glfwGetTime() > 10){
+    // //     bro2->setState(AnimState::FT_Walk);
+    // }
+
+//     scene->update(animationPlayer);
+//     // model->update();
+// }
+
+void Window::displayCallback(GLFWwindow* window) {
+
+    // if (cube != nullptr) {
+    //     // cube->handleContinuousInput(window);
+    //     glm::vec3 forward = Cam->GetForwardVector();
+    //     forward.y = 0.0f;  
+    //     forward = glm::normalize(forward);
+
+    //     glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
+
+    //     cube->handleContinuousInput(window, forward, right);
+    //     // character->handleInput(window, forward,right);
+    // }
+    if (character != nullptr) {
         glm::vec3 forward = Cam->GetForwardVector();
-        forward.y = 0.0f;  
+        forward.y = 0.0f;
         forward = glm::normalize(forward);
-
+    
         glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
-
-        cube->handleContinuousInput(window, forward, right);
+    
+        character->handleInput(window, forward, right);
     }
+    
     // Clear the color and depth buffers.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     #ifdef __APPLE__
@@ -224,7 +381,7 @@ void Window::displayCallback(GLFWwindow* window) {
     #endif
 
     // Render the object.
-    cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
+    // cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
     floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
     NPC->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
     artifact->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
@@ -238,7 +395,7 @@ void Window::displayCallback(GLFWwindow* window) {
         glViewport(0, Window::height - miniMapSize, miniMapSize, miniMapSize); 
     #endif
     glm::mat4 viewProj_miniMap = MiniMapCam->GetViewProjectMtx();
-    cube->draw(viewProj_miniMap, shaderProgram, false);
+    // cube->draw(viewProj_miniMap, shaderProgram, false);
     artifact->draw(viewProj_miniMap, shaderProgram, false);
     floor->draw(viewProj_miniMap, shaderProgram, true);
 
@@ -249,6 +406,19 @@ void Window::displayCallback(GLFWwindow* window) {
         */
         NPC->draw(viewProj_miniMap, Window::shaderProgram);
     }
+    // // animationPlayer->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
+    // // Render the object.
+    // // cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
+
+    // floor->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false), true);
+
+    scene->draw(Cam->GetViewProjectMtx(), shaderManager);
+    // scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_anim);
+    // scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
+    // scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
+    // // model->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
+
+    character->draw(Cam->GetViewProjectMtx(), shaderManager);
 
     // Gets events, including input such as keyboard and mouse or window resizing.
     // glfwPollEvents();
@@ -294,9 +464,15 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
 
 
             default:
-                if (cube != nullptr) {
-                    cube->userInput(key);
-                    //cube->handleContinuousInput(window);
+                // if (cube != nullptr) {
+                //     cube->userInput(key);
+                //     //cube->handleContinuousInput(window);
+                // }
+                // break;
+                if (character != nullptr) {
+                    if (key == GLFW_KEY_SPACE) {
+                        character->triggerJump();
+                    }
                 }
                 break;
         }

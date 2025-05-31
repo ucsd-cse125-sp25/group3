@@ -1,5 +1,6 @@
+.vs
 .vscode
-/build
+build/
 obj
 Networking/client
 Networking/server

@@ -7,105 +7,38 @@ endif()
 
 project(menv)
 
+set(my_build_type "Debug")
+
 # Add source files
-set(
-    SOURCES
-    packets/Packet.cpp
-    packets/GuiUpdatePacket.cpp
-    packets/CursorPacket.cpp
-    packets/EndGamePacket.cpp
-    packets/InitPacket.cpp
-    packets/InitPlayerPacket.cpp
-    packets/NPCPacket.cpp
-    packets/KeyPacket.cpp
-    packets/StateUpdatePacket.cpp
-    packets/PacketFactory.cpp
-    src/Camera.cpp
-    src/Cube.cpp
-    src/NPCs.cpp
-    src/Shader.cpp
-    src/Tokenizer.cpp
-    src/Window.cpp
-    src/ClientLogic.cpp
-    src/ServerLogic.cpp
-    Networking/ServerGame.cpp 
-    Networking/ServerNetwork.cpp 
-    Networking/NetworkServices.cpp
-    Networking/ClientGame.cpp 
-    Networking/ClientNetwork.cpp
+file(
+    GLOB SOURCES
+    *.cpp
+    src/*.cpp
+    packets/*.cpp
+    Networking/*.cpp
 )
 
 # Add header files
-set(
-    HEADERS
-    packets/Packet.h
-    packets/GuiUpdatePacket.h
-    packets/CursorPacket.h
-    packets/EndGamePacket.h
-    packets/InitPacket.h
-    packets/InitPlayerPacket.h
-    packets/NPCPacket.h
-    packets/KeyPacket.h
-    packets/StateUpdatePacket.h
-    packets/PacketFactory.h
-    include/core.h
-    include/Camera.h
-    include/Cube.h
-    include/NPCs.h
-    include/Shader.h
-    include/Tokenizer.h
-    include/Window.h
-    include/ClientLogic.h
-    include/ServerLogic.h
-    Networking/ServerGame.h 
-    Networking/ServerNetwork.h
-    Networking/NetworkServices.h
-    Networking/ClientGame.h 
-    Networking/ClientNetwork.h
+file(
+    GLOB HEADERS
+    *.h
+    include/*.h
+    packets/*.h
+    Networking/*.h
 )
 
-# GoogleTest requires at least C++14
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-)
-# For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
-# Add mini-game files
-file(GLOB MINIGAME_SOURCES
-    "minigame/*.cpp"
-    "minigame/src/*.cpp"
-)
-
-set(IMGUI_DIR ${CMAKE_SOURCE_DIR}/external/imgui)
-
-set(IMGUI_SOURCES
-    ${IMGUI_DIR}/imgui.cpp
-    ${IMGUI_DIR}/imgui_demo.cpp
-    ${IMGUI_DIR}/imgui_draw.cpp
-    ${IMGUI_DIR}/imgui_tables.cpp
-    ${IMGUI_DIR}/imgui_widgets.cpp
-    ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
-    ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
-
-)
+add_subdirectory(dependencies/assimp ${CMAKE_BINARY_DIR}/assimp)
 
 # Require GL
 find_package(OpenGL REQUIRED)
 
-# Add include directories
 include_directories(
     include
     minigame
     minigame/include
+    ${ASSIMP_INCLUDE_DIRS}
 )
 
-# Add library directories
 link_directories(
     lib
 )
@@ -154,7 +87,7 @@ if (APPLE)
         PATHS ${CUSTOM_PATHS}
         PATH_SUFFIXES include
         NO_DEFAULT_PATH
-)
+    )
 
     # Find libraries
     find_library(GLEW_LIBRARY GLEW
@@ -191,9 +124,10 @@ if (APPLE)
         target_link_libraries(client PRIVATE ${GLFW_LIBRARY})
     endif()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES})
-target_link_libraries(server PRIVATE ${OPENGL_LIBRARIES})
-target_link_libraries(client PRIVATE ${OPENGL_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES})
+    target_link_libraries(server PRIVATE ${OPENGL_LIBRARIES})
+    target_link_libraries(client PRIVATE ${OPENGL_LIBRARIES})
 
 elseif (WIN32)
     message(STATUS "Building on Windows")
@@ -202,6 +136,7 @@ elseif (WIN32)
         ${OPENGL_LIBRARIES}
         glew32s.lib
         glfw3
+        assimp
     )
     target_link_libraries(server
         ${OPENGL_LIBRARIES}
@@ -213,9 +148,9 @@ elseif (WIN32)
         glew32s.lib
         glfw3
     )
+
 endif()
 
-# Move assets to .exe
 add_custom_target(CopyShaders ALL
 	COMMAND ${CMAKE_COMMAND} -E copy_directory
 	"${PROJECT_SOURCE_DIR}/shaders"
@@ -224,6 +159,32 @@ add_custom_target(CopyShaders ALL
 add_dependencies(menv CopyShaders)
 add_dependencies(server CopyShaders)
 add_dependencies(client CopyShaders)
+
+add_custom_target(CopyModels ALL
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	"${PROJECT_SOURCE_DIR}/models"
+	"${CMAKE_BINARY_DIR}/models"
+)
+
+add_custom_target(CopyTextures ALL
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	"${PROJECT_SOURCE_DIR}/textures"
+	"${CMAKE_BINARY_DIR}/textures"
+)
+
+if(DEFINED CMAKE_BUILD_TYPE)
+    set(my_build_type CMAKE_BUILD_TYPE)
+endif()
+
+if (WIN32)
+    add_custom_command(TARGET menv
+        COMMENT "Copy Assimp DLL"
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/assimp/bin/${my_build_type}/assimp-vc143-mtd.dll ${CMAKE_BINARY_DIR}/${my_build_type}    
+    )
+endif()
+
+add_dependencies(menv CopyShaders CopyModels CopyTextures)
 
 
 find_package(Doxygen)
@@ -252,4 +213,6 @@ target_link_libraries(
 )
 
 include(GoogleTest)
+
 gtest_discover_tests(Packet_test)
+# Move assets to .exe

@@ -2,6 +2,8 @@
 
 #include "Camera.h"
 #include "Cube.h"
+#include "Scene.h"
+#include "Model.h"
 #include "Shader.h"
 #include "core.h"
 #include "NPCs.h"
@@ -15,6 +17,15 @@ enum class AbilityType {
     INVISIBILITY,
     SPEED_UP
 };
+#include "Character.h"
+
+#include "Skeleton.h"
+#include "Animation.h"
+#include "AnimationPlayer.h"
+
+#include "ShaderManager.h"
+#include "TextureManager.h"
+#include "ModelManager.h"
 
 class Window {
 public:
@@ -39,9 +50,21 @@ public:
     static std::map<unsigned int, NPCs*> npcs;
     static Cube* artifact;
 
+    static Character* character;
+
+    static Scene* scene;
+    // static Model* model;
+
+    static AnimationPlayer* animationPlayer;
 
     // Shader Program
-    static GLuint shaderProgram;
+    // static GLuint shaderProgram;
+    // static GLuint shaderProgram_uv;
+    // static GLuint shaderProgram_anim;
+    static ShaderManager* shaderManager;
+    static ModelManager* modelManager;
+    static TextureManager* textureManager;
+
 
     //track the mouse
     static bool altDown;
