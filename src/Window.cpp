@@ -25,6 +25,7 @@ std::map<unsigned int, Cube*> Window::cubes;
 NPCs* Window::NPC;
 std::map<unsigned int, NPCs*> Window::npcs;
 Character* Window::character;
+std::map<unsigned int, Character*> Window::characters;
 
 Scene* Window::scene;
 
@@ -575,11 +576,11 @@ void Window::applyServerState(const StateUpdatePacket& packet) {
                 unsigned int currClient = initPacket->clientID;
                 // printf("curr client is %u\n", client_id);
                 
-                if (cubes.find(currClient) == cubes.end()) {
+                if (characters.find(currClient) == characters.end()) {
                     addClient(currClient);
                 }
-                Cube* cube = cubes[currClient];
-                cube->updateFromPacket(*initPacket);
+                Character* character = characters[currClient];
+                character->updateFromPacket(*initPacket);
                 
                 if (currClient == client_id) {
                     Cam->updateFromPacket(*initPacket, false);
@@ -628,23 +629,24 @@ void Window::render(GLFWwindow* window) {
     #else
         glViewport(0, 0, Window::width, Window::height);
     #endif
-    std::map<unsigned int, Cube*>::iterator playerIter;
+    std::map<unsigned int, Character*>::iterator playerIter;
 
-    for (playerIter = cubes.begin(); playerIter != cubes.end(); playerIter++) {
+    for (playerIter = characters.begin(); playerIter != characters.end(); playerIter++) {
         //printf("rendering cube for client %u\n", iter->first);
-        // playerIter->second->draw(Cam->GetViewProjectMtx(), Window::shaderProgram, false);
+        playerIter->second->model->update(animationPlayer);
+        playerIter->second->draw(Cam->GetViewProjectMtx(),shaderManager);
     }
 
     std::map<unsigned int, NPCs*>::iterator npcIter;
 
     for (npcIter = npcs.begin(); npcIter != npcs.end(); npcIter++) {
         //printf("rendering cube for client %u\n", iter->first);
-        // npcIter->second->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
+        npcIter->second->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false));
     }
 
    //cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
-    // floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
-    // artifact->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
+    floor->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false), true);
+    artifact->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false),false);
 
     int miniMapSize = 256;
     //glViewport(0, Window::height - miniMapSize, miniMapSize, miniMapSize); 
@@ -656,17 +658,17 @@ void Window::render(GLFWwindow* window) {
     #endif
     glm::mat4 viewProj_miniMap = MiniMapCam->GetViewProjectMtx();
     //cube->draw(viewProj_miniMap, Window::shaderProgram, false);
-    for (playerIter=cubes.begin(); playerIter != cubes.end(); playerIter++) {
-        // playerIter->second->draw(viewProj_miniMap, Window::shaderProgram, false);
-    }
-    // floor->draw(viewProj_miniMap, Window::shaderProgram, true);
-    // artifact->draw(viewProj_miniMap, shaderProgram, false);
+    // for (playerIter=cubes.begin(); playerIter != cubes.end(); playerIter++) {
+    //     playerIter->second->draw(viewProj_miniMap, shaderManager->getShader(RenderMode::BASE, false), false);
+    // }
+    floor->draw(viewProj_miniMap, shaderManager->getShader(RenderMode::BASE, false), true);
+    artifact->draw(viewProj_miniMap, shaderManager->getShader(RenderMode::BASE, false), false);
 
     if (radarActive){
 
         for (npcIter = npcs.begin(); npcIter != npcs.end(); npcIter++) {
             //printf("rendering cube for client %u\n", iter->first);
-            // npcIter->second->draw(viewProj_miniMap, Window::shaderProgram);
+            npcIter->second->draw(viewProj_miniMap, shaderManager->getShader(RenderMode::BASE, false));
         }
         // NPC->draw(viewProj_miniMap, Window::shaderProgram);
     }
@@ -692,9 +694,11 @@ void Window::setClientID(const InitPlayerPacket& packet) {
 }
 
 void Window::addClient(unsigned int client) {
-    Cube* cubePtr = new Cube();
-    cubes.insert(std::pair<unsigned int, Cube*>(client, cubePtr));
-    printf("init cube for client %u\n", client);
+    AnInstance* model = new AnInstance(modelManager->getModel(ModelType::SecurityGuard));
+    model->setState(AnimState::Run);
+    Character* characterPtr = new Character(model);
+    characters.insert(std::pair<unsigned int, Character*>(client, characterPtr));
+    printf("init character for client %u\n", client);
 }
 
 void Window::addNPC(unsigned int npc) {
@@ -705,9 +709,9 @@ void Window::addNPC(unsigned int npc) {
 
 void Window::removeClient(unsigned int client) {
 
-    if (cubes.find(client) != cubes.end()) {
-        Cube* cubePtr = cubes[client];
-        delete cubePtr;
+    if (characters.find(client) != characters.end()) {
+        Character* charPtr = characters[client];
+        delete charPtr;
         cubes.erase(client);
     }
 }

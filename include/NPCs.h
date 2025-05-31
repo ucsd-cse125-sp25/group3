@@ -5,7 +5,7 @@
 #include "Cube.h"
 #include <chrono>
 #include "../packets/NPCPacket.h"
-#include <glm/gtc/type_ptr.hpp>
+
 
 class NPCs {
 private:

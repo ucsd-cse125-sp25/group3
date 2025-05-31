@@ -6,7 +6,7 @@
 #include <chrono>
 #include <set>
 #include <map>
-#define TOTAL_PLAYERS 4
+#define TOTAL_PLAYERS 1
 
 enum ClientStatus {
     ONGOING,
@@ -24,6 +24,7 @@ class CubeState {
         std::vector<unsigned int> indices;
         glm::mat4 model;
         glm::mat4 baseModel = glm::mat4(1.0f);
+        glm::vec3 lastMoveDir = glm::vec3(0, 0, 1);
 
         //jumping
         bool isJumping = false;

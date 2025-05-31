@@ -492,6 +492,7 @@ void client_logic::setCharacterSelectPage(GameState currState) {
     if (ImGui::Button("Randomize")) { /* randomize logic */ }
     ImGui::SameLine();
     // if (ImGui::Button("Confirm")) {currentState = PLAYING;}
+    ImGui::BeginDisabled(selectedSlot == -1);
     if (ImGui::Button("Confirm", ImVec2(120, 40))) {
         // currentState = PLAYING;
         // stateChanged = true; // Flag for state transition
@@ -503,7 +504,7 @@ void client_logic::setCharacterSelectPage(GameState currState) {
         packet->windowHeight = Window::height;
         pendingPackets.push_back(std::move(packet));
     }
-    // ImGui::EndDisabled();
+    ImGui::EndDisabled();
     ImGui::PopStyleVar(3);
     ImGui::PopStyleColor(4);
 
@@ -567,12 +568,12 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
     ImGui::Text("Current Game State: %s", "Playing");
     ImGui::End();
 
-    ImGui::Begin("MINIGAME PLACEHOLDER", nullptr, ImGuiWindowFlags_NoResize);
+    // ImGui::Begin("MINIGAME PLACEHOLDER", nullptr, ImGuiWindowFlags_NoResize);
     
-    if (ImGui::Button("I DIED", ImVec2(120, 40))) {
-        // currentState = IN_MINIGAME;
-        // stateChanged = true; // Flag for state transition
-        // glfwPostEmptyEvent(); // Force frame refresh
-    }
-    ImGui::End();
+    // if (ImGui::Button("I DIED", ImVec2(120, 40))) {
+    //     // currentState = IN_MINIGAME;
+    //     // stateChanged = true; // Flag for state transition
+    //     // glfwPostEmptyEvent(); // Force frame refresh
+    // }
+    // ImGui::End();
 }

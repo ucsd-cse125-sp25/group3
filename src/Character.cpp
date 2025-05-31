@@ -66,8 +66,17 @@ void Character::update(AnimationPlayer* animationPlayer) {
     }
 }
 
+void Character::updateFromPacket(const InitPlayerPacket& packet) {
+    glm::mat4 modelMatrix;
+    memcpy(glm::value_ptr(modelMatrix), packet.model, sizeof(packet.model));
+    model->setMMat(modelMatrix);
+    // model->setState(packet.animState);
+    isInvisible = packet.isInvisible;
+}
 
 void Character::draw(const glm::mat4& viewProjMtx, ShaderManager* shaderManager) {
+    if (isInvisible) return;
+
     if (useModel) {
         model->draw(viewProjMtx, shaderManager);
         // std::cout<< "yes use model draw" <<std::endl;

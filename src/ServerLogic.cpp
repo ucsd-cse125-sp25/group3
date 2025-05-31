@@ -129,7 +129,11 @@ void CubeState::update() {
         speed = normalSpeed;
     }
 
-    model = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
+    glm::mat4 rotateM = glm::inverse(glm::lookAt(glm::vec3(0), lastMoveDir, glm::vec3(0, 1, 0)));
+
+    model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, jumpHeight, 0.0f)) * baseModel;
+    model = model * rotateM;
+
     // printf("jump height: %f\n", jumpHeight);
     //printState();
 }
@@ -203,6 +207,7 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact) {
     if (glm::length(movement) > 0.0f) {
         movement = glm::normalize(movement) * cube.speed;
         cube.baseModel = glm::translate(cube.baseModel, movement);
+        cube.lastMoveDir = glm::normalize(movement);
     }
 
     if (key == KeyType::KEY_R) {

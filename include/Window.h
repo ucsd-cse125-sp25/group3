@@ -51,6 +51,7 @@ public:
     static Cube* artifact;
 
     static Character* character;
+    static std::map<unsigned int, Character*> characters;
 
     static Scene* scene;
     // static Model* model;
