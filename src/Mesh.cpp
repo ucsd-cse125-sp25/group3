@@ -215,11 +215,10 @@ void Mesh::setDefaultJointVal(Vertex &v){
 void Mesh::setupBuf(){
     // Generate a vertex array (VAO) and two vertex buffer objects (VBO).
     glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO_pn);
-    glGenBuffers(1, &VBO_uv);
-
     // Bind to the VAO.
     glBindVertexArray(VAO);
+
+    glGenBuffers(1, &VBO_pn);
 
     // glBindBuffer(GL_ARRAY_BUFFER, VBO_pn);
     // glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*verticesRaw.size(), verticesRaw.data(), GL_DYNAMIC_DRAW);
@@ -267,6 +266,8 @@ void Mesh::setupBuf(){
     glEnableVertexAttribArray(6);
     glVertexAttribPointer(6, MAX_JOINT_INFLUENCE/2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, weights) + (4 * sizeof(float))));
 
+    glGenBuffers(1, &VBO_uv);
+
     // Bind to the second VBO - We will use it to store the uvs
     glBindBuffer(GL_ARRAY_BUFFER, VBO_uv);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * uvs.size(), uvs.data(), GL_STATIC_DRAW);
@@ -285,6 +286,8 @@ void Mesh::setupBuf(){
 }
     
 void Mesh::draw(glm::mat4 model, std::vector<glm::mat4>& mMat, const glm::mat4& viewProjMtx, ShaderManager* shaderManager){
+    std::cout << "Mesh draw start" << std::endl;
+    
     bool animated = (skel != nullptr);
     GLuint shader = shaderManager->getShader(renderMode, animated);
     
@@ -294,14 +297,14 @@ void Mesh::draw(glm::mat4 model, std::vector<glm::mat4>& mMat, const glm::mat4& 
     // actiavte the shader program
     glUseProgram(shader);
 
+    // Bind the VAO
+    glBindVertexArray(VAO);
+
     // get the locations and send the uniforms to the shader
     glUniformMatrix4fv(glGetUniformLocation(shader, "viewProj"), 1, false, (float*)&viewProjMtx);
     glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, (float*)&model);
     glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &color[0]);
     glUniformMatrix4fv(glGetUniformLocation(shader, "finalJointMats"), MAX_JOINTS, GL_FALSE, &(mMat[0])[0][0]);
-
-    // Bind the VAO
-    glBindVertexArray(VAO);
 
     // draw the points using triangles, indexed with the EBO
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
@@ -309,6 +312,7 @@ void Mesh::draw(glm::mat4 model, std::vector<glm::mat4>& mMat, const glm::mat4& 
     // Unbind the VAO and shader program
     glBindVertexArray(0);
     glUseProgram(0);
+    std::cout << "Mesh draw end" << std::endl;
 }
 
 void Mesh::update(std::vector<glm::mat4>& mMat){
