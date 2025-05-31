@@ -217,7 +217,7 @@ bool client_logic::LoadTextureFromFile(const char* file_name, GLuint* out_textur
 void client_logic::setStartPage(GameState currState) {
     GLuint parchmentTexture;
     int parchmentWidth, parchmentHeight;
-    bool ok = LoadTextureFromFile("../external/images/parchment_scroll.png", &parchmentTexture, &parchmentWidth, &parchmentHeight);
+    bool ok = LoadTextureFromFile("../../../external/images/parchment_scroll.png", &parchmentTexture, &parchmentWidth, &parchmentHeight);
     IM_ASSERT(ok);
 
     // Load a handwriting-style font
