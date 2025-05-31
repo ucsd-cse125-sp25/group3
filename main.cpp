@@ -3,17 +3,17 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "minigame/minigame.h"
+// #include "minigame/minigame.h"
 #include <GL/glew.h>
-#include "minigame/include/stb_image.h"
+// #include "minigame/include/stb_image.h"
 #include <iostream>
 // #include "minigame/include/window.h"
 
 
 
 GameState currentState = START_MENU;
-static MiniGame miniGame;
-static bool miniGameInitialized = false;
+// static MiniGame miniGame;
+// static bool miniGameInitialized = false;
 
 const char* GameStateToString(GameState state) {
     switch (state) {
@@ -129,8 +129,8 @@ int main(void) {
     
     // Font and style setup
     // https://github.com/Fromager/junicode
-    io.Fonts->AddFontFromFileTTF("../external/style/fonts/Junicode-Bold.ttf", 32.0f);
-    ImFont* handwritingFont = io.Fonts->AddFontFromFileTTF("../external/style/fonts/HomemadeApple-Regular.ttf", 28.0f);
+    io.Fonts->AddFontFromFileTTF("../../external/style/fonts/Junicode-Bold.ttf", 32.0f);
+    ImFont* handwritingFont = io.Fonts->AddFontFromFileTTF("../../external/style/fonts/HomemadeApple-Regular.ttf", 28.0f);
 
     ImGuiStyle& style = ImGui::GetStyle();
     style.Colors[ImGuiCol_WindowBg] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f); // Opaque background
@@ -150,7 +150,7 @@ int main(void) {
     int my_image_width = 0;
     int my_image_height = 0;
     GLuint my_image_texture = 0;
-    bool ret = LoadTextureFromFile("../external/images/HeistAtTheMuseumTitle.png", &my_image_texture, &my_image_width, &my_image_height);
+    bool ret = LoadTextureFromFile("../../external/images/HeistAtTheMuseumTitle.png", &my_image_texture, &my_image_width, &my_image_height);
     IM_ASSERT(ret);
     
     while (!glfwWindowShouldClose(window)) {
@@ -235,11 +235,11 @@ int main(void) {
 
             ImGui::Begin("MINIGAME PLACEHOLDER", nullptr, ImGuiWindowFlags_NoResize);
             
-            if (ImGui::Button("I DIED", ImVec2(120, 40))) {
-                currentState = IN_MINIGAME;
-                stateChanged = true; // Flag for state transition
-                glfwPostEmptyEvent(); // Force frame refresh
-            }
+            // if (ImGui::Button("I DIED", ImVec2(120, 40))) {
+            //     currentState = IN_MINIGAME;
+            //     stateChanged = true; // Flag for state transition
+            //     glfwPostEmptyEvent(); // Force frame refresh
+            // }
             ImGui::End();
         }
 
@@ -302,7 +302,7 @@ int main(void) {
             // Load your parchment background
             GLuint parchmentTexture;
             int parchmentWidth, parchmentHeight;
-            bool ok = LoadTextureFromFile("../external/images/parchment_scroll.png", &parchmentTexture, &parchmentWidth, &parchmentHeight);
+            bool ok = LoadTextureFromFile("../../external/images/parchment_scroll.png", &parchmentTexture, &parchmentWidth, &parchmentHeight);
             IM_ASSERT(ok);
 
             // Load a handwriting-style font
@@ -531,25 +531,25 @@ int main(void) {
             ImGui::End();
         }
         
-        if (currentState == IN_MINIGAME) {
+        // if (currentState == IN_MINIGAME) {
 
-                // std::cout << "minigame" << std::endl;
-            if (!miniGameInitialized) {
-                miniGame.init(window);
-                miniGameInitialized = true;
-                std::cout << "minigame initialized" << std::endl;
-            }
+        //         // std::cout << "minigame" << std::endl;
+        //     if (!miniGameInitialized) {
+        //         miniGame.init(window);
+        //         miniGameInitialized = true;
+        //         std::cout << "minigame initialized" << std::endl;
+        //     }
 
-            //std::cout << "minigame initialized" << std::endl;
-            miniGame.update(window);
-            miniGame.render();
+        //     //std::cout << "minigame initialized" << std::endl;
+        //     miniGame.update(window);
+        //     miniGame.render();
 
-            if (miniGame.isFinished()) {
-                miniGame.cleanup();
-                currentState = PLAYING; 
-                miniGameInitialized = false;
-            }
-        }
+        //     if (miniGame.isFinished()) {
+        //         miniGame.cleanup();
+        //         currentState = PLAYING; 
+        //         miniGameInitialized = false;
+        //     }
+        // }
 
         if (currentState == IN_MINIGAME){
             // Window::displayCallback(window);

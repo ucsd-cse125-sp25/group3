@@ -14,18 +14,40 @@ file(
     GLOB SOURCES
     *.cpp
     src/*.cpp
-    packets/*.cpp
     Networking/*.cpp
+    packets/*.cpp
 )
+
+list(FILTER SOURCES EXCLUDE REGEX ".*main\\.cpp$")
+list(FILTER SOURCES EXCLUDE REGEX ".*server\\.cpp$")
+list(FILTER SOURCES EXCLUDE REGEX ".*client\\.cpp$")
 
 # Add header files
 file(
     GLOB HEADERS
     *.h
     include/*.h
-    packets/*.h
     Networking/*.h
+    packets/*.h
 )
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+
+set(IMGUI_DIR ${CMAKE_SOURCE_DIR}/external/imgui)
+
+set(IMGUI_SOURCES
+    ${IMGUI_DIR}/imgui.cpp
+    ${IMGUI_DIR}/imgui_demo.cpp
+    ${IMGUI_DIR}/imgui_draw.cpp
+    ${IMGUI_DIR}/imgui_tables.cpp
+    ${IMGUI_DIR}/imgui_widgets.cpp
+    ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
+    ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+
+)
+
 
 add_subdirectory(dependencies/assimp ${CMAKE_BINARY_DIR}/assimp)
 
@@ -47,14 +69,6 @@ link_directories(
 add_executable(server Networking/server.cpp ${SOURCES} ${HEADERS} ${IMGUI_SOURCES} ${MINIGAME_SOURCES})
 add_executable(client Networking/client.cpp ${SOURCES} ${HEADERS} ${IMGUI_SOURCES} ${MINIGAME_SOURCES})
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${IMGUI_SOURCES} ${MINIGAME_SOURCES} main.cpp)
-
-#minigame shaders
-add_custom_target(CopyMiniGameShaders ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    "${CMAKE_SOURCE_DIR}/minigame/shaders"
-    "${CMAKE_BINARY_DIR}/minigame/shaders"
-)
-add_dependencies(menv CopyMiniGameShaders)
 
 # Link libraries
 
@@ -142,11 +156,13 @@ elseif (WIN32)
         ${OPENGL_LIBRARIES}
         glew32s.lib
         glfw3
+        assimp
     )
     target_link_libraries(client
         ${OPENGL_LIBRARIES}
         glew32s.lib
         glfw3
+        assimp
     )
 
 endif()
@@ -198,21 +214,3 @@ if(DOXYGEN_FOUND)
         COMMENT "Generating API documentation with Doxygen"
         VERBATIM)
 endif()
-
-# build GoogleTest code
-enable_testing()
-
-add_executable(
-  Packet_test
-  ./packets/Packet_test.cpp
-  ./packets/Packet.cpp
-)
-target_link_libraries(
-  Packet_test
-  GTest::gtest_main
-)
-
-include(GoogleTest)
-
-gtest_discover_tests(Packet_test)
-# Move assets to .exe

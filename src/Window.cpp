@@ -382,29 +382,30 @@ void Window::displayCallback(GLFWwindow* window) {
 
     // Render the object.
     // cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
-    floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
-    NPC->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
-    artifact->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
+    // floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
+    // NPC->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
+    // artifact->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
+    floor->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false), true);
 
     int miniMapSize = 256;
     //glViewport(0, Window::height - miniMapSize, miniMapSize, miniMapSize); 
-    #ifdef __APPLE__
-        glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
-        glViewport(0, fbHeight - miniMapSize, miniMapSize, miniMapSize); 
-    #else
-        glViewport(0, Window::height - miniMapSize, miniMapSize, miniMapSize); 
-    #endif
-    glm::mat4 viewProj_miniMap = MiniMapCam->GetViewProjectMtx();
+    // #ifdef __APPLE__
+    //     glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+    //     glViewport(0, fbHeight - miniMapSize, miniMapSize, miniMapSize); 
+    // #else
+    //     glViewport(0, Window::height - miniMapSize, miniMapSize, miniMapSize); 
+    // #endif
+    // glm::mat4 viewProj_miniMap = MiniMapCam->GetViewProjectMtx();
     // cube->draw(viewProj_miniMap, shaderProgram, false);
-    artifact->draw(viewProj_miniMap, shaderProgram, false);
-    floor->draw(viewProj_miniMap, shaderProgram, true);
+    // artifact->draw(viewProj_miniMap, shaderProgram, false);
+    // floor->draw(viewProj_miniMap, shaderProgram, true);
 
     if (showOthersOnMiniMap){
         /*
         Drawing npc for test only, for multiplayer with networking, can do draw others here 
         something like for each cube in cubePtr, draw it ish
         */
-        NPC->draw(viewProj_miniMap, Window::shaderProgram);
+        // NPC->draw(viewProj_miniMap, Window::shaderProgram);
     }
     // // animationPlayer->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
     // // Render the object.
@@ -631,19 +632,19 @@ void Window::render(GLFWwindow* window) {
 
     for (playerIter = cubes.begin(); playerIter != cubes.end(); playerIter++) {
         //printf("rendering cube for client %u\n", iter->first);
-        playerIter->second->draw(Cam->GetViewProjectMtx(), Window::shaderProgram, false);
+        // playerIter->second->draw(Cam->GetViewProjectMtx(), Window::shaderProgram, false);
     }
 
     std::map<unsigned int, NPCs*>::iterator npcIter;
 
     for (npcIter = npcs.begin(); npcIter != npcs.end(); npcIter++) {
         //printf("rendering cube for client %u\n", iter->first);
-        npcIter->second->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
+        // npcIter->second->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
     }
 
    //cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
-    floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
-    artifact->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
+    // floor->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,true);
+    // artifact->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
 
     int miniMapSize = 256;
     //glViewport(0, Window::height - miniMapSize, miniMapSize, miniMapSize); 
@@ -656,16 +657,16 @@ void Window::render(GLFWwindow* window) {
     glm::mat4 viewProj_miniMap = MiniMapCam->GetViewProjectMtx();
     //cube->draw(viewProj_miniMap, Window::shaderProgram, false);
     for (playerIter=cubes.begin(); playerIter != cubes.end(); playerIter++) {
-        playerIter->second->draw(viewProj_miniMap, Window::shaderProgram, false);
+        // playerIter->second->draw(viewProj_miniMap, Window::shaderProgram, false);
     }
-    floor->draw(viewProj_miniMap, Window::shaderProgram, true);
-    artifact->draw(viewProj_miniMap, shaderProgram, false);
+    // floor->draw(viewProj_miniMap, Window::shaderProgram, true);
+    // artifact->draw(viewProj_miniMap, shaderProgram, false);
 
     if (radarActive){
 
         for (npcIter = npcs.begin(); npcIter != npcs.end(); npcIter++) {
             //printf("rendering cube for client %u\n", iter->first);
-            npcIter->second->draw(viewProj_miniMap, Window::shaderProgram);
+            // npcIter->second->draw(viewProj_miniMap, Window::shaderProgram);
         }
         // NPC->draw(viewProj_miniMap, Window::shaderProgram);
     }
