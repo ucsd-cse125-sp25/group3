@@ -286,7 +286,6 @@ void Mesh::setupBuf(){
 }
     
 void Mesh::draw(glm::mat4 model, std::vector<glm::mat4>& mMat, const glm::mat4& viewProjMtx, ShaderManager* shaderManager){
-    std::cout << "Mesh draw start" << std::endl;
     
     bool animated = (skel != nullptr);
     GLuint shader = shaderManager->getShader(renderMode, animated);
@@ -312,7 +311,6 @@ void Mesh::draw(glm::mat4 model, std::vector<glm::mat4>& mMat, const glm::mat4& 
     // Unbind the VAO and shader program
     glBindVertexArray(0);
     glUseProgram(0);
-    std::cout << "Mesh draw end" << std::endl;
 }
 
 void Mesh::update(std::vector<glm::mat4>& mMat){
