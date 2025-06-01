@@ -1,6 +1,5 @@
 
 #include "ClientGame.h" 
-#include <direct.h>
 
 ClientGame::ClientGame()
 {

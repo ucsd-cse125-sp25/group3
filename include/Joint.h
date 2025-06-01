@@ -24,7 +24,7 @@ public:
     Joint();
     ~Joint();
 
-    void update(glm::mat4& parent);
+    void update(glm::mat4 parent);
     bool load(const aiNode* node);
     void addChild(Joint &j);
     void log(std::map<std::string, Joint *>& joints);
