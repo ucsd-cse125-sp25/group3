@@ -178,6 +178,7 @@ bool Window::initializeObjects() {
 
 void Window::cleanUp() {
     // Deallcoate the objects.
+    printf("deleting\n");
     delete cube;
     delete artifact;
     delete floor;
@@ -185,11 +186,9 @@ void Window::cleanUp() {
     delete MiniMapCam;
     delete scene;
     delete character;
-
-    delete textureManager;
     
+    delete textureManager;
     delete animationPlayer;
-
     // Delete the shader program.
     // glDeleteProgram(shaderProgram);
     // glDeleteProgram(shaderProgram_uv);
@@ -577,11 +576,12 @@ void Window::applyServerState(const StateUpdatePacket& packet) {
                 // printf("curr client is %u\n", client_id);
                 
                 if (characters.find(currClient) == characters.end()) {
-                    addClient(currClient);
+                    addClient(currClient, initPacket->type);
                 }
                 Character* character = characters[currClient];
-                character->updateFromPacket(*initPacket);
-                
+                character->updateFromPacket(*initPacket, animationPlayer);
+                // character->model->update(animationPlayer);
+
                 if (currClient == client_id) {
                     Cam->updateFromPacket(*initPacket, false);
                     MiniMapCam->updateFromPacket(*initPacket, true);
@@ -633,7 +633,7 @@ void Window::render(GLFWwindow* window) {
 
     for (playerIter = characters.begin(); playerIter != characters.end(); playerIter++) {
         //printf("rendering cube for client %u\n", iter->first);
-        playerIter->second->model->update(animationPlayer);
+        // playerIter->second->model->update(animationPlayer);
         playerIter->second->draw(Cam->GetViewProjectMtx(),shaderManager);
     }
 
@@ -693,9 +693,15 @@ void Window::setClientID(const InitPlayerPacket& packet) {
     printf("client id is %d\n", client_id);
 }
 
-void Window::addClient(unsigned int client) {
-    AnInstance* model = new AnInstance(modelManager->getModel(ModelType::SecurityGuard));
-    model->setState(AnimState::Run);
+void Window::addClient(unsigned int client, CharacterType type) {
+    ModelType characterModel;
+
+    if (type == CHARACTER_4) {
+        characterModel = ModelType::SecurityGuard;
+    } else {
+        characterModel = ModelType::FemaleThief;
+    }
+    AnInstance* model = new AnInstance(modelManager->getModel(characterModel));
     Character* characterPtr = new Character(model);
     characters.insert(std::pair<unsigned int, Character*>(client, characterPtr));
     printf("init character for client %u\n", client);
@@ -712,7 +718,7 @@ void Window::removeClient(unsigned int client) {
     if (characters.find(client) != characters.end()) {
         Character* charPtr = characters[client];
         delete charPtr;
-        cubes.erase(client);
+        characters.erase(client);
     }
 }
 

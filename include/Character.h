@@ -36,5 +36,5 @@ public:
     void handleInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir);
     glm::vec3 getPosition() const;
 
-    void updateFromPacket(const InitPlayerPacket& packet);
+    void updateFromPacket(const InitPlayerPacket& packet, AnimationPlayer* animationPlayer);
 };

@@ -20,7 +20,7 @@ Joint::~Joint() {
     }
 }
 
-void Joint::update(glm::mat4& parent) {
+void Joint::update(const glm::mat4& parent) {
     // compute world matrix W
     worldMat = parent*localMat;
 

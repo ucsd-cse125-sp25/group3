@@ -1,6 +1,8 @@
 #include <vector>
 #include "Packet.h"
+#include "InitPacket.h"
 #include "../include/core.h"
+#include "../include/AnimState.h"
 #ifndef INITPLAYER_H // include guard
 #define INITPLAYER_H
 
@@ -8,6 +10,8 @@ class InitPlayerPacket : public Packet {
 public:
     unsigned int clientID;
     GameState currentState;
+    CharacterType type;
+    AnimState animState;
 
     // actions
     bool altDown;

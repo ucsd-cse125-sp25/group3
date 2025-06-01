@@ -155,6 +155,8 @@ void CubeState::saveToPacket(InitPlayerPacket& packet) {
         }
     }
     packet.isInvisible = isInvisible;
+    packet.type = type;
+    packet.animState = animState;
 
     // memcpy(buf, &isInvisible, sizeof(bool));
     // vec->insert(vec->end(), &buf[0], &buf[1]);

@@ -6,6 +6,7 @@
 #include <chrono>
 #include <set>
 #include <map>
+#include "AnimState.h"
 #define TOTAL_PLAYERS 1
 
 enum ClientStatus {
@@ -36,6 +37,7 @@ class CubeState {
 
         //for character abilities
         CharacterType type = NONE;  // default
+        AnimState animState = AnimState::Run;
         bool eWasPressed = false;
 
         // for invisible ability

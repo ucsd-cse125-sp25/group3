@@ -94,7 +94,7 @@ public:
 
     static void render(GLFWwindow* window);
     static void setClientID(const InitPlayerPacket& packet);
-    static void addClient(unsigned int client);
+    static void addClient(unsigned int client, CharacterType type);
     static void addNPC(unsigned int npc);
     static void removeClient(unsigned int client);
     static void setInitState(const InitPlayerPacket& packet);
