@@ -28,8 +28,6 @@ Model::~Model(){
     for (Mesh* m : meshes){
         delete m;
     }
-
-    delete skel;
 }
 
 ModelType Model::getModelType() {
