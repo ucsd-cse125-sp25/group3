@@ -15,7 +15,6 @@ Joint::Joint() {
 Joint::~Joint() {
     delete cube;
     for(Joint *child : children) {
-        child -> ~Joint();
         delete child;
     }
 }

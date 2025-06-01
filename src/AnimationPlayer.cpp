@@ -41,6 +41,7 @@ bool AnimationPlayer::loadAnims(ModelType modelType, std::map<std::string, AnimS
 
     Skeleton* skel = new Skeleton();
     if (!skel->load(scene->mRootNode)){
+        delete skel;
         return false;
     }
     skel->log();
@@ -59,6 +60,7 @@ bool AnimationPlayer::loadAnims(ModelType modelType, std::map<std::string, AnimS
             Animation* anim = new Animation();
 
             if (!anim->load(scene->mAnimations[i])){
+                delete anim;
                 return false;
             }
 
