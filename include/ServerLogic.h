@@ -37,7 +37,7 @@ class CubeState {
 
         //for character abilities
         CharacterType type = NONE;  // default
-        AnimState animState = AnimState::Run;
+        AnimState animState = AnimState::Stop;
         bool eWasPressed = false;
 
         // for invisible ability

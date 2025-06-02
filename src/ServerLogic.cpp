@@ -210,6 +210,12 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact) {
         movement = glm::normalize(movement) * cube.speed;
         cube.baseModel = glm::translate(cube.baseModel, movement);
         cube.lastMoveDir = glm::normalize(movement);
+        
+        if (cube.type == CharacterType::CHARACTER_4) {
+            cube.animState = AnimState::Run;
+        } else if (cube.type != CharacterType::NONE) {
+            cube.animState = AnimState::FT_Walk;
+        }
     }
 
     if (key == KeyType::KEY_R) {
@@ -263,6 +269,7 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact) {
                         cube.isSpeedBoosted = true;
                         cube.speedBoostStartTime = std::chrono::steady_clock::now();
                         cube.speed = cube.boostedSpeed;
+                        cube.animState = AnimState::Run;
                     }
                     break;
                 }
@@ -501,6 +508,7 @@ void ArtifactState::attemptGrab(CubeState * player) {
         // printf("distance: %f\n", distance);
         if (distance < 1.5f) {
             holder = player;
+            player->animState = AnimState::FT_Pick_Up;
             printf("artifact picked up\n");
         }
     }
