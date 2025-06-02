@@ -663,11 +663,20 @@ void Window::render(GLFWwindow* window) {
     floor->draw(viewProj_miniMap, shaderManager->getShader(RenderMode::BASE, false), true);
     artifact->draw(viewProj_miniMap, shaderManager->getShader(RenderMode::BASE, false), false);
 
+    for (playerIter = characters.begin(); playerIter != characters.end(); playerIter++) {
+        //printf("rendering cube for client %u\n", iter->first);
+        // playerIter->second->model->update(animationPlayer);
+        if (playerIter->first == client_id || radarActive) {
+            playerIter->second->draw(viewProj_miniMap, shaderManager);
+        }
+    }
+
     if (radarActive){
 
         for (npcIter = npcs.begin(); npcIter != npcs.end(); npcIter++) {
             //printf("rendering cube for client %u\n", iter->first);
             // npcIter->second->draw(viewProj_miniMap, shaderManager->getShader(RenderMode::BASE, false));
+            npcIter->second->draw(viewProj_miniMap, shaderManager);
         }
         // NPC->draw(viewProj_miniMap, Window::shaderProgram);
     }
