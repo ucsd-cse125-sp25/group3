@@ -18,6 +18,8 @@ MiniGame::~MiniGame() {
 }
 
 void MiniGame::init(GLFWwindow* window) {
+
+    
     // Get framebuffer size (in case window was resized)
     glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
 
@@ -41,6 +43,9 @@ void MiniGame::init(GLFWwindow* window) {
     initQuadRenderer();
     characterShader = quadShader;
 
+    float refW = 2880.0f;
+    float refH = 1800.0f;
+
     int charW, charH, ch;
     unsigned char* data = stbi_load("../minigame/assets/thief1_right.png", &charW, &charH, &ch, 4);
     if (!data) {
@@ -51,8 +56,8 @@ void MiniGame::init(GLFWwindow* window) {
     stbi_image_free(data);
 
     float scale = 1.0f / 4.0f;
-    float drawW = charW * scale;
-    float drawH = charH * scale;
+    float drawW = charW / refW * windowWidth * scale;
+    float drawH = charH /refH * windowHeight * scale;
     float posX = windowWidth - drawW;
     float posY = windowHeight - drawH;
 
@@ -61,16 +66,18 @@ void MiniGame::init(GLFWwindow* window) {
         "../minigame/assets/thief1_left.png");
 
     // Add platforms
-    platforms.emplace_back(330, 1700, 200, 27, 0);//1
-    platforms.emplace_back(0, 1475, 270, 27, 0);//2
-    platforms.emplace_back(0, 1595, 360, 32, 0);//3
-    platforms.emplace_back(468, 1212, 360, 43, 0);//4
-    platforms.emplace_back(1205, 1060, 520, 62, 0);//5
-    platforms.emplace_back(1890, 1268, 408, 58, 0);//6
-    platforms.emplace_back(2570, 930, 320, 55, 0);//7
-    platforms.emplace_back(520, 750, 410, 54, 0);//8
-    platforms.emplace_back(1400, 555, 480, 55, 0);//9
-    platforms.emplace_back(2270, 510, 480, 37, 0);//10
+    
+
+    platforms.emplace_back((330.0f / refW) * windowWidth, (1700.0f / refH) * windowHeight, (200.0f / refW) * windowWidth, (27.0f / refH) * windowHeight, 0);//1
+    platforms.emplace_back((0.0f   / refW) * windowWidth, (1475.0f / refH) * windowHeight, (270.0f / refW) * windowWidth, (27.0f / refH) * windowHeight, 0); // 2
+    platforms.emplace_back((0.0f   / refW) * windowWidth, (1595.0f / refH) * windowHeight, (360.0f / refW) * windowWidth, (32.0f / refH) * windowHeight, 0); // 3
+    platforms.emplace_back((468.0f / refW) * windowWidth, (1212.0f / refH) * windowHeight, (360.0f / refW) * windowWidth, (43.0f / refH) * windowHeight, 0); // 4
+    platforms.emplace_back((1205.0f / refW) * windowWidth, (1060.0f / refH) * windowHeight, (520.0f / refW) * windowWidth, (62.0f / refH) * windowHeight, 0); // 5
+    platforms.emplace_back((1890.0f / refW) * windowWidth, (1268.0f / refH) * windowHeight, (408.0f / refW) * windowWidth, (58.0f / refH) * windowHeight, 0); // 6
+    platforms.emplace_back((2570.0f / refW) * windowWidth, (930.0f / refH) * windowHeight, (320.0f / refW) * windowWidth, (55.0f / refH) * windowHeight, 0); // 7
+    platforms.emplace_back((520.0f / refW) * windowWidth, (750.0f / refH) * windowHeight, (410.0f / refW) * windowWidth, (54.0f / refH) * windowHeight, 0); // 8
+    platforms.emplace_back((1400.0f / refW) * windowWidth, (555.0f / refH) * windowHeight, (480.0f / refW) * windowWidth, (55.0f / refH) * windowHeight, 0); // 9
+    platforms.emplace_back((2270.0f / refW) * windowWidth, (510.0f / refH) * windowHeight, (480.0f / refW) * windowWidth, (37.0f / refH) * windowHeight, 0); // 10
 }
 
 void MiniGame::update(GLFWwindow* window) {
