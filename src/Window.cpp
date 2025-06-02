@@ -578,7 +578,7 @@ void Window::applyServerState(const StateUpdatePacket& packet) {
                 }
                 Character* character = characters[currClient];
                 character->updateFromPacket(*initPacket, animationPlayer);
-                // character->model->update(animationPlayer);
+    
 
                 if (currClient == client_id) {
                     Cam->updateFromPacket(*initPacket, false);
@@ -632,7 +632,7 @@ void Window::render(GLFWwindow* window) {
     for (playerIter = characters.begin(); playerIter != characters.end(); playerIter++) {
         //printf("rendering cube for client %u\n", iter->first);
         // playerIter->second->model->update(animationPlayer);
-        // playerIter->second->draw(Cam->GetViewProjectMtx(),shaderManager);
+        playerIter->second->draw(Cam->GetViewProjectMtx(),shaderManager);
     }
 
     std::map<unsigned int, NPCs*>::iterator npcIter;
@@ -700,6 +700,8 @@ void Window::addClient(unsigned int client, CharacterType type) {
         characterModel = ModelType::FemaleThief;
     }
     AnInstance* model = new AnInstance(modelManager->getModel(characterModel));
+    
+    // model->setState(AnimState::Run);
     Character* characterPtr = new Character(model);
     characters.insert(std::pair<unsigned int, Character*>(client, characterPtr));
     printf("init character for client %u\n", client);
