@@ -117,10 +117,10 @@ bool Window::initializeObjects() {
         {"Armature.002|Walking", AnimState::FT_Walk}
     };
 
-    if (!animationPlayer->loadAnims(ModelType::FemaleThief, female_thief_animations, "../models/characters/female_thief1.fbx")) {
+    if (!animationPlayer->loadAnims(ModelType::FemaleThief, female_thief_animations, "../models/characters/feamle_thief.fbx")) {
         std::cout << "animation loading failed" << std::endl;
     }
-    Model* femaleThief = new Model(ModelType::FemaleThief, "../models/characters/female_thief1.fbx", textureManager);
+    Model* femaleThief = new Model(ModelType::FemaleThief, "../models/characters/feamle_thief.fbx", textureManager);
     femaleThief->setMMat(glm::rotate(glm::scale(glm::mat4(1.0f), glm::vec3(0.002f)), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
     femaleThief->setSkel(animationPlayer);
     modelManager->addModel(femaleThief);
@@ -149,7 +149,7 @@ bool Window::initializeObjects() {
 
     AnInstance* bro2 = new AnInstance(modelManager->getModel(ModelType::FemaleThief));
     bro2->setMMat(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 1.0f)));
-    bro2->setState(AnimState::FT_Idle);
+    bro2->setState(AnimState::Run);
     scene->addInstance(bro2);
 
     std::cout << "instance2" << std::endl;
