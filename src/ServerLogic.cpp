@@ -210,6 +210,12 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact) {
         movement = glm::normalize(movement) * cube.speed;
         cube.baseModel = glm::translate(cube.baseModel, movement);
         cube.lastMoveDir = glm::normalize(movement);
+        
+        if (cube.type == CharacterType::CHARACTER_4) {
+            cube.animState = AnimState::Run;
+        } else if (cube.type != CharacterType::NONE) {
+            cube.animState = AnimState::FT_Walk;
+        }
     }
 
     if (key == KeyType::KEY_R) {
@@ -263,6 +269,7 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact) {
                         cube.isSpeedBoosted = true;
                         cube.speedBoostStartTime = std::chrono::steady_clock::now();
                         cube.speed = cube.boostedSpeed;
+                        cube.animState = AnimState::Run;
                     }
                     break;
                 }
@@ -400,6 +407,7 @@ void PlayerData::update() {
 
 NPCState::NPCState(){
     npcModel = CubeState(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1));
+    npcModel.animState = AnimState::FT_Walk;
     glm::vec3 startPos = glm::vec3(2.0f, 0.0f, -3.0f);
     glm::mat4 newModel = glm::mat4(1.0f);
     newModel = glm::translate(newModel, startPos);
@@ -427,6 +435,7 @@ void NPCState::update(){
 
         if (elapsed >= waitDuration) {
             isWaiting = false;
+            npcModel.animState = AnimState::FT_Walk;
             currentTarget = generateRandomTarget();  
         } else {
             return;  
@@ -441,6 +450,7 @@ void NPCState::update(){
 
         if (random_num < 0.5 ){
             isWaiting = true;
+            npcModel.animState = AnimState::FT_Idle;
         }
         waitStartTime = std::chrono::steady_clock::now();
         currentTarget = generateRandomTarget(); 
@@ -448,7 +458,10 @@ void NPCState::update(){
     }
     glm::vec3 movement = glm::normalize(direction) * speed;
     npcModel.baseModel = glm::translate(npcModel.baseModel, movement);
-    npcModel.model = npcModel.baseModel;
+    npcModel.lastMoveDir = glm::normalize(movement);
+    glm::mat4 rotateM = glm::inverse(glm::lookAt(glm::vec3(0), npcModel.lastMoveDir, glm::vec3(0, 1, 0)));
+    npcModel.model = npcModel.baseModel * rotateM;
+    // npcModel.model = npcModel.baseModel;
     // npcModel->setBaseAndModel(glm::translate(npcModel->baseModel, movement));
 }
 
@@ -460,6 +473,7 @@ glm::vec3 NPCState::generateRandomTarget() {
 }
 
 void NPCState::saveToPacket(NPCPacket& packet) {
+    packet.animState = npcModel.animState;
 
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
@@ -494,6 +508,7 @@ void ArtifactState::attemptGrab(CubeState * player) {
         // printf("distance: %f\n", distance);
         if (distance < 1.5f) {
             holder = player;
+            // player->animState = AnimState::FT_Pick_Up;
             printf("artifact picked up\n");
         }
     }

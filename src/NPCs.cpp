@@ -1,13 +1,14 @@
 #include "NPCs.h"
 #include <iostream>
 
-NPCs::NPCs(Cube* cube){
-    npcModel = cube;
+NPCs::NPCs(Character* character){
+    npcModel = character;
     glm::vec3 startPos = glm::vec3(2.0f, 0.0f, -3.0f);
     glm::mat4 newmodel = glm::mat4(1.0f);
     newmodel = glm::translate(newmodel, startPos);
 
-    npcModel->setBaseModel(newmodel);
+    // npcModel->setBaseModel(newmodel);
+    npcModel->baseModel = newmodel;
     currentTarget = generateRandomTarget();
 
 }
@@ -17,9 +18,9 @@ NPCs::~NPCs(){
 
 }
 
-void NPCs::draw(const glm::mat4& viewProjMtx, GLuint shader){
-    npcModel->setColor(glm::vec3(0.5f,0.7f,0.6f));
-    npcModel->draw(viewProjMtx,shader,false);
+void NPCs::draw(const glm::mat4& viewProjMtx, ShaderManager* shaderManager){
+    // npcModel->setColor(glm::vec3(0.5f,0.7f,0.6f));
+    npcModel->draw(viewProjMtx, shaderManager);
 }
 
 void NPCs::update(){
@@ -60,7 +61,9 @@ void NPCs::update(){
     }
     
     glm::vec3 movement = glm::normalize(direction) * speed;
-    npcModel->setBaseAndModel(glm::translate(npcModel->baseModel, movement));
+    // npcModel->setBaseAndModel(glm::translate(npcModel->baseModel, movement));
+    npcModel->baseModel = glm::translate(npcModel->baseModel, movement);
+    npcModel->model->setMMat(npcModel->baseModel);
 }
 
 glm::vec3 NPCs::generateRandomTarget() {
@@ -70,8 +73,14 @@ glm::vec3 NPCs::generateRandomTarget() {
     return glm::vec3(x, 0.0f, z);
 }
 
-void NPCs::updateFromPacket(const NPCPacket& packet) {
+void NPCs::updateFromPacket(const NPCPacket& packet, AnimationPlayer* animationPlayer) {
     glm::mat4 newModel;
     memcpy(glm::value_ptr(newModel), packet.model, sizeof(packet.model));
-    npcModel->setBaseModel(newModel);
+    // npcModel->setBaseModel(newModel);
+    npcModel->model->setMMat(newModel);
+    
+    if (npcModel->model->getState() != packet.animState) {
+        npcModel->model->setState(packet.animState);
+    }
+    npcModel->model->update(animationPlayer);
 }

@@ -59,6 +59,12 @@ void ServerGame::receiveFromClients() {
         } 
         PlayerData* player = playersData[iter->first];
 
+        if (player->cube.type == CharacterType::CHARACTER_4) {
+            player->cube.animState = AnimState::SG_Shooting_Gun;
+        } else if (player->cube.type != CharacterType::NONE) {
+            player->cube.animState = AnimState::FT_Idle;
+        }
+
         while (packetsDone == ONGOING) {
             int headerSize = Packet::getHeaderSize();
             //char header[headerSize];

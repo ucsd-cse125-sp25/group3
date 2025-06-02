@@ -67,10 +67,12 @@ void Character::update(AnimationPlayer* animationPlayer) {
 }
 
 void Character::updateFromPacket(const InitPlayerPacket& packet, AnimationPlayer* animationPlayer) {
+    if (model->getState() != packet.animState)
+    model->setState(packet.animState);
     glm::mat4 modelMatrix;
     memcpy(glm::value_ptr(modelMatrix), packet.model, sizeof(packet.model));
     model->setMMat(modelMatrix);
-    model->setState(packet.animState);
+    
     model->update(animationPlayer);
     isInvisible = packet.isInvisible;
 }
