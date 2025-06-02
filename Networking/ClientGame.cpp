@@ -1,6 +1,12 @@
 
 #include "ClientGame.h" 
+// #include <direct.h>
+
+#ifdef _WIN32
 #include <direct.h>
+#else
+#include <sys/stat.h>
+#endif
 
 ClientGame::ClientGame()
 {
