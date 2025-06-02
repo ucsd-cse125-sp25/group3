@@ -311,16 +311,16 @@ void Mesh::draw(glm::mat4 model, std::vector<glm::mat4>& mMat, const glm::mat4& 
     if (animated){
         glUniformMatrix4fv(glGetUniformLocation(shader, "finalJointMats"), MAX_JOINTS, GL_FALSE, &(mMat[0])[0][0]);   
     }
-std::cout << "drawing elements" << std::endl;
-std::cout << "animated: " << animated << std::endl;
-if (renderMode == RenderMode::TEXTURE) {
-    std::cout << "RenderMode::Texture" << std::endl;
-} else {
-    std::cout << "RenderMode::Base" << std::endl;
-}
+// std::cout << "drawing elements" << std::endl;
+// std::cout << "animated: " << animated << std::endl;
+// if (renderMode == RenderMode::TEXTURE) {
+//     std::cout << "RenderMode::Texture" << std::endl;
+// } else {
+//     std::cout << "RenderMode::Base" << std::endl;
+// }
     // draw the points using triangles, indexed with the EBO
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-std::cout << "survived" << std::endl;
+// std::cout << "survived" << std::endl;
     // Unbind the VAO and shader program
     glBindVertexArray(0);
     glUseProgram(0);

@@ -34,6 +34,7 @@ std::vector<AnInstance*>* Scene::getInstances(){
 
 void Scene::draw(const glm::mat4& viewProjMtx, ShaderManager* shaderManager){
     for (int i = 0; i < instances.size(); i++){
+        printf("instance %d\n",i);
         instances[i]->draw(viewProjMtx, shaderManager);
     }
 }

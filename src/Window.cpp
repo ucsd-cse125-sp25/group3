@@ -140,16 +140,16 @@ bool Window::initializeObjects() {
     securityGuard->setMMat(glm::rotate(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
     modelManager->addModel(securityGuard);
 
-    AnInstance* bro = new AnInstance(securityGuard);
-    bro->setState(AnimState::Run);
-    scene->addInstance(bro);
+    // AnInstance* bro = new AnInstance(securityGuard);
+    // bro->setState(AnimState::Run);
+    // scene->addInstance(bro);
 
     std::cout << "instance" << std::endl;
 
-    AnInstance* bro2 = new AnInstance(modelManager->getModel(ModelType::FemaleThief));
-    bro2->setMMat(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 1.0f)));
-    bro2->setState(AnimState::Run);
-    scene->addInstance(bro2);
+    // AnInstance* bro2 = new AnInstance(modelManager->getModel(ModelType::FemaleThief));
+    // bro2->setMMat(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 1.0f)));
+    // bro2->setState(AnimState::Run);
+    // scene->addInstance(bro2);
 
     std::cout << "instance2" << std::endl;
 
@@ -165,7 +165,7 @@ bool Window::initializeObjects() {
 
     AnInstance* model = new AnInstance(modelManager->getModel(ModelType::SecurityGuard));
     //currently no idle state for the security guard
-    model->setState(AnimState::Run);
+    model->setState(AnimState::Stop);
 
     character = new Character(model);
     // cube = new Cube(glm::vec3(-1, 0, -2), glm::vec3(1, 1, 1));
@@ -416,9 +416,9 @@ void Window::displayCallback(GLFWwindow* window) {
     // scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
     // scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
     // // model->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
-
+    
     character->draw(Cam->GetViewProjectMtx(), shaderManager);
-
+    printf("character drawn\n");
     // Gets events, including input such as keyboard and mouse or window resizing.
     // glfwPollEvents();
     // Swap buffers.
