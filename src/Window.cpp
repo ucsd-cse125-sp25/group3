@@ -118,12 +118,11 @@ bool Window::initializeObjects() {
         {"Armature.002|Walking", AnimState::FT_Walk}
     };
 
-    if (!animationPlayer->loadAnims(ModelType::FemaleThief, female_thief_animations, "../models/characters/female_thief1.fbx")) {
+    if (!animationPlayer->loadAnims(ModelType::FemaleThief, female_thief_animations, "../models/characters/feamle_thief.fbx")) {
         std::cout << "animation loading failed" << std::endl;
     }
-    Model* femaleThief = new Model(ModelType::FemaleThief, "../models/characters/female_thief1.fbx", textureManager);
+    Model* femaleThief = new Model(ModelType::FemaleThief, animationPlayer, "../models/characters/feamle_thief.fbx", textureManager);
     femaleThief->setMMat(glm::rotate(glm::scale(glm::mat4(1.0f), glm::vec3(0.002f)), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
-    femaleThief->setSkel(animationPlayer);
     modelManager->addModel(femaleThief);
 
     // load in all security guard related things
@@ -137,9 +136,8 @@ bool Window::initializeObjects() {
     if (!animationPlayer->loadAnims(ModelType::SecurityGuard, security_guard_animations, "../models/characters/security_guard.fbx")) {
         std::cout << "animation loading failed" << std::endl;
     }
-    Model* securityGuard = new Model(ModelType::SecurityGuard, "../models/characters/security_guard.fbx", textureManager);
+    Model* securityGuard = new Model(ModelType::SecurityGuard, animationPlayer, "../models/characters/security_guard.fbx", textureManager);
     securityGuard->setMMat(glm::rotate(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
-    securityGuard->setSkel(animationPlayer);
     modelManager->addModel(securityGuard);
 
     AnInstance* bro = new AnInstance(securityGuard);
@@ -150,7 +148,7 @@ bool Window::initializeObjects() {
 
     AnInstance* bro2 = new AnInstance(modelManager->getModel(ModelType::FemaleThief));
     bro2->setMMat(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 1.0f)));
-    bro2->setState(AnimState::FT_Idle);
+    bro2->setState(AnimState::Run);
     scene->addInstance(bro2);
 
     std::cout << "instance2" << std::endl;
@@ -634,7 +632,7 @@ void Window::render(GLFWwindow* window) {
     for (playerIter = characters.begin(); playerIter != characters.end(); playerIter++) {
         //printf("rendering cube for client %u\n", iter->first);
         // playerIter->second->model->update(animationPlayer);
-        playerIter->second->draw(Cam->GetViewProjectMtx(),shaderManager);
+        // playerIter->second->draw(Cam->GetViewProjectMtx(),shaderManager);
     }
 
     std::map<unsigned int, NPCs*>::iterator npcIter;

@@ -40,16 +40,23 @@ private:
     */
     void addMesh(Mesh* mesh);
 
+    void setSkel(AnimationPlayer* animPlayer);
+
 public:
 
     /*
-    Creates the model
+    Creates the model use IF NOT ANIMATED
 
     Once created, meshes should be added to the model
-
-    Call update(), then call setupBuf() once at the beginning.
     */
     Model(ModelType mType, const std::string & file, TextureManager* textureManager);
+
+    /*
+    Creates the model use IF ANIMATED (MUST ALREADY HAVE LOADED IN SKELETON)
+
+    Once created, meshes should be added to the model
+    */
+    Model(ModelType mType, AnimationPlayer* animPlayer, const std::string & file, TextureManager* textureManager);
 
     /*
     Deletes all meshes controlled by the Model.
@@ -94,8 +101,6 @@ public:
     Gets a mesh located at index i in the list of meshes controlled by this model
     */
     Mesh* getMesh(int i);
-
-    void setSkel(AnimationPlayer* animPlayer);
 
     /*
     Sets up the buffers for OpenGL, must be called before draw().

@@ -11,6 +11,7 @@
 #include "TextureManager.h"
 
 #define MAX_JOINT_INFLUENCE 8
+#define MAX_JOINT_INFLUENCE_GPU 4 
 #define MAX_JOINTS 100
 
 struct Vertex {

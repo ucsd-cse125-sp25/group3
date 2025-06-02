@@ -7,15 +7,31 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+/*
+ONLY USE THIS IF THERE IS NO SKELETON FOR THIS MODEL!
+*/
 
 Model::Model(ModelType mType, const std::string & file, TextureManager* textureManager){
     model = glm::mat4(1.0f);
     
     modelType = mType;
 
-    skel = NULL;
+    load(file, textureManager);
+
+    this->skel = nullptr;
+
+    setupBuf();
+}
+
+Model::Model(ModelType mType, AnimationPlayer* animPlayer, const std::string & file, TextureManager* textureManager){
+    model = glm::mat4(1.0f);
+    
+    modelType = mType;
 
     load(file, textureManager);
+
+    // sets the skeleton of the model, if there is no matching skeleton, it is set to null
+    setSkel(animPlayer);
 
     setupBuf();
 }
@@ -28,8 +44,6 @@ Model::~Model(){
     for (Mesh* m : meshes){
         delete m;
     }
-
-    delete skel;
 }
 
 ModelType Model::getModelType() {
@@ -140,6 +154,7 @@ void Model::draw(std::vector<std::vector<glm::mat4>>& jointMats, const glm::mat4
     glm::mat4 VPMmMtx = viewProjMtx * model;
     for (int i = 0; i < meshInstances.size(); i++){
         // meshes[i]->setMMat(model);
+        std::cout<< "i: " << i << std::endl;
         meshInstances[i]->draw(jointMats[i], VPMmMtx, shaderManager);
     }
 }
