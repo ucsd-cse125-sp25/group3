@@ -102,7 +102,7 @@ bool Window::initializeObjects() {
     artifact->setBaseModel(glm::translate(glm::mat4(1.0f), glm::vec3(7.0f, 0.0f, 2.0f)));
     cube->setCarriedArtifact(artifact);
     floor = new Cube(glm::vec3(-8, -2.03, -8), glm::vec3(8, -2.01, 8));
-    NPC = new NPCs(new Cube(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1)));
+    // NPC = new NPCs(new Cube(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1)));
 
 
     scene = new Scene();
@@ -604,7 +604,7 @@ void Window::applyServerState(const StateUpdatePacket& packet) {
                     addNPC(npcID);
                 }
                 NPCs* npc = npcs[npcID];
-                npc->updateFromPacket(*npcPacket);
+                npc->updateFromPacket(*npcPacket, animationPlayer);
             }
         }
     }   
@@ -639,7 +639,8 @@ void Window::render(GLFWwindow* window) {
 
     for (npcIter = npcs.begin(); npcIter != npcs.end(); npcIter++) {
         //printf("rendering cube for client %u\n", iter->first);
-        npcIter->second->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false));
+        // npcIter->second->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false));
+        npcIter->second->draw(Cam->GetViewProjectMtx(),shaderManager);
     }
 
    //cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
@@ -666,7 +667,7 @@ void Window::render(GLFWwindow* window) {
 
         for (npcIter = npcs.begin(); npcIter != npcs.end(); npcIter++) {
             //printf("rendering cube for client %u\n", iter->first);
-            npcIter->second->draw(viewProj_miniMap, shaderManager->getShader(RenderMode::BASE, false));
+            // npcIter->second->draw(viewProj_miniMap, shaderManager->getShader(RenderMode::BASE, false));
         }
         // NPC->draw(viewProj_miniMap, Window::shaderProgram);
     }
@@ -708,7 +709,10 @@ void Window::addClient(unsigned int client, CharacterType type) {
 }
 
 void Window::addNPC(unsigned int npc) {
-    NPCs* npcPtr = new NPCs(new Cube(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1)));
+    AnInstance* model = new AnInstance(modelManager->getModel(ModelType::FemaleThief));
+    Character* characterPtr = new Character(model);
+    NPCs* npcPtr = new NPCs(characterPtr);
+    // NPCs* npcPtr = new NPCs(new Cube(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1)));
     npcs.insert(std::pair<unsigned int, NPCs*>(npc, npcPtr));
     // printf("init cube for client %u\n", client);
 }

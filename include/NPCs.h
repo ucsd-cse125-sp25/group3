@@ -5,6 +5,7 @@
 #include "Cube.h"
 #include <chrono>
 #include "../packets/NPCPacket.h"
+#include "Character.h"
 
 
 class NPCs {
@@ -21,10 +22,10 @@ private:
 
 public:
 
-    NPCs(Cube* cube);
+    NPCs(Character* character);
     ~NPCs();
 
-    Cube* npcModel;
+    Character* npcModel;
 
     enum State {
         IDLE,
@@ -38,10 +39,10 @@ public:
 
 
     void update();
-    void draw(const glm::mat4& viewProjMtx, GLuint shader);
+    void draw(const glm::mat4& viewProjMtx, ShaderManager* shaderManager);
 
     glm::vec3 generatePosition();
     glm::vec3 generateRandomTarget();
 
-    void updateFromPacket(const NPCPacket& npcPacket);
+    void updateFromPacket(const NPCPacket& npcPacket, AnimationPlayer* animationPlayer);
 };
