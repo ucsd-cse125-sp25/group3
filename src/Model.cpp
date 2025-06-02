@@ -152,7 +152,9 @@ void Model::setupBuf(){
 
 void Model::draw(std::vector<std::vector<glm::mat4>>& jointMats, const glm::mat4& viewProjMtx, ShaderManager* shaderManager){
     glm::mat4 VPMmMtx = viewProjMtx * model;
+    assert(jointMats.size() == meshInstances.size());
     for (int i = 0; i < meshInstances.size(); i++){
+        assert(jointMats[i].size() == MAX_JOINTS);
         // meshes[i]->setMMat(model);
         meshInstances[i]->draw(jointMats[i], VPMmMtx, shaderManager);
     }

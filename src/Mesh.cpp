@@ -176,6 +176,7 @@ void Mesh::setJointVals(const aiMesh* mesh){
         }
 
         assert(id != -1);
+        assert(id <= MAX_JOINTS);
 
         auto weights = mesh->mBones[i]->mWeights;
         int numWeights = mesh->mBones[i]->mNumWeights;
@@ -309,6 +310,8 @@ void Mesh::draw(glm::mat4 model, std::vector<glm::mat4>& mMat, const glm::mat4& 
     glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &color[0]);
 
     if (animated){
+        assert(mMat.size() == MAX_JOINTS);
+
         glUniformMatrix4fv(glGetUniformLocation(shader, "finalJointMats"), MAX_JOINTS, GL_FALSE, &(mMat[0])[0][0]);   
     }
 
