@@ -140,18 +140,18 @@ bool Window::initializeObjects() {
     securityGuard->setMMat(glm::rotate(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
     modelManager->addModel(securityGuard);
 
-    AnInstance* bro = new AnInstance(securityGuard);
-    bro->setState(AnimState::Run);
-    scene->addInstance(bro);
+    // AnInstance* bro = new AnInstance(securityGuard);
+    // bro->setState(AnimState::Run);
+    // scene->addInstance(bro);
 
-    std::cout << "instance" << std::endl;
+    // std::cout << "instance" << std::endl;
 
-    AnInstance* bro2 = new AnInstance(modelManager->getModel(ModelType::FemaleThief));
-    bro2->setMMat(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 1.0f)));
-    bro2->setState(AnimState::Run);
-    scene->addInstance(bro2);
+    // AnInstance* bro2 = new AnInstance(modelManager->getModel(ModelType::FemaleThief));
+    // bro2->setMMat(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 1.0f)));
+    // bro2->setState(AnimState::Run);
+    // scene->addInstance(bro2);
 
-    std::cout << "instance2" << std::endl;
+    // std::cout << "instance2" << std::endl;
 
     Model* museum = new Model(ModelType::Museum, "../models/map/museum.fbx", textureManager);
     museum->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
@@ -646,6 +646,7 @@ void Window::render(GLFWwindow* window) {
    //cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
     floor->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false), true);
     artifact->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false),false);
+    scene->draw(Cam->GetViewProjectMtx(), shaderManager);
 
     int miniMapSize = 256;
     //glViewport(0, Window::height - miniMapSize, miniMapSize, miniMapSize); 
@@ -662,6 +663,7 @@ void Window::render(GLFWwindow* window) {
     // }
     floor->draw(viewProj_miniMap, shaderManager->getShader(RenderMode::BASE, false), true);
     artifact->draw(viewProj_miniMap, shaderManager->getShader(RenderMode::BASE, false), false);
+    scene->draw(viewProj_miniMap, shaderManager);
 
     for (playerIter = characters.begin(); playerIter != characters.end(); playerIter++) {
         //printf("rendering cube for client %u\n", iter->first);

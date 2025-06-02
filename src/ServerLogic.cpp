@@ -508,7 +508,7 @@ void ArtifactState::attemptGrab(CubeState * player) {
         // printf("distance: %f\n", distance);
         if (distance < 1.5f) {
             holder = player;
-            player->animState = AnimState::FT_Pick_Up;
+            // player->animState = AnimState::FT_Pick_Up;
             printf("artifact picked up\n");
         }
     }
