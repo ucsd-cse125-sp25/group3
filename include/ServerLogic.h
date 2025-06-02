@@ -7,7 +7,7 @@
 #include <set>
 #include <map>
 #include "AnimState.h"
-#define TOTAL_PLAYERS 1
+#define TOTAL_PLAYERS 2
 
 enum ClientStatus {
     ONGOING,
@@ -114,6 +114,8 @@ class PlayerData {
         Camera miniMapCam;
         int windowWidth;
         int windowHeight;
+        float lastX;
+        float lastY;
         bool initialized = false;
         bool firstMouse;
         bool altDown;
