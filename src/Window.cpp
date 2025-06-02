@@ -120,9 +120,8 @@ bool Window::initializeObjects() {
     if (!animationPlayer->loadAnims(ModelType::FemaleThief, female_thief_animations, "../models/characters/feamle_thief.fbx")) {
         std::cout << "animation loading failed" << std::endl;
     }
-    Model* femaleThief = new Model(ModelType::FemaleThief, "../models/characters/feamle_thief.fbx", textureManager);
+    Model* femaleThief = new Model(ModelType::FemaleThief, animationPlayer, "../models/characters/feamle_thief.fbx", textureManager);
     femaleThief->setMMat(glm::rotate(glm::scale(glm::mat4(1.0f), glm::vec3(0.002f)), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
-    femaleThief->setSkel(animationPlayer);
     modelManager->addModel(femaleThief);
 
     // load in all security guard related things
@@ -136,9 +135,8 @@ bool Window::initializeObjects() {
     if (!animationPlayer->loadAnims(ModelType::SecurityGuard, security_guard_animations, "../models/characters/security_guard.fbx")) {
         std::cout << "animation loading failed" << std::endl;
     }
-    Model* securityGuard = new Model(ModelType::SecurityGuard, "../models/characters/security_guard.fbx", textureManager);
+    Model* securityGuard = new Model(ModelType::SecurityGuard, animationPlayer, "../models/characters/security_guard.fbx", textureManager);
     securityGuard->setMMat(glm::rotate(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
-    securityGuard->setSkel(animationPlayer);
     modelManager->addModel(securityGuard);
 
     AnInstance* bro = new AnInstance(securityGuard);

@@ -7,15 +7,31 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+/*
+ONLY USE THIS IF THERE IS NO SKELETON FOR THIS MODEL!
+*/
 
 Model::Model(ModelType mType, const std::string & file, TextureManager* textureManager){
     model = glm::mat4(1.0f);
     
     modelType = mType;
 
-    skel = NULL;
+    load(file, textureManager);
+
+    this->skel = nullptr;
+
+    setupBuf();
+}
+
+Model::Model(ModelType mType, AnimationPlayer* animPlayer, const std::string & file, TextureManager* textureManager){
+    model = glm::mat4(1.0f);
+    
+    modelType = mType;
 
     load(file, textureManager);
+
+    // sets the skeleton of the model, if there is no matching skeleton, it is set to null
+    setSkel(animPlayer);
 
     setupBuf();
 }
