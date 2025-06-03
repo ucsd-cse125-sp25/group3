@@ -1,6 +1,7 @@
 #version 330 core
 // NOTE: Do NOT use any version older than 330! Bad things will happen!
 
+layout (location = 0) in vec2 vertexUV;
 layout (location = 1) in vec3 position;
 layout (location = 2) in vec3 normal;
 
@@ -21,6 +22,8 @@ uniform mat4 finalJointMats[MAX_JOINTS];
 // The default output, gl_Position, should be assigned something. 
 out vec3 fragNormal;
 out vec3 fragPos;
+out vec2 uv;
+
 
 void main()
 {
@@ -81,4 +84,6 @@ void main()
 	fragNormal = vec3(model * totalNorm);
 
     fragPos = vec3(model * totalPos);
+    uv = vertexUV;
+
 }

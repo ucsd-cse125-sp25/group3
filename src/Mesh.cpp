@@ -269,9 +269,9 @@ void Mesh::setupBuf(){
     // glVertexAttribPointer(3, MAX_JOINT_INFLUENCE, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
 
     if (skel != nullptr){
-        std::cout << "Offset:" << offsetof(Vertex, jointIDs) << std::endl;
-        std::cout << "Offset:" << (offsetof(Vertex, jointIDs) + (MAX_JOINT_INFLUENCE_GPU * sizeof(int))) << std::endl;
-        std::cout << "Offset:" << offsetof(Vertex, weights) << std::endl;
+        // std::cout << "Offset:" << offsetof(Vertex, jointIDs) << std::endl;
+        // std::cout << "Offset:" << (offsetof(Vertex, jointIDs) + (MAX_JOINT_INFLUENCE_GPU * sizeof(int))) << std::endl;
+        // std::cout << "Offset:" << offsetof(Vertex, weights) << std::endl;
         
         //jointIDs
         glEnableVertexAttribArray(3);
@@ -324,12 +324,18 @@ void Mesh::draw(glm::mat4 model, std::vector<glm::mat4>& mMat, const glm::mat4& 
 
     if (animated){
         assert(mMat.size() == MAX_JOINTS);
-        glUniformMatrix4fv(glGetUniformLocation(shader, "finalJointMats"), MAX_JOINTS, GL_FALSE, &(mMat[0])[0][0]);   
+        std::vector<glm::mat4> matrices;
+        matrices.reserve(MAX_JOINTS);
+        for (int i = 0; i < MAX_JOINTS; i++){
+            matrices[i] = mMat[i];
+        }
+        glUniformMatrix4fv(glGetUniformLocation(shader, "finalJointMats"), MAX_JOINTS, GL_FALSE, &(matrices[0])[0][0]);   
+        // std::cout << "I am a matrix of fine character finito" << std::endl;
     }
 
     // draw the points using triangles, indexed with the EBO
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-    std::cout << "done drawing" << std::endl;
+    // std::cout << "done drawing" << std::endl;
     // Unbind the VAO and shader program
     glBindVertexArray(0);
     glUseProgram(0);

@@ -156,7 +156,6 @@ void Model::draw(std::vector<std::vector<glm::mat4>>& jointMats, const glm::mat4
     for (int i = 0; i < meshInstances.size(); i++){
         assert(jointMats[i].size() == MAX_JOINTS);
         // meshes[i]->setMMat(model);
-        std::cout << "i: " << i << std::endl;
         meshInstances[i]->draw(jointMats[i], VPMmMtx, shaderManager);
     }
 }
