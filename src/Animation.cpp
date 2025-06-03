@@ -4,7 +4,9 @@
  #include <iostream>
  #include "Skeleton.h"
 
-Animation::Animation(){}
+Animation::Animation(){
+    duration = 0.0f;
+}
 
 Animation::~Animation(){
     for (auto it = channels.begin(); it != channels.end(); ++it){
@@ -17,6 +19,7 @@ bool Animation::load(const aiAnimation* animation){
     timeStart = 0.0f;
     timeEnd = (float) (animation->mDuration);
     ticksPerSec = (float) animation->mTicksPerSecond;
+    duration = ((float) animation->mDuration) / ticksPerSec;
     std::cout << ticksPerSec << std::endl;
     std::cout << timeEnd << std::endl;
 
@@ -47,4 +50,8 @@ void Animation::evaluate(float time, std::map<std::string, glm::mat4>& pose){
         glm::mat4 val = ch->evaluate(frameTime); 
         pose[ch->getName()] = val;
     }
+}
+
+float Animation::getDuration() {
+    return duration;
 }

@@ -1,15 +1,14 @@
 #version 330 core
 // NOTE: Do NOT use any version older than 330! Bad things will happen!
 
-layout (location = 0) in vec3 position;
-layout (location = 1) in vec3 normal;
+layout (location = 0) in vec2 vertexUV;
+layout (location = 1) in vec3 position;
+layout (location = 2) in vec3 normal;
 
-layout (location = 2) in ivec4 jointIDs1;
-layout (location = 3) in vec4 weights1;
+layout (location = 3) in ivec4 jointIDs1;
+layout (location = 4) in vec4 weights1;
 layout (location = 5) in ivec4 jointIDs2;
 layout (location = 6) in vec4 weights2;
-
-layout (location = 4) in vec2 vertexUV;
 
 // Uniform variables
 uniform mat4 viewProj;
