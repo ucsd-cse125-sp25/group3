@@ -324,12 +324,12 @@ void Mesh::draw(glm::mat4 model, std::vector<glm::mat4>& mMat, const glm::mat4& 
 
     if (animated){
         assert(mMat.size() == MAX_JOINTS);
-        std::vector<glm::mat4> matrices;
-        matrices.reserve(MAX_JOINTS);
-        for (int i = 0; i < MAX_JOINTS; i++){
-            matrices[i] = mMat[i];
-        }
-        glUniformMatrix4fv(glGetUniformLocation(shader, "finalJointMats"), MAX_JOINTS, GL_FALSE, &(matrices[0])[0][0]);   
+        // std::vector<glm::mat4> matrices;
+        // matrices.reserve(MAX_JOINTS);
+        // for (int i = 0; i < MAX_JOINTS; i++){
+        //     matrices[i] = mMat[i];
+        // }
+        glUniformMatrix4fv(glGetUniformLocation(shader, "finalJointMats"), MAX_JOINTS, GL_FALSE, &(mMat[0])[0][0]);   
         // std::cout << "I am a matrix of fine character finito" << std::endl;
     }
 
