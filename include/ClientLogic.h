@@ -31,13 +31,13 @@ class client_logic {
         static bool availableChars[4];
         static MiniGame miniGame;
         static bool miniGameInitialized;  
-        static std::vector<Platform> miniGamePlatforms;
+        static std::vector<Platform> miniGamePlatformsServer;
 
         static std::vector<std::unique_ptr<Packet>> pendingPackets;
 
         static void updateAvailableChars(GuiUpdatePacket& packet);
 
-        static void setMinigamePlatforms(const InitMinigamePacket& initMinigamePacket);
+        static void setMinigamePlatformsServer(const InitMinigamePacket& initMinigamePacket);
 
         static void error_callback(int error, const char* description);
 

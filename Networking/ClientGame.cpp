@@ -111,10 +111,11 @@ void ClientGame::update()
         client_logic::setMainGameWindow(window);
     } else if (Window::currentState == IN_MINIGAME) {
         if (!client_logic::miniGameInitialized) {
-            client_logic::miniGame.init(window, client_logic::miniGamePlatforms);
+            client_logic::miniGame.init(window, client_logic::miniGamePlatformsServer);
             client_logic::miniGameInitialized = true;
             std::cout << "minigame initialized" << std::endl;
         }
+        client_logic::miniGame.updateMinigamePlatforms();
         client_logic::miniGame.update(window);
         client_logic::miniGame.render();
 
@@ -155,7 +156,7 @@ void ClientGame::update()
             case INIT_MINIGAME: {
                 InitMinigamePacket* initMinigamePacket = dynamic_cast<InitMinigamePacket*>(packet.get());
                 printf("recieved init minigame packet from server\n");
-                client_logic::setMinigamePlatforms(*initMinigamePacket);
+                client_logic::setMinigamePlatformsServer(*initMinigamePacket);
                 break;
             }
             case GUI_UPDATE: {

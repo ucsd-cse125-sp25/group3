@@ -19,9 +19,11 @@ public:
     void cleanup();
     float timeOnLastPlatform = 0.0f;
     bool isFinished() const;
+    void updateMinigamePlatforms();
 
 private:
     Character* player;
+    std::vector<Platform> serverPlatforms; // no scaling, for reference in updating platforms
     std::vector<Platform> platforms;
     GLuint backgroundTex;
     int windowWidth;

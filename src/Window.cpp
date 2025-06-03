@@ -151,6 +151,8 @@ GLFWwindow* Window::createWindow(int width, int height) {
         Window::resizeCallback(window, width, height);
     #endif
 
+    glfwSetWindowSizeCallback(window, resizeCallback);
+
     return window;
 }
 

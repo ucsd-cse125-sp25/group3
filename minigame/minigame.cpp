@@ -61,12 +61,14 @@ void MiniGame::init(GLFWwindow* window, std::vector<Platform> platformsToInit) {
         "../minigame/assets/thief1_left.png");
 
     for (int i = 0; i < platformsToInit.size(); i++) {
-        platforms.emplace_back(platformsToInit[i]);
+        serverPlatforms.emplace_back(platformsToInit[i]);
     }
 }
 
 void MiniGame::update(GLFWwindow* window) {
     std::cout << "[MiniGame] rendering frame" << std::endl;
+    glfwGetFramebufferSize(window, &windowWidth, &windowHeight); //in case window was resized
+    updateMinigamePlatforms();
     if (!player) return;
 
     player->handleInput(window);
@@ -103,8 +105,6 @@ void MiniGame::render() {
     glClear(GL_COLOR_BUFFER_BIT);
     renderQuad(backgroundTex, 0, 0, windowWidth, windowHeight);
 
-    
-
     if (player) 
     {
         GLuint shader = player->getShader();
@@ -118,6 +118,16 @@ void MiniGame::render() {
     }
     for (const auto& p : platforms)
         p.draw(quadShader);
+}
+
+void MiniGame::updateMinigamePlatforms() {
+    platforms.clear();
+    std::cout << "Window width: " << windowWidth << ", Window height: " << windowHeight << std::endl;
+    for(int i = 0; i < serverPlatforms.size(); i++) {
+        Platform plat = Platform(serverPlatforms[i].x * windowWidth, serverPlatforms[i].y * windowHeight, serverPlatforms[i].width * windowWidth, serverPlatforms[i].height * windowHeight, 0);
+        platforms.emplace_back(plat);
+        std::cout << "Added platform: " << plat.x  << ", " << plat.y << ", " << plat.width << ", " << plat.height << std::endl;
+    }
 }
 
 void MiniGame::cleanup() {

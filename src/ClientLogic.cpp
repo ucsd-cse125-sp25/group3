@@ -6,17 +6,16 @@ ImFont* client_logic::handwritingFont;
 bool client_logic::availableChars[4];
 MiniGame client_logic::miniGame;
 bool client_logic::miniGameInitialized = false;
-std::vector<Platform> client_logic::miniGamePlatforms;
+std::vector<Platform> client_logic::miniGamePlatformsServer;
 // ImGuiIO& client_logic::io;
 std::vector<std::unique_ptr<Packet>> client_logic::pendingPackets;
 
-void client_logic::setMinigamePlatforms(const InitMinigamePacket& initMinigamePacket) {
-    miniGamePlatforms.clear();
+void client_logic::setMinigamePlatformsServer(const InitMinigamePacket& initMinigamePacket) {
+    miniGamePlatformsServer.clear();
     for(int i = 0; i < initMinigamePacket.numPlatforms; i++) {
-        // TODO: Add tex value
-        Platform plat = Platform(initMinigamePacket.platformX[i] * Window::width, initMinigamePacket.platformY[i] * Window::height, initMinigamePacket.platformWidth[i] * Window::width, initMinigamePacket.platformHeight[i] * Window::height, 0);
-        miniGamePlatforms.emplace_back(plat);
-        std::cout << "Added platform: " << initMinigamePacket.platformX[i] << ", " << initMinigamePacket.platformY[i] << ", " << initMinigamePacket.platformWidth[i] << ", " << initMinigamePacket.platformHeight[i] << std::endl;
+        Platform plat = Platform(initMinigamePacket.platformX[i], initMinigamePacket.platformY[i], initMinigamePacket.platformWidth[i], initMinigamePacket.platformHeight[i], 0);
+        miniGamePlatformsServer.emplace_back(plat);
+        std::cout << "Received platform: " << initMinigamePacket.platformX[i] << ", " << initMinigamePacket.platformY[i] << ", " << initMinigamePacket.platformWidth[i] << ", " << initMinigamePacket.platformHeight[i] << std::endl;
     }
 }
 

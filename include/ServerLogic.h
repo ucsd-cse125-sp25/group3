@@ -6,7 +6,8 @@
 #include <chrono>
 #include <set>
 #include <map>
-#define TOTAL_PLAYERS 4
+//#define TOTAL_PLAYERS 4
+#define TOTAL_PLAYERS 1
 
 enum ClientStatus {
     ONGOING,
