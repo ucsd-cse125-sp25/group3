@@ -252,6 +252,10 @@ void Mesh::setupBuf(){
     // glVertexAttribPointer(3, MAX_JOINT_INFLUENCE, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
 
     if (skel != nullptr){
+        std::cout << "Offset:" << offsetof(Vertex, jointIDs) << std::endl;
+        std::cout << "Offset:" << (offsetof(Vertex, jointIDs) + (MAX_JOINT_INFLUENCE_GPU * sizeof(int))) << std::endl;
+        std::cout << "Offset:" << offsetof(Vertex, weights) << std::endl;
+        
         //jointIDs
         glEnableVertexAttribArray(2);
         glVertexAttribIPointer(2, MAX_JOINT_INFLUENCE_GPU, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, jointIDs));
