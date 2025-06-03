@@ -26,16 +26,20 @@ ServerGame::ServerGame(void)
 
     ServerGame::minigamePlatforms.clear();
     // texture is not sent by server; client determines this.
-    minigamePlatforms.emplace_back(330, 1700, 200, 27, 0);//1
-    minigamePlatforms.emplace_back(0, 1475, 270, 27, 0);//2
-    minigamePlatforms.emplace_back(0, 1595, 360, 32, 0);//3
-    minigamePlatforms.emplace_back(468, 1212, 360, 43, 0);//4
-    minigamePlatforms.emplace_back(1205, 1060, 520, 62, 0);//5
-    minigamePlatforms.emplace_back(1890, 1268, 408, 58, 0);//6
-    minigamePlatforms.emplace_back(2570, 930, 320, 55, 0);//7
-    minigamePlatforms.emplace_back(520, 750, 410, 54, 0);//8
-    minigamePlatforms.emplace_back(1400, 555, 480, 55, 0);//9
-    minigamePlatforms.emplace_back(2270, 510, 480, 37, 0);//10
+
+    float refW = 2880.0f;
+    float refH = 1800.0f;
+
+    minigamePlatforms.emplace_back((330.0f / refW), (1700.0f / refH), (200.0f / refW), (27.0f / refH), 0);//1
+    minigamePlatforms.emplace_back((0.0f   / refW), (1475.0f / refH), (270.0f / refW), (27.0f / refH), 0); // 2
+    minigamePlatforms.emplace_back((0.0f   / refW), (1595.0f / refH), (360.0f / refW), (32.0f / refH), 0); // 3
+    minigamePlatforms.emplace_back((468.0f / refW), (1212.0f / refH), (360.0f / refW), (43.0f / refH), 0); // 4
+    minigamePlatforms.emplace_back((1205.0f / refW), (1060.0f / refH), (520.0f / refW), (62.0f / refH), 0); // 5
+    minigamePlatforms.emplace_back((1890.0f / refW), (1268.0f / refH), (408.0f / refW), (58.0f / refH), 0); // 6
+    minigamePlatforms.emplace_back((2570.0f / refW), (930.0f / refH), (320.0f / refW), (55.0f / refH), 0); // 7
+    minigamePlatforms.emplace_back((520.0f / refW), (750.0f / refH), (410.0f / refW), (54.0f / refH), 0); // 8
+    minigamePlatforms.emplace_back((1400.0f / refW), (555.0f / refH), (480.0f / refW), (55.0f / refH), 0); // 9
+    minigamePlatforms.emplace_back((2270.0f / refW), (510.0f / refH), (480.0f / refW), (37.0f / refH), 0); // 10
 }
 
 void ServerGame::update()

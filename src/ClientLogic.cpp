@@ -14,7 +14,7 @@ void client_logic::setMinigamePlatforms(const InitMinigamePacket& initMinigamePa
     miniGamePlatforms.clear();
     for(int i = 0; i < initMinigamePacket.numPlatforms; i++) {
         // TODO: Add tex value
-        Platform plat = Platform(initMinigamePacket.platformX[i], initMinigamePacket.platformY[i], initMinigamePacket.platformWidth[i], initMinigamePacket.platformHeight[i], 0);
+        Platform plat = Platform(initMinigamePacket.platformX[i] * Window::width, initMinigamePacket.platformY[i] * Window::height, initMinigamePacket.platformWidth[i] * Window::width, initMinigamePacket.platformHeight[i] * Window::height, 0);
         miniGamePlatforms.emplace_back(plat);
         std::cout << "Added platform: " << initMinigamePacket.platformX[i] << ", " << initMinigamePacket.platformY[i] << ", " << initMinigamePacket.platformWidth[i] << ", " << initMinigamePacket.platformHeight[i] << std::endl;
     }
