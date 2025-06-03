@@ -35,9 +35,9 @@ ClientGame::ClientGame()
     
     //io.Fonts->AddFontDefault();
     //io.Fonts->AddFontFromFileTTF("..\\external\\style\\fonts\\Junicode-Bold.ttf", 32.0f);
-    io.Fonts->AddFontFromFileTTF("../external/style/fonts/Junicode-Bold.ttf", 32.0f);
+    io.Fonts->AddFontFromFileTTF("../../external/style/fonts/Junicode-Bold.ttf", 32.0f);
     
-    client_logic::handwritingFont = io.Fonts->AddFontFromFileTTF("../external/style/fonts/HomemadeApple-Regular.ttf", 28.0f);
+    client_logic::handwritingFont = io.Fonts->AddFontFromFileTTF("../../external/style/fonts/HomemadeApple-Regular.ttf", 28.0f);
     
     ImGuiStyle& style = ImGui::GetStyle();
     style.Colors[ImGuiCol_WindowBg] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f); // Opaque background
@@ -56,7 +56,7 @@ ClientGame::ClientGame()
     int my_image_width = 0;
     int my_image_height = 0;
     GLuint my_image_texture = 0;
-    bool ret = client_logic::LoadTextureFromFile("../external/images/HeistAtTheMuseumTitle.png", &my_image_texture, &my_image_width, &my_image_height);
+    bool ret = client_logic::LoadTextureFromFile("../../external/images/HeistAtTheMuseumTitle.png", &my_image_texture, &my_image_width, &my_image_height);
     //bool ret = client_logic::LoadTextureFromFile("../external/images/HeistAtTheMuseumTitle.png", &my_image_texture, &my_image_width, &my_image_height);
     IM_ASSERT(ret);
 

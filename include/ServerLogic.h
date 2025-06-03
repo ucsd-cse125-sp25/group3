@@ -7,7 +7,8 @@
 #include <set>
 #include <map>
 #include "AnimState.h"
-#define TOTAL_PLAYERS 1
+#define TOTAL_PLAYERS 2
+#define NUM_TO_STOP 5
 
 enum ClientStatus {
     ONGOING,
@@ -112,6 +113,7 @@ class PlayerData {
         CubeState cube;
         Camera camera;
         Camera miniMapCam;
+        int iterationsStopped = 0;
         int windowWidth;
         int windowHeight;
         float lastX;
@@ -134,6 +136,7 @@ class PlayerData {
         void update();
 
         void handleGuiInput(KeyType key);
+        void detectStop();
 };
 
 class ServerLogic {

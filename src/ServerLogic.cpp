@@ -207,6 +207,7 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact) {
         movement -= rightDir;
         
     if (glm::length(movement) > 0.0f) {
+        iterationsStopped = 0;
         movement = glm::normalize(movement) * cube.speed;
         cube.baseModel = glm::translate(cube.baseModel, movement);
         cube.lastMoveDir = glm::normalize(movement);
@@ -322,6 +323,12 @@ bool PlayerData::init(InitPacket* packet) {
         miniMapCam.SetOrtho(-10, 10, -10, 10, 0.1f, 100.0f); 
         miniMapCam.SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
         cube.type = packet->character;
+
+        if (cube.type == CharacterType::CHARACTER_4) {
+            cube.animState = AnimState::SG_Shooting_Gun;
+        } else if (cube.type != CharacterType::NONE) {
+            cube.animState = AnimState::FT_Idle;
+        }
         ServerLogic::availableChars[packet->character] = false;
         currentState = WAITING;
         return true;
@@ -371,6 +378,18 @@ void PlayerData::handleCursor(double currX, double currY) {
     
     // cube.update();
     // camera.Update(cube.getPosition()); 
+}
+
+void PlayerData::detectStop() {
+    iterationsStopped += 1;
+// printf("here: %d\n", iterationsStopped);
+    if (iterationsStopped == NUM_TO_STOP && cube.type == CharacterType::CHARACTER_4) {
+        cube.animState = AnimState::SG_Shooting_Gun;
+        iterationsStopped = 0;
+    } else if (iterationsStopped == NUM_TO_STOP && cube.type != CharacterType::NONE) {
+        iterationsStopped = 0;
+        cube.animState = AnimState::FT_Idle;
+    }
 }
 
 void PlayerData::resetCamera() {
