@@ -50,9 +50,14 @@ void MiniGame::init(GLFWwindow* window, std::vector<Platform> platformsToInit) {
     }
     stbi_image_free(data);
 
+    float refW = 2880.0f;
+    float refH = 1800.0f;
+
+
     float scale = 1.0f / 4.0f;
-    float drawW = charW * scale;
-    float drawH = charH * scale;
+    float drawW = charW / refW * windowWidth * scale;
+    float drawH = charH /refH * windowHeight * scale;
+
     float posX = windowWidth - drawW;
     float posY = windowHeight - drawH;
 
