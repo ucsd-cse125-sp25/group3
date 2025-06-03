@@ -1,6 +1,7 @@
 #include "AABB.h"
 #include <iostream>
 #include <limits>
+#include <functional>
 
 AABB::AABB() {
     min = glm::vec3(std::numeric_limits<float>::max());

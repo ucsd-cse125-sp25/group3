@@ -184,11 +184,11 @@ bool Window::initializeObjects() {
     // // Model* buddha = new Model(ModelType::Museum, "../models/map/museum.fbx", textureManager);
     // modelManager->addModel(buddha);
 
-    // AnInstance* model = new AnInstance(modelManager->getModel(ModelType::SecurityGuard));
-    // //currently no idle state for the security guard
-    // model->setState(AnimState::Walk);
+    AnInstance* model = new AnInstance(modelManager->getModel(ModelType::SecurityGuard));
+    //currently no idle state for the security guard
+    model->setState(AnimState::Walk);
 
-    // character = new Character(model);
+    character = new Character(model);
     // cube = new Cube(glm::vec3(-1, 0, -2), glm::vec3(1, 1, 1));
     // floor = new Cube(glm::vec3(-8, -2.03, -8), glm::vec3(8, -2.01, 8));
     
@@ -338,7 +338,7 @@ void Window::idleCallback() {
     // Cam->Update(cube->getPosition());
 
     // cube->update();
-    NPC->update();
+    // NPC->update();
 
     // if (cube->didUseRadarAbility()) {
     //     activateRadarAbility();
@@ -439,7 +439,7 @@ void Window::displayCallback(GLFWwindow* window) {
     // // model->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_uv);
     
     character->draw(Cam->GetViewProjectMtx(), shaderManager);
-    printf("character drawn\n");
+    
     // Gets events, including input such as keyboard and mouse or window resizing.
     // glfwPollEvents();
     // Swap buffers.
