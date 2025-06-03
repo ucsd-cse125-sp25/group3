@@ -27,6 +27,8 @@ enum class AbilityType {
 #include "TextureManager.h"
 #include "ModelManager.h"
 
+#include "AABB_loader.h"
+
 class Window {
 public:
     static unsigned int client_id;
@@ -71,6 +73,10 @@ public:
     static bool altDown;
     static bool firstMouse;
 
+    // for collision 
+    static std::map<std::string, AABB> museumAABBs;
+
+
     // Act as Constructors and desctructors
     static bool initializeProgram();
     static bool initializeObjects();
@@ -108,4 +114,6 @@ public:
     static bool radarActive;
     static std::chrono::steady_clock::time_point radarStartTime;
     static const int radarDuration = 5;
+
+
 };
