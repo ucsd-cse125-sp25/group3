@@ -15,12 +15,11 @@ Joint::Joint() {
 Joint::~Joint() {
     delete cube;
     for(Joint *child : children) {
-        child -> ~Joint();
         delete child;
     }
 }
 
-void Joint::update(glm::mat4 parent) {
+void Joint::update(const glm::mat4& parent) {
     // compute world matrix W
     worldMat = parent*localMat;
 

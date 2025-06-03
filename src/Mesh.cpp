@@ -176,6 +176,7 @@ void Mesh::setJointVals(const aiMesh* mesh){
         }
 
         assert(id != -1);
+        assert(id <= MAX_JOINTS);
 
         auto weights = mesh->mBones[i]->mWeights;
         int numWeights = mesh->mBones[i]->mNumWeights;
@@ -250,21 +251,23 @@ void Mesh::setupBuf(){
     // glEnableVertexAttribArray(3);
     // glVertexAttribPointer(3, MAX_JOINT_INFLUENCE, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
 
-    //jointIDs
-    glEnableVertexAttribArray(2);
-    glVertexAttribIPointer(2, MAX_JOINT_INFLUENCE/2, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, jointIDs));
+    if (skel != nullptr){
+        //jointIDs
+        glEnableVertexAttribArray(2);
+        glVertexAttribIPointer(2, MAX_JOINT_INFLUENCE_GPU, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, jointIDs));
 
-    //weights
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, MAX_JOINT_INFLUENCE/2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
+        //weights
+        glEnableVertexAttribArray(3);
+        glVertexAttribPointer(3, MAX_JOINT_INFLUENCE_GPU, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
 
-    //jointIDs2
-    glEnableVertexAttribArray(5);
-    glVertexAttribIPointer(5, MAX_JOINT_INFLUENCE/2, GL_INT, sizeof(Vertex), (void*)(offsetof(Vertex, jointIDs) + (4 * sizeof(int))));
+        //jointIDs2
+        glEnableVertexAttribArray(5);
+        glVertexAttribIPointer(5, MAX_JOINT_INFLUENCE_GPU, GL_INT, sizeof(Vertex), (void*)(offsetof(Vertex, jointIDs) + (MAX_JOINT_INFLUENCE_GPU * sizeof(int))));
 
-    //weights2
-    glEnableVertexAttribArray(6);
-    glVertexAttribPointer(6, MAX_JOINT_INFLUENCE/2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, weights) + (4 * sizeof(float))));
+        //weights2
+        glEnableVertexAttribArray(6);
+        glVertexAttribPointer(6, MAX_JOINT_INFLUENCE_GPU, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, weights) + (MAX_JOINT_INFLUENCE_GPU * sizeof(float))));
+    }
 
     glGenBuffers(1, &VBO_uv);
 
@@ -290,8 +293,10 @@ void Mesh::draw(glm::mat4 model, std::vector<glm::mat4>& mMat, const glm::mat4& 
     bool animated = (skel != nullptr);
     GLuint shader = shaderManager->getShader(renderMode, animated);
     
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, tex);
+    if (renderMode == RenderMode::TEXTURE) {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, tex);
+    }
     
     // actiavte the shader program
     glUseProgram(shader);
@@ -303,8 +308,13 @@ void Mesh::draw(glm::mat4 model, std::vector<glm::mat4>& mMat, const glm::mat4& 
     glUniformMatrix4fv(glGetUniformLocation(shader, "viewProj"), 1, false, (float*)&viewProjMtx);
     glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, (float*)&model);
     glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &color[0]);
-    glUniformMatrix4fv(glGetUniformLocation(shader, "finalJointMats"), MAX_JOINTS, GL_FALSE, &(mMat[0])[0][0]);
-std::cout << "drawing" << std::endl;
+
+    if (animated){
+        assert(mMat.size() == MAX_JOINTS);
+
+        glUniformMatrix4fv(glGetUniformLocation(shader, "finalJointMats"), MAX_JOINTS, GL_FALSE, &(mMat[0])[0][0]);   
+    }
+
     // draw the points using triangles, indexed with the EBO
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     std::cout << "done drawing" << std::endl;
