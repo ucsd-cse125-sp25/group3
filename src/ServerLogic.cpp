@@ -303,6 +303,8 @@ bool PlayerData::init(InitPacket* packet) {
     if (packet->character == NONE) {
         windowWidth = packet->windowWidth;
         windowHeight = packet->windowHeight;
+        lastX = windowWidth / 2.0f;
+        lastY = windowHeight / 2.0f;
         currentState = START_MENU;
         return false;
     } else {
@@ -336,12 +338,11 @@ bool PlayerData::init(InitPacket* packet) {
 }
 
 void PlayerData::handleCursor(double currX, double currY) {
-
+// printf("client id: %u\n", client_id);
     if (altDown) {
         return;
     }
-    static float lastX = windowWidth / 2.0f;
-    static float lastY = windowHeight / 2.0f;
+    
     float sensitivity = 0.1f;
 
     if (firstMouse) {
