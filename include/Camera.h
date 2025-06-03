@@ -52,6 +52,7 @@ public:
     float Distance;  // Distance of the camera eye position to the origin (meters)
     float Azimuth;   // Rotation of the camera eye position around the Y axis (degrees)
     float Incline;   // Angle of the camera eye position over the XZ plane (degrees)
+    float HeightOffset;  // Y-axis offset above target position (meters)
 
     // Computed data
     glm::mat4 ViewProjectMtx;

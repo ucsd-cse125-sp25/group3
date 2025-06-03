@@ -27,7 +27,9 @@ void Camera::Update(const glm::vec3& targetPos) {
             world;
 
     // Step 4: Move to cube's position
-    world = glm::translate(glm::mat4(1.0f), targetPos) * world;
+    glm::vec3 adjustedTarget = targetPos + glm::vec3(0.0f, HeightOffset, 0.0f);
+    world = glm::translate(glm::mat4(1.0f), adjustedTarget) * world;
+    // world = glm::translate(glm::mat4(1.0f), targetPos) * world;
 
     // Step 5: Compute view matrix
     glm::mat4 view = glm::inverse(world);
@@ -39,7 +41,7 @@ void Camera::Update(const glm::vec3& targetPos) {
     ViewProjectMtx = project * view;
 
     Eye = glm::vec3(world[3]);  // camera position
-    Center = targetPos;         // cube position
+    Center = adjustedTarget;         // cube position
 }
 
 void Camera::updateProjection() 
@@ -67,9 +69,10 @@ void Camera::Reset() {
     NearClip = 0.1f;
     FarClip = 100.0f;
 
-    Distance = 10.0f;
+    Distance = 3.0f;
     Azimuth = 0.0f;
     Incline = 20.0f;
+    HeightOffset = 3.0f; 
 
     isOrtho = false;
     updateProjection();
