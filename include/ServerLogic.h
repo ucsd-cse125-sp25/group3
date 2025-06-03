@@ -7,7 +7,8 @@
 #include <set>
 #include <map>
 #include "AnimState.h"
-#define TOTAL_PLAYERS 2
+#include "AABB_loader.h"
+#define TOTAL_PLAYERS 1
 #define NUM_TO_STOP 5
 
 enum ClientStatus {
@@ -74,6 +75,7 @@ class NPCState {
         std::chrono::steady_clock::time_point waitStartTime;
         float waitDuration = 2.0f; 
 
+        bool collided = false;
     public:
 
         NPCState();
@@ -90,7 +92,7 @@ class NPCState {
         glm::vec3 currPos;
         glm::vec3 currentTarget;
 
-        void update();
+        void update(const std::map<std::string, AABB> museumAABBs);
         glm::vec3 generatePosition();
         glm::vec3 generateRandomTarget();
         void saveToPacket(NPCPacket& packet);
@@ -128,7 +130,7 @@ class PlayerData {
         // PlayerData();
         // ~PlayerData();
         bool init(InitPacket* packet);
-        void calculateNewPos(KeyType key, ArtifactState* artifact);
+        void calculateNewPos(KeyType key, ArtifactState* artifact, const std::map<std::string, AABB> museumAABBs);
         void handleCursor(double currX, double currY);
         void resetCamera();
         void saveToPacket(unsigned int client_id, InitPlayerPacket& packet);
@@ -143,6 +145,8 @@ class ServerLogic {
     public:
         static bool gameStarted;
         static bool availableChars[4];
+        static std::map<std::string, AABB> museumAABBs;
+        static void loadAABBs();
         static bool processMovement(std::set<KeyType>& recievedMovementKeys, KeyType key);
         static void attemptGameStart(std::map<unsigned int, PlayerData*>& playersData);
 };

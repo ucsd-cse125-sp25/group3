@@ -2,6 +2,7 @@
 
 bool ServerLogic::gameStarted = false;
 bool ServerLogic::availableChars[4] = {true, true, true, true};
+std::map<std::string, AABB> ServerLogic::museumAABBs;
 
 CubeState::CubeState(glm::vec3 cubeMin, glm::vec3 cubeMax) {
     // Model matrix.
@@ -190,7 +191,7 @@ void PlayerData::handleGuiInput(KeyType key) {
     }
 }
 
-void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact) {
+void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact, const std::map<std::string, AABB> museumAABBs) {
     glm::vec3 forwardDir = camera.GetForwardVector();
     forwardDir.y = 0.0f;  
     forwardDir = glm::normalize(forwardDir);
@@ -206,15 +207,42 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact) {
     if (key == KeyType::KEY_A)
         movement -= rightDir;
         
+    // if (glm::length(movement) > 0.0f) {
+    //     iterationsStopped = 0;
+    //     movement = glm::normalize(movement) * cube.speed;
+    //     cube.baseModel = glm::translate(cube.baseModel, movement);
+    //     cube.lastMoveDir = glm::normalize(movement);
+    //     cube.animState = AnimState::Walk; 
+    // }
+
     if (glm::length(movement) > 0.0f) {
-        iterationsStopped = 0;
         movement = glm::normalize(movement) * cube.speed;
-        cube.baseModel = glm::translate(cube.baseModel, movement);
-        cube.lastMoveDir = glm::normalize(movement);
-        
-        
-        cube.animState = AnimState::Walk;
-        
+
+        glm::vec3 nextPos = glm::vec3(cube.baseModel[3]) + movement;
+    
+        float characterHalfSize = 0.3f; 
+    
+        AABB characterBox(
+            nextPos - glm::vec3(characterHalfSize),
+            nextPos + glm::vec3(characterHalfSize)
+        );
+    
+        bool collided = false;
+        for (const auto& [name, box] : museumAABBs) {
+            if (box.intersects(characterBox)) {
+                collided = true;
+                break;
+            }
+        }
+    
+        if (!collided) {
+            cube.baseModel = glm::translate(cube.baseModel, movement);
+            cube.lastMoveDir = glm::normalize(movement);
+        } else {
+            // std::cout << "Collision detected, movement blocked!" << std::endl;
+        }
+        cube.animState = AnimState::Walk; 
+        iterationsStopped = 0;
     }
 
     if (key == KeyType::KEY_R) {
@@ -438,7 +466,7 @@ NPCState::NPCState(){
     currentTarget = generateRandomTarget();
 }
 
-void NPCState::update(){
+void NPCState::update(const std::map<std::string, AABB> museumAABBs){
     
     // float random_num = static_cast <float> (rand())/ (static_cast <float> (RAND_MAX ));
 
@@ -467,22 +495,47 @@ void NPCState::update(){
 
     glm::vec3 direction = currentTarget - currPos;
 
-    if (glm::length(direction) < 0.05f) {
-        float random_num = static_cast <float> (rand())/ (static_cast <float> (RAND_MAX ));
+    if (glm::length(direction) < 0.05f || collided) {
+        float random_num = static_cast <float> (rand())/ (static_cast <float> (RAND_MAX));
 
-        if (random_num < 0.5 ){
+        if (random_num < 0.45 ){
             isWaiting = true;
             npcModel.animState = AnimState::FT_Idle;
         }
         waitStartTime = std::chrono::steady_clock::now();
         currentTarget = generateRandomTarget(); 
+        collided = false;
         return;
     }
+    // glm::vec3 movement = glm::normalize(direction) * speed;
+    // npcModel.baseModel = glm::translate(npcModel.baseModel, movement);
+    // npcModel.lastMoveDir = glm::normalize(movement);
+    // glm::mat4 rotateM = glm::inverse(glm::lookAt(glm::vec3(0), npcModel.lastMoveDir, glm::vec3(0, 1, 0)));
+    // npcModel.model = npcModel.baseModel * rotateM;
+    
     glm::vec3 movement = glm::normalize(direction) * speed;
-    npcModel.baseModel = glm::translate(npcModel.baseModel, movement);
-    npcModel.lastMoveDir = glm::normalize(movement);
-    glm::mat4 rotateM = glm::inverse(glm::lookAt(glm::vec3(0), npcModel.lastMoveDir, glm::vec3(0, 1, 0)));
-    npcModel.model = npcModel.baseModel * rotateM;
+    glm::vec3 nextPos = glm::vec3(npcModel.baseModel[3]) + movement;
+    float characterHalfSize = 0.3f; 
+
+    AABB characterBox(
+        nextPos - glm::vec3(characterHalfSize),
+        nextPos + glm::vec3(characterHalfSize)
+    );
+    // collided = false;
+
+    for (const auto& [name, box] : museumAABBs) {
+        if (box.intersects(characterBox)) {
+            collided = true;
+            break;
+        }
+    }
+
+    if (!collided) {
+        npcModel.baseModel = glm::translate(npcModel.baseModel, movement);
+        npcModel.lastMoveDir = glm::normalize(movement);
+        glm::mat4 rotateM = glm::inverse(glm::lookAt(glm::vec3(0), npcModel.lastMoveDir, glm::vec3(0, 1, 0)));
+        npcModel.model = npcModel.baseModel * rotateM;
+    } 
     // npcModel.model = npcModel.baseModel;
     // npcModel->setBaseAndModel(glm::translate(npcModel->baseModel, movement));
 }
@@ -580,4 +633,19 @@ void ServerLogic::attemptGameStart(std::map<unsigned int, PlayerData*>& playersD
         }
     }
     gameStarted = true;
+}
+
+void ServerLogic::loadAABBs() {
+    museumAABBs = AABB_loader::loadAABBs("../models/map_bb/museum_wall_aabb.obj");
+    std::map<std::string, AABB> artifactsAABBs = AABB_loader::loadAABBs("../models/map_bb/artefacts_aabb.obj");
+    std::map<std::string, AABB> otherAABBs = AABB_loader::loadAABBs("../models/map_bb/non_artefacts_aabb.obj");
+    museumAABBs.insert(artifactsAABBs.begin(), artifactsAABBs.end());
+    // museumAABBs.insert(otherAABBs.begin(), otherAABBs.end());
+
+    // debug print
+    for (const auto& [name, box] : museumAABBs) {
+        std::cout << "Loaded AABB: " << name 
+                  << " Min: " << glm::to_string(box.min) 
+                  << " Max: " << glm::to_string(box.max) << std::endl;
+    }
 }

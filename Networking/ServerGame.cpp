@@ -23,6 +23,8 @@ ServerGame::ServerGame(void)
         NPCState npc = NPCState();
         npcData.insert(pair<unsigned int, NPCState>(i, npc));
     }
+
+    ServerLogic::loadAABBs();
 }
 
 void ServerGame::update()
@@ -149,7 +151,7 @@ void ServerGame::receiveFromClients() {
                             player->handleGuiInput(keyPacket->key_type);
                             sendGuiUpdate(iter->first, false);
                         } else if (ServerLogic::processMovement(recievedMovementKeys, keyPacket->key_type)) {
-                            player->calculateNewPos(keyPacket->key_type, &artifact);
+                            player->calculateNewPos(keyPacket->key_type, &artifact, ServerLogic::museumAABBs);
                         } 
                     } else {
                         printf("Error: Failed to cast to KeyPacket\n");
@@ -195,7 +197,7 @@ void ServerGame::receiveFromClients() {
 
     for (npcIter=npcData.begin(); npcIter!=npcData.end(); npcIter++) {
         NPCState npc = npcData[npcIter->first];
-        npc.update();
+        npc.update(ServerLogic::museumAABBs);
         npcData[npcIter->first] = npc;
     }
     artifact.update();
