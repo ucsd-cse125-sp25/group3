@@ -5,7 +5,6 @@
 
 in vec3 fragNormal;
 in vec3 fragPos;
-in vec2 uv;
 
 // uniforms used for lighting
 uniform vec3 DiffuseColor;	// passed in from c++ side NOTE: you can also set the value here and then remove 
@@ -40,5 +39,4 @@ void main()
 	// fragColor = vec4(fragNormal, 1);
 
 	vec3 temp = fragPos; 
-	vec2 temp2 = uv;
 }

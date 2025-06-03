@@ -31,7 +31,7 @@ ShaderManager::ShaderManager() {
 
     addShader(RenderMode::BASE, true, shaderProgram_anim);
 
-    GLuint shaderProgram_anim_uv = LoadShaders("../shaders/anim_shader_multi.vert", "../shaders/anim_shader_uv.frag", true);
+    GLuint shaderProgram_anim_uv = LoadShaders("../shaders/anim_shader_multi_uv.vert", "../shaders/anim_shader_uv.frag", true);
 
     if (!shaderProgram_anim_uv) {
         std::cerr << "Failed to initialize shader program with uvs and anim" << std::endl;

@@ -12,6 +12,7 @@
 
 class Animation {
 private:
+    float duration;
     float timeStart, timeEnd;
     float ticksPerSec;
     std::map<std::string, Channel*> channels;
@@ -21,4 +22,8 @@ public:
     bool load(const aiAnimation* animation);
     std::vector<std::string> getNames();
     void evaluate(float time, std::map<std::string, glm::mat4>& pose);
+    /*
+    Returns the duration of the animation (1 cycle of it)
+    */
+    float getDuration();
 };

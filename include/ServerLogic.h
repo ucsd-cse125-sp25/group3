@@ -7,7 +7,7 @@
 #include <set>
 #include <map>
 #include "AnimState.h"
-#define TOTAL_PLAYERS 2
+#define TOTAL_PLAYERS 1
 
 enum ClientStatus {
     ONGOING,

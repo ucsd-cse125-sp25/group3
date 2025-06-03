@@ -129,8 +129,17 @@ int main(void) {
     
     // Font and style setup
     // https://github.com/Fromager/junicode
-    io.Fonts->AddFontFromFileTTF("../external/style/fonts/Junicode-Bold.ttf", 32.0f);
-    ImFont* handwritingFont = io.Fonts->AddFontFromFileTTF("../external/style/fonts/HomemadeApple-Regular.ttf", 28.0f);
+
+    // io.Fonts->AddFontFromFileTTF("../../external/style/fonts/Junicode-Bold.ttf", 32.0f);
+    // ImFont* handwritingFont = io.Fonts->AddFontFromFileTTF("../../external/style/fonts/HomemadeApple-Regular.ttf", 28.0f);
+    #ifdef _WIN32
+        io.Fonts->AddFontFromFileTTF("../../external/style/fonts/Junicode-Bold.ttf", 32.0f);
+        ImFont* handwritingFont = io.Fonts->AddFontFromFileTTF("../../external/style/fonts/HomemadeApple-Regular.ttf", 28.0f);
+    #else
+        io.Fonts->AddFontFromFileTTF("../external/style/fonts/Junicode-Bold.ttf", 32.0f);
+        ImFont* handwritingFont = io.Fonts->AddFontFromFileTTF("../external/style/fonts/HomemadeApple-Regular.ttf", 28.0f);
+    #endif
+
 
     ImGuiStyle& style = ImGui::GetStyle();
     style.Colors[ImGuiCol_WindowBg] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f); // Opaque background
@@ -150,7 +159,12 @@ int main(void) {
     int my_image_width = 0;
     int my_image_height = 0;
     GLuint my_image_texture = 0;
-    bool ret = LoadTextureFromFile("../external/images/HeistAtTheMuseumTitle.png", &my_image_texture, &my_image_width, &my_image_height);
+    #ifdef _WIN32
+        bool ret = LoadTextureFromFile("../../external/images/HeistAtTheMuseumTitle.png", &my_image_texture, &my_image_width, &my_image_height);
+    #else
+        bool ret = LoadTextureFromFile("../external/images/HeistAtTheMuseumTitle.png", &my_image_texture, &my_image_width, &my_image_height);
+    #endif
+    // bool ret = LoadTextureFromFile("../../external/images/HeistAtTheMuseumTitle.png", &my_image_texture, &my_image_width, &my_image_height);
     IM_ASSERT(ret);
     
     while (!glfwWindowShouldClose(window)) {
@@ -302,7 +316,11 @@ int main(void) {
             // Load your parchment background
             GLuint parchmentTexture;
             int parchmentWidth, parchmentHeight;
-            bool ok = LoadTextureFromFile("../external/images/parchment_scroll.png", &parchmentTexture, &parchmentWidth, &parchmentHeight);
+            #ifdef _WIN32
+                bool ok = LoadTextureFromFile("../../external/images/parchment_scroll.png", &parchmentTexture, &parchmentWidth, &parchmentHeight);
+            #else
+                bool ok = LoadTextureFromFile("../external/images/parchment_scroll.png", &parchmentTexture, &parchmentWidth, &parchmentHeight);
+            #endif
             IM_ASSERT(ok);
 
             // Load a handwriting-style font

@@ -17,8 +17,10 @@
 struct Vertex {
     glm::vec3 position;
     glm::vec3 normal;
-    int jointIDs[MAX_JOINT_INFLUENCE];
-    float weights[MAX_JOINT_INFLUENCE];
+    int jointIDs1[MAX_JOINT_INFLUENCE_GPU];
+    float weights1[MAX_JOINT_INFLUENCE_GPU];
+    int jointIDs2[MAX_JOINT_INFLUENCE_GPU];
+    float weights2[MAX_JOINT_INFLUENCE_GPU];
     int numJoints;
 };
 

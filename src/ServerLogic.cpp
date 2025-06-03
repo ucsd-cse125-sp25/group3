@@ -211,11 +211,9 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact) {
         cube.baseModel = glm::translate(cube.baseModel, movement);
         cube.lastMoveDir = glm::normalize(movement);
         
-        if (cube.type == CharacterType::CHARACTER_4) {
-            cube.animState = AnimState::Run;
-        } else if (cube.type != CharacterType::NONE) {
-            cube.animState = AnimState::FT_Walk;
-        }
+        
+        cube.animState = AnimState::Walk;
+        
     }
 
     if (key == KeyType::KEY_R) {
@@ -408,7 +406,7 @@ void PlayerData::update() {
 
 NPCState::NPCState(){
     npcModel = CubeState(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1));
-    npcModel.animState = AnimState::FT_Walk;
+    npcModel.animState = AnimState::Walk;
     glm::vec3 startPos = glm::vec3(2.0f, 0.0f, -3.0f);
     glm::mat4 newModel = glm::mat4(1.0f);
     newModel = glm::translate(newModel, startPos);
@@ -436,7 +434,7 @@ void NPCState::update(){
 
         if (elapsed >= waitDuration) {
             isWaiting = false;
-            npcModel.animState = AnimState::FT_Walk;
+            npcModel.animState = AnimState::Walk;
             currentTarget = generateRandomTarget();  
         } else {
             return;  

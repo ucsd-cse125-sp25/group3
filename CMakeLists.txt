@@ -140,8 +140,11 @@ if (APPLE)
 
     target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES})
-    target_link_libraries(server PRIVATE ${OPENGL_LIBRARIES} assimp)
-    target_link_libraries(client PRIVATE ${OPENGL_LIBRARIES} assimp)
+    target_link_libraries(server PRIVATE ${OPENGL_LIBRARIES})
+    target_link_libraries(client PRIVATE ${OPENGL_LIBRARIES})
+    target_link_libraries(server PRIVATE assimp)
+    target_link_libraries(client PRIVATE assimp)
+
 
 elseif (WIN32)
     message(STATUS "Building on Windows")

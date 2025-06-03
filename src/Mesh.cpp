@@ -176,6 +176,7 @@ void Mesh::setJointVals(const aiMesh* mesh){
         }
 
         assert(id != -1);
+        assert(id <= MAX_JOINTS);
 
         auto weights = mesh->mBones[i]->mWeights;
         int numWeights = mesh->mBones[i]->mNumWeights;
@@ -187,9 +188,14 @@ void Mesh::setJointVals(const aiMesh* mesh){
 
             int sz = vertices[vid].numJoints;
             if (sz < MAX_JOINT_INFLUENCE){
-                vertices[vid].jointIDs[sz] = id;
-                vertices[vid].weights[sz] = (float) weights[wid].mWeight;
-
+                if (sz < MAX_JOINT_INFLUENCE_GPU){
+                    vertices[vid].jointIDs1[sz] = id;
+                    vertices[vid].weights1[sz] = (float) weights[wid].mWeight;
+                } else {
+                    int index = sz % MAX_JOINT_INFLUENCE_GPU;
+                    vertices[vid].jointIDs2[index] = id;
+                    vertices[vid].weights2[index] = (float) weights[wid].mWeight;
+                }
                 vertices[vid].numJoints += 1;
             } else {
                 std::cout << sz << std::endl;
@@ -201,9 +207,13 @@ void Mesh::setJointVals(const aiMesh* mesh){
 }
 
 void Mesh::setDefaultJointVal(Vertex &v){
-    for (int i = 0; i < MAX_JOINT_INFLUENCE; i++) {
-        v.jointIDs[i] = -1;
-        v.weights[i] = 0.0f;
+    for (int i = 0; i < MAX_JOINT_INFLUENCE_GPU; i++) {
+        v.jointIDs1[i] = -1;
+        v.weights1[i] = 0.0f;
+    }
+    for (int i = 0; i < MAX_JOINT_INFLUENCE_GPU; i++) {
+        v.jointIDs2[i] = -1;
+        v.weights2[i] = 0.0f;
     }
     v.numJoints = 0;
 }
@@ -217,6 +227,14 @@ void Mesh::setupBuf(){
     glGenVertexArrays(1, &VAO);
     // Bind to the VAO.
     glBindVertexArray(VAO);
+
+    glGenBuffers(1, &VBO_uv);
+
+    // Bind to the second VBO - We will use it to store the uvs
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_uv);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * uvs.size(), uvs.data(), GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
 
     glGenBuffers(1, &VBO_pn);
 
@@ -234,13 +252,13 @@ void Mesh::setupBuf(){
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
     //positions, every Vertex struct, it is the 1st 3 floats starting from the pointer, which starts off at offset 0
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
 
     //normals, every Vertex struct, it is the 1st 3 floats starting from the pointer, which starts off at offset of what Normal has in the struct Vector 
     //(it is given the label index 1 to use as "location" in vertex shader)
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 
     // //jointIDs
     // glEnableVertexAttribArray(2);
@@ -251,30 +269,26 @@ void Mesh::setupBuf(){
     // glVertexAttribPointer(3, MAX_JOINT_INFLUENCE, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
 
     if (skel != nullptr){
+        // std::cout << "Offset:" << offsetof(Vertex, jointIDs) << std::endl;
+        // std::cout << "Offset:" << (offsetof(Vertex, jointIDs) + (MAX_JOINT_INFLUENCE_GPU * sizeof(int))) << std::endl;
+        // std::cout << "Offset:" << offsetof(Vertex, weights) << std::endl;
+        
         //jointIDs
-        glEnableVertexAttribArray(2);
-        glVertexAttribIPointer(2, MAX_JOINT_INFLUENCE_GPU, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, jointIDs));
+        glEnableVertexAttribArray(3);
+        glVertexAttribIPointer(3, MAX_JOINT_INFLUENCE_GPU, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, jointIDs1));
 
         //weights
-        glEnableVertexAttribArray(3);
-        glVertexAttribPointer(3, MAX_JOINT_INFLUENCE_GPU, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
+        glEnableVertexAttribArray(4);
+        glVertexAttribPointer(4, MAX_JOINT_INFLUENCE_GPU, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights1));
 
         //jointIDs2
         glEnableVertexAttribArray(5);
-        glVertexAttribIPointer(5, MAX_JOINT_INFLUENCE_GPU, GL_INT, sizeof(Vertex), (void*)(offsetof(Vertex, jointIDs) + (MAX_JOINT_INFLUENCE_GPU * sizeof(int))));
+        glVertexAttribIPointer(5, MAX_JOINT_INFLUENCE_GPU, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, jointIDs2));
 
         //weights2
         glEnableVertexAttribArray(6);
-        glVertexAttribPointer(6, MAX_JOINT_INFLUENCE_GPU, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, weights) + (MAX_JOINT_INFLUENCE_GPU * sizeof(float))));
+        glVertexAttribPointer(6, MAX_JOINT_INFLUENCE_GPU, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights2));
     }
-
-    glGenBuffers(1, &VBO_uv);
-
-    // Bind to the second VBO - We will use it to store the uvs
-    glBindBuffer(GL_ARRAY_BUFFER, VBO_uv);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * uvs.size(), uvs.data(), GL_STATIC_DRAW);
-    glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
 
     // Generate EBO, bind the EBO to the bound VAO and send the data
     glGenBuffers(1, &EBO);
@@ -309,7 +323,14 @@ void Mesh::draw(glm::mat4 model, std::vector<glm::mat4>& mMat, const glm::mat4& 
     glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &color[0]);
 
     if (animated){
+        assert(mMat.size() == MAX_JOINTS);
+        // std::vector<glm::mat4> matrices;
+        // matrices.reserve(MAX_JOINTS);
+        // for (int i = 0; i < MAX_JOINTS; i++){
+        //     matrices[i] = mMat[i];
+        // }
         glUniformMatrix4fv(glGetUniformLocation(shader, "finalJointMats"), MAX_JOINTS, GL_FALSE, &(mMat[0])[0][0]);   
+        // std::cout << "I am a matrix of fine character finito" << std::endl;
     }
 // std::cout << "drawing elements" << std::endl;
 // std::cout << "animated: " << animated << std::endl;

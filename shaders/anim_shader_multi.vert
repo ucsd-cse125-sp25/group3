@@ -1,15 +1,13 @@
 #version 330 core
 // NOTE: Do NOT use any version older than 330! Bad things will happen!
 
-layout (location = 0) in vec3 position;
-layout (location = 1) in vec3 normal;
+layout (location = 1) in vec3 position;
+layout (location = 2) in vec3 normal;
 
-layout (location = 2) in ivec4 jointIDs1;
-layout (location = 3) in vec4 weights1;
+layout (location = 3) in ivec4 jointIDs1;
+layout (location = 4) in vec4 weights1;
 layout (location = 5) in ivec4 jointIDs2;
 layout (location = 6) in vec4 weights2;
-
-layout (location = 4) in vec2 vertexUV;
 
 // Uniform variables
 uniform mat4 viewProj;
@@ -23,8 +21,6 @@ uniform mat4 finalJointMats[MAX_JOINTS];
 // The default output, gl_Position, should be assigned something. 
 out vec3 fragNormal;
 out vec3 fragPos;
-out vec2 uv;
-
 
 void main()
 {
@@ -34,7 +30,7 @@ void main()
     int exceed = 1;
     int skip = 0;
     for(int i = 0; i < 4; i++){
-        if (jointIDs1[i] == -1){
+        if (jointIDs1[i] < 0){
             skip += 1;
             continue;
         }
@@ -54,7 +50,7 @@ void main()
     
     if (exceed == 1){
         for(int i = 0; i < 4; i++){
-            if (jointIDs2[i] == -1){
+            if (jointIDs2[i] < 0){
                 skip += 1;
                 continue;
             }
@@ -80,13 +76,9 @@ void main()
     totalNorm = normalize(totalNorm);
     // OpenGL maintains the D matrix so you only need to multiply by P, V (aka C inverse), and M
     gl_Position = viewProj * totalPos;
-    // gl_Position = viewProj * model * totalPos;
-    // gl_Position = viewProj * model * vec4(position, 1.0f);
     
     // for shading
 	fragNormal = vec3(model * totalNorm);
 
     fragPos = vec3(model * totalPos);
-    uv = vertexUV;
-
 }
