@@ -106,6 +106,20 @@ Skeleton* AnimationPlayer::getSkel(ModelType modelType){
     }
 }
 
+float AnimationPlayer::getAnimDuration(ModelType modelType, AnimState animState){
+    if (animState == AnimState::Stop){
+        return 0.0f;
+    }
+    
+    // These will throw an error if you try to access an animation that doesn't exist
+    assert(animMap.find(modelType) != animMap.end());
+    assert(animMap[modelType].find(animState) != animMap[modelType].end());
+    assert(skelMap.find(modelType) != skelMap.end());
+
+    currAnim = animMap[modelType][animState];
+    return currAnim->getDuration();
+}
+
 // void AnimationPlayer::draw(glm::mat4 viewProjMat, GLuint shader) {
 //     skel -> draw(viewProjMat, shader);
 // }

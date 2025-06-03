@@ -149,7 +149,7 @@ bool Window::initializeObjects() {
 
     AnInstance* bro2 = new AnInstance(modelManager->getModel(ModelType::FemaleThief));
     bro2->setMMat(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 1.0f)));
-    bro2->setState(AnimState::Run);
+    bro2->setState(AnimState::Walk);
     scene->addInstance(bro2);
 
     std::cout << "instance2" << std::endl;
@@ -166,7 +166,7 @@ bool Window::initializeObjects() {
 
     AnInstance* model = new AnInstance(modelManager->getModel(ModelType::SecurityGuard));
     //currently no idle state for the security guard
-    model->setState(AnimState::Run);
+    model->setState(AnimState::Walk);
 
     character = new Character(model);
     // cube = new Cube(glm::vec3(-1, 0, -2), glm::vec3(1, 1, 1));

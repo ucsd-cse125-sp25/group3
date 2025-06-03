@@ -35,6 +35,11 @@ public:
 
     // void AnimationPlayer::draw(glm::mat4 viewProjMat, GLuint shader);
 
+    /*
+    Returns the duration of 1 cycle of the animation corresponding to the modeltype and animation state
+    */
+    float getAnimDuration(ModelType modelType, AnimState animState);
+
     void fullUpdate(float start_time);
     void update(float start_time);
     void poseSkel();
