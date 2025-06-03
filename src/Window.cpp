@@ -58,6 +58,10 @@ bool Window::radarActive = false;
 std::chrono::steady_clock::time_point Window::radarStartTime;
 AbilityType Window::currentAbility = AbilityType::NONE;
 
+// collision 
+std::map<std::string, AABB> Window::museumAABBs;
+
+
 // Constructors and desctructors
 bool Window::initializeProgram() {
     // // Create a shader program with a vertex shader and a fragment shader.
@@ -94,6 +98,21 @@ bool Window::initializeProgram() {
 }
 
 bool Window::initializeObjects() {
+
+    // load collision box 
+    museumAABBs = AABB_loader::loadAABBs("../models/map_bb/museum_wall_aabb.obj");
+    std::map<std::string, AABB> artifactsAABBs = AABB_loader::loadAABBs("../models/map_bb/artefacts_aabb.obj");
+    std::map<std::string, AABB> otherAABBs = AABB_loader::loadAABBs("../models/map_bb/non_artefacts_aabb.obj");
+    museumAABBs.insert(artifactsAABBs.begin(), artifactsAABBs.end());
+    // museumAABBs.insert(otherAABBs.begin(), otherAABBs.end());
+
+    // debug print
+    for (const auto& [name, box] : museumAABBs) {
+        std::cout << "Loaded AABB: " << name 
+                  << " Min: " << glm::to_string(box.min) 
+                  << " Max: " << glm::to_string(box.max) << std::endl;
+    }
+
     // Create a cube
     cube = new Cube();
     artifact = new Cube(glm::vec3(-0.5, 0, -1), glm::vec3(0, 0.5, 1));
@@ -367,7 +386,7 @@ void Window::displayCallback(GLFWwindow* window) {
     
         glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
     
-        character->handleInput(window, forward, right);
+        character->handleInput(window, forward, right , museumAABBs);
     }
     
     // Clear the color and depth buffers.

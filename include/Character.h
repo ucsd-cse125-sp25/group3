@@ -4,6 +4,7 @@
 #include "AnInstance.h"
 #include "ShaderManager.h"
 #include "AnimationPlayer.h"
+#include "AABB.h"
 
 class Character {
 private:
@@ -21,16 +22,17 @@ public:
     bool isGrounded = true;
     float initialJumpVelocity = 0.015f;
 
-    glm::vec3 lastMoveDir = glm::vec3(0, 0, 1);  // 初始面向前
+    glm::vec3 lastMoveDir = glm::vec3(0, 0, 1);  
 
     // Character(bool useModel,const std::string& modelPath = "");
-    Character(AnInstance* model);  // 新构造函数声明
+    Character(AnInstance* model);  
     ~Character();
 
     void draw(const glm::mat4& viewProjMtx, ShaderManager* shaderManager);
     void update(AnimationPlayer* animationPlayer);
 
     void triggerJump();
-    void handleInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir);
+    void handleInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir,
+        const std::map<std::string, AABB> museumAABBs);
     glm::vec3 getPosition() const;
 };

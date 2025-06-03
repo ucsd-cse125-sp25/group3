@@ -19,7 +19,7 @@
 Character::Character(AnInstance* model)
     : useModel(true), model(model)
 {
-    // model->setMMat(baseModel);  // 设置初始位置
+    // model->setMMat(baseModel); 
     // baseModel = glm::scale(baseModel, glm::vec3(0.01f));
     model->setMMat(baseModel);
 }
@@ -34,7 +34,7 @@ Character::~Character() {
 }
 
 void Character::update(AnimationPlayer* animationPlayer) {
-    // 跳跃逻辑
+
     if (isJumping) {
         jumpVelocity += gravity;
         jumpHeight += jumpVelocity;
@@ -46,10 +46,8 @@ void Character::update(AnimationPlayer* animationPlayer) {
         }
     }
 
-    // // 生成变换矩阵
     // // glm::mat4 modelMatrix = glm::translate(baseModel, glm::vec3(0.0f, jumpHeight, 0.0f));
     
-
     glm::mat4 rotateM = glm::inverse(glm::lookAt(glm::vec3(0), lastMoveDir, glm::vec3(0, 1, 0)));
 
     glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, jumpHeight, 0.0f)) * baseModel;
@@ -76,7 +74,8 @@ void Character::draw(const glm::mat4& viewProjMtx, ShaderManager* shaderManager)
     }
 }
 
-void Character::handleInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir) {
+void Character::handleInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir,
+    const std::map<std::string, AABB> museumAABBs){
     // if (useModel) {
     //     model->handleInput(window, forwardDir, rightDir);
     // } else {
@@ -94,25 +93,53 @@ void Character::handleInput(GLFWwindow* window, const glm::vec3& forwardDir, con
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         movement -= rightDir;
 
+    // if (glm::length(movement) > 0.0f) {
+    //     movement = glm::normalize(movement) * speed;
+    //     baseModel = glm::translate(baseModel, movement);
+
+    //     lastMoveDir = glm::normalize(movement);
+    // }
+
     if (glm::length(movement) > 0.0f) {
         movement = glm::normalize(movement) * speed;
-        baseModel = glm::translate(baseModel, movement);
 
-        lastMoveDir = glm::normalize(movement);
+        glm::vec3 nextPos = glm::vec3(baseModel[3]) + movement;
+    
+        float characterHalfSize = 0.3f; 
+    
+        AABB characterBox(
+            nextPos - glm::vec3(characterHalfSize),
+            nextPos + glm::vec3(characterHalfSize)
+        );
+    
+        bool collided = false;
+        for (const auto& [name, box] : museumAABBs) {
+            if (box.intersects(characterBox)) {
+                collided = true;
+                break;
+            }
+        }
+    
+        if (!collided) {
+            baseModel = glm::translate(baseModel, movement);
+            lastMoveDir = glm::normalize(movement);
+        } else {
+            // std::cout << "Collision detected, movement blocked!" << std::endl;
+        }
     }
 
-    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
-        baseModel = glm::translate(baseModel, glm::vec3(0, 0.005f, 0));
-    if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
-        baseModel = glm::translate(baseModel, glm::vec3(0, -0.005f, 0));
-    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
-        baseModel = glm::rotate(baseModel, 0.02f, glm::vec3(0, 1, 0));
-    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
-        baseModel = glm::rotate(baseModel, -0.02f, glm::vec3(0, 1, 0));
+    // if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+    //     baseModel = glm::translate(baseModel, glm::vec3(0, 0.005f, 0));
+    // if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
+    //     baseModel = glm::translate(baseModel, glm::vec3(0, -0.005f, 0));
+    // if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+    //     baseModel = glm::rotate(baseModel, 0.02f, glm::vec3(0, 1, 0));
+    // if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+    //     baseModel = glm::rotate(baseModel, -0.02f, glm::vec3(0, 1, 0));
 
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && isGrounded) {
-        triggerJump();
-    }
+    // if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && isGrounded) {
+    //     triggerJump();
+    // }
 
     
     
