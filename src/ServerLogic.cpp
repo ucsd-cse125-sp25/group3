@@ -272,7 +272,11 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact) {
                     break;
                 }
                 case CHARACTER_3: {
-                    // isAltColor = !isAltColor;
+
+                    if (!radarActive) {
+                        radarActive = true; 
+                        radarStartTime = std::chrono::steady_clock::now(); 
+                    }
                     break;
                 }
                 case CHARACTER_4: {
