@@ -227,6 +227,58 @@ bool client_logic::LoadTextureFromFile(const char* file_name, GLuint* out_textur
 
 static std::map<std::string, float> hoverTime;
 
+void client_logic::RenderFancyTextButton(const char* label, bool& clicked, ImFont* fontNormal, ImFont* fontHover, bool& selected) {
+    std::string labelKey(label);
+
+    ImDrawList* drawList = ImGui::GetWindowDrawList();
+    ImVec2 pos = ImGui::GetCursorScreenPos();
+    ImVec2 textSize = ImGui::CalcTextSize(label);
+
+    float cursorX = (ImGui::GetWindowSize().x - textSize.x) * 0.5f;
+    ImGui::SetCursorPosX(cursorX);
+    pos = ImGui::GetCursorScreenPos();
+
+    ImGui::InvisibleButton(label, textSize);
+    bool hovered = ImGui::IsItemHovered();
+    clicked = ImGui::IsItemClicked();
+
+    // Hover pulse animation
+    if (hovered) {
+        hoverTime[labelKey] += ImGui::GetIO().DeltaTime;
+    } else {
+        hoverTime[labelKey] = 0.0f;
+    }
+
+    float t = hoverTime[labelKey];
+    float pulse = hovered ? (0.6f + 0.4f * (std::sin(t * 4.0f) + 1.0f) * 0.5f) : 1.0f;
+
+    ImFont* font = hovered ? fontHover : fontNormal;
+    ImGui::PushFont(font);
+
+    ImU32 textColor = hovered
+        ? ImGui::ColorConvertFloat4ToU32(ImVec4(1.0f, 0.9f, 0.5f, 1.0f))
+        : ImGui::ColorConvertFloat4ToU32(ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
+
+    if (selected) {
+        textColor = ImGui::ColorConvertFloat4ToU32(ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
+        font = fontHover;
+    }
+
+    if (hovered) {
+        for (int i = 1; i <= 3; ++i) {
+            float offset = i * pulse;
+            ImU32 glowColor = IM_COL32(255, 220, 100, static_cast<int>(40 / i));
+            drawList->AddText(ImVec2(pos.x + offset, pos.y + offset), glowColor, label);
+            drawList->AddText(ImVec2(pos.x - offset, pos.y + offset), glowColor, label);
+            drawList->AddText(ImVec2(pos.x + offset, pos.y - offset), glowColor, label);
+            drawList->AddText(ImVec2(pos.x - offset, pos.y - offset), glowColor, label);
+        }
+    }
+
+    drawList->AddText(pos, textColor, label);
+    ImGui::PopFont();
+}
+
 void client_logic::RenderFancyTextButton(const char* label, bool& clicked, ImFont* fontNormal, ImFont* fontHover) {
     std::string labelKey(label);
 
@@ -257,7 +309,7 @@ void client_logic::RenderFancyTextButton(const char* label, bool& clicked, ImFon
 
     ImU32 textColor = hovered
         ? ImGui::ColorConvertFloat4ToU32(ImVec4(1.0f, 0.9f, 0.5f, 1.0f))
-        : ImGui::ColorConvertFloat4ToU32(ImVec4(1.0f, 0.95f, 0.85f, 1.0f));
+        : ImGui::ColorConvertFloat4ToU32(ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
 
     if (hovered) {
         for (int i = 1; i <= 3; ++i) {
@@ -273,7 +325,6 @@ void client_logic::RenderFancyTextButton(const char* label, bool& clicked, ImFon
     drawList->AddText(pos, textColor, label);
     ImGui::PopFont();
 }
-
 
 
 
@@ -378,20 +429,29 @@ void client_logic::setCharacterSelectPage(GameState currState) {
     ImGui::NewFrame();
 
     // Define style and background
-float panelWidth = 400.0f;
-ImVec2 windowSize = io->DisplaySize;
-float panelHeight = windowSize.y;
 
-ImGui::SetNextWindowPos(ImVec2(windowSize.x - panelWidth, 0));
+ImVec2 windowSize = io->DisplaySize;
+float panelWidth = windowSize.x * .30f;
+float panelHeight = windowSize.y * 0.80f;
+
+ImVec2 centerPos = ImVec2((windowSize.x - panelWidth) * 0.5f, (windowSize.y - panelHeight) * 0.5f);
+ImGui::SetNextWindowPos(centerPos);
 ImGui::SetNextWindowSize(ImVec2(panelWidth, panelHeight));
 
-ImGui::Begin("ParchmentPanel", nullptr,
-    ImGuiWindowFlags_NoTitleBar |
-    ImGuiWindowFlags_NoResize |
-    ImGuiWindowFlags_NoMove |
-    ImGuiWindowFlags_NoCollapse |
-    ImGuiWindowFlags_NoScrollbar |
-    ImGuiWindowFlags_NoBackground); // Remove default background
+ImGui::Begin("Parchment Panel", nullptr,
+    ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+    ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
+
+// ImGui::SetNextWindowPos(ImVec2(windowSize.x - panelWidth, 0));
+// ImGui::SetNextWindowSize(ImVec2(panelWidth, panelHeight));
+
+// ImGui::Begin("ParchmentPanel", nullptr,
+//     ImGuiWindowFlags_NoTitleBar |
+//     ImGuiWindowFlags_NoResize |
+//     ImGuiWindowFlags_NoMove |
+//     ImGuiWindowFlags_NoCollapse |
+//     ImGuiWindowFlags_NoScrollbar |
+//     ImGuiWindowFlags_NoBackground); 
 
 // Draw parchment background image
 if (parchment_texture) {
@@ -416,7 +476,18 @@ ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 6.0f);
 if (s_font_italic) ImGui::PushFont(s_font_italic);
 
 // Character selection
-ImGui::Text("🧍 Choose Your Role");
+bool clicked = false;
+bool isSelected = true;
+ImGui::Dummy(ImVec2(0.0f, 10.0f));  // smaller vertical space
+
+ImGui::Dummy(ImVec2(0.0f, 50.0f));  // smaller vertical space
+
+ImGui::Dummy(ImVec2(0.0f, 10.0f));  // smaller vertical space
+
+client_logic::RenderFancyTextButton("Select Your Character", clicked, s_font_italic, s_font_bold, isSelected);
+ImGui::Dummy(ImVec2(0.0f, 50.0f));  // smaller vertical space
+
+
 static int selectedSlot = -1;
 const char* roles[] = { "Thief 1", "Thief 2", "Thief 3", "Security Guard" };
 int roleCount = IM_ARRAYSIZE(roles);
@@ -426,36 +497,66 @@ if (selectedSlot != -1 && !availableChars[selectedSlot]) {
 }
 static CharacterType selCharacter;
 
+// for (int i = 0; i < roleCount; ++i) {
+//     ImGui::BeginDisabled(!availableChars[i]);
+//     if (ImGui::Button(roles[i], ImVec2(-1, 40))) {
+//         selectedSlot = i;
+//         selCharacter = static_cast<CharacterType>(i);
+//     }
+//     ImGui::EndDisabled();
+//     if (i < roleCount - 1) ImGui::Spacing();
+// }
+
 for (int i = 0; i < roleCount; ++i) {
-    ImGui::BeginDisabled(!availableChars[i]);
-    if (ImGui::Button(roles[i], ImVec2(-1, 40))) {
+    if (i > 0) ImGui::Dummy(ImVec2(0.0f, 20.0f));
+
+    clicked = false;
+    isSelected = (selectedSlot == i);
+    std::string label = roles[i];
+
+    if (!availableChars[i]) ImGui::BeginDisabled();
+
+    client_logic::RenderFancyTextButton(label.c_str(), clicked, s_font_italic, s_font_bold, isSelected);
+
+    if (clicked && availableChars[i]) {
         selectedSlot = i;
         selCharacter = static_cast<CharacterType>(i);
     }
-    ImGui::EndDisabled();
-    if (i < roleCount - 1) ImGui::Spacing();
+
+    if (!availableChars[i]) ImGui::EndDisabled();
 }
+
 
 ImGui::Spacing();
 ImGui::Separator();
 ImGui::Spacing();
 
 // Options
-if (ImGui::Button("◀ Back")) {
+ImVec2 buttonSize(400, 64);
+float spacing = ImGui::GetStyle().ItemSpacing.x;
+float totalWidth = buttonSize.x * 2 + spacing;
+float offsetX = (ImGui::GetWindowSize().x - totalWidth) * 0.5f;
+ImGui::SetCursorPosX(offsetX);
+
+if (ImGui::Button("Back", buttonSize)) {
     auto packet = std::make_unique<KeyPacket>();
     packet->packet_type = KEY_INPUT;
     packet->key_type = KeyType::CHAR_SEL_BACK;
     pendingPackets.push_back(std::move(packet));
 }
+
 ImGui::SameLine();
-if (ImGui::Button("Randomize")) {
+
+if (ImGui::Button("Randomize", buttonSize)) {
     // randomize logic
 }
+ImGui::Dummy(ImVec2(0.0f, 50.0f));  // smaller vertical space
 
-ImGui::Spacing();
-
+ImVec2 confirmSize(300, 76);
+float confirmX = (ImGui::GetWindowSize().x - confirmSize.x) * 0.5f;
+ImGui::SetCursorPosX(confirmX);
 ImGui::BeginDisabled(selectedSlot == -1);
-if (ImGui::Button("Confirm", ImVec2(-1, 40))) {
+if (ImGui::Button("Confirm", ImVec2(120, 36))) {
     auto packet = std::make_unique<InitPacket>();
     packet->packet_type = INIT_CONNECTION;
     packet->character = selCharacter;
@@ -464,6 +565,31 @@ if (ImGui::Button("Confirm", ImVec2(-1, 40))) {
     pendingPackets.push_back(std::move(packet));
 }
 ImGui::EndDisabled();
+
+
+// if (ImGui::Button("Back")) {
+//     auto packet = std::make_unique<KeyPacket>();
+//     packet->packet_type = KEY_INPUT;
+//     packet->key_type = KeyType::CHAR_SEL_BACK;
+//     pendingPackets.push_back(std::move(packet));
+// }
+// ImGui::SameLine();
+// if (ImGui::Button("Randomize")) {
+//     // randomize logic
+// }
+
+// ImGui::Spacing();
+
+// ImGui::BeginDisabled(selectedSlot == -1);
+// if (ImGui::Button("Confirm", ImVec2(-1, 40))) {
+//     auto packet = std::make_unique<InitPacket>();
+//     packet->packet_type = INIT_CONNECTION;
+//     packet->character = selCharacter;
+//     packet->windowWidth = Window::width;
+//     packet->windowHeight = Window::height;
+//     pendingPackets.push_back(std::move(packet));
+// }
+// ImGui::EndDisabled();
 
 if (s_font_italic) ImGui::PopFont();
 ImGui::PopStyleVar(3);
