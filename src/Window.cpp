@@ -101,9 +101,15 @@ bool Window::initializeProgram() {
 bool Window::initializeObjects() {
 
     // load collision box 
-    museumAABBs = AABB_loader::loadAABBs("../models/map_bb/museum_wall_aabb.obj");
-    std::map<std::string, AABB> artifactsAABBs = AABB_loader::loadAABBs("../models/map_bb/artefacts_aabb.obj");
-    std::map<std::string, AABB> otherAABBs = AABB_loader::loadAABBs("../models/map_bb/non_artefacts_aabb.obj");
+    // museumAABBs = AABB_loader::loadAABBs("../models/map_bb/museum_wall_aabb.obj");
+    // std::map<std::string, AABB> artifactsAABBs = AABB_loader::loadAABBs("../models/map_bb/artefacts_aabb.obj");
+    // std::map<std::string, AABB> otherAABBs = AABB_loader::loadAABBs("../models/map_bb/non_artefacts_aabb.obj");
+    // museumAABBs.insert(artifactsAABBs.begin(), artifactsAABBs.end());
+    // // museumAABBs.insert(otherAABBs.begin(), otherAABBs.end());
+
+    museumAABBs = AABB_loader::loadAABBs("../models/map_bb/museum_nofloor_bb_large.obj");
+    std::map<std::string, AABB> artifactsAABBs = AABB_loader::loadAABBs("../models/map_bb/artefacts_bb_large.obj");
+    // std::map<std::string, AABB> otherAABBs = AABB_loader::loadAABBs("../models/map_bb/museum_no_artefact_bb_large.obj");
     museumAABBs.insert(artifactsAABBs.begin(), artifactsAABBs.end());
     // museumAABBs.insert(otherAABBs.begin(), otherAABBs.end());
 
@@ -174,11 +180,46 @@ bool Window::initializeObjects() {
 
     // std::cout << "instance2" << std::endl;
 
-    Model* museum = new Model(ModelType::Museum, "../models/map/Museum Map.fbx", textureManager);
+    // Model* museum = new Model(ModelType::Museum, "../models/map_bb/museum_nofloor_bb_large.obj", textureManager);
+    Model* museum = new Model(ModelType::Museum, "../models/map/Museum Map_Without Artifacts.fbx", textureManager);
     museum->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
     modelManager->addModel(museum);
     AnInstance* museumInstance = new AnInstance(museum);
     scene->addInstance(museumInstance);
+
+    std::map<ModelType, std::string> artifacts_toload = {
+        {ModelType::Artefact_AsianPainting, "../models/map/artefacts/AsianPainting.fbx"},
+        {ModelType::Artefact_BuddhaStatue, "../models/map/artefacts/BudahStatue.fbx"},
+        {ModelType::Artefact_DogSkeleton, "../models/map/artefacts/DogSkeleton.fbx"},
+        {ModelType::Artefact_LionStatue, "../models/map/artefacts/LionStatue.fbx"},
+        {ModelType::Artefact_Michelangelo, "../models/map/artefacts/Michelangelo.fbx"},
+        {ModelType::Artefact_Mondrian, "../models/map/artefacts/Modorian.fbx"},
+        {ModelType::Artefact_MonaLisa, "../models/map/artefacts/MonaLisa.fbx"},
+        {ModelType::Artefact_SittingSkeleton, "../models/map/artefacts/SittingSkeleton.fbx"},
+        {ModelType::Artefact_Skull, "../models/map/artefacts/Skull.fbx"},
+        {ModelType::Artefact_StarryNight, "../models/map/artefacts/StarryNight.fbx"},
+        {ModelType::Artefact_Torso, "../models/map/artefacts/TorsoStatue.fbx"}
+    };
+
+    for (auto it = artifacts_toload.begin(); it != artifacts_toload.end(); ++it) {
+        Model* temp = new Model(it->first, it->second, textureManager);
+        temp->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
+        modelManager->addModel(temp);
+        AnInstance* artifact_instance = new AnInstance(temp);
+        scene->addInstance(artifact_instance);
+    }
+
+    std::map<ModelType, std::string> items_toload = {
+        {ModelType::Item_Baton, "../models/items/Baton.fbx"},
+        {ModelType::Item_FlashLight, "../models/items/FlashLight.fbx"},
+        {ModelType::Item_TaserGun, "../models/items/TaserGun.fbx"}
+    };
+
+    for (auto it = items_toload.begin(); it != items_toload.end(); ++it) {
+        Model* temp = new Model(it->first, it->second, textureManager);
+        temp->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.001f)));
+        modelManager->addModel(temp);
+    }
 
     // Model* buddha = new Model(ModelType::Buddha, "../models/buddha.ply", textureManager);
     // // Model* buddha = new Model(ModelType::Museum, "../models/map/museum.fbx", textureManager);

@@ -636,9 +636,16 @@ void ServerLogic::attemptGameStart(std::map<unsigned int, PlayerData*>& playersD
 }
 
 void ServerLogic::loadAABBs() {
-    museumAABBs = AABB_loader::loadAABBs("../models/map_bb/museum_wall_aabb.obj");
-    std::map<std::string, AABB> artifactsAABBs = AABB_loader::loadAABBs("../models/map_bb/artefacts_aabb.obj");
-    std::map<std::string, AABB> otherAABBs = AABB_loader::loadAABBs("../models/map_bb/non_artefacts_aabb.obj");
+    // load collision box 
+    // museumAABBs = AABB_loader::loadAABBs("../models/map_bb/museum_wall_aabb.obj");
+    // std::map<std::string, AABB> artifactsAABBs = AABB_loader::loadAABBs("../models/map_bb/artefacts_aabb.obj");
+    // std::map<std::string, AABB> otherAABBs = AABB_loader::loadAABBs("../models/map_bb/non_artefacts_aabb.obj");
+    // museumAABBs.insert(artifactsAABBs.begin(), artifactsAABBs.end());
+    // // museumAABBs.insert(otherAABBs.begin(), otherAABBs.end());
+    
+    museumAABBs = AABB_loader::loadAABBs("../models/map_bb/museum_nofloor_bb_large.obj");
+    std::map<std::string, AABB> artifactsAABBs = AABB_loader::loadAABBs("../models/map_bb/artefacts_bb_large.obj");
+    // std::map<std::string, AABB> otherAABBs = AABB_loader::loadAABBs("../models/map_bb/museum_no_artefact_bb_large.obj");
     museumAABBs.insert(artifactsAABBs.begin(), artifactsAABBs.end());
     // museumAABBs.insert(otherAABBs.begin(), otherAABBs.end());
 
