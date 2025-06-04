@@ -8,7 +8,7 @@
 #include <map>
 #include "AnimState.h"
 #include "AABB_loader.h"
-#define TOTAL_PLAYERS 4
+#define TOTAL_PLAYERS 2
 #define NUM_TO_STOP 5
 
 enum ClientStatus {

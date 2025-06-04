@@ -176,8 +176,11 @@ int ServerNetwork::receiveData(unsigned int client_id, char * recvbuf, int bufLe
     if( sessions.find(client_id) != sessions.end()) {
         #ifdef _WIN32
         SOCKET currentSocket = sessions[client_id];
+
+        // if (currentSocket == INVALID_SOCKET) return 0;
         #else
         int currentSocket = sessions[client_id];
+        // if (currentSocket < 1) return 0;
         #endif
 
         while (totalRead != bufLength) {
@@ -195,7 +198,7 @@ int ServerNetwork::receiveData(unsigned int client_id, char * recvbuf, int bufLe
                 return -1;
             } else if (iResult > 0) {
                 totalRead += iResult;
-            }
+            } 
             
         }
     }
@@ -227,12 +230,17 @@ void ServerNetwork::sendToAll(char * packets, int totalSize)
             if (iSendResult == SOCKET_ERROR) {
                 printf("send failed with error: %d\n", WSAGetLastError());
                 closesocket(currentSocket);
+                // sessions[iter->first] = INVALID_SOCKET;
+                // break;
                 exit(1);
             }
             #else
             if (iSendResult < 0) {
                 printf("sendToAll failed");
                 close(currentSocket);
+                // sessions[iter->first] = 0;
+                // break;
+                exit(1);
             }
             #endif
             totSent += iSendResult;
@@ -250,17 +258,31 @@ void ServerNetwork::sendToOne(unsigned int client_id, char* packets, int totalSi
     #endif
     int iSendResult;
     currentSocket = sessions[client_id];
-    iSendResult = NetworkServices::sendMessage(currentSocket, packets, totalSize);
+    int totSent = 0;
 
-    #ifdef _WIN32
-    if (iSendResult == SOCKET_ERROR) {
-        printf("send failed with error: %d\n", WSAGetLastError());
-        closesocket(currentSocket);
+    while (totSent != totalSize) {
+        iSendResult = NetworkServices::sendMessage(currentSocket, packets, totalSize);
+
+        #ifdef _WIN32
+        if (iSendResult == SOCKET_ERROR) {
+            printf("send failed with error: %d\n", WSAGetLastError());
+            // return client_id;
+            closesocket(currentSocket);
+            // sessions[client_id] = INVALID_SOCKET;
+            // return;
+            exit(1);
+        }
+        #else
+        if (iSendResult < 0) {
+            printf("sendToAll failed");
+           
+            close(currentSocket);
+            // sessions[client_id] = 0;
+            // return;
+            exit(1);
+        }
+        #endif
+        totSent+=iSendResult;
     }
-    #else
-    if (iSendResult < 0) {
-        printf("sendToAll failed");
-        close(currentSocket);
-    }
-    #endif
+    
 }

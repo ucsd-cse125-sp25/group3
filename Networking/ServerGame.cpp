@@ -72,9 +72,10 @@ void ServerGame::receiveFromClients() {
             //char header[headerSize];
             std::vector<char> header(Packet::getHeaderSize());
             int data_length = network->receiveData(iter->first, header.data(), headerSize);
-           
+        //    printf("client %u read %d bytes\n", iter->first, data_length);
             if (data_length == 0) {
-                printf("Client %d has disconnected\n", iter->first);
+                printf("trying to disconnect client %u\n", iter->first);
+                // printf("Client %d has disconnected\n", iter->first);
                 playersData.erase(iter->first);
                 iter = network->sessions.erase(iter);
                 packetsDone = DISCONNECT;
