@@ -8,7 +8,7 @@
 #include <map>
 #include "AnimState.h"
 #include "AABB_loader.h"
-#define TOTAL_PLAYERS 1
+#define TOTAL_PLAYERS 4
 #define NUM_TO_STOP 5
 
 enum ClientStatus {
@@ -103,7 +103,7 @@ class ArtifactState {
         CubeState* holder;
         CubeState artifactModel;
         ArtifactState();
-        void update();
+        void update(bool putDown);
         void attemptGrab(CubeState * player);
         void saveToPacket(StateUpdatePacket& packet);
 };

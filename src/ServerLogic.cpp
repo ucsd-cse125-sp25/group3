@@ -563,10 +563,14 @@ ArtifactState::ArtifactState() {
     artifactModel.model = glm::translate(glm::mat4(1.0f), glm::vec3(7.0f, 0.0f, 2.0f));
 }
 
-void ArtifactState::update() {
+void ArtifactState::update(bool putDown) {
 
-    if (holder != nullptr) {
+    if (holder != nullptr && !putDown) {
         glm::vec3 offset(1.0f, 1.0f, 0.0f);
+        glm::mat4 newBaseModel = glm::translate(holder->baseModel, offset);
+        artifactModel.model = newBaseModel;
+    } else if (holder != nullptr) {
+        glm::vec3 offset(1.0f, 0.0f, 0.0f);
         glm::mat4 newBaseModel = glm::translate(holder->baseModel, offset);
         artifactModel.model = newBaseModel;
     }
@@ -586,6 +590,9 @@ void ArtifactState::attemptGrab(CubeState * player) {
             // player->animState = AnimState::FT_Pick_Up;
             printf("artifact picked up\n");
         }
+    } else if (holder == player) {
+        update(true);
+        holder = nullptr;
     }
 }
 

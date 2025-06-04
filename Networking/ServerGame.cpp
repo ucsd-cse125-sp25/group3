@@ -200,7 +200,7 @@ void ServerGame::receiveFromClients() {
         npc.update(ServerLogic::museumAABBs);
         npcData[npcIter->first] = npc;
     }
-    artifact.update();
+    artifact.update(false);
     
     // sendGuiUpdate();
 
