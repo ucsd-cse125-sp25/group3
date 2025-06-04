@@ -38,11 +38,66 @@ ClientGame::ClientGame()
     #ifdef _WIN32
     io.Fonts->AddFontFromFileTTF("../../external/style/fonts/Junicode-Bold.ttf", 32.0f);
     client_logic::handwritingFont = io.Fonts->AddFontFromFileTTF("../../external/style/fonts/HomemadeApple-Regular.ttf", 28.0f);
+    client_logic::s_font_italic = io.Fonts->AddFontFromFileTTF("../../external/style/fonts/Junicode-BoldItalic.ttf", 36.0f);
+    client_logic::s_font_bold = io.Fonts->AddFontFromFileTTF("../../external/style/fonts/Junicode-Bold.ttf", 36.0f);
     #else 
     io.Fonts->AddFontFromFileTTF("../external/style/fonts/Junicode-Bold.ttf", 32.0f);
     client_logic::handwritingFont = io.Fonts->AddFontFromFileTTF("../external/style/fonts/HomemadeApple-Regular.ttf", 28.0f);
+    client_logic::s_font_italic = io.Fonts->AddFontFromFileTTF("../external/style/fonts/Junicode-BoldItalic.ttf", 36.0f);
+    client_logic::s_font_bold = io.Fonts->AddFontFromFileTTF("../external/style/fonts/Junicode-Bold.ttf", 36.0f);
+    #endif
+
+     #ifdef _WIN32
+    // Load background
+    file_success = client_logic::LoadTextureFromFile("../../external/images/start_menu_background.png", 
+                                      &client_logic::background_texture, 
+                                      &client_logic::background_width, 
+                                      &client_logic::background_height);
+    if (!file_success) {
+        std::cerr << "ERROR: Failed to load start_menu_background.png" << std::endl;
+        overall_success = false;
+    }
+
+    // Load title
+    file_success = client_logic::LoadTextureFromFile("../../external/images/start_menu_title_dark.png", 
+                                      &client_logic::title_texture, 
+                                      &client_logic::title_width, 
+                                      &client_logic::title_height);
+    if (!file_success) {
+        std::cerr << "ERROR: Failed to load HeistAtTheMuseumTitle.png" << std::endl;
+        overall_success = false;
+    }
+    #else 
+    // Load background
+    bool file_success, overall_success;
+    file_success = client_logic::LoadTextureFromFile("../external/images/start_menu_background.png", 
+                                      &client_logic::background_texture, 
+                                      &client_logic::background_width, 
+                                      &client_logic::background_height);
+    if (!file_success) {
+        std::cerr << "ERROR: Failed to load start_menu_background.png" << std::endl;
+        overall_success = false;
+    }
+
+    // Load title
+    file_success = client_logic::LoadTextureFromFile("../external/images/start_menu_title_dark.png", 
+                                      &client_logic::title_texture, 
+                                      &client_logic::title_width, 
+                                      &client_logic::title_height);
+    if (!file_success) {
+        std::cerr << "ERROR: Failed to load HeistAtTheMuseumTitle.png" << std::endl;
+        overall_success = false;
+    }
     #endif
     
+    if (!overall_success) {
+        std::cerr << "WARNING: One or more menu textures failed to load!" << std::endl;
+    } else {
+        std::cout << "SUCCESS: All menu textures loaded successfully" << std::endl;
+    }
+
+        
+
     ImGuiStyle& style = ImGui::GetStyle();
     style.Colors[ImGuiCol_WindowBg] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f); // Opaque background
     style.Colors[ImGuiCol_Button] = ImVec4(0.7f, 0.6f, 0.2f, 1.0f);
