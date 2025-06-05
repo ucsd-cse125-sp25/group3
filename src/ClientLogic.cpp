@@ -437,22 +437,23 @@ void client_logic::setCharacterSelectPage(GameState currState, GLFWwindow* windo
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+    Window::renderCharacterPreview(window);
+
     if (!window) {
         std::cerr << "Error: Window is not initialized!" << std::endl;
         return;
     }
 
     // Window::render(window);
-    Window::renderCharacterPreview(window);
     static bool showInfo[4] = { false, false, false, false };
     
 
     const char* names[] = { "Geoffreybella", "Anthonyia", "Curtina", "Voelkernessa" };
     const char* abilities[] = {
-        "Cloakfade – Become invisible for 3 seconds.",
-        "Ghoststep – Double speed for 3 seconds.",
-        "EchoVision – See all player positions on map for 5 seconds.",
-        "OmniScan – Periodically reveals all player positions."
+        "Cloakfade  Become invisible for 3 seconds.",
+        "Ghoststep Double speed for 3 seconds.",
+        "EchoVision See all player positions on map for 5 seconds.",
+        "OmniScan Periodically reveals all player positions."
     };
     const char* bios[] = {
         "Geoffreybella grew up in foggy London, mastering illusions as a magician’s assistant. She now uses her tricks to disappear mid-heist.",

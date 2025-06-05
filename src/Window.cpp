@@ -935,8 +935,8 @@ void Window::renderCharacterPreview(GLFWwindow* window) {
         scene->draw(Cam->GetViewProjectMtx(), shaderManager);
     }
 
-    glfwPollEvents();
-    glfwSwapBuffers(window);
+    // glfwPollEvents();
+    // glfwSwapBuffers(window);
 }
 
 
