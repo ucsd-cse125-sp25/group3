@@ -91,6 +91,8 @@ void MinigameCharacter::draw() {
     glBindVertexArray(characterVAO);
 
     glActiveTexture(GL_TEXTURE0);
+    if (facingRight) currentTexture = textureRight;
+    else currentTexture = textureLeft;
     glBindTexture(GL_TEXTURE_2D, currentTexture);
     glUniform1i(glGetUniformLocation(characterShader, "backgroundTex"), 0); 
 
@@ -109,19 +111,6 @@ void MinigameCharacter::draw() {
 
     glBindVertexArray(0);
 }
-
-/* void MinigameCharacter::handleInput(GLFWwindow* window) {
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-
-    }
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-
-    }
-
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && isOnGround) {
-
-    }
-} */
 
 float MinigameCharacter::getX() const {
     return x;

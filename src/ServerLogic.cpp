@@ -539,20 +539,20 @@ void ServerLogic::attemptGameStart(std::map<unsigned int, PlayerData*>& playersD
 }
 
 MinigameCharacterState::MinigameCharacterState()
-    : x(0), y(0), vx(0.f), speed(300.f), facingRight(true) {}
+    : x(0), y(0), vx(0.f), speed(300.f), facingRight(false) {}
 
 MinigameCharacterState::MinigameCharacterState(float x, float y)
-    : x(x), y(y), vx(0.f), speed(300.f), facingRight(true) {}
+    : x(x), y(y), vx(0.f), speed(300.f), facingRight(false) {}
 
 void MinigameCharacterState::handleInput(KeyType key) {
     std::cout << "MinigameCharacterState :: Handling input" << std::endl;
     if (key == KeyType::KEY_A) {
         vx = -speed;
-        facingRight = false;
+        facingRight = true;
     }
     else if (key == KeyType::KEY_D) {
         vx = speed;
-        facingRight = true;
+        facingRight = false;
     }
     else if (key == KeyType::KEY_SPACE) {
         vy = jumpVelocity;
