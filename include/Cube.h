@@ -7,6 +7,9 @@
 #include <fstream>
 #include "../packets/InitPlayerPacket.h"
 
+#include "Artifact.h"
+
+
 class Cube {
 private:
     GLuint VAO;
@@ -54,8 +57,8 @@ public:
     //interact with artifact
     bool isCarryingArtifact = false;
     void attemptGrabArtifact();
-    Cube* carriedArtifact = nullptr;
-    void setCarriedArtifact(Cube* artifact);
+    Artifact* carriedArtifact = nullptr;
+    void setCarriedArtifact(Artifact* artifact);
 
     // for "changing apperance"
     glm::vec3 colorAlt = glm::vec3(0.2f, 0.8f, 1.0f); 

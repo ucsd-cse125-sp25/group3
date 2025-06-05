@@ -11,12 +11,15 @@ void StateUpdatePacket::updateLength() {
         length += packet->getSize();
     }
     length += sizeof(artifactModel);
+
+    length += sizeof(artifact_state);
 }
 
 StateUpdatePacket::StateUpdatePacket(){
     length = 0;
     numClients = 0;
     numNPCs = 0;
+    artifact_state = 1;
 }
 
 unsigned int StateUpdatePacket::getSize() {
@@ -50,6 +53,10 @@ int StateUpdatePacket::serializePayload(char* data) {
 
     std::memcpy(data + offset, &artifactModel, sizeof(artifactModel));
     offset += sizeof(artifactModel);
+
+    std::memcpy(data + offset, &artifact_state, sizeof(artifact_state));
+    offset += sizeof(artifact_state);
+
     return offset;
 }
 
@@ -80,6 +87,10 @@ int StateUpdatePacket::deserializePayload(char* data) {
     }
     std::memcpy(&artifactModel, data + offset, sizeof(artifactModel));
     offset += sizeof(artifactModel);
+
+    std::memcpy(&artifact_state, data + offset, sizeof(artifact_state));
+    offset += sizeof(artifact_state);
+
     updateLength();
     return offset;
 }

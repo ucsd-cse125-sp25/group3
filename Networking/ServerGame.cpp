@@ -25,6 +25,11 @@ ServerGame::ServerGame(void)
     }
 
     ServerLogic::loadAABBs();
+
+    std::string movingArtifacts[3] = {"horse", "skeleton", "lion"};
+    unsigned int choice = (unsigned int) (rand() % 3);
+    AABB artifact_bb = ServerLogic::museumAABBs[movingArtifacts[choice]];
+    artifact.init(artifact_bb.min, artifact_bb.max, artifact_bb.getCenter(), choice);
 }
 
 void ServerGame::update()
@@ -277,6 +282,8 @@ void ServerGame::sendInitPlayerState(unsigned int client_id) {
     packet.currentState = player->currentState;
     packet.altDown = player->altDown;
     packet.radarActive = player->radarActive;
+
+    packet.artifact_id = artifact.id;
 
     player->cube.saveToPacket(packet);
     player->camera.saveToPacket(packet, false);

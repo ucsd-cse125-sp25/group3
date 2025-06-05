@@ -558,9 +558,17 @@ void NPCState::saveToPacket(NPCPacket& packet) {
 }
 
 ArtifactState::ArtifactState() {
+    init_state = 1;
     holder = nullptr;
     artifactModel = CubeState(glm::vec3(-0.5, 0, -1), glm::vec3(0, 0.5, 1));
     artifactModel.model = glm::translate(glm::mat4(1.0f), glm::vec3(7.0f, 0.0f, 2.0f));
+}
+
+void ArtifactState::init(glm::vec3 minCube, glm::vec3 maxCube, glm::vec3 position, unsigned int artifact_id) {
+    init_state = 1;
+    artifactModel = CubeState(minCube, maxCube);
+    artifactModel.model = glm::translate(glm::mat4(1.0f), position);
+    id = artifact_id;
 }
 
 void ArtifactState::update(bool putDown) {
@@ -580,6 +588,7 @@ void ArtifactState::attemptGrab(CubeState * player) {
     //for now, don't allow someone to grab artifact if already held by someone else
     // printf("attempting grab by player %d\n", player->type);
     if (holder == nullptr) {
+        init_state = 0;
         glm::vec3 playerPos = player->getPosition();
         glm::vec3 artifactPos = artifactModel.getPosition();
         float distance = glm::length(playerPos - artifactPos);
@@ -603,6 +612,8 @@ void ArtifactState::saveToPacket(StateUpdatePacket& packet) {
             packet.artifactModel[i][j] = artifactModel.model[i][j];
         }
     }
+
+    packet.artifact_state = init_state;
 }
 
 bool ServerLogic::processMovement(std::set<KeyType>& recievedMovementKeys, KeyType key) {
@@ -639,6 +650,7 @@ void ServerLogic::attemptGameStart(std::map<unsigned int, PlayerData*>& playersD
             playerIter->second->currentState = PLAYING;
         }
     }
+
     gameStarted = true;
 }
 

@@ -8,6 +8,8 @@
 
 class InitPlayerPacket : public Packet {
 public:
+    unsigned int artifact_id;
+
     unsigned int clientID;
     GameState currentState;
     CharacterType type;

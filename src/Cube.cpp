@@ -348,7 +348,7 @@ void Cube::attemptGrabArtifact() {
         }
     }
 }
-void Cube::setCarriedArtifact(Cube* artifact) {
+void Cube::setCarriedArtifact(Artifact* artifact) {
     carriedArtifact = artifact;
 }
 

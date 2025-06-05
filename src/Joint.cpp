@@ -6,14 +6,11 @@ Joint::Joint() {
     boxmin = glm::vec3(-1.0f, -0.5f, -0.5f);
     boxmax = glm::vec3(1.0f, 0.5f, 0.5f);
 
-    cube = new Cube(boxmin, boxmax);
-
     origMat = glm::mat4(1.0f);
     localMat = origMat;
 }
 
 Joint::~Joint() {
-    delete cube;
     for(Joint *child : children) {
         delete child;
     }
@@ -66,7 +63,6 @@ void Joint::draw(glm::mat4 viewProjMat, GLuint shader) {
     //cube->draw(viewProjMat, shader);
     if (name == "mixamorig:Spine1"){
         std::cout << glm::to_string(worldMat) << std::endl;
-        cube->draw(viewProjMat * worldMat, shader, false);
     }
     // recursively call Draw() on children
     for(Joint *child : children) {

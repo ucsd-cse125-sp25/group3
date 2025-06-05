@@ -100,9 +100,12 @@ class NPCState {
 
 class ArtifactState {
     public:
+        unsigned int init_state; // 1 is init, changed to false otherwise
+        unsigned int id;
         CubeState* holder;
         CubeState artifactModel;
         ArtifactState();
+        void init(glm::vec3 minCube, glm::vec3 maxCube, glm::vec3 position, unsigned int artifact_id);
         void update(bool putDown);
         void attemptGrab(CubeState * player);
         void saveToPacket(StateUpdatePacket& packet);
