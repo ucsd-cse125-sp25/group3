@@ -26,6 +26,13 @@ enum class OSType: uint8_t {
 
 #ifndef CLIENT_LOGIC
 #define CLIENT_LOGIC
+
+enum class WinState {
+    NONE,
+    THIEF_WIN,
+    GUARD_WIN
+};
+
 class client_logic {
     public:
         static ImGuiIO* io;
@@ -64,5 +71,11 @@ class client_logic {
         // timer
         static std::string currentTimeString;
 
+        // win 
+        static WinState gameResult;
+        static CharacterType playerRole;
+
+        // static GLuint img_thief_win, img_thief_lose, img_guard_win, img_guard_lose;
+        // static int img_width, img_height;
 };
 #endif

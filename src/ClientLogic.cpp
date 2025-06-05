@@ -1,5 +1,15 @@
 #include "ClientLogic.h" 
 
+WinState client_logic::gameResult = WinState::NONE;
+CharacterType client_logic::playerRole = CharacterType::NONE;
+
+// GLuint client_logic::img_thief_win = 0;
+// GLuint client_logic::img_thief_lose = 0;
+// GLuint client_logic::img_guard_win = 0;
+// GLuint client_logic::img_guard_lose = 0;
+// int client_logic::img_width = 0;
+// int client_logic::img_height = 0;
+
 ImVec2 client_logic::displaySize;
 ImGuiIO* client_logic::io;
 ImFont* client_logic::handwritingFont;
@@ -613,6 +623,39 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
 
 
     ImGui::End();
+
+    if (gameResult != WinState::NONE) {
+        // // std::cout << "yes game endddddddddd" << std::endl;
+        // GLuint textureToShow = 0;
+
+        // if (playerRole == CharacterType::CHARACTER_4) {
+        //     textureToShow = (gameResult == WinState::GUARD_WIN) ? img_guard_win : img_guard_lose;
+        // } else {
+        //     textureToShow = (gameResult == WinState::THIEF_WIN) ? img_thief_win : img_thief_lose;
+        // }
+
+        // ImVec2 imageSize((float)img_width, (float)img_height);
+        // ImVec2 centerPos((screenSize.x - img_width) * 0.5f, (screenSize.y - img_height) * 0.5f);
+        // ImGui::SetNextWindowPos(centerPos, ImGuiCond_Always);
+        // ImGui::SetNextWindowSize(imageSize);
+        // ImGui::Begin("GameResult", nullptr,
+        //     ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+        //     ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground);
+
+        // // ImGui::Image((void*)(intptr_t)textureToShow, imageSize);
+
+        // ImGui::End();
+        ImGui::Begin("Game End", nullptr,
+        ImGuiWindowFlags_NoTitleBar |
+        ImGuiWindowFlags_AlwaysAutoResize |
+        ImGuiWindowFlags_NoMove |
+        ImGuiWindowFlags_NoBackground);
+
+        ImGui::Text("Game End!!!!!");
+
+        ImGui::End();
+    }
+
 
 }
 

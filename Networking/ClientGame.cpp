@@ -127,6 +127,26 @@ void ClientGame::update()
         client_logic::setCharacterSelectPage(Window::currentState);
     } else if (Window::currentState == PLAYING) {
         client_logic::handleUserInput(window);
+        // static bool texturesLoaded = false;
+        // if (!texturesLoaded) {
+        //     #ifdef _WIN32
+        //     const char* base = "../../external/images/";
+        //     #else
+        //     const char* base = "../external/images/";
+        //     #endif
+            
+        //     client_logic::LoadTextureFromFile((std::string(base) + "thief_win.png").c_str(), 
+        //         &client_logic::img_thief_win, &client_logic::img_width, &client_logic::img_height);
+        //     client_logic::LoadTextureFromFile((std::string(base) + "thief_lose.png").c_str(), 
+        //         &client_logic::img_thief_lose, &client_logic::img_width, &client_logic::img_height);
+        //     client_logic::LoadTextureFromFile((std::string(base) + "guard_win.png").c_str(), 
+        //         &client_logic::img_guard_win, &client_logic::img_width, &client_logic::img_height);
+        //     client_logic::LoadTextureFromFile((std::string(base) + "guard_lose.png").c_str(), 
+        //         &client_logic::img_guard_lose, &client_logic::img_width, &client_logic::img_height);
+
+        //     texturesLoaded = true;
+        // }
+
         client_logic::setMainGameWindow(window);
     } 
     
@@ -207,6 +227,16 @@ void ClientGame::update()
                         std::cout << "Thief Wins! Winner ID: " << winPacket->winningClientID << std::endl;
                     }
                 }
+                client_logic::gameResult = (winPacket->winningClientID == Window::client_id)
+                                            ? ((client_logic::playerRole == CharacterType::CHARACTER_4) 
+                                                ? WinState::GUARD_WIN 
+                                                : WinState::THIEF_WIN)
+                                            : ((client_logic::playerRole == CharacterType::CHARACTER_4) 
+                                                ? WinState::THIEF_WIN 
+                                                : WinState::GUARD_WIN);
+
+                std::cout << "[Client] Received WIN_STATE, gameResult = " << (int)client_logic::gameResult << std::endl;
+
                 // printf("Client %u wins the game!\n", winPacket->winningClientID);
                 break;
             }
