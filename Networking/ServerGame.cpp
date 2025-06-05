@@ -173,8 +173,16 @@ void ServerGame::receiveFromClients() {
                     KeyPacket* keyPacket = dynamic_cast<KeyPacket*>(packet.get());
                     //printf("server recieved key input packet from client\n");
                     if (keyPacket) {
-                        
-                        if (player->currentState != PLAYING) {
+
+                        if (player->currentState == CHARACTER_SELECTION) {
+                            if (ServerLogic::processMovement(recievedMovementKeys, keyPacket->key_type)) {
+                                player->calculateNewPos(keyPacket->key_type, &artifact, ServerLogic::museumAABBs, playersData, npcData);
+                            
+                                player->handleGuiInput(keyPacket->key_type);
+                                sendGuiUpdate(iter->first, false);
+                            }   
+                        }
+                         else if (player->currentState != PLAYING) {
                             printf("recieved gui input\n");
                             player->handleGuiInput(keyPacket->key_type);
                             sendGuiUpdate(iter->first, false);
@@ -301,7 +309,7 @@ void ServerGame::receiveFromClients() {
     // } else {
     //     sendGuiUpdate();
     // }
-    if (ServerLogic::gameStarted) {
+    // if (ServerLogic::gameStarted ) {
         sendStateUpdate();
 
         static auto lastTimeBroadcast = std::chrono::steady_clock::now();
@@ -357,7 +365,8 @@ void ServerGame::receiveFromClients() {
             network->sendToAll(packet_data.data(), packet_size);
         }
 
-    }
+    
+    
     
     auto orig_diff = std::chrono::steady_clock::now() - start;
     auto milli_diff = std::chrono::duration_cast<std::chrono::milliseconds>(orig_diff);
@@ -369,6 +378,7 @@ void ServerGame::receiveFromClients() {
         printf("WARNING: Tick took longer than allocated by %lld ms\n", -wait.count());
     }
 }
+
 
 //should specify id of who's disconnecting so other clients know to remove that client's data
 void ServerGame::disconnectClient(unsigned int client_id) {

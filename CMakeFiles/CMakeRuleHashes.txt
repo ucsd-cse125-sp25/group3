@@ -1,4 +1,6 @@
 # Hashes of file build rules.
-1d61d28d8c86e3e6d697e6d7f5404097 CMakeFiles/CopyMiniGameShaders
+135e46c7b328a0596145e5d2eb4a88fc CMakeFiles/CopyModels
 2bd0d3ce64f79ee9587298fbffd4d773 CMakeFiles/CopyShaders
+8c471050327738562f0a56533c54b585 CMakeFiles/CopyTextures
 59ac9a922e16152c9f73993bf111dfdf CMakeFiles/doc_doxygen
+0c5c6173af6c6dfc3bd3ee92c229b7a2 assimp/CMakeFiles/uninstall

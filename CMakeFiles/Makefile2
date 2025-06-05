@@ -63,36 +63,197 @@ CMAKE_BINARY_DIR = /Users/jessieouyang/group3
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
+all: CMakeFiles/soloud.dir/all
+all: CMakeFiles/server.dir/all
+all: CMakeFiles/client.dir/all
 all: CMakeFiles/menv.dir/all
-all: CMakeFiles/CopyMiniGameShaders.dir/all
 all: CMakeFiles/CopyShaders.dir/all
+all: CMakeFiles/CopyModels.dir/all
+all: CMakeFiles/CopyTextures.dir/all
+all: assimp/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
-preinstall:
+preinstall: assimp/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
+clean: CMakeFiles/soloud.dir/clean
+clean: CMakeFiles/server.dir/clean
+clean: CMakeFiles/client.dir/clean
 clean: CMakeFiles/menv.dir/clean
-clean: CMakeFiles/CopyMiniGameShaders.dir/clean
 clean: CMakeFiles/CopyShaders.dir/clean
+clean: CMakeFiles/CopyModels.dir/clean
+clean: CMakeFiles/CopyTextures.dir/clean
 clean: CMakeFiles/doc_doxygen.dir/clean
+clean: assimp/clean
 .PHONY : clean
+
+#=============================================================================
+# Directory level rules for directory assimp
+
+# Recursive "all" directory target.
+assimp/all: assimp/code/all
+assimp/all: assimp/test/all
+.PHONY : assimp/all
+
+# Recursive "preinstall" directory target.
+assimp/preinstall: assimp/code/preinstall
+assimp/preinstall: assimp/test/preinstall
+.PHONY : assimp/preinstall
+
+# Recursive "clean" directory target.
+assimp/clean: assimp/CMakeFiles/uninstall.dir/clean
+assimp/clean: assimp/code/clean
+assimp/clean: assimp/test/clean
+.PHONY : assimp/clean
+
+#=============================================================================
+# Directory level rules for directory assimp/code
+
+# Recursive "all" directory target.
+assimp/code/all: assimp/code/CMakeFiles/assimp.dir/all
+.PHONY : assimp/code/all
+
+# Recursive "preinstall" directory target.
+assimp/code/preinstall:
+.PHONY : assimp/code/preinstall
+
+# Recursive "clean" directory target.
+assimp/code/clean: assimp/code/CMakeFiles/assimp.dir/clean
+.PHONY : assimp/code/clean
+
+#=============================================================================
+# Directory level rules for directory assimp/test
+
+# Recursive "all" directory target.
+assimp/test/all: assimp/test/CMakeFiles/unit.dir/all
+assimp/test/all: assimp/test/headercheck/all
+.PHONY : assimp/test/all
+
+# Recursive "preinstall" directory target.
+assimp/test/preinstall: assimp/test/headercheck/preinstall
+.PHONY : assimp/test/preinstall
+
+# Recursive "clean" directory target.
+assimp/test/clean: assimp/test/CMakeFiles/unit.dir/clean
+assimp/test/clean: assimp/test/headercheck/clean
+.PHONY : assimp/test/clean
+
+#=============================================================================
+# Directory level rules for directory assimp/test/headercheck
+
+# Recursive "all" directory target.
+assimp/test/headercheck/all:
+.PHONY : assimp/test/headercheck/all
+
+# Recursive "preinstall" directory target.
+assimp/test/headercheck/preinstall:
+.PHONY : assimp/test/headercheck/preinstall
+
+# Recursive "clean" directory target.
+assimp/test/headercheck/clean:
+.PHONY : assimp/test/headercheck/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/soloud.dir
+
+# All Build rule for target.
+CMakeFiles/soloud.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/soloud.dir/build.make CMakeFiles/soloud.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/soloud.dir/build.make CMakeFiles/soloud.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=73,74,75,76 "Built target soloud"
+.PHONY : CMakeFiles/soloud.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/soloud.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/soloud.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 0
+.PHONY : CMakeFiles/soloud.dir/rule
+
+# Convenience name for target.
+soloud: CMakeFiles/soloud.dir/rule
+.PHONY : soloud
+
+# clean rule for target.
+CMakeFiles/soloud.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/soloud.dir/build.make CMakeFiles/soloud.dir/clean
+.PHONY : CMakeFiles/soloud.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/server.dir
+
+# All Build rule for target.
+CMakeFiles/server.dir/all: CMakeFiles/soloud.dir/all
+CMakeFiles/server.dir/all: CMakeFiles/CopyShaders.dir/all
+CMakeFiles/server.dir/all: assimp/code/CMakeFiles/assimp.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=63,64,65,66,67,68,69,70,71,72 "Built target server"
+.PHONY : CMakeFiles/server.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/server.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 55
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/server.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 0
+.PHONY : CMakeFiles/server.dir/rule
+
+# Convenience name for target.
+server: CMakeFiles/server.dir/rule
+.PHONY : server
+
+# clean rule for target.
+CMakeFiles/server.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/clean
+.PHONY : CMakeFiles/server.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/client.dir
+
+# All Build rule for target.
+CMakeFiles/client.dir/all: CMakeFiles/soloud.dir/all
+CMakeFiles/client.dir/all: CMakeFiles/CopyShaders.dir/all
+CMakeFiles/client.dir/all: assimp/code/CMakeFiles/assimp.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=42,43,44,45,46,47,48,49,50,51 "Built target client"
+.PHONY : CMakeFiles/client.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/client.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 55
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/client.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 0
+.PHONY : CMakeFiles/client.dir/rule
+
+# Convenience name for target.
+client: CMakeFiles/client.dir/rule
+.PHONY : client
+
+# clean rule for target.
+CMakeFiles/client.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/clean
+.PHONY : CMakeFiles/client.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/menv.dir
 
 # All Build rule for target.
-CMakeFiles/menv.dir/all: CMakeFiles/CopyMiniGameShaders.dir/all
+CMakeFiles/menv.dir/all: CMakeFiles/soloud.dir/all
 CMakeFiles/menv.dir/all: CMakeFiles/CopyShaders.dir/all
+CMakeFiles/menv.dir/all: CMakeFiles/CopyModels.dir/all
+CMakeFiles/menv.dir/all: CMakeFiles/CopyTextures.dir/all
+CMakeFiles/menv.dir/all: assimp/code/CMakeFiles/assimp.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/menv.dir/build.make CMakeFiles/menv.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/menv.dir/build.make CMakeFiles/menv.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 "Built target menv"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=52,53,54,55,56,57,58,59,60,61,62 "Built target menv"
 .PHONY : CMakeFiles/menv.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/menv.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 19
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 56
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/menv.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 0
 .PHONY : CMakeFiles/menv.dir/rule
@@ -105,32 +266,6 @@ menv: CMakeFiles/menv.dir/rule
 CMakeFiles/menv.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/menv.dir/build.make CMakeFiles/menv.dir/clean
 .PHONY : CMakeFiles/menv.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/CopyMiniGameShaders.dir
-
-# All Build rule for target.
-CMakeFiles/CopyMiniGameShaders.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CopyMiniGameShaders.dir/build.make CMakeFiles/CopyMiniGameShaders.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CopyMiniGameShaders.dir/build.make CMakeFiles/CopyMiniGameShaders.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num= "Built target CopyMiniGameShaders"
-.PHONY : CMakeFiles/CopyMiniGameShaders.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/CopyMiniGameShaders.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 0
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/CopyMiniGameShaders.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 0
-.PHONY : CMakeFiles/CopyMiniGameShaders.dir/rule
-
-# Convenience name for target.
-CopyMiniGameShaders: CMakeFiles/CopyMiniGameShaders.dir/rule
-.PHONY : CopyMiniGameShaders
-
-# clean rule for target.
-CMakeFiles/CopyMiniGameShaders.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CopyMiniGameShaders.dir/build.make CMakeFiles/CopyMiniGameShaders.dir/clean
-.PHONY : CMakeFiles/CopyMiniGameShaders.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/CopyShaders.dir
@@ -159,18 +294,70 @@ CMakeFiles/CopyShaders.dir/clean:
 .PHONY : CMakeFiles/CopyShaders.dir/clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/CopyModels.dir
+
+# All Build rule for target.
+CMakeFiles/CopyModels.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CopyModels.dir/build.make CMakeFiles/CopyModels.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CopyModels.dir/build.make CMakeFiles/CopyModels.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num= "Built target CopyModels"
+.PHONY : CMakeFiles/CopyModels.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/CopyModels.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 0
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/CopyModels.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 0
+.PHONY : CMakeFiles/CopyModels.dir/rule
+
+# Convenience name for target.
+CopyModels: CMakeFiles/CopyModels.dir/rule
+.PHONY : CopyModels
+
+# clean rule for target.
+CMakeFiles/CopyModels.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CopyModels.dir/build.make CMakeFiles/CopyModels.dir/clean
+.PHONY : CMakeFiles/CopyModels.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/CopyTextures.dir
+
+# All Build rule for target.
+CMakeFiles/CopyTextures.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CopyTextures.dir/build.make CMakeFiles/CopyTextures.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CopyTextures.dir/build.make CMakeFiles/CopyTextures.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num= "Built target CopyTextures"
+.PHONY : CMakeFiles/CopyTextures.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/CopyTextures.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 0
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/CopyTextures.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 0
+.PHONY : CMakeFiles/CopyTextures.dir/rule
+
+# Convenience name for target.
+CopyTextures: CMakeFiles/CopyTextures.dir/rule
+.PHONY : CopyTextures
+
+# clean rule for target.
+CMakeFiles/CopyTextures.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CopyTextures.dir/build.make CMakeFiles/CopyTextures.dir/clean
+.PHONY : CMakeFiles/CopyTextures.dir/clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/doc_doxygen.dir
 
 # All Build rule for target.
 CMakeFiles/doc_doxygen.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/doc_doxygen.dir/build.make CMakeFiles/doc_doxygen.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/doc_doxygen.dir/build.make CMakeFiles/doc_doxygen.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=1 "Built target doc_doxygen"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num= "Built target doc_doxygen"
 .PHONY : CMakeFiles/doc_doxygen.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/doc_doxygen.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 1
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 0
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/doc_doxygen.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 0
 .PHONY : CMakeFiles/doc_doxygen.dir/rule
@@ -183,6 +370,84 @@ doc_doxygen: CMakeFiles/doc_doxygen.dir/rule
 CMakeFiles/doc_doxygen.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/doc_doxygen.dir/build.make CMakeFiles/doc_doxygen.dir/clean
 .PHONY : CMakeFiles/doc_doxygen.dir/clean
+
+#=============================================================================
+# Target rules for target assimp/CMakeFiles/uninstall.dir
+
+# All Build rule for target.
+assimp/CMakeFiles/uninstall.dir/all:
+	$(MAKE) $(MAKESILENT) -f assimp/CMakeFiles/uninstall.dir/build.make assimp/CMakeFiles/uninstall.dir/depend
+	$(MAKE) $(MAKESILENT) -f assimp/CMakeFiles/uninstall.dir/build.make assimp/CMakeFiles/uninstall.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num= "Built target uninstall"
+.PHONY : assimp/CMakeFiles/uninstall.dir/all
+
+# Build rule for subdir invocation for target.
+assimp/CMakeFiles/uninstall.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 0
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 assimp/CMakeFiles/uninstall.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 0
+.PHONY : assimp/CMakeFiles/uninstall.dir/rule
+
+# Convenience name for target.
+uninstall: assimp/CMakeFiles/uninstall.dir/rule
+.PHONY : uninstall
+
+# clean rule for target.
+assimp/CMakeFiles/uninstall.dir/clean:
+	$(MAKE) $(MAKESILENT) -f assimp/CMakeFiles/uninstall.dir/build.make assimp/CMakeFiles/uninstall.dir/clean
+.PHONY : assimp/CMakeFiles/uninstall.dir/clean
+
+#=============================================================================
+# Target rules for target assimp/code/CMakeFiles/assimp.dir
+
+# All Build rule for target.
+assimp/code/CMakeFiles/assimp.dir/all:
+	$(MAKE) $(MAKESILENT) -f assimp/code/CMakeFiles/assimp.dir/build.make assimp/code/CMakeFiles/assimp.dir/depend
+	$(MAKE) $(MAKESILENT) -f assimp/code/CMakeFiles/assimp.dir/build.make assimp/code/CMakeFiles/assimp.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41 "Built target assimp"
+.PHONY : assimp/code/CMakeFiles/assimp.dir/all
+
+# Build rule for subdir invocation for target.
+assimp/code/CMakeFiles/assimp.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 41
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 assimp/code/CMakeFiles/assimp.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 0
+.PHONY : assimp/code/CMakeFiles/assimp.dir/rule
+
+# Convenience name for target.
+assimp: assimp/code/CMakeFiles/assimp.dir/rule
+.PHONY : assimp
+
+# clean rule for target.
+assimp/code/CMakeFiles/assimp.dir/clean:
+	$(MAKE) $(MAKESILENT) -f assimp/code/CMakeFiles/assimp.dir/build.make assimp/code/CMakeFiles/assimp.dir/clean
+.PHONY : assimp/code/CMakeFiles/assimp.dir/clean
+
+#=============================================================================
+# Target rules for target assimp/test/CMakeFiles/unit.dir
+
+# All Build rule for target.
+assimp/test/CMakeFiles/unit.dir/all: assimp/code/CMakeFiles/assimp.dir/all
+	$(MAKE) $(MAKESILENT) -f assimp/test/CMakeFiles/unit.dir/build.make assimp/test/CMakeFiles/unit.dir/depend
+	$(MAKE) $(MAKESILENT) -f assimp/test/CMakeFiles/unit.dir/build.make assimp/test/CMakeFiles/unit.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100 "Built target unit"
+.PHONY : assimp/test/CMakeFiles/unit.dir/all
+
+# Build rule for subdir invocation for target.
+assimp/test/CMakeFiles/unit.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 65
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 assimp/test/CMakeFiles/unit.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jessieouyang/group3/CMakeFiles 0
+.PHONY : assimp/test/CMakeFiles/unit.dir/rule
+
+# Convenience name for target.
+unit: assimp/test/CMakeFiles/unit.dir/rule
+.PHONY : unit
+
+# clean rule for target.
+assimp/test/CMakeFiles/unit.dir/clean:
+	$(MAKE) $(MAKESILENT) -f assimp/test/CMakeFiles/unit.dir/build.make assimp/test/CMakeFiles/unit.dir/clean
+.PHONY : assimp/test/CMakeFiles/unit.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
