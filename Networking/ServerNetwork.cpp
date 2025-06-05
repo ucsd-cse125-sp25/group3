@@ -77,7 +77,7 @@ ServerNetwork::ServerNetwork(void)
             exit(1);
         }
     #endif
-
+    
     // Set the mode of the socket to be nonblocking
     u_long iMode = 1;
 
@@ -97,10 +97,10 @@ ServerNetwork::ServerNetwork(void)
             exit(1);
         }
     #endif
-        
+
     // Setup the TCP listening socket
     iResult = ::bind( ListenSocket, result->ai_addr, (int)result->ai_addrlen);
-
+    
     #ifdef _WIN32
     if (iResult == SOCKET_ERROR) {
         printf("bind failed with error: %d\n", WSAGetLastError());
@@ -116,13 +116,13 @@ ServerNetwork::ServerNetwork(void)
         exit(1);
     }
     #endif
-
+    std::cout << "here" << std::endl;
     // no longer need address information
     freeaddrinfo(result);
-
+    std::cout << "here" << std::endl;
     // start listening for new clients attempting to connect
     iResult = listen(ListenSocket, SOMAXCONN);
-
+    std::cout << "here" << std::endl;
     #ifdef _WIN32
     if (iResult == SOCKET_ERROR) {
         printf("listen failed with error: %d\n", WSAGetLastError());

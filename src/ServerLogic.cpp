@@ -818,7 +818,7 @@ void ServerLogic::processCapture(PlayerData* capturer, std::map<unsigned int, Pl
             if (distance < captureRange && !player->cube.isCaptured) {
                 player->cube.isCaptured = true;
                 player->currentState = IN_MINIGAME;
-                player->cube.isInvisible = true;
+                // player->cube.isInvisible = true;
                 capturedSomeone = true;
                 std::cout << "Player " << id << " captured by hunter!" << std::endl;
                 

@@ -19,12 +19,12 @@ ServerGame::ServerGame(void)
     
     // set up the server network to listen 
     network = new ServerNetwork(); 
-
+    
     for (unsigned int i=0; i<NUM_NPC; i++) {
         NPCState npc = NPCState();
         npcData.insert(pair<unsigned int, NPCState>(i, npc));
     }
-
+printf("ehre\n");
     ServerLogic::loadAABBs();
 
     // std::string movingArtifacts[3] = {"horse", "skeleton", "lion"};
@@ -51,6 +51,7 @@ ServerGame::ServerGame(void)
     minigamePlatforms.emplace_back((520.0f / refW), (750.0f / refH), (410.0f / refW), (54.0f / refH), 0); // 8
     minigamePlatforms.emplace_back((1400.0f / refW), (555.0f / refH), (480.0f / refW), (55.0f / refH), 0); // 9
     minigamePlatforms.emplace_back((2270.0f / refW), (510.0f / refH), (480.0f / refW), (37.0f / refH), 0); // 10
+printf("done\n");
 }
 
 void ServerGame::update()
@@ -227,6 +228,7 @@ void ServerGame::receiveFromClients() {
                 case MINIGAME_FINISHED: {
                     MinigameFinishedPacket* finishedPacket = dynamic_cast<MinigameFinishedPacket*>(packet.get());
                     playersData[finishedPacket->clientID]->currentState = PLAYING;
+                    player->cube.isCaptured = false;
                     break;
                 }
                 default: {

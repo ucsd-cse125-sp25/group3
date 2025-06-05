@@ -146,6 +146,7 @@ void MiniGame::cleanup() {
     glDeleteVertexArrays(1, &quadVAO);
     glDeleteBuffers(1, &quadVBO);
     glDeleteProgram(quadShader);
+    finished = false;
 }
 
 bool MiniGame::isFinished() const {
