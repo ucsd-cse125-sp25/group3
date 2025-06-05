@@ -61,8 +61,8 @@ void Artifact::update(AnimationPlayer* animationPlayer) {
 void Artifact::draw(const glm::mat4& viewProjMtx, ShaderManager* shaderManager) {
     for (int i = 0; i < initInstances.size(); i++){
         if (i == artifact_id){
+           
             if (artifact_init == 0){
-                // std::cout << "draw" << std::endl;
                 initInstances[artifact_id]->draw(viewProjMtx, shaderManager);
             } else {
                 // std::cout << "why" << std::endl;

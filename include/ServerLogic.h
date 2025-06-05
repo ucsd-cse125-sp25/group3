@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include <cstdio>
 #include <chrono>
+#include <string>
 #include <set>
 #include <map>
 #include "AnimState.h"
@@ -120,6 +121,7 @@ class ArtifactState {
         void update(bool putDown);
         void attemptGrab(CubeState * player);
         void saveToPacket(StateUpdatePacket& packet);
+        void resetPos();
 };
 
 class PlayerData {
@@ -160,6 +162,7 @@ class ServerLogic {
     public:
         static bool gameStarted;
         static bool availableChars[4];
+        static std::string movingArtifacts[3];
         static std::map<std::string, AABB> museumAABBs;
         static void loadAABBs();
         static bool processMovement(std::set<KeyType>& recievedMovementKeys, KeyType key);

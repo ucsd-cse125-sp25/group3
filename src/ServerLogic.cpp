@@ -14,6 +14,7 @@
 
 bool ServerLogic::gameStarted = false;
 bool ServerLogic::availableChars[4] = {true, true, true, true};
+std::string ServerLogic::movingArtifacts[3] = {"horse", "skeleton", "lion"};
 std::map<std::string, AABB> ServerLogic::museumAABBs;
 
 CubeState::CubeState(glm::vec3 cubeMin, glm::vec3 cubeMax) {
@@ -595,6 +596,13 @@ void ArtifactState::init(glm::vec3 minCube, glm::vec3 maxCube, glm::vec3 positio
     id = artifact_id;
 }
 
+void ArtifactState::resetPos() {
+    init_state = 0;
+    glm::vec3 position = ServerLogic::museumAABBs[ServerLogic::movingArtifacts[id]].getCenter();
+    artifactModel.model = glm::translate(glm::mat4(1.0f), position);
+    // id = artifact_id;
+}
+
 void ArtifactState::calcRadius(glm::vec3 min, glm::vec3 max){
     radius = glm::distance(min, max)/2.0f;
 }
@@ -625,6 +633,11 @@ void ArtifactState::attemptGrab(CubeState * player) {
         std::cout << "dist: " << distance << std::endl;
         std::cout << "radius: " << radius << std::endl;
         if (distance < radius + 2.0f) {
+
+            if (player->type == CharacterType::CHARACTER_4) {
+                resetPos();
+                return;
+            }
             holder = player;
             init_state = 1;
             // player->animState = AnimState::FT_Pick_Up;
