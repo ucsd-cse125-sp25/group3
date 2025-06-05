@@ -108,16 +108,15 @@ class MinigameCharacterState;
 class MiniGameState {
     friend class ServerGame;
 public:
-    MiniGameState();
     MiniGameState(int windowWidth, int windowHeight, std::vector<Platform> platforms);
 
     void updateCharacterPosition(MinigameCharacterState* character, float x, float y);
     void resetCharacter(MinigameCharacterState* character);
 
 private:
-    std::vector<Platform> platforms;
     int windowWidth;
     int windowHeight;
+    std::vector<Platform> platforms;
     bool finished;
 };
 

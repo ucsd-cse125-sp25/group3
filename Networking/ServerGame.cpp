@@ -11,7 +11,27 @@
 
 unsigned int ServerGame::client_id; 
 
+std::vector<Platform> ServerGame::generateMinigamePlatforms() {
+    float refW = 2880.0f;
+    float refH = 1800.0f;
+    std::vector<Platform> platforms;
+
+    platforms.emplace_back((330.0f / refW), (1700.0f / refH), (200.0f / refW), (27.0f / refH), 0);
+    platforms.emplace_back((0.0f   / refW), (1475.0f / refH), (270.0f / refW), (27.0f / refH), 0);
+    platforms.emplace_back((0.0f   / refW), (1595.0f / refH), (360.0f / refW), (32.0f / refH), 0);
+    platforms.emplace_back((468.0f / refW), (1212.0f / refH), (360.0f / refW), (43.0f / refH), 0);
+    platforms.emplace_back((1205.0f / refW), (1060.0f / refH), (520.0f / refW), (62.0f / refH), 0);
+    platforms.emplace_back((1890.0f / refW), (1268.0f / refH), (408.0f / refW), (58.0f / refH), 0);
+    platforms.emplace_back((2570.0f / refW), (930.0f / refH), (320.0f / refW), (55.0f / refH), 0);
+    platforms.emplace_back((520.0f / refW), (750.0f / refH), (410.0f / refW), (54.0f / refH), 0);
+    platforms.emplace_back((1400.0f / refW), (555.0f / refH), (480.0f / refW), (55.0f / refH), 0);
+    platforms.emplace_back((2270.0f / refW), (510.0f / refH), (480.0f / refW), (37.0f / refH), 0);
+
+    return platforms;
+}
+
 ServerGame::ServerGame(void)
+    :minigame(2880.0f, 1800.0f, generateMinigamePlatforms())
 {
     // id's to assign clients for our table
     client_id = 0;
@@ -23,24 +43,6 @@ ServerGame::ServerGame(void)
         NPCState npc = NPCState();
         npcData.insert(pair<unsigned int, NPCState>(i, npc));
     }
-
-    // texture is not sent by server; client determines this.
-
-    float refW = 2880.0f;
-    float refH = 1800.0f;
-    std::vector<Platform> minigamePlatforms;
-    minigamePlatforms.emplace_back((330.0f / refW), (1700.0f / refH), (200.0f / refW), (27.0f / refH), 0);//1
-    minigamePlatforms.emplace_back((0.0f   / refW), (1475.0f / refH), (270.0f / refW), (27.0f / refH), 0); // 2
-    minigamePlatforms.emplace_back((0.0f   / refW), (1595.0f / refH), (360.0f / refW), (32.0f / refH), 0); // 3
-    minigamePlatforms.emplace_back((468.0f / refW), (1212.0f / refH), (360.0f / refW), (43.0f / refH), 0); // 4
-    minigamePlatforms.emplace_back((1205.0f / refW), (1060.0f / refH), (520.0f / refW), (62.0f / refH), 0); // 5
-    minigamePlatforms.emplace_back((1890.0f / refW), (1268.0f / refH), (408.0f / refW), (58.0f / refH), 0); // 6
-    minigamePlatforms.emplace_back((2570.0f / refW), (930.0f / refH), (320.0f / refW), (55.0f / refH), 0); // 7
-    minigamePlatforms.emplace_back((520.0f / refW), (750.0f / refH), (410.0f / refW), (54.0f / refH), 0); // 8
-    minigamePlatforms.emplace_back((1400.0f / refW), (555.0f / refH), (480.0f / refW), (55.0f / refH), 0); // 9
-    minigamePlatforms.emplace_back((2270.0f / refW), (510.0f / refH), (480.0f / refW), (37.0f / refH), 0); // 10
-
-    ServerGame::minigame = MiniGameState(refW, refH, minigamePlatforms);
 }
 
 void ServerGame::update()
@@ -120,6 +122,7 @@ void ServerGame::receiveFromClients() {
                     InitPacket* initPacket = dynamic_cast<InitPacket*>(packet.get());
                     printf("server received init packet from client\n");
                     player->init(initPacket);
+                    player->minigameCharacter.minigame = &minigame;
 
                     if (!player->initialized) {
                         sendInitPlayerState(iter->first);

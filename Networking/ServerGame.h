@@ -23,6 +23,7 @@ public:
     void disconnectClient(unsigned int client_id);
     void sendGuiUpdate(unsigned int client_id, bool sendAll);
     void sendInitMinigamePacket(unsigned int client_id);
+    static std::vector<Platform> generateMinigamePlatforms();
 
 private:
 

@@ -576,13 +576,15 @@ void MinigameCharacterState::update() {
     vx = 0.0f;
 }
 
-MiniGameState::MiniGameState()
-    : windowWidth(0), windowHeight(0), platforms() {};
-
-MiniGameState::MiniGameState(int windowWidth, int windowHeight, std::vector<Platform> platforms)
-    : windowWidth(windowWidth), windowHeight(windowHeight), platforms(platforms) {}
+MiniGameState::MiniGameState(int windowWidth, int windowHeight, std::vector<Platform> plats)
+    : windowWidth(windowWidth), windowHeight(windowHeight), platforms(std::move(plats)) {
+        std::cout << "MiniGameState :: Other constructor used" << std::endl;
+        std::cout << "MiniGameState :: Constructed at " << this << std::endl;
+    }
 
 void MiniGameState::updateCharacterPosition(MinigameCharacterState* character, float nextX, float nextY) {
+    std::cout << "MiniGameState :: updateCharacterPosition called on " << this << std::endl;
+
     std::cout << "MiniGameState :: Calculating character position" << std::endl;
     const float drawW = character->width;
     const float drawH = character->height;
@@ -592,7 +594,13 @@ void MiniGameState::updateCharacterPosition(MinigameCharacterState* character, f
 
     //character->isOnGround = false;
 
+    if (platforms.empty()) {
+        std::cerr << "MiniGameState :: Error - No platforms available!" << std::endl;
+        return;
+    }
+
     std::cout << "MiniGameState :: About to calculate platforms " << std::endl;
+    std::cout << "MiniGameState :: plats size = " << platforms.size() << std::endl;
     for (int i = 0 ; i < platforms.size(); i++) {
         std::cout << "MiniGameState :: calculating platform " << i << std::endl;
         const float margin = 20.0f;
