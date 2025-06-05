@@ -795,9 +795,11 @@ void ServerLogic::processCapture(PlayerData* capturer, std::map<unsigned int, Pl
     // std::cout << "yes character_4 " << std::endl;
     glm::vec3 capturerPos = capturer->cube.getPosition();
     float captureRange = 0.3f;
+    bool capturedSomeone = false;
 
     for (auto& [id, player] : playersData) {
         if (player == capturer) continue;
+        if (capturedSomeone) break;
 
         CharacterType otherType = player->cube.type;
 
@@ -814,6 +816,7 @@ void ServerLogic::processCapture(PlayerData* capturer, std::map<unsigned int, Pl
             // }
             if (distance < captureRange && !player->cube.isCaptured) {
                 player->cube.isCaptured = true;
+                capturedSomeone = true;
                 std::cout << "Player " << id << " captured by hunter!" << std::endl;
                 
                 capturer->captureMessage = "Thief captured!";
