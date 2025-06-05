@@ -5,8 +5,8 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include <sys/socket.h>
-#include <unistd.h>
+// #include <sys/socket.h>
+// #include <unistd.h>
 #include <string>
 #include "ServerLogic.h"
 
@@ -676,20 +676,19 @@ void ServerLogic::attemptGameStart(std::map<unsigned int, PlayerData*>& playersD
     int numPlayers = 0;
 
     if (!gameStarted) {
-        printf("trying to start game\n");
+        // printf("trying to start game\n");
         for (playerIter=playersData.begin(); playerIter!=playersData.end(); playerIter++) {
 
-            if (playerIter->second->currentState != WAITING) {
-                return;
+            if (playerIter->second->currentState == WAITING) {
+                numPlayers++;
             }
-            numPlayers++;
         }
 
-        if (numPlayers != TOTAL_PLAYERS) {
+        if (numPlayers < TOTAL_PLAYERS) {
             return;
         }
     }
-    printf("starting\n");
+    // printf("starting\n");
     for (playerIter=playersData.begin(); playerIter!=playersData.end(); playerIter++) {
         
         if (playerIter->second->currentState == WAITING) {
@@ -790,7 +789,7 @@ std::string ServerLogic::getCurrentTimeString() {
     return ss.str();
 }
 
-void ServerLogic::sendTimeToClient(int clientSocket) {
-    std::string timeStr = getCurrentTimeString();
-    send(clientSocket, timeStr.c_str(), timeStr.length(), 0);
-}
+// void ServerLogic::sendTimeToClient(int clientSocket) {
+//     std::string timeStr = getCurrentTimeString();
+//     send(clientSocket, timeStr.c_str(), timeStr.length(), 0);
+// }

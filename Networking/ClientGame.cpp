@@ -226,6 +226,8 @@ void ClientGame::update()
                     } else {
                         std::cout << "Thief Wins! Winner ID: " << winPacket->winningClientID << std::endl;
                     }
+
+                    Window::currentState = WIN_CONDITION;
                 }
                 client_logic::gameResult = (winPacket->winningClientID == Window::client_id)
                                             ? ((client_logic::playerRole == CharacterType::CHARACTER_4) 
