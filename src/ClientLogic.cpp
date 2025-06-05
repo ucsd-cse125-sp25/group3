@@ -692,7 +692,7 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
                 // float posX = (io->DisplaySize.x - displayWidth) * 0.5f;
                 // float posY = (io->DisplaySize.y - displayHeight) * 0.5f;
                 ImGui::SetCursorPos(ImVec2(0, 0));
-                // std::cout << "characterrrrrr type :  " << client_logic::playerRole << std::endl;
+                std::cout << "characterrrrrr type :  " << client_logic::playerRole << std::endl;
                 if (client_logic::playerRole == 4)
                 {
                     std::cout << "security guard lose "<< std::endl;

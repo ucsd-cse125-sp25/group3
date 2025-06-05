@@ -173,6 +173,7 @@ void ClientGame::update()
                 InitPlayerPacket* initPlayerPacket = dynamic_cast<InitPlayerPacket*>(packet.get());
                 // TODO: Make this work with packet class
                 printf("recieved init player packet from server\n");
+                client_logic::playerRole = initPlayerPacket->type;
                 /*Window::setClientID(packet.payload.data());*/
                 Window::setInitState(*initPlayerPacket);
                 break;
