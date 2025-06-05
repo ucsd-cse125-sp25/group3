@@ -191,7 +191,8 @@ void PlayerData::handleGuiInput(KeyType key) {
     }
 }
 
-void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact, const std::map<std::string, AABB> museumAABBs) {
+void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact, 
+    const std::map<std::string, AABB> museumAABBs,std::map<unsigned int, PlayerData*> playersData) {
     glm::vec3 forwardDir = camera.GetForwardVector();
     forwardDir.y = 0.0f;  
     forwardDir = glm::normalize(forwardDir);
@@ -325,6 +326,11 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact, const std
         } else {
             cube.eWasPressed = false;
         }
+    }
+
+    if (key == KeyType::KEY_C) {
+        // std::cout <<"C is pressed " << std::endl;
+        ServerLogic::processCapture(this, playersData);
     }
 }
 
@@ -661,5 +667,42 @@ void ServerLogic::loadAABBs() {
         std::cout << "Loaded AABB: " << name 
                   << " Min: " << glm::to_string(box.min) 
                   << " Max: " << glm::to_string(box.max) << std::endl;
+    }
+}
+
+void ServerLogic::processCapture(PlayerData* capturer, std::map<unsigned int, PlayerData*>& playersData) {
+    // std::cout << "enter process Capture function " << std::endl;
+    if (capturer->cube.type != CHARACTER_4) return;
+    // std::cout << "yes character_4 " << std::endl;
+    glm::vec3 capturerPos = capturer->cube.getPosition();
+    float captureRange = 0.5f;
+
+    for (auto& [id, player] : playersData) {
+        if (player == capturer) continue;
+
+        CharacterType otherType = player->cube.type;
+
+        if (otherType == CHARACTER_1 || otherType == CHARACTER_2 || otherType == CHARACTER_3) {
+            // std::cout << "yes inside for loop: " << otherType << std::endl;
+            glm::vec3 otherPos = player->cube.getPosition();
+            float distance = glm::length(capturerPos - otherPos);
+            // std::cout << "distance: " << distance;
+            // std::cout << " captureRange : " << captureRange << std::endl;
+            // if (player->cube.isCaptured){
+            //     std::cout <<  "isCapture is true" << std::endl;
+            // }else{
+            //     std::cout <<  "isCapture is false"  << std::endl;
+            // }
+            if (distance < captureRange && !player->cube.isCaptured) {
+                player->cube.isCaptured = true;
+                std::cout << "Player " << id << " captured by hunter!" << std::endl;
+
+                // TODO : 
+                // enter mini game 
+                // is Capture = true 
+                // after success in mini game, is capture = false 
+            }
+        }
+
     }
 }

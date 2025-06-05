@@ -62,6 +62,10 @@ class CubeState {
 
         void updateFromPacket(const InitPlayerPacket& packet);
         void saveToPacket(InitPlayerPacket& packet);
+
+        // capture
+        bool isCaptured = false;
+
 };
 
 class NPCState {
@@ -130,7 +134,8 @@ class PlayerData {
         // PlayerData();
         // ~PlayerData();
         bool init(InitPacket* packet);
-        void calculateNewPos(KeyType key, ArtifactState* artifact, const std::map<std::string, AABB> museumAABBs);
+        void calculateNewPos(KeyType key, ArtifactState* artifact, 
+                const std::map<std::string, AABB> museumAABBs, std::map<unsigned int, PlayerData*> playersData);
         void handleCursor(double currX, double currY);
         void resetCamera();
         void saveToPacket(unsigned int client_id, InitPlayerPacket& packet);
@@ -149,4 +154,5 @@ class ServerLogic {
         static void loadAABBs();
         static bool processMovement(std::set<KeyType>& recievedMovementKeys, KeyType key);
         static void attemptGameStart(std::map<unsigned int, PlayerData*>& playersData);
+        static void processCapture(PlayerData* capturer, std::map<unsigned int, PlayerData*>& playersData);
 };
