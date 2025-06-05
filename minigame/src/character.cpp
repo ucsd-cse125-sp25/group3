@@ -7,8 +7,9 @@
 #include <sstream>
 #include <string>
 
+MinigameCharacter::MinigameCharacter() {}
 
-Character::Character(float x, float y, const std::string& leftTex, const std::string& rightTex)
+MinigameCharacter::MinigameCharacter(float x, float y, const std::string& leftTex, const std::string& rightTex)
     : x(x), y(y), vx(0.f), speed(300.f), facingRight(true) {
     textureLeft = loadTexture(leftTex);
     textureRight = loadTexture(rightTex);
@@ -16,13 +17,15 @@ Character::Character(float x, float y, const std::string& leftTex, const std::st
     initRenderer();
 }
 
-unsigned int Character::loadTexture(const std::string& path) {
+unsigned int MinigameCharacter::loadTexture(const std::string& path) {
     int w, h, ch;
     unsigned char* data = stbi_load(path.c_str(), &w, &h, &ch, 4);
     if (!data) {
         std::cerr << "Failed to load texture: " << path << std::endl;
         return 0;
     }
+
+    std::cout << "Minigame character width " << w << ", height " << h << std::endl;
 
     width = w;  
     height = h;
@@ -37,11 +40,11 @@ unsigned int Character::loadTexture(const std::string& path) {
     return tex;
 }
 
-GLuint Character::getShader() const {
+GLuint MinigameCharacter::getShader() const {
     return characterShader;
 }
 
-void Character::initRenderer() {
+void MinigameCharacter::initRenderer() {
     float vertices[] = {
         // positions    // tex coords
          0.f,  0.f,      0.0f, 0.0f,
@@ -76,98 +79,14 @@ void Character::initRenderer() {
     glDeleteShader(fs);
 }
 
-
-
-
-void Character::handleInput(GLFWwindow* window) {
-    vx = 0.f;
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        vx = -speed;
-        if (facingRight) {
-            currentTexture = textureRight;
-            facingRight = false;
-        }
-    }
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        vx = speed;
-        if (!facingRight) {
-            currentTexture = textureLeft;
-            facingRight = true;
-        }
-    }
-
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && isOnGround) {
-    vy = jumpVelocity;
-    isOnGround = false;
-}
+void MinigameCharacter::update(const MinigameCharacterPacket& packet) {
+    x = packet.x;
+    y = packet.y;
+    facingRight = packet.facingRight;
+    isFinished = packet.isFinished;
 }
 
-void Character::update(float dt, int windowHeight, int windowWidth, const std::vector<Platform>& platforms) {
-    float drawW = width * 1.0f/4.0f;
-    float drawH = height * 1.0f/4.0f;
-
-    float nextX = x + vx * dt;
-    float nextY = y + vy * dt;
-
-    isOnGround = false;
-    vy += gravity * dt; 
-
-    float groundY =  windowHeight - drawH;
-    if (y > groundY) {
-        y = groundY;
-        vy = 0.f;
-        isOnGround = true;
-    }
-
-    for (const auto& p : platforms) {
-
-        const float margin = 20.0f;
-
-        bool isFalling = vy >= 0.f;
-        bool isJumping = vy < 0.f;
-
-        bool horizontalOverlap = (nextX + drawW > p.x) && (nextX < p.x + p.width);
-        bool verticalContact = (y + drawH <= p.y + margin) && (nextY + drawH >= p.y);
-
-        if (isFalling && horizontalOverlap && verticalContact) {
-            nextY = p.y - drawH;
-            vy = 0.f;
-            isOnGround = true;
-        }
-
-        bool verticalOverlap = (nextY + drawH > p.y) && (nextY < p.y + p.height);
-
-        bool hittingLeft = (nextX + drawW > p.x) && (x + drawW <= p.x);
-        bool hittingRight = (nextX < p.x + p.width) && (x >= p.x + p.width);
-
-        if (verticalOverlap && hittingLeft) {
-            nextX = p.x - drawW;
-            vx = 0.f;
-        } else if (verticalOverlap && hittingRight) {
-            nextX = p.x + p.width;
-            vx = 0.f;
-        }
-
-        bool bottomContact = (y >= p.y + p.height) && (nextY < p.y + p.height);
-        if (isJumping && horizontalOverlap && bottomContact) {
-            nextY = p.y + p.height;
-            vy = 0.f;
-        }
-    }
-    x = nextX;
-    y = nextY;
-
-    if (x < 0.f) {
-        x = 0.f;
-        vx = 0.f;
-    }
-    if (x + drawW > windowWidth) {
-        x = windowWidth - drawW;
-        vx = 0.f;
-    }
-}
-
-void Character::draw() {
+void MinigameCharacter::draw() {
     glUseProgram(characterShader);
     glBindVertexArray(characterVAO);
 
@@ -191,18 +110,31 @@ void Character::draw() {
     glBindVertexArray(0);
 }
 
-float Character::getX() const {
+/* void MinigameCharacter::handleInput(GLFWwindow* window) {
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+
+    }
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && isOnGround) {
+
+    }
+} */
+
+float MinigameCharacter::getX() const {
     return x;
 }
 
-float Character::getY() const {
+float MinigameCharacter::getY() const {
     return y;
 }
 
-float Character::getWidth() const {
+float MinigameCharacter::getWidth() const {
     return width * 1.0f / 4.0f;
 }
 
-float Character::getHeight() const {
+float MinigameCharacter::getHeight() const {
     return height * 1.0f / 4.0f;
 }

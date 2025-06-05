@@ -24,12 +24,11 @@ ServerGame::ServerGame(void)
         npcData.insert(pair<unsigned int, NPCState>(i, npc));
     }
 
-    ServerGame::minigamePlatforms.clear();
     // texture is not sent by server; client determines this.
 
     float refW = 2880.0f;
     float refH = 1800.0f;
-
+    std::vector<Platform> minigamePlatforms;
     minigamePlatforms.emplace_back((330.0f / refW), (1700.0f / refH), (200.0f / refW), (27.0f / refH), 0);//1
     minigamePlatforms.emplace_back((0.0f   / refW), (1475.0f / refH), (270.0f / refW), (27.0f / refH), 0); // 2
     minigamePlatforms.emplace_back((0.0f   / refW), (1595.0f / refH), (360.0f / refW), (32.0f / refH), 0); // 3
@@ -40,6 +39,8 @@ ServerGame::ServerGame(void)
     minigamePlatforms.emplace_back((520.0f / refW), (750.0f / refH), (410.0f / refW), (54.0f / refH), 0); // 8
     minigamePlatforms.emplace_back((1400.0f / refW), (555.0f / refH), (480.0f / refW), (55.0f / refH), 0); // 9
     minigamePlatforms.emplace_back((2270.0f / refW), (510.0f / refH), (480.0f / refW), (37.0f / refH), 0); // 10
+
+    ServerGame::minigame = MiniGameState(refW, refH, minigamePlatforms);
 }
 
 void ServerGame::update()
@@ -155,8 +156,13 @@ void ServerGame::receiveFromClients() {
                     KeyPacket* keyPacket = dynamic_cast<KeyPacket*>(packet.get());
                     printf("server recieved key input packet from client\n");
                     if (keyPacket) {
-                        
-                        if (player->currentState != PLAYING) {
+                        if (player->currentState == IN_MINIGAME) {
+                            if(ServerLogic::processMovement(recievedMovementKeys, keyPacket->key_type)) {
+                                player->minigameCharacter.handleInput(keyPacket->key_type);
+                            }
+                            sendMinigameCharacterPacket(iter->first);
+                        }
+                        else if (player->currentState != PLAYING) {
                             printf("recieved gui input\n");
                             player->handleGuiInput(keyPacket->key_type);
                             sendGuiUpdate(iter->first, false);
@@ -304,14 +310,14 @@ void ServerGame::sendInitMinigamePacket(unsigned int client_id) {
     InitMinigamePacket packet;
     packet.packet_type = INIT_MINIGAME;
 
-    packet.numPlatforms = minigamePlatforms.size();
+    packet.numPlatforms = minigame.platforms.size();
 
     for(int i = 0; i < packet.numPlatforms; i++) {
-        std::cout << "Sending platform: " << minigamePlatforms[i].x << ", " << minigamePlatforms[i].y << ", " << minigamePlatforms[i].width << ", " << minigamePlatforms[i].height << std::endl;
-        packet.platformX.push_back(minigamePlatforms[i].x);
-        packet.platformY.push_back(minigamePlatforms[i].y);
-        packet.platformWidth.push_back(minigamePlatforms[i].width);
-        packet.platformHeight.push_back(minigamePlatforms[i].height);
+        std::cout << "Sending platform: " << minigame.platforms[i].x << ", " << minigame.platforms[i].y << ", " << minigame.platforms[i].width << ", " << minigame.platforms[i].height << std::endl;
+        packet.platformX.push_back(minigame.platforms[i].x);
+        packet.platformY.push_back(minigame.platforms[i].y);
+        packet.platformWidth.push_back(minigame.platforms[i].width);
+        packet.platformHeight.push_back(minigame.platforms[i].height);
     }
 
     const unsigned int packet_size = packet.getSize();
@@ -388,6 +394,25 @@ void ServerGame::sendStateUpdate() {
     std::vector<char> packet_data(packet_size);
     packet.serialize(packet_data.data());
     network->sendToAll(packet_data.data(), packet_size);
+}
+
+void ServerGame::sendMinigameCharacterPacket(unsigned int client_id) {
+    printf("Sending minigame character state to %d\n", client_id);
+    PlayerData* player = playersData[client_id];
+
+    MinigameCharacterPacket packet;
+    packet.packet_type = MINIGAME_CHARACTER;
+
+    packet.x = player->minigameCharacter.x;
+    packet.y = player->minigameCharacter.y;
+    packet.facingRight = player->minigameCharacter.facingRight;
+    packet.isFinished = player->minigameCharacter.isFinished;
+
+    const unsigned int packet_size = packet.getSize();
+    std::vector<char> packet_data(packet_size);
+    packet.serialize(packet_data.data());
+
+    network->sendToOne(client_id, packet_data.data(), packet_size);
 }
 
 void ServerGame::sendGuiUpdate(unsigned int client_id, bool sendAll) {

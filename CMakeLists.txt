@@ -20,6 +20,7 @@ set(
     packets/NPCPacket.cpp
     packets/KeyPacket.cpp
     packets/StateUpdatePacket.cpp
+    packets/MinigameCharacterPacket.cpp
     packets/PacketFactory.cpp
     src/Camera.cpp
     src/Cube.cpp
@@ -49,6 +50,7 @@ set(
     packets/NPCPacket.h
     packets/KeyPacket.h
     packets/StateUpdatePacket.h
+    packets/MinigameCharacterPacket.h
     packets/PacketFactory.h
     include/core.h
     include/Camera.h

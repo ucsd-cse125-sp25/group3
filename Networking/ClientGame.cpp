@@ -53,6 +53,9 @@ ClientGame::ClientGame()
     //std::cout << "Sending Init Packet\n";
     sendInitPacket();
     //std::cout << "Init Packet sent\n";
+
+    ClientGame::minigameCharacter = MinigameCharacter(0,0,"../minigame/assets/thief1_right.png", "../minigame/assets/thief1_left.png");
+    client_logic::miniGame.player = &minigameCharacter;
 }
 
 void ClientGame::sendPacket(Packet& packet) {
@@ -110,6 +113,7 @@ void ClientGame::update()
         client_logic::handleUserInput(window);
         client_logic::setMainGameWindow(window);
     } else if (Window::currentState == IN_MINIGAME) {
+        client_logic::handleUserInput(window);
         if (!client_logic::miniGameInitialized) {
             client_logic::miniGame.init(window, client_logic::miniGamePlatformsServer);
             client_logic::miniGameInitialized = true;
@@ -119,7 +123,7 @@ void ClientGame::update()
         client_logic::miniGame.update(window);
         client_logic::miniGame.render();
 
-        if (client_logic::miniGame.isFinished()) {
+        if (minigameCharacter.isFinished) {
             std::cout << "minigame finished" << std::endl;
             client_logic::miniGame.cleanup();
             Window::currentState = PLAYING; 
@@ -181,6 +185,12 @@ void ClientGame::update()
                 }
                 // Window::render(window);
                 // Window::cube->update();
+                break;
+            }
+            case MINIGAME_CHARACTER: {
+                printf("minigame character packet from server\n");
+                MinigameCharacterPacket* mcPacket = dynamic_cast<MinigameCharacterPacket*>(packet.get());
+                minigameCharacter.update(*mcPacket);
                 break;
             }
             case END_GAME: {

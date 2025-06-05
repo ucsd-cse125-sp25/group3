@@ -103,6 +103,53 @@ class ArtifactState {
         void saveToPacket(StateUpdatePacket& packet);
 };
 
+class MinigameCharacterState;
+
+class MiniGameState {
+    friend class ServerGame;
+public:
+    MiniGameState();
+    MiniGameState(int windowWidth, int windowHeight, std::vector<Platform> platforms);
+
+    void updateCharacterPosition(MinigameCharacterState* character, float x, float y);
+    void resetCharacter(MinigameCharacterState* character);
+
+private:
+    std::vector<Platform> platforms;
+    int windowWidth;
+    int windowHeight;
+    bool finished;
+};
+
+class MinigameCharacterState {
+    friend class MiniGameState;
+    friend class ServerGame;
+public:
+    MinigameCharacterState();
+    MinigameCharacterState(float x, float y);
+    void handleInput(KeyType key);
+    void update();
+
+private:
+    MiniGameState* minigame;
+    float x, y;
+    float vx = 0.0f;
+    float vy = 0.0f;
+    float speed = 1.0f;
+    bool facingRight = false;
+    bool isFinished = false;
+    float timeOnLastPlatform = 0.0f;
+
+    float gravity = 510.f; 
+    float jumpVelocity = -550.f;
+    bool isOnGround = true;     
+
+    //TODO: figure out ratio
+    int width = 5.0f;
+    int height = 10.0f;
+};
+
+
 class PlayerData {
     public:
         bool stateChanged = false;
@@ -110,6 +157,7 @@ class PlayerData {
         CubeState cube;
         Camera camera;
         Camera miniMapCam;
+        MinigameCharacterState minigameCharacter;
         int windowWidth;
         int windowHeight;
         bool initialized = false;

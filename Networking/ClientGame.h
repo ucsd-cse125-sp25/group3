@@ -15,6 +15,7 @@ class ClientGame
 public:
     GLFWwindow* window;
     ClientNetwork* network; 
+    MinigameCharacter minigameCharacter;
 
     ClientGame();
     void sendPendingPackets();

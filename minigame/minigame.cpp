@@ -11,7 +11,7 @@ GLuint quadShader = 0;
 GLuint characterShader = 0;
 
 MiniGame::MiniGame() 
-    : player(nullptr), backgroundTex(0), windowWidth(0), windowHeight(0), finished(false) {}
+    : player(nullptr), backgroundTex(0), windowWidth(0), windowHeight(0){}
 
 MiniGame::~MiniGame() {
     cleanup();
@@ -34,7 +34,6 @@ void MiniGame::init(GLFWwindow* window, std::vector<Platform> platformsToInit) {
     backgroundTex = loadTexture("../minigame/assets/background.png");
     if (backgroundTex == 0) {
         std::cerr << "[MiniGame] Failed to load background!" << std::endl;
-        finished = true;
         return;
     }
 
@@ -45,7 +44,6 @@ void MiniGame::init(GLFWwindow* window, std::vector<Platform> platformsToInit) {
     unsigned char* data = stbi_load("../minigame/assets/thief1_right.png", &charW, &charH, &ch, 4);
     if (!data) {
         std::cerr << "Failed to load character texture!\n";
-        finished = true;
         return;
     }
     stbi_image_free(data);
@@ -61,9 +59,9 @@ void MiniGame::init(GLFWwindow* window, std::vector<Platform> platformsToInit) {
     float posX = windowWidth - drawW;
     float posY = windowHeight - drawH;
 
-    player = new Character(posX, posY, 
+    /* player = new MinigameCharacter(posX, posY, 
         "../minigame/assets/thief1_right.png", 
-        "../minigame/assets/thief1_left.png");
+        "../minigame/assets/thief1_left.png"); */
 
     for (int i = 0; i < platformsToInit.size(); i++) {
         serverPlatforms.emplace_back(platformsToInit[i]);
@@ -71,38 +69,9 @@ void MiniGame::init(GLFWwindow* window, std::vector<Platform> platformsToInit) {
 }
 
 void MiniGame::update(GLFWwindow* window) {
-    std::cout << "[MiniGame] rendering frame" << std::endl;
+    //std::cout << "[MiniGame] rendering frame" << std::endl;
     glfwGetFramebufferSize(window, &windowWidth, &windowHeight); //in case window was resized
     updateMinigamePlatforms();
-    if (!player) return;
-
-    player->handleInput(window);
-    player->update(1.0f / 60.0f, windowHeight, windowWidth, platforms);
-
-
-    Platform& lastPlatform = platforms.back();
-
-    float px = player->getX();
-    float py = player->getY();
-    float pw = player->getWidth();
-    float ph = player->getHeight();
-
-    float lx = lastPlatform.getX();
-    float ly = lastPlatform.getY();
-    float lw = lastPlatform.getWidth();
-
-    bool onPlatform = 
-    py + ph >= ly && py + ph <= ly + 15 &&  
-    px + pw >= lx && px <= lx + lw;
-
-    if (onPlatform) {
-        timeOnLastPlatform += 1.0f / 60.0f; 
-        if (timeOnLastPlatform >= 2.0f) {
-            finished = true;
-        }
-    } else {
-        timeOnLastPlatform = 0.0f;
-    }
 }
 
 void MiniGame::render() {
@@ -127,18 +96,18 @@ void MiniGame::render() {
 
 void MiniGame::updateMinigamePlatforms() {
     platforms.clear();
-    std::cout << "Window width: " << windowWidth << ", Window height: " << windowHeight << std::endl;
+    //std::cout << "Window width: " << windowWidth << ", Window height: " << windowHeight << std::endl;
     for(int i = 0; i < serverPlatforms.size(); i++) {
         Platform plat = Platform(serverPlatforms[i].x * windowWidth, serverPlatforms[i].y * windowHeight, serverPlatforms[i].width * windowWidth, serverPlatforms[i].height * windowHeight, 0);
         platforms.emplace_back(plat);
-        std::cout << "Added platform: " << plat.x  << ", " << plat.y << ", " << plat.width << ", " << plat.height << std::endl;
+        // platform: " << plat.x  << ", " << plat.y << ", " << plat.width << ", " << plat.height << std::endl;
     }
 }
 
 void MiniGame::cleanup() {
-    delete player;
+    /* delete player;
     player = nullptr;
-    platforms.clear();
+    platforms.clear(); */
     if (backgroundTex) {
         glDeleteTextures(1, &backgroundTex);
         backgroundTex = 0;
@@ -146,10 +115,6 @@ void MiniGame::cleanup() {
     glDeleteVertexArrays(1, &quadVAO);
     glDeleteBuffers(1, &quadVBO);
     glDeleteProgram(quadShader);
-}
-
-bool MiniGame::isFinished() const {
-    return finished;
 }
 
 GLuint MiniGame::loadTexture(const char* path) {

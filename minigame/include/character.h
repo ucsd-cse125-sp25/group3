@@ -1,5 +1,5 @@
-#ifndef CHARACTER_H
-#define CHARACTER_H
+#ifndef MINIGAMECHARACTER_H
+#define MINIGAMECHARACTER_H
 
 #include <GLFW/glfw3.h>
 #include <string>
@@ -7,12 +7,13 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "../packets/MinigameCharacterPacket.h"
 
-class Character {
+class MinigameCharacter {
 public:
-    Character(float x, float y, const std::string& leftTex, const std::string& rightTex);
-    void handleInput(GLFWwindow* window);
-    void update(float dt, int windowHeight, int windowWidth, const std::vector<Platform>& platforms);
+    MinigameCharacter();
+    MinigameCharacter(float x, float y, const std::string& leftTex, const std::string& rightTex);
+    void update(const MinigameCharacterPacket& packet);
     void draw();
 
     float getX() const;
@@ -21,6 +22,7 @@ public:
     float getHeight() const;
 
     GLuint getShader() const;
+    bool isFinished;
 
 
 private:
@@ -44,8 +46,6 @@ private:
     GLuint characterVBO = 0;
     GLuint characterShader = 0;
     void initRenderer();
-    
-    
 
     int width, height;
 };

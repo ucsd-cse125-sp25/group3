@@ -83,7 +83,6 @@ void client_logic::handleUserInput(GLFWwindow* window) {
     
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         key = KeyType::KEY_E;
-
     if (key != KeyType::NONE) {
         auto packet = std::make_unique<KeyPacket>();
         packet->packet_type = KEY_INPUT;

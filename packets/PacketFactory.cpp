@@ -34,6 +34,9 @@ std::unique_ptr<Packet> PacketFactory::createFromBuffer(char* data) {
         case INIT_MINIGAME:
             packet = std::make_unique<InitMinigamePacket>();
             break;
+        case MINIGAME_CHARACTER:
+            packet = std::make_unique<MinigameCharacterPacket>();
+            break;
         default:
             printf("Unknown packet type passed to PacketFactory: %d \n", packet->packet_type);
             return nullptr;

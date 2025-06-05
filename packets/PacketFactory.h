@@ -8,6 +8,7 @@
 #include "NPCPacket.h"
 #include "GuiUpdatePacket.h"
 #include "InitMinigamePacket.h"
+#include "MinigameCharacterPacket.h"
 
 #ifndef PACKETFACTORY_H // include guard
 #define PACKETFACTORY_H

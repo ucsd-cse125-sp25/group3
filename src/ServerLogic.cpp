@@ -284,8 +284,6 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact) {
 }
 
 bool PlayerData::init(InitPacket* packet) {
-
-    
     if (packet->character == NONE) {
         windowWidth = packet->windowWidth;
         windowHeight = packet->windowHeight;
@@ -305,6 +303,7 @@ bool PlayerData::init(InitPacket* packet) {
         miniMapCam.SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
         cube.type = packet->character;
         ServerLogic::availableChars[packet->character] = false;
+        minigameCharacter = MinigameCharacterState(0, 0);
         currentState = WAITING;
         return true;
     }
@@ -537,4 +536,158 @@ void ServerLogic::attemptGameStart(std::map<unsigned int, PlayerData*>& playersD
         }
     }
     gameStarted = true;
+}
+
+MinigameCharacterState::MinigameCharacterState()
+    : x(0), y(0), vx(0.f), speed(300.f), facingRight(true) {}
+
+MinigameCharacterState::MinigameCharacterState(float x, float y)
+    : x(x), y(y), vx(0.f), speed(300.f), facingRight(true) {}
+
+void MinigameCharacterState::handleInput(KeyType key) {
+    std::cout << "MinigameCharacterState :: Handling input" << std::endl;
+    if (key == KeyType::KEY_A) {
+        vx = -speed;
+        facingRight = false;
+    }
+    else if (key == KeyType::KEY_D) {
+        vx = speed;
+        facingRight = true;
+    }
+    else if (key == KeyType::KEY_SPACE) {
+        vy = jumpVelocity;
+        isOnGround = false;
+    }
+    update();
+}
+
+void MinigameCharacterState::update() {
+    std::cout << "MinigameCharacterState :: Handling update" << std::endl;
+    const float dt = 1.0f / 60.0f;  // fixed timestep for server
+
+    vy += gravity * dt;
+
+    float nextX = x + vx * dt;
+    float nextY = y + vy * dt;
+
+    minigame->updateCharacterPosition(this, nextX, nextY);
+
+    // Reset horizontal movement unless continuous input is held
+    vx = 0.0f;
+}
+
+MiniGameState::MiniGameState()
+    : windowWidth(0), windowHeight(0), platforms() {};
+
+MiniGameState::MiniGameState(int windowWidth, int windowHeight, std::vector<Platform> platforms)
+    : windowWidth(windowWidth), windowHeight(windowHeight), platforms(platforms) {}
+
+void MiniGameState::updateCharacterPosition(MinigameCharacterState* character, float nextX, float nextY) {
+    std::cout << "MiniGameState :: Calculating character position" << std::endl;
+    const float drawW = character->width;
+    const float drawH = character->height;
+
+    float finalX = nextX;
+    float finalY = nextY;
+
+    //character->isOnGround = false;
+
+    std::cout << "MiniGameState :: About to calculate platforms " << std::endl;
+    for (int i = 0 ; i < platforms.size(); i++) {
+        std::cout << "MiniGameState :: calculating platform " << i << std::endl;
+        const float margin = 20.0f;
+        bool isFalling = character->vy >= 0.f;
+        bool isJumping = character->vy < 0.f;
+
+        // Horizontal and vertical overlap checks
+        bool horizontalOverlap = (finalX + drawW > platforms[i].x) && (finalX < platforms[i].x + platforms[i].width);
+        bool verticalContact = (character->y + drawH <= platforms[i].y + margin) && (finalY + drawH >= platforms[i].y);
+
+        // Landing on top of platform
+        if (isFalling && horizontalOverlap && verticalContact) {
+            finalY = platforms[i].y - drawH;
+            character->vy = 0.f;
+            character->isOnGround = true;
+        }
+
+        bool verticalOverlap = (finalY + drawH > platforms[i].y) && (finalY < platforms[i].y + platforms[i].height);
+        bool hittingLeft = (finalX + drawW > platforms[i].x) && (character->x + drawW <= platforms[i].x);
+        bool hittingRight = (finalX < platforms[i].x + platforms[i].width) && (character->x >= platforms[i].x + platforms[i].width);
+
+        // Left/Right wall collision
+        if (verticalOverlap && hittingLeft) {
+            finalX = platforms[i].x - drawW;
+            character->vx = 0.f;
+        } else if (verticalOverlap && hittingRight) {
+            finalX = platforms[i].x + platforms[i].width;
+            character->vx = 0.f;
+        }
+
+        // Hitting bottom of a platform
+        bool bottomContact = (character->y >= platforms[i].y + platforms[i].height) && (finalY < platforms[i].y + platforms[i].height);
+        if (isJumping && horizontalOverlap && bottomContact) {
+            finalY = platforms[i].y + platforms[i].height;
+            character->vy = 0.f;
+        }
+    }
+
+    character->x = finalX;
+    character->y = finalY;
+
+    // make sure character doesn't go out of bounds
+    if (character->x < 0.0f) {
+        character->x = 0.0f;
+        character->vx = 0.0f;
+    }
+    if (character->x + drawW > windowWidth) {
+        character->x = windowWidth - drawW;
+        character->vx = 0.0f;
+    }
+
+    if (character->y + drawH > windowHeight) {
+        character->y = windowHeight - drawH;
+        character->vy = 0.0f;
+        character->isOnGround = true;
+    }
+
+    std::cout << "MiniGameState :: new x position " << character->x << ", new y position " << character->y << std::endl;
+
+    // check if player has finished game
+    Platform& lastPlatform = platforms.back();
+
+    float px = character->x;
+    float py = character->y;
+    float pw = character->width;
+    float ph = character->height;
+
+    float lx = lastPlatform.x;
+    float ly = lastPlatform.y;
+    float lw = lastPlatform.width;
+
+    bool onPlatform = 
+    py + ph >= ly && py + ph <= ly + 15 &&  
+    px + pw >= lx && px <= lx + lw;
+
+    if (onPlatform) {
+        character->timeOnLastPlatform += 1.0f / 60.0f; 
+        if (character->timeOnLastPlatform >= 2.0f) {
+            finished = true;
+        }
+    } else {
+        character->timeOnLastPlatform = 0.0f;
+    }
+    std::cout << "MiniGameState :: Calculations completed" << std::endl;
+}
+
+void MiniGameState::resetCharacter(MinigameCharacterState* character) {
+    std::cout << "MiniGameState :: Character reset" << std::endl;
+    character->x = windowWidth - character->width;
+    character->y = windowHeight - character->height;
+    character->vx = 0.0f;
+    character->vy = 0.0f;
+    character->speed = 1.0f;
+    character->facingRight = false;
+    character->isFinished = false;
+    character->isOnGround = true;
+    character->timeOnLastPlatform = 0.0f;
 }

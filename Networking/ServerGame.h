@@ -16,6 +16,7 @@ public:
     void receiveFromClients();
     void sendActionPackets();
     void sendEchoPackets(std::string);
+    void sendMinigameCharacterPacket(unsigned int client_id);
     void sendInitPlayerState(unsigned int client_id);
     void sendInitNPCState(unsigned int client_id);
     void sendStateUpdate();
@@ -38,5 +39,5 @@ private:
     std::map<unsigned int, PlayerData*> playersData;
     std::map<unsigned int, NPCState> npcData;
 
-    std::vector<Platform> minigamePlatforms;
+    MiniGameState minigame;
 };
