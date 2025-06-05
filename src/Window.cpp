@@ -467,7 +467,14 @@ void Window::displayCallback(GLFWwindow* window) {
     
         glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
     
-        character->handleInput(window, forward, right , museumAABBs);
+        // character->handleInput(window, forward, right , museumAABBs);
+        std::map<unsigned int, Character*> npcCharacters;
+        for (const auto& [id, npc] : Window::npcs) {
+            npcCharacters[id] = npc->npcModel;  
+        }
+
+        character->handleInput(window, forward, right, museumAABBs, characters, npcCharacters);
+
     }
     
     // Clear the color and depth buffers.

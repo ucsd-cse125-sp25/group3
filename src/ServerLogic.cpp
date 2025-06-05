@@ -153,7 +153,7 @@ void CubeState::update() {
 
 }
 
-glm::vec3 CubeState::getPosition() {
+glm::vec3 CubeState::getPosition()const {
     return glm::vec3(model[3]);  // extract translation from matrix
 }
 
@@ -206,7 +206,10 @@ void PlayerData::handleGuiInput(KeyType key) {
 }
 
 void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact, 
-    const std::map<std::string, AABB> museumAABBs,std::map<unsigned int, PlayerData*> playersData) {
+                const std::map<std::string, AABB> museumAABBs,
+                std::map<unsigned int, PlayerData*> playersData,
+                std::map<unsigned int, NPCState>& npcData) {
+
     glm::vec3 forwardDir = camera.GetForwardVector();
     forwardDir.y = 0.0f;  
     forwardDir = glm::normalize(forwardDir);
@@ -249,6 +252,38 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact,
                 break;
             }
         }
+
+        // other player AABB
+        // for (const auto& [id, data] : playersData) {
+        //     if (data == this) continue;
+        //     glm::vec3 otherPos = data->cube.getPosition();
+        //     AABB otherBox(
+        //         otherPos - glm::vec3(characterHalfSize),
+        //         otherPos + glm::vec3(characterHalfSize)
+        //     );
+        //     if (characterBox.intersects(otherBox)) {
+        //         std::cout<< "yes collide with other player  " <<std::endl;
+        //         collided = true;
+        //         break;
+        //     }
+        // }
+
+        // NPC AABB 
+        if (!collided) {
+        for (const auto& [id, npc] : npcData) {
+            glm::vec3 npcPos = npc.npcModel.getPosition();
+                AABB npcBox(
+                    npcPos - glm::vec3(characterHalfSize),
+                    npcPos + glm::vec3(characterHalfSize)
+                );
+                if (characterBox.intersects(npcBox)) {
+                    std::cout<< "yes collide with npc  " <<std::endl;
+                    collided = true;
+                    break;
+                }
+            }
+        }
+
     
         if (!collided) {
             cube.baseModel = glm::translate(cube.baseModel, movement);
@@ -343,8 +378,18 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact,
     }
 
     if (key == KeyType::KEY_C) {
-        // std::cout <<"C is pressed " << std::endl;
-        ServerLogic::processCapture(this, playersData);
+        ServerLogic::processCapture(this, playersData, npcData);
+                std::cout <<"C is pressed " << std::endl;
+        if (skillOnCooldown) {
+            auto now = std::chrono::steady_clock::now();
+            auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - skillCooldownStart);
+            if (elapsed.count() < 10) {
+                std::cout << "Skill on cooldown!" << std::endl;
+                return;
+            } else {
+                skillOnCooldown = false;
+            }
+        }
     }
 }
 
@@ -746,15 +791,17 @@ bool ServerLogic::winCondition(CubeState * player)
 
 }
 
-void ServerLogic::processCapture(PlayerData* capturer, std::map<unsigned int, PlayerData*>& playersData) {
+void ServerLogic::processCapture(PlayerData* capturer, std::map<unsigned int, PlayerData*>& playersData,std::map<unsigned int, NPCState>& npcData) {
     // std::cout << "enter process Capture function " << std::endl;
     if (capturer->cube.type != CHARACTER_4) return;
     // std::cout << "yes character_4 " << std::endl;
     glm::vec3 capturerPos = capturer->cube.getPosition();
-    float captureRange = 0.5f;
+    float captureRange = 0.3f;
+    bool capturedSomeone = false;
 
     for (auto& [id, player] : playersData) {
         if (player == capturer) continue;
+        if (capturedSomeone) break;
 
         CharacterType otherType = player->cube.type;
 
@@ -771,13 +818,37 @@ void ServerLogic::processCapture(PlayerData* capturer, std::map<unsigned int, Pl
             // }
             if (distance < captureRange && !player->cube.isCaptured) {
                 player->cube.isCaptured = true;
+                capturedSomeone = true;
                 std::cout << "Player " << id << " captured by hunter!" << std::endl;
+                
+                capturer->captureMessage = "Thief captured!";
+                capturer->captureMessageStart = std::chrono::steady_clock::now();
+                capturer->showCaptureMessage = true;
 
                 // TODO : 
                 // enter mini game 
                 // is Capture = true 
                 // after success in mini game, is capture = false 
+                break;
             }
+        }
+
+    }
+
+    for (auto& [id, npc] : npcData) {
+
+        glm::vec3 npcPos = npc.npcModel.getPosition();
+        float distance = glm::length(capturerPos - npcPos);
+        if (distance < captureRange) {
+            std::cout << "NPC " << id << " captured by hunter!" << std::endl;
+
+            capturer->captureMessage = "Sorry, wrong NPC!";
+            capturer->captureMessageStart = std::chrono::steady_clock::now();
+            capturer->showCaptureMessage = true;
+
+            capturer->skillOnCooldown = true;
+            capturer->skillCooldownStart = std::chrono::steady_clock::now();
+            break;
         }
 
     }

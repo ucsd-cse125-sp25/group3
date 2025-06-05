@@ -292,6 +292,32 @@ int main(void) {
             //     glfwPostEmptyEvent(); // Force frame refresh
             // }
             ImGui::End();
+
+            // if (Window::cubes.find(Window::client_id) != Window::cubes.end()){
+            //     Cube* myCube = Window::cubes[Window::client_id];
+            //     PlayerData* myData = playersData[Window::client_id];
+
+            //     if (myData->showCaptureMessage) {
+            //         auto now = std::chrono::steady_clock::now();
+            //         auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - myData->captureMessageStart);
+            //         if (elapsed.count() < 5) {
+            //             ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_Always);
+            //             ImGui::Begin("CaptureMessage", nullptr,
+            //                 ImGuiWindowFlags_NoTitleBar |
+            //                 ImGuiWindowFlags_NoResize |
+            //                 ImGuiWindowFlags_NoMove |
+            //                 ImGuiWindowFlags_NoScrollbar |
+            //                 ImGuiWindowFlags_NoBackground |
+            //                 ImGuiWindowFlags_NoCollapse);
+
+            //             ImGui::Text("%s", myData->captureMessage.c_str());
+            //             ImGui::End();
+            //         } else {
+            //             myData->showCaptureMessage = false;
+            //         }
+            //     }
+            // }
+
         }
 
         // UI Rendering

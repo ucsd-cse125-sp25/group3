@@ -9,7 +9,7 @@
 #include <map>
 #include "AnimState.h"
 #include "AABB_loader.h"
-#define TOTAL_PLAYERS 2
+#define TOTAL_PLAYERS 4
 #define NUM_TO_STOP 5
 
 enum ClientStatus {
@@ -60,7 +60,7 @@ class CubeState {
         CubeState(glm::vec3 cubeMin = glm::vec3(-1, -1, -1), glm::vec3 cubeMax = glm::vec3(1, 1, 1));
         void update();
         void printState();
-        glm::vec3 getPosition();
+        glm::vec3 getPosition()const ;
 
         void updateFromPacket(const InitPlayerPacket& packet);
         void saveToPacket(InitPlayerPacket& packet);
@@ -126,6 +126,13 @@ class ArtifactState {
 
 class PlayerData {
     public:
+        std::string captureMessage = "";
+        std::chrono::steady_clock::time_point captureMessageStart;
+        bool showCaptureMessage = false;
+
+        bool skillOnCooldown = false;
+        std::chrono::steady_clock::time_point skillCooldownStart;
+
         bool stateChanged = false;
         GameState currentState = INIT;
         CubeState cube;
@@ -147,7 +154,10 @@ class PlayerData {
         // ~PlayerData();
         bool init(InitPacket* packet, unsigned int client_id);
         void calculateNewPos(KeyType key, ArtifactState* artifact, 
-                const std::map<std::string, AABB> museumAABBs, std::map<unsigned int, PlayerData*> playersData);
+                const std::map<std::string, AABB> museumAABBs, 
+                std::map<unsigned int, PlayerData*> playersData,
+                std::map<unsigned int, NPCState>& npcData);
+
         void handleCursor(double currX, double currY);
         void resetCamera();
         void saveToPacket(unsigned int client_id, InitPlayerPacket& packet);
@@ -168,7 +178,7 @@ class ServerLogic {
         static bool processMovement(std::set<KeyType>& recievedMovementKeys, KeyType key);
         static void attemptGameStart(std::map<unsigned int, PlayerData*>& playersData);
         static bool winCondition(CubeState * player);
-        static void processCapture(PlayerData* capturer, std::map<unsigned int, PlayerData*>& playersData);
+        static void processCapture(PlayerData* capturer, std::map<unsigned int, PlayerData*>& playersData, std::map<unsigned int, NPCState>& npcData);
 
         // timer 
         static std::string getCurrentTimeString();

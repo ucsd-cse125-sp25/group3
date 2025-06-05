@@ -179,7 +179,9 @@ void ServerGame::receiveFromClients() {
                             player->handleGuiInput(keyPacket->key_type);
                             sendGuiUpdate(iter->first, false);
                         } else if (ServerLogic::processMovement(recievedMovementKeys, keyPacket->key_type)) {
-                            player->calculateNewPos(keyPacket->key_type, &artifact, ServerLogic::museumAABBs,playersData);
+
+                            player->calculateNewPos(keyPacket->key_type, &artifact, ServerLogic::museumAABBs,
+                                            playersData,npcData);
                         } 
                     } else {
                         printf("Error: Failed to cast to KeyPacket\n");
