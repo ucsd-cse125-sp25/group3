@@ -7,6 +7,9 @@ bool client_logic::availableChars[4];
 // ImGuiIO& client_logic::io;
 std::vector<std::unique_ptr<Packet>> client_logic::pendingPackets;
 
+// timer 
+std::string client_logic::currentTimeString = "05:00";
+
 
 void client_logic::updateAvailableChars(GuiUpdatePacket& packet) {
 
@@ -583,4 +586,33 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
     //     // glfwPostEmptyEvent(); // Force frame refresh
     // }
     // ImGui::End();
+
+    // // Show test countdown timer "Time: 04:59" at top center
+    ImVec2 screenSize = io->DisplaySize;
+    ImVec2 windowSize1 = ImVec2(200, 50);
+    ImVec2 windowPos = ImVec2((screenSize.x - windowSize1.x) * 0.5f, 20.0f);
+
+    ImGui::SetNextWindowPos(windowPos, ImGuiCond_Always);
+    ImGui::SetNextWindowSize(windowSize1);
+    ImGui::Begin("##TimeTest", nullptr,
+        ImGuiWindowFlags_NoTitleBar |
+        ImGuiWindowFlags_NoResize |
+        ImGuiWindowFlags_NoMove |
+        ImGuiWindowFlags_NoBackground |
+        ImGuiWindowFlags_AlwaysAutoResize);
+
+    // const char* timeText = "Time: 04:59";
+    // float textWidth = ImGui::CalcTextSize(timeText).x;
+    // ImGui::SetCursorPosX((windowSize1.x - textWidth) * 0.5f);
+    // ImGui::Text("%s", timeText);
+    // std::cout << "in client logic setmain game window :" <<currentTimeString<< std::endl;
+    std::string timeDisplay = "Time: " + currentTimeString;
+    float textWidth = ImGui::CalcTextSize(timeDisplay.c_str()).x;
+    ImGui::SetCursorPosX((windowSize1.x - textWidth) * 0.5f);
+    ImGui::Text("%s", timeDisplay.c_str());
+
+
+    ImGui::End();
+
 }
+

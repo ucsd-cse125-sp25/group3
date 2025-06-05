@@ -8,6 +8,10 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+
+#include <sys/socket.h>
+#include <unistd.h>
+#include <cstring>
 // #include "../minigame/minigame.h"
 // #include <GL/glew.h>
 // #include "../minigame/include/stb_image.h"
@@ -54,5 +58,11 @@ class client_logic {
         static void setCharacterSelectPage(GameState currState);
 
         static void setMainGameWindow(GLFWwindow* window);
+
+        static void receiveTimeFromServer(int serverSocket);
+
+        // timer
+        static std::string currentTimeString;
+
 };
 #endif

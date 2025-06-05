@@ -158,4 +158,9 @@ class ServerLogic {
         static void attemptGameStart(std::map<unsigned int, PlayerData*>& playersData);
         static bool winCondition(CubeState * player);
         static void processCapture(PlayerData* capturer, std::map<unsigned int, PlayerData*>& playersData);
+
+        // timer 
+        static std::string getCurrentTimeString();
+        static void sendTimeToClient(int clientSocket) ;
+
 };

@@ -9,7 +9,11 @@
 #include <iostream>
 // #include "minigame/include/window.h"
 
+#include <chrono>
 
+static std::chrono::steady_clock::time_point countdownStartTime;
+static const int totalCountdownSeconds = 1 * 10; 
+static bool countdownStarted = false;
 
 GameState currentState = START_MENU;
 // static MiniGame miniGame;
@@ -246,6 +250,39 @@ int main(void) {
             ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
             ImGui::Text("Current Game State: %s", GameStateToString(currentState));
             ImGui::End();
+
+            // Countdown Timer Window (default display)
+            if (countdownStarted) {
+                auto now = std::chrono::steady_clock::now();
+                int elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - countdownStartTime).count();
+                int timeLeft = std::max(0, totalCountdownSeconds - elapsed);
+            
+                int minutes = timeLeft / 60;
+                int seconds = timeLeft % 60;
+            
+                ImVec2 screenSize = ImGui::GetIO().DisplaySize;
+                ImVec2 windowSize = ImVec2(200, 50);
+                ImVec2 windowPos = ImVec2((screenSize.x - windowSize.x) * 0.5f, 20.0f);
+            
+                ImGui::SetNextWindowPos(windowPos, ImGuiCond_Always);
+                ImGui::SetNextWindowSize(windowSize);
+                ImGui::Begin("##TimeDisplay", nullptr,
+                    ImGuiWindowFlags_NoTitleBar |
+                    ImGuiWindowFlags_NoResize |
+                    ImGuiWindowFlags_NoMove |
+                    ImGuiWindowFlags_NoScrollbar |
+                    ImGuiWindowFlags_NoBackground |
+                    ImGuiWindowFlags_NoCollapse);
+            
+                char timeText[64];
+                snprintf(timeText, sizeof(timeText), "Time: %02d:%02d", minutes, seconds);
+                float textWidth = ImGui::CalcTextSize(timeText).x;
+                ImGui::SetCursorPosX((windowSize.x - textWidth) * 0.5f);
+                ImGui::Text("%s", timeText);
+            
+                ImGui::End();
+            }
+            
 
             ImGui::Begin("MINIGAME PLACEHOLDER", nullptr, ImGuiWindowFlags_NoResize);
             
@@ -536,6 +573,10 @@ int main(void) {
                 currentState = PLAYING;
                 stateChanged = true; // Flag for state transition
                 glfwPostEmptyEvent(); // Force frame refresh
+
+                // start timer
+                countdownStarted = true;
+                countdownStartTime = std::chrono::steady_clock::now();
             }
             ImGui::PopStyleVar(3);
             ImGui::PopStyleColor(4);

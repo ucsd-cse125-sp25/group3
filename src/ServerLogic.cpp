@@ -1,3 +1,13 @@
+#pragma once
+
+#include <chrono>
+#include <ctime>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <string>
 #include "ServerLogic.h"
 
 bool ServerLogic::gameStarted = false;
@@ -731,4 +741,17 @@ void ServerLogic::processCapture(PlayerData* capturer, std::map<unsigned int, Pl
         }
 
     }
+}
+
+std::string ServerLogic::getCurrentTimeString() {
+    auto now = std::chrono::system_clock::now();
+    auto in_time_t = std::chrono::system_clock::to_time_t(now);
+    std::stringstream ss;
+    ss << std::put_time(std::localtime(&in_time_t), "%H:%M:%S");
+    return ss.str();
+}
+
+void ServerLogic::sendTimeToClient(int clientSocket) {
+    std::string timeStr = getCurrentTimeString();
+    send(clientSocket, timeStr.c_str(), timeStr.length(), 0);
 }

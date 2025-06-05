@@ -203,6 +203,17 @@ void ClientGame::update()
                 printf("Client %u wins the game!\n", winPacket->winningClientID);
                 break;
             }
+            case TIME_UPDATE: {
+                TimeUpdate* timePacket = dynamic_cast<TimeUpdate*>(packet.get());
+                // std::cout << "yes in case time_update "<< std::endl;
+                if (timePacket) {
+                    // std::cout << "yes inside if timePacket  "<< std::endl;
+                    client_logic::currentTimeString = timePacket->timeString;
+                    // std::cout << "current time : in case time_update: " << client_logic::currentTimeString << std::endl;
+                }
+                break;
+            }
+
             default:
                 printf("client received unknown packet type from server\n");
                 break;
