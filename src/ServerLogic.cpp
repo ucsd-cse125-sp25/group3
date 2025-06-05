@@ -254,19 +254,19 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact,
         }
 
         // other player AABB
-        for (const auto& [id, data] : playersData) {
-            if (data == this) continue;
-            glm::vec3 otherPos = data->cube.getPosition();
-            AABB otherBox(
-                otherPos - glm::vec3(characterHalfSize),
-                otherPos + glm::vec3(characterHalfSize)
-            );
-            if (characterBox.intersects(otherBox)) {
-                std::cout<< "yes collide with other player  " <<std::endl;
-                collided = true;
-                break;
-            }
-        }
+        // for (const auto& [id, data] : playersData) {
+        //     if (data == this) continue;
+        //     glm::vec3 otherPos = data->cube.getPosition();
+        //     AABB otherBox(
+        //         otherPos - glm::vec3(characterHalfSize),
+        //         otherPos + glm::vec3(characterHalfSize)
+        //     );
+        //     if (characterBox.intersects(otherBox)) {
+        //         std::cout<< "yes collide with other player  " <<std::endl;
+        //         collided = true;
+        //         break;
+        //     }
+        // }
 
         // NPC AABB 
         if (!collided) {
