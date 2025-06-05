@@ -126,6 +126,13 @@ class ArtifactState {
 
 class PlayerData {
     public:
+        std::string captureMessage = "";
+        std::chrono::steady_clock::time_point captureMessageStart;
+        bool showCaptureMessage = false;
+
+        bool skillOnCooldown = false;
+        std::chrono::steady_clock::time_point skillCooldownStart;
+
         bool stateChanged = false;
         GameState currentState = INIT;
         CubeState cube;
@@ -149,7 +156,7 @@ class PlayerData {
         void calculateNewPos(KeyType key, ArtifactState* artifact, 
                 const std::map<std::string, AABB> museumAABBs, 
                 std::map<unsigned int, PlayerData*> playersData,
-                const std::map<unsigned int, NPCState>& npcData);
+                std::map<unsigned int, NPCState>& npcData);
 
         void handleCursor(double currX, double currY);
         void resetCamera();
@@ -171,7 +178,7 @@ class ServerLogic {
         static bool processMovement(std::set<KeyType>& recievedMovementKeys, KeyType key);
         static void attemptGameStart(std::map<unsigned int, PlayerData*>& playersData);
         static bool winCondition(CubeState * player);
-        static void processCapture(PlayerData* capturer, std::map<unsigned int, PlayerData*>& playersData);
+        static void processCapture(PlayerData* capturer, std::map<unsigned int, PlayerData*>& playersData, std::map<unsigned int, NPCState>& npcData);
 
         // timer 
         static std::string getCurrentTimeString();
