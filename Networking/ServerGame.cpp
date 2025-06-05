@@ -212,8 +212,8 @@ void ServerGame::receiveFromClients() {
                 packet.packet_type = WIN_STATE;
                 const unsigned int packet_size = packet.getSize();
                 std::vector<char> packet_data(packet_size);
-                packet.serialize(packet_data);
-                network->sendToAll(packet_data, packet_size);
+                packet.serialize(packet_data.data());
+                network->sendToAll(packet_data.data(), packet_size);
             }
 
             
