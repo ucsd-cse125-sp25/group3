@@ -349,8 +349,9 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact,
 }
 
 bool PlayerData::init(InitPacket* packet, unsigned int client_id) {
-
     
+    cube.baseModel = glm::translate(glm::mat4(1.0f), glm::vec3(((float) client_id) * 2.0f, 0.0f, 0.0f));
+
     if (packet->character == NONE) {
         windowWidth = packet->windowWidth;
         windowHeight = packet->windowHeight;
@@ -382,6 +383,7 @@ bool PlayerData::init(InitPacket* packet, unsigned int client_id) {
         currentState = WAITING;
         return true;
     }
+
     // initialized = false;
     // firstMouse = true;
     // altDown = false;
