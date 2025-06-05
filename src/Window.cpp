@@ -714,7 +714,7 @@ void Window::applyServerState(const StateUpdatePacket& packet) {
     glm::mat4 artifactModel;
     memcpy(glm::value_ptr(artifactModel), packet.artifactModel, sizeof(packet.artifactModel));
     artifact->setBaseModel(artifactModel);
-    std::cout << glm::to_string(artifactModel) << std::endl;
+    // std::cout << glm::to_string(artifactModel) << std::endl;
     artifact->setArtifactState(packet.artifact_state);
     artifact->update(animationPlayer);
 }

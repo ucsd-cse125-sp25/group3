@@ -4,7 +4,7 @@
 
 Artifact::Artifact()
 {
-    artifact_init = true;
+    artifact_init = 0;
     artifact_id = 0;
 }
 
@@ -27,11 +27,7 @@ void Artifact::addInitInstance(AnInstance* instance) {
 }
 
 void Artifact::setArtifactState(unsigned int state) {
-    if (state == 1) {
-        artifact_init = true;
-    } else {
-        artifact_init = false;
-    }
+    artifact_init = state;
 }
 
 void Artifact::setBaseModel(glm::mat4 model) {
@@ -45,11 +41,15 @@ void Artifact::setArtifactId(unsigned int id) {
 void Artifact::update(AnimationPlayer* animationPlayer) {
     for (int i = 0; i < initInstances.size(); i++){
         if (i == artifact_id){
-            if (artifact_init){
+            if (artifact_init == 0){
                 initInstances[i]->update(animationPlayer);
             } else {
-                std::cout << glm::to_string(baseModel) << std::endl;
-                movingInstances[i]->setMMat(baseModel);
+                if (artifact_init == 1){
+                    // std::cout << glm::to_string(baseModel) << std::endl;
+                    movingInstances[i]->setMMat(baseModel * glm::rotate(glm::scale(glm::mat4(1.0f), glm::vec3(0.5f)), 90.0f, glm::vec3(0, 1, 0)));
+                } else {
+                    movingInstances[i]->setMMat(baseModel);
+                }
                 movingInstances[i]->update(animationPlayer);
             }
         } else {
@@ -61,7 +61,7 @@ void Artifact::update(AnimationPlayer* animationPlayer) {
 void Artifact::draw(const glm::mat4& viewProjMtx, ShaderManager* shaderManager) {
     for (int i = 0; i < initInstances.size(); i++){
         if (i == artifact_id){
-            if (artifact_init){
+            if (artifact_init == 0){
                 // std::cout << "draw" << std::endl;
                 initInstances[artifact_id]->draw(viewProjMtx, shaderManager);
             } else {

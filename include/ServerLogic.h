@@ -104,7 +104,11 @@ class ArtifactState {
         unsigned int id;
         CubeState* holder;
         CubeState artifactModel;
+
+        float radius;
+
         ArtifactState();
+        void calcRadius(glm::vec3 min, glm::vec3 max);
         void init(glm::vec3 minCube, glm::vec3 maxCube, glm::vec3 position, unsigned int artifact_id);
         void update(bool putDown);
         void attemptGrab(CubeState * player);

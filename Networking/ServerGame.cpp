@@ -7,6 +7,7 @@
 #include <cassert>
 #include <set>
 #include <vector>
+#include <ctime>
 #define TICK 30 //in ms
 
 unsigned int ServerGame::client_id; 
@@ -27,7 +28,10 @@ ServerGame::ServerGame(void)
     ServerLogic::loadAABBs();
 
     std::string movingArtifacts[3] = {"horse", "skeleton", "lion"};
+    srand(time(NULL));
     unsigned int choice = (unsigned int) (rand() % 3);
+    std::cout << "check" << std::endl;
+    std::cout << choice << std::endl;
     AABB artifact_bb = ServerLogic::museumAABBs[movingArtifacts[choice]];
     artifact.init(artifact_bb.min, artifact_bb.max, artifact_bb.getCenter(), choice);
 }

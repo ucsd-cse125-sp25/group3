@@ -19,7 +19,7 @@ StateUpdatePacket::StateUpdatePacket(){
     length = 0;
     numClients = 0;
     numNPCs = 0;
-    artifact_state = 1;
+    artifact_state = 0;
 }
 
 unsigned int StateUpdatePacket::getSize() {

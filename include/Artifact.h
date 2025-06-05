@@ -12,7 +12,7 @@ private:
 public:
     std::vector<AnInstance*> movingInstances;
     std::vector<AnInstance*> initInstances;
-    bool artifact_init;
+    unsigned int artifact_init;
     unsigned int artifact_id;          
     glm::mat4 baseModel = glm::mat4(1.0f);  
 
