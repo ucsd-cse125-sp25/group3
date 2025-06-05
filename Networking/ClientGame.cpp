@@ -8,6 +8,18 @@
 #include <sys/stat.h>
 #endif
 
+#include <fstream>
+#include <iostream>
+#include <string>
+
+
+bool fileExists(const std::string& path) {
+    std::ifstream f(path);
+    return f.good();
+}
+
+
+
 ClientGame::ClientGame()
 {
     //std::cout << "Starting process of creating ClientGame\n";
@@ -96,6 +108,8 @@ ClientGame::ClientGame()
         std::cout << "SUCCESS: All menu textures loaded successfully" << std::endl;
     }
 
+
+
         
 
     ImGuiStyle& style = ImGui::GetStyle();
@@ -122,6 +136,29 @@ ClientGame::ClientGame()
     bool ret = client_logic::LoadTextureFromFile("../external/images/HeistAtTheMuseumTitle.png", &my_image_texture, &my_image_width, &my_image_height);
     #endif
     IM_ASSERT(ret);
+
+    #ifdef _WIN32
+    if (!audio.init()) {
+        std::cerr << "Audio init failed" << std::endl;
+    } else {
+        std::cout << "Audio initialized successfully" << std::endl;
+        audio.loadSound("bgm", "../../external/audio/sneak.wav");
+        audio.loadSound("button_click", "../../external/audio/click.wav");
+        audio.playSound("bgm");
+    }
+    #else
+     if (!audio.init()) {
+        std::cerr << "Audio init failed" << std::endl;
+    } else {
+        std::cout << "Audio initialized successfully" << std::endl;
+        audio.loadSound("bgm", "../external/audio/sneak.wav");
+        audio.loadSound("button_click", "../external/audio/click.wav");
+        audio.playSound("bgm");
+    }
+    #endif
+    IM_ASSERT(ret);
+
+   
 
     // send init packet
     //std::cout << "Sending Init Packet\n";
@@ -168,6 +205,7 @@ void ClientGame::sendPendingPackets() {
 void ClientGame::update()
 {
     glfwPollEvents();
+     // In game loop
 
     if (Window::currentState == START_MENU || Window::currentState == CHARACTER_SELECTION) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -179,7 +217,9 @@ void ClientGame::update()
     if (Window::currentState == START_MENU || Window::currentState == INIT) {
         client_logic::setStartPage(Window::currentState);
     } else if (Window::currentState == CHARACTER_SELECTION || Window::currentState == WAITING){
-        client_logic::setCharacterSelectPage(Window::currentState);
+        client_logic::handleUserInput(window);
+        client_logic::setCharacterSelectPage(Window::currentState, window, &audio);
+
     } else if (Window::currentState == PLAYING) {
         client_logic::handleUserInput(window);
         client_logic::setMainGameWindow(window);

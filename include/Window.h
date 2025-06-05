@@ -100,8 +100,10 @@ public:
     static void mouse_callback(GLFWwindow* window, int button, int action, int mods);
     static void cursor_callback(GLFWwindow* window, double currX, double currY);
 
+    static void setCharacterPreview(CharacterType selCharacter);
     static void render(GLFWwindow* window);
     static void renderCharacterPreview(GLFWwindow* window);
+    
 
     static void setClientID(const InitPlayerPacket& packet);
     static void addClient(unsigned int client, CharacterType type);

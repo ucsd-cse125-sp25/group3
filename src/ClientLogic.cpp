@@ -227,7 +227,7 @@ bool client_logic::LoadTextureFromFile(const char* file_name, GLuint* out_textur
 
 static std::map<std::string, float> hoverTime;
 
-void client_logic::RenderFancyTextButton(const char* label, bool& clicked, ImFont* fontNormal, ImFont* fontHover, bool& selected) {
+void client_logic::RenderFancyTextButton(const char* label, bool& clicked, ImFont* fontNormal, ImFont* fontHover, bool& selected, AudioManager* audio) {
     std::string labelKey(label);
 
     ImDrawList* drawList = ImGui::GetWindowDrawList();
@@ -241,6 +241,9 @@ void client_logic::RenderFancyTextButton(const char* label, bool& clicked, ImFon
     ImGui::InvisibleButton(label, textSize);
     bool hovered = ImGui::IsItemHovered();
     clicked = ImGui::IsItemClicked();
+    if (clicked && client_logic::audio_enabled) {
+        audio->playSound("button_click");
+    }
 
     // Hover pulse animation
     if (hovered) {
@@ -331,6 +334,7 @@ void client_logic::RenderFancyTextButton(const char* label, bool& clicked, ImFon
 
 void client_logic::setStartPage(GameState currState) {
     // TODO: Make load textures and fonts somewhere else (outside of the while loop)
+    
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -413,7 +417,7 @@ void client_logic::setStartPage(GameState currState) {
     ImGui::End();
 }
 
-void client_logic::setCharacterSelectPage(GameState currState, GLFWwindow* window) {
+void client_logic::setCharacterSelectPage(GameState currState, GLFWwindow* window, AudioManager* audio) {
 
     ImVec2 windowSize = io->DisplaySize;
     
@@ -437,7 +441,28 @@ void client_logic::setCharacterSelectPage(GameState currState, GLFWwindow* windo
         std::cerr << "Error: Window is not initialized!" << std::endl;
         return;
     }
+
+    // Window::render(window);
     Window::renderCharacterPreview(window);
+    static bool showInfo[4] = { false, false, false, false };
+    
+
+    const char* names[] = { "Geoffreybella", "Anthonyia", "Curtina", "Voelkernessa" };
+    const char* abilities[] = {
+        "Cloakfade – Become invisible for 3 seconds.",
+        "Ghoststep – Double speed for 3 seconds.",
+        "EchoVision – See all player positions on map for 5 seconds.",
+        "OmniScan – Periodically reveals all player positions."
+    };
+    const char* bios[] = {
+        "Geoffreybella grew up in foggy London, mastering illusions as a magician’s assistant. She now uses her tricks to disappear mid-heist.",
+        "Anthonyia, raised in Marseille, was once a getaway driver. Now she races past cameras and guards for the ultimate adrenaline rush.",
+        "Curtina, a former hacker prodigy, watches from the shadows, guiding teammates through laser fields with her surveillance skills.",
+        "Voelkernessa, a retired military strategist, turned the museum into her fortress. She knows its secrets better than its curators."
+    };
+
+
+    
 
 
     // Define style and background
@@ -472,6 +497,7 @@ void client_logic::setCharacterSelectPage(GameState currState, GLFWwindow* windo
             ImVec2(0, 0), ImVec2(1, 1));
     }
 
+
     // Apply warm vintage style
     ImGui::PushStyleColor(ImGuiCol_Button,        ImVec4(0.50f, 0.38f, 0.24f, 1.0f));  // tan
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.70f, 0.55f, 0.30f, 1.0f));  // lighter brown
@@ -490,7 +516,8 @@ void client_logic::setCharacterSelectPage(GameState currState, GLFWwindow* windo
     bool isSelected = true;
 
     static int selectedSlot = -1;
-    const char* roles[] = { "Thief 1", "Thief 2", "Thief 3", "Security Guard" };
+    const char* roles[] = { "Geoffreybella", "Anthonyia", "Curtina", "Voelkernessa" };
+
     // abilities and info (birthdays?)
 
     int roleCount = IM_ARRAYSIZE(roles);
@@ -502,7 +529,7 @@ void client_logic::setCharacterSelectPage(GameState currState, GLFWwindow* windo
     static CharacterType selCharacter;
     ImGui::Dummy(ImVec2(0.0f, 120.0f));  // smaller vertical space
 
-    client_logic::RenderFancyTextButton("Select Your Character", clicked, s_font_italic, s_font_bold, isSelected);
+    client_logic::RenderFancyTextButton("Select Your Character", clicked, s_font_italic, s_font_bold, isSelected, audio);
     ImGui::Dummy(ImVec2(0.0f, 50.0f));  // smaller vertical space
     if (clicked ) {
             selectedSlot = -1;
@@ -518,7 +545,7 @@ void client_logic::setCharacterSelectPage(GameState currState, GLFWwindow* windo
 
         if (!availableChars[i]) ImGui::BeginDisabled();
 
-        client_logic::RenderFancyTextButton(label.c_str(), clicked, s_font_italic, s_font_bold, isSelected);
+        client_logic::RenderFancyTextButton(label.c_str(), clicked, s_font_italic, s_font_bold, isSelected, audio);
 
         if (clicked && availableChars[i]) {
             selectedSlot = i;
@@ -527,6 +554,9 @@ void client_logic::setCharacterSelectPage(GameState currState, GLFWwindow* windo
 
         if (!availableChars[i]) ImGui::EndDisabled();
     }
+    Window::setCharacterPreview(selCharacter);
+    
+
 
 
     ImGui::Spacing();
@@ -562,32 +592,36 @@ void client_logic::setCharacterSelectPage(GameState currState, GLFWwindow* windo
         pendingPackets.push_back(std::move(packet));
     }
 
-ImGui::SameLine();
+    ImGui::SameLine();
 
-if (ImGui::Button("Randomize", randSize)) {
-    // Step 1: Gather indices of available characters
-    std::vector<int> availableIndices;
-    for (int i = 0; i < IM_ARRAYSIZE(roles); ++i) {
-        if (availableChars[i]) {
-            availableIndices.push_back(i);
+    if (ImGui::Button("Randomize", randSize)) {
+        // Step 1: Gather indices of available characters
+        std::vector<int> availableIndices;
+        for (int i = 0; i < IM_ARRAYSIZE(roles); ++i) {
+            if (availableChars[i]) {
+                availableIndices.push_back(i);
+            }
+        }
+
+        // Step 2: Pick a random one
+        if (!availableIndices.empty()) {
+            int randomIndex = availableIndices[rand() % availableIndices.size()];
+            selectedSlot = randomIndex;
+            selCharacter = static_cast<CharacterType>(randomIndex);
         }
     }
-
-    // Step 2: Pick a random one
-    if (!availableIndices.empty()) {
-        int randomIndex = availableIndices[rand() % availableIndices.size()];
-        selectedSlot = randomIndex;
-        selCharacter = static_cast<CharacterType>(randomIndex);
-    }
-}
-
-
     ImVec2 confirmSize = ImGui::CalcTextSize("Confirm");
     confirmSize.x += paddingX;
     confirmSize.y += paddingY;
 
-    float confirmX = (ImGui::GetWindowSize().x - confirmSize.x) * 0.5f;
-    ImGui::SetCursorPosX(confirmX);
+    ImVec2 storySize = ImGui::CalcTextSize("Story");
+    storySize.x += paddingX;
+    storySize.y += paddingY;
+
+    spacing = ImGui::GetStyle().ItemSpacing.x;
+    float totalConfirmRowWidth = confirmSize.x + storySize.x + spacing;
+    float rowOffsetX = (ImGui::GetWindowSize().x - totalConfirmRowWidth) * 0.5f;
+    ImGui::SetCursorPosX(rowOffsetX);
 
     ImGui::BeginDisabled(selectedSlot == -1);
     if (ImGui::Button("Confirm", confirmSize)) {
@@ -599,6 +633,12 @@ if (ImGui::Button("Randomize", randSize)) {
         pendingPackets.push_back(std::move(packet));
     }
     ImGui::EndDisabled();
+
+    ImGui::SameLine();
+
+    if (ImGui::Button(("Story##" + std::to_string(selectedSlot)).c_str(), storySize)) {
+        showInfo[selectedSlot] = true;
+    }
 
 
     if (s_font_italic) ImGui::PopFont();
@@ -622,10 +662,73 @@ if (ImGui::Button("Randomize", randSize)) {
         ImGuiWindowFlags_NoBackground);
 
     ImGui::SetCursorPosY(modelPanelSize.y * 0.45f);
-    ImGui::SetCursorPosX((modelPanelSize.x - ImGui::CalcTextSize("Character Model Placeholder").x) * 0.5f);
-    ImGui::Text("Character Model Placeholder");
+ImGui::SetCursorPosX((modelPanelSize.x - ImGui::CalcTextSize("How to Play").x) * 0.5f);
+ImGui::Text("How to Play");
+
+ImGui::Dummy(ImVec2(0.0f, 12.0f));
+ImGui::SetCursorPosX(modelPanelSize.x * 0.15f);
+ImGui::Text("- Use WASD or arrow keys to move");
+ImGui::SetCursorPosX(modelPanelSize.x * 0.15f);
+ImGui::Text("- Use mouse to adjust camera");
+ImGui::SetCursorPosX(modelPanelSize.x * 0.15f);
+ImGui::Text("- Press E to use ability");
+ImGui::SetCursorPosX(modelPanelSize.x * 0.15f);
+ImGui::Text("- Press F to pick up items");
+ImGui::SetCursorPosX(modelPanelSize.x * 0.15f);
+ImGui::Text("- Press C to catch the thief");
+
 
     ImGui::End();
+    ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::Text("Current Game State: %s", "START MENU");
+    ImGui::End();
+
+
+    for (int i = 0; i < 4; ++i) {
+        if (showInfo[i]) {
+            ImGui::OpenPopup(("Bio##" + std::to_string(i)).c_str());
+        }
+        ImGui::SetNextWindowSize(ImVec2(panelWidth, panelHeight));
+ImGui::SetNextWindowPos(leftCenteredPos);
+
+if (ImGui::BeginPopupModal(("Bio##" + std::to_string(i)).c_str(), &showInfo[i],
+    ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove)) {
+
+
+    // Overall styling
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));  // black background
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.8f, 0.8f, 0.8f, 1.0f));      // default text color (light gray)
+    ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(80 / 255.f, 46 / 255.f, 9 / 255.f, 1.0f));  // dark brown
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(30, 20));
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(14, 8));
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(20, 12));
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(1550, 0));  // wider
+
+    // Header (name) with tan color
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.627f, 0.478f, 0.333f, 1.0f));  // tan
+    ImGui::Text("%s", names[i]);
+    ImGui::PopStyleColor();
+
+    ImGui::Separator();
+    ImGui::TextWrapped("Ability: %s", abilities[i]);
+    ImGui::Spacing();
+    ImGui::TextWrapped("%s", bios[i]);
+
+    ImGui::Spacing();
+    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 100) * 0.5f);  // Center button
+    if (ImGui::Button("Close", ImVec2(100, 40))) {
+        showInfo[i] = false;
+        ImGui::CloseCurrentPopup();
+    }
+
+    // Cleanup
+    ImGui::PopStyleVar(4);
+    ImGui::PopStyleColor(3);
+
+    ImGui::EndPopup();
+    }
+    
+    }
 
 
 

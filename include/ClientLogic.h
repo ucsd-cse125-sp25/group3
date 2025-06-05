@@ -11,9 +11,13 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "AudioManager.h"
 // #include "../minigame/minigame.h"
 // #include <GL/glew.h>
 // #include "../minigame/include/stb_image.h"
+
+#include "AudioManager.h"
+
 
 #ifndef OS_TYPES
 #define OS_TYPES
@@ -63,13 +67,13 @@ class client_logic {
 
         static bool LoadTextureFromFile(const char* file_name, GLuint* out_texture, int* out_width, int* out_height);
 
-        static void RenderFancyTextButton(const char* label, bool& clicked, ImFont* fontNormal, ImFont* fontHover, bool& selected);
+        static void RenderFancyTextButton(const char* label, bool& clicked, ImFont* fontNormal, ImFont* fontHover, bool& selected, AudioManager* audio);
 
         static void RenderFancyTextButton(const char* label, bool& clicked, ImFont* fontNormal, ImFont* fontHover);
 
         static void setStartPage(GameState currState);
 
-        static void setCharacterSelectPage(GameState currState, GLFWwindow* window);
+        static void setCharacterSelectPage(GameState currState, GLFWwindow* window, AudioManager* audio);
 
         static void setMainGameWindow(GLFWwindow* window);
 };
