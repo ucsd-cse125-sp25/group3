@@ -8,10 +8,16 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-
-#include <sys/socket.h>
-#include <unistd.h>
+// #include <unistd.h>
 #include <cstring>
+
+#ifdef _WIN32 
+    // #include <winsock2.h>
+    #include <Windows.h>
+#endif
+    // #else 
+//     #include <sys/socket.h>
+// #endif
 // #include "../minigame/minigame.h"
 // #include <GL/glew.h>
 // #include "../minigame/include/stb_image.h"

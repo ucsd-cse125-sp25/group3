@@ -58,10 +58,11 @@ void ServerGame::update()
     TimeUpdate timePacket;
     strncpy(timePacket.timeString, timeStr.c_str(), sizeof(timePacket.timeString));
 
-    char timeData[timePacket.getSize()];
-    timePacket.serialize(timeData);
+    // char timeData[timePacket.getSize()];
+    std::vector<char> timeData(timePacket.getSize());
+    timePacket.serialize(timeData.data());
 
-    network->sendToAll(timeData, timePacket.getSize());
+    network->sendToAll(timeData.data(), timePacket.getSize());
 
 }
 

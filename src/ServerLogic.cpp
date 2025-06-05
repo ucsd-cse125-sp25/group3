@@ -5,8 +5,8 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include <sys/socket.h>
-#include <unistd.h>
+// #include <sys/socket.h>
+// #include <unistd.h>
 #include <string>
 #include "ServerLogic.h"
 
@@ -790,7 +790,7 @@ std::string ServerLogic::getCurrentTimeString() {
     return ss.str();
 }
 
-void ServerLogic::sendTimeToClient(int clientSocket) {
-    std::string timeStr = getCurrentTimeString();
-    send(clientSocket, timeStr.c_str(), timeStr.length(), 0);
-}
+// void ServerLogic::sendTimeToClient(int clientSocket) {
+//     std::string timeStr = getCurrentTimeString();
+//     send(clientSocket, timeStr.c_str(), timeStr.length(), 0);
+// }
