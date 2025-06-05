@@ -226,7 +226,8 @@ void ServerGame::receiveFromClients() {
                 }
                 case MINIGAME_FINISHED: {
                     MinigameFinishedPacket* finishedPacket = dynamic_cast<MinigameFinishedPacket*>(packet.get());
-                    //playersData[];
+                    playersData[finishedPacket->clientID]->currentState = PLAYING;
+                    break;
                 }
                 default: {
                     printf("error in packet types\n");
@@ -313,7 +314,12 @@ void ServerGame::receiveFromClients() {
         npc.update(ServerLogic::museumAABBs);
         npcData[npcIter->first] = npc;
     }
-    artifact.update(player->cube.isCaptured);
+    bool putDown = false;
+
+    if (artifact.holder != nullptr) {
+        putDown = artifact.holder->isCaptured;
+    }
+    artifact.update(putDown);
     
     // sendGuiUpdate();
 

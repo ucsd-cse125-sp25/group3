@@ -22,6 +22,7 @@ public:
     void sendPacket(Packet& packet);
     void sendInitPacket();
     void sendKeyPacket(KeyType);
+    void sendMinigameFinishedPacket();
     char network_data[MAX_PACKET_SIZE];
     void update();
 };

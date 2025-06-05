@@ -306,14 +306,14 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact,
         firstMouse = true;
     }
 
-    if (key == KeyType::KEY_SPACE) {
-        // printf("JUMPING\n");
-        if (cube.isGrounded) {
-            cube.isJumping = true;
-            cube.isGrounded = false;   
-            cube.jumpVelocity = cube.initialJumpVelocity;
-        }
-    }
+    // if (key == KeyType::KEY_SPACE) {
+    //     // printf("JUMPING\n");
+    //     if (cube.isGrounded) {
+    //         cube.isJumping = true;
+    //         cube.isGrounded = false;   
+    //         cube.jumpVelocity = cube.initialJumpVelocity;
+    //     }
+    // }
 
     if (key == KeyType::KEY_F) {
         artifact->attemptGrab(&cube);

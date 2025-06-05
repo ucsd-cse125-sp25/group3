@@ -84,6 +84,13 @@ void ClientGame::sendPacket(Packet& packet) {
     NetworkServices::sendMessage(network->ConnectSocket, packet_data.data(), packet_size);
 }
 
+void ClientGame::sendMinigameFinishedPacket() {
+    MinigameFinishedPacket packet;
+    packet.packet_type = MINIGAME_FINISHED;
+    packet.clientID = Window::client_id;
+    sendPacket(packet);
+}
+
 void ClientGame::sendInitPacket() {
     InitPacket packet;
     packet.packet_type = INIT_CONNECTION;
@@ -163,6 +170,7 @@ void ClientGame::update()
             client_logic::miniGame.cleanup();
             Window::currentState = PLAYING; 
             client_logic::miniGameInitialized = false;
+            sendMinigameFinishedPacket();
         }
     }
     

@@ -38,6 +38,8 @@ enum PacketTypes {
 
     INIT_MINIGAME = 13,
 
+    MINIGAME_FINISHED = 14
+
 }; 
 
 // Packet structure will be type (4 bytes), length (4 bytes), data (N bytes) 
