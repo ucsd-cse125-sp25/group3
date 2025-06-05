@@ -211,7 +211,7 @@ void ServerGame::receiveFromClients() {
                 Packet packet;
                 packet.packet_type = WIN_STATE;
                 const unsigned int packet_size = packet.getSize();
-                char packet_data[packet_size];
+                std::vector<char> packet_data(packet_size);
                 packet.serialize(packet_data);
                 network->sendToAll(packet_data, packet_size);
             }
