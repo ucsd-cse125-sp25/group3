@@ -710,6 +710,7 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
         }
         else if((int)gameResult == 1)//security guard win
         {
+            std::cout << "yes inside game result 11  "<< std::endl;
              #ifdef _WIN32
                 bool resultTextureLoaded_thief = client_logic::LoadTextureFromFile(
                     
