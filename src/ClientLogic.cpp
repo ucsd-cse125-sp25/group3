@@ -630,43 +630,43 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
         GLuint resultTexture_guard = 0;
         int resultImageWidth = 0;
         int resultImageHeight = 0;
-        static bool texturesLoaded = false;
-        static bool resultTextureLoaded_thief = false;
-        static bool resultTextureLoaded_guard = false;
+        //static bool texturesLoaded = false;
+        /*static bool resultTextureLoaded_thief = false;
+        static bool resultTextureLoaded_guard = false;*/
 
         if((int)gameResult == 0)
         {
             
-            if(!texturesLoaded)
-            {
+            /*if(!texturesLoaded)
+            {*/
                 #ifdef _WIN32
-                resultTextureLoaded_thief = client_logic::LoadTextureFromFile(
+                bool resultTextureLoaded_thief = client_logic::LoadTextureFromFile(
                     
                     "../../external/images/result_pic/thief_win.png",
                     &resultTexture_theif,
                     &resultImageWidth,
                     &resultImageHeight);
-                resultTextureLoaded_guard = client_logic::LoadTextureFromFile(
+                bool resultTextureLoaded_guard = client_logic::LoadTextureFromFile(
                     
                     "../../external/images/result_pic/guard_lose.png",
                     &resultTexture_guard,
                     &resultImageWidth,
                     &resultImageHeight);    
-                texturesLoaded = true;
+                //texturesLoaded = true;
                 #else 
-                resultTextureLoaded_thief = client_logic::LoadTextureFromFile(                
+                bool resultTextureLoaded_thief = client_logic::LoadTextureFromFile(                
                     "../external/images/result_pic/thief_win.png",
                     &resultTexture_theif,
                     &resultImageWidth,
                     &resultImageHeight);
-                resultTextureLoaded_guard = client_logic::LoadTextureFromFile(                
+                bool resultTextureLoaded_guard = client_logic::LoadTextureFromFile(                
                     "../external/images/result_pic/guard_lose.png",
                     &resultTexture_guard,
                     &resultImageWidth,
                     &resultImageHeight);
-                texturesLoaded = true;
+                //texturesLoaded = true;
                 #endif
-            }
+            //}
             
             if(resultTextureLoaded_thief && resultTextureLoaded_guard)
             {
