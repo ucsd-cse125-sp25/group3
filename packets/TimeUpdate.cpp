@@ -14,7 +14,7 @@ int TimeUpdate::serializePayload(char* data) {
 int TimeUpdate::deserializePayload(char* data){
     memcpy(timeString, data + Packet::getHeaderSize(), sizeof(timeString));
 
-    std::cout << "[Client deserialize] Raw string from packet: '" << timeString << "'" << std::endl;
+    // std::cout << "[Client deserialize] Raw string from packet: '" << timeString << "'" << std::endl;
     return getSize();
 }
 

@@ -200,7 +200,14 @@ void ClientGame::update()
             }
             case WIN_STATE: {
                 WinPacket* winPacket = dynamic_cast<WinPacket*>(packet.get());
-                printf("Client %u wins the game!\n", winPacket->winningClientID);
+                if (winPacket) {
+                    if (winPacket->winnerType == WinnerType::GUARD) {
+                        std::cout << "Security Guard Wins!" << std::endl;
+                    } else {
+                        std::cout << "Thief Wins! Winner ID: " << winPacket->winningClientID << std::endl;
+                    }
+                }
+                // printf("Client %u wins the game!\n", winPacket->winningClientID);
                 break;
             }
             case TIME_UPDATE: {

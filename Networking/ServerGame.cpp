@@ -239,6 +239,38 @@ void ServerGame::receiveFromClients() {
 
     }
 
+    // // Security Guard win: time reaches 00:00
+    // unsigned int guardClientID = -1;
+
+    // for (const auto& pair : playersData) {
+    //     if (pair.second->cube.type == CharacterType::CHARACTER_4) {
+    //         guardClientID = pair.first;
+    //         break;
+    //     }
+    // }
+
+    // if (ServerLogic::gameStarted && !winAlreadySent) {
+    //     using namespace std::chrono;
+    //     auto now = steady_clock::now();
+    //     int elapsed = duration_cast<seconds>(now - gameStartTime).count();
+    //     if (elapsed >= GAME_DURATION_SECONDS) {
+    //         winAlreadySent = true;
+    //         std::cout << "Security Guard Win (timeout)" << std::endl;
+
+    //         WinPacket packet;
+    //         packet.packet_type = WIN_STATE;
+    //         packet.winningClientID = -1;  // no one specific wins
+    //         packet.winnerType = WinnerType::GUARD;
+
+    //         const unsigned int packet_size = packet.getSize();
+    //         std::vector<char> packet_data(packet_size);
+    //         packet.serialize(packet_data.data());
+
+    //         network->sendToAll(packet_data.data(), packet_size);
+    //     }
+    // }
+
+
     std::map<unsigned int, NPCState>::iterator npcIter;
 
     for (npcIter=npcData.begin(); npcIter!=npcData.end(); npcIter++) {
@@ -271,7 +303,35 @@ void ServerGame::receiveFromClients() {
             // std::string current = getCurrentTimeString();  
             // strncpy(timePacket.timeString, current.c_str(), sizeof(timePacket.timeString));
             std::string current = getCurrentTimeString();  
-            std::cout << "current time  " << getCurrentTimeString() << std::endl;
+            // std::cout << "current time  " << getCurrentTimeString() << std::endl;
+
+            // whether time end 
+            if (current == "00:00" && !winAlreadySent) {
+                winAlreadySent = true;
+
+                unsigned int guardClientID = -1;
+                for (const auto& pair : playersData) {
+                    if (pair.second->cube.type == CharacterType::CHARACTER_4) {
+                        guardClientID = pair.first;
+                        break;
+                    }
+                }
+
+                if (guardClientID != -1) {
+                    WinPacket packet;
+                    packet.packet_type = WIN_STATE;
+                    packet.winningClientID = guardClientID;
+                    packet.winnerType = WinnerType::GUARD;
+
+                    const unsigned int packet_size = packet.getSize();
+                    std::vector<char> packet_data(packet_size);
+                    packet.serialize(packet_data.data());
+                    network->sendToAll(packet_data.data(), packet_size);
+
+                    printf("Security Guard Wins\n");
+                }
+            }
+
 
             strncpy(timePacket.timeString, current.c_str(), sizeof(timePacket.timeString) - 1); 
             timePacket.timeString[sizeof(timePacket.timeString) - 1] = '\0'; 

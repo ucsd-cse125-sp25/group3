@@ -35,7 +35,7 @@ std::unique_ptr<Packet> PacketFactory::createFromBuffer(char* data) {
             packet = std::make_unique<GuiUpdatePacket>();
             break;
         case TIME_UPDATE:
-            std::cout << "in case time_update" << std::endl;
+            // std::cout << "in case time_update" << std::endl;
             packet = std::make_unique<TimeUpdate>();
             break;
         default:
