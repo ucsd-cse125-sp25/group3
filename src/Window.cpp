@@ -124,7 +124,7 @@ bool Window::initializeObjects() {
 
     // Create a cube
     cube = new Cube();
-    artifact = new Artifact();
+
     cube->setCarriedArtifact(artifact);
     floor = new Cube(glm::vec3(-8, -2.03, -8), glm::vec3(8, -2.01, 8));
     // NPC = new NPCs(new Cube(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1)));
@@ -179,6 +179,7 @@ bool Window::initializeObjects() {
     // scene->addInstance(bro2);
 
     // std::cout << "instance2" << std::endl;
+    artifact = new Artifact();
 
     std::map<ModelType, std::string> artifacts_picked_up_state_toload = {
         {ModelType::Artefact_AsianPainting_Moving, "../models/items/artifacts/asianPainting_item.fbx"},
@@ -186,16 +187,12 @@ bool Window::initializeObjects() {
         {ModelType::Artefact_LionStatue_Moving, "../models/items/artifacts/lionStatue_item.fbx"},
     };
 
-    unsigned int temp_id = 0;
     for (auto it = artifacts_picked_up_state_toload.begin(); it != artifacts_picked_up_state_toload.end(); ++it) {
-        if (temp_id == artifact_id){
-            Model* temp = new Model(it->first, it->second, textureManager);
-            temp->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
-            modelManager->addModel(temp);
-            AnInstance* artifact_instance = new AnInstance(temp);
-            artifact->addMovingInstance(artifact_instance);
-        }
-        temp_id++;
+        Model* temp = new Model(it->first, it->second, textureManager);
+        temp->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
+        modelManager->addModel(temp);
+        AnInstance* artifact_instance = new AnInstance(temp);
+        artifact->addMovingInstance(artifact_instance);
     }
 
     std::map<ModelType, std::string> artifacts_put_down_state_toload = {
@@ -204,18 +201,12 @@ bool Window::initializeObjects() {
         {ModelType::Artefact_LionStatue, "../models/map/artefacts/LionStatue.fbx"},
     };
 
-    temp_id = 0;
     for (auto it = artifacts_put_down_state_toload.begin(); it != artifacts_put_down_state_toload.end(); ++it) {
         Model* temp = new Model(it->first, it->second, textureManager);
         temp->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
         modelManager->addModel(temp);
         AnInstance* artifact_instance = new AnInstance(temp);
-        if (temp_id != artifact_id) {
-            scene->addInstance(artifact_instance);
-        } else {
-            artifact->addInitInstance(artifact_instance);
-        }
-        temp_id++;
+        artifact->addInitInstance(artifact_instance);
     }
 
     if (false) {
@@ -423,6 +414,8 @@ void Window::idleCallback() {
 
         character->update(animationPlayer);
     }
+
+    artifact->update(animationPlayer);
     // Cam->Update(cube->getPosition());
 
     // cube->update();
@@ -520,6 +513,7 @@ void Window::displayCallback(GLFWwindow* window) {
 
     // floor->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false), true);
 
+    artifact->draw(Cam->GetViewProjectMtx(), shaderManager);
     scene->draw(Cam->GetViewProjectMtx(), shaderManager);
     // scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_anim);
     // scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
@@ -720,7 +714,9 @@ void Window::applyServerState(const StateUpdatePacket& packet) {
     glm::mat4 artifactModel;
     memcpy(glm::value_ptr(artifactModel), packet.artifactModel, sizeof(packet.artifactModel));
     artifact->setBaseModel(artifactModel);
+    std::cout << glm::to_string(artifactModel) << std::endl;
     artifact->setArtifactState(packet.artifact_state);
+    artifact->update(animationPlayer);
 }
 
 void Window::render(GLFWwindow* window) {
@@ -774,7 +770,7 @@ void Window::render(GLFWwindow* window) {
     // }
     floor->draw(viewProj_miniMap, shaderManager->getShader(RenderMode::BASE, false), true);
     scene->draw(viewProj_miniMap, shaderManager);
-    scene->draw(viewProj_miniMap, shaderManager);
+    artifact->draw(viewProj_miniMap, shaderManager);
 
     for (playerIter = characters.begin(); playerIter != characters.end(); playerIter++) {
         //printf("rendering cube for client %u\n", iter->first);
@@ -864,6 +860,8 @@ void Window::setInitState(const InitPlayerPacket& packet) {
     //     initialized = true;
     // }
     artifact_id = packet.artifact_id;
+    std::cout << "SET ARTIFACT ID" << std::endl;
+    artifact->artifact_id = artifact_id;
 }
 
 void Window::applyGuiUpdate(const GuiUpdatePacket& guiPacket) {

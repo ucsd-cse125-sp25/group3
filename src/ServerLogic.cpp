@@ -1,5 +1,7 @@
 #include "ServerLogic.h"
 
+#include "glm/gtx/string_cast.hpp"
+
 bool ServerLogic::gameStarted = false;
 bool ServerLogic::availableChars[4] = {true, true, true, true};
 std::map<std::string, AABB> ServerLogic::museumAABBs;
@@ -588,14 +590,14 @@ void ArtifactState::attemptGrab(CubeState * player) {
     //for now, don't allow someone to grab artifact if already held by someone else
     // printf("attempting grab by player %d\n", player->type);
     if (holder == nullptr) {
-        init_state = 0;
         glm::vec3 playerPos = player->getPosition();
         glm::vec3 artifactPos = artifactModel.getPosition();
         float distance = glm::length(playerPos - artifactPos);
         // std::cout << "Distance = " << distance << std::endl;
         // printf("distance: %f\n", distance);
-        if (distance < 1.5f) {
+        if (distance < 2.0f) {
             holder = player;
+            init_state = 0;
             // player->animState = AnimState::FT_Pick_Up;
             printf("artifact picked up\n");
         }

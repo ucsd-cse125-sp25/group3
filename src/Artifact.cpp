@@ -5,26 +5,25 @@
 Artifact::Artifact()
 {
     artifact_init = true;
-    movingInstance = nullptr;
-    initInstance = nullptr;
+    artifact_id = 0;
 }
 
 
 Artifact::~Artifact() {
-    if (movingInstance != nullptr) {
-        delete movingInstance;
+    for (AnInstance* i : movingInstances) {
+        delete i;
     }
-    if (initInstance != nullptr) {
-        delete initInstance;
+    for (AnInstance* i : initInstances) {
+        delete i;
     }
 }
 
 void Artifact::addMovingInstance(AnInstance* instance) {
-    movingInstance = instance;
+    movingInstances.push_back(instance);
 }
 
 void Artifact::addInitInstance(AnInstance* instance) {
-    initInstance = initInstance;
+    initInstances.push_back(instance);
 }
 
 void Artifact::setArtifactState(unsigned int state) {
@@ -39,21 +38,39 @@ void Artifact::setBaseModel(glm::mat4 model) {
     baseModel = model;
 }
 
+void Artifact::setArtifactId(unsigned int id) {
+    artifact_id = id;
+}
 
 void Artifact::update(AnimationPlayer* animationPlayer) {
-    if (artifact_init){
-        initInstance->update(animationPlayer);
-    } else {
-        movingInstance->setMMat(baseModel);
-        movingInstance->update(animationPlayer);
+    for (int i = 0; i < initInstances.size(); i++){
+        if (i == artifact_id){
+            if (artifact_init){
+                initInstances[i]->update(animationPlayer);
+            } else {
+                std::cout << glm::to_string(baseModel) << std::endl;
+                movingInstances[i]->setMMat(baseModel);
+                movingInstances[i]->update(animationPlayer);
+            }
+        } else {
+            initInstances[i]->update(animationPlayer);
+        }
     }
 }
 
 void Artifact::draw(const glm::mat4& viewProjMtx, ShaderManager* shaderManager) {
-    if (artifact_init){
-        initInstance->draw(viewProjMtx, shaderManager);
-    } else {
-        movingInstance->draw(viewProjMtx, shaderManager);
+    for (int i = 0; i < initInstances.size(); i++){
+        if (i == artifact_id){
+            if (artifact_init){
+                // std::cout << "draw" << std::endl;
+                initInstances[artifact_id]->draw(viewProjMtx, shaderManager);
+            } else {
+                // std::cout << "why" << std::endl;
+                movingInstances[artifact_id]->draw(viewProjMtx, shaderManager);
+            }
+        } else {
+            initInstances[i]->draw(viewProjMtx, shaderManager);
+        }
     }
 }
 

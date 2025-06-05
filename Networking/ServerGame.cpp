@@ -272,7 +272,6 @@ void ServerGame::sendEchoPackets(std::string response) {
 //cube baseModel, model
 //then camera floats
 void ServerGame::sendInitPlayerState(unsigned int client_id) {
-    printf("Sending initial player state");
     PlayerData* player = playersData[client_id];
 
     InitPlayerPacket packet;
