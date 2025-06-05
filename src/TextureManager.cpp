@@ -37,7 +37,8 @@ GLuint TextureManager::createTexture(unsigned char* data, int channels, int widt
         }
         // generate a mip map so small meshes don't look weird and we don't waste compute/memory
         glGenerateMipmap(GL_TEXTURE_2D);
-
+        
+        std::cout << "texture added" << std::endl;
         textures[name] = texID;
     }
     else
