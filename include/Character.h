@@ -7,6 +7,7 @@
 #include "../packets/InitPlayerPacket.h"
 #include "AABB.h"
 
+
 class Character {
 private:
 
@@ -34,8 +35,15 @@ public:
     void update(AnimationPlayer* animationPlayer);
 
     void triggerJump();
-    void handleInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir,
-        const std::map<std::string, AABB> museumAABBs);
+    // void handleInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir,
+    //     const std::map<std::string, AABB> museumAABBs);
+    void handleInput(GLFWwindow* window,
+                 const glm::vec3& forwardDir,
+                 const glm::vec3& rightDir,
+                 const std::map<std::string, AABB>& museumAABBs,
+                 const std::map<unsigned int, Character*>& otherPlayers,
+                 const std::map<unsigned int, Character*> npcs );
+
     glm::vec3 getPosition() const;
 
     void updateFromPacket(const InitPlayerPacket& packet, AnimationPlayer* animationPlayer);
