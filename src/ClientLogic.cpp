@@ -630,38 +630,47 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
         GLuint resultTexture_guard = 0;
         int resultImageWidth = 0;
         int resultImageHeight = 0;
+        static bool texturesLoaded = false;
+        bool resultTextureLoaded_thief = false;
+        bool resultTextureLoaded_guard = false;
 
         if((int)gameResult == 1)
         {
             
-            #ifdef _WIN32
-            bool resultTextureLoaded_thief = client_logic::LoadTextureFromFile(
-                
-                "../../external/images/result_pic/thief_win.png",
-                &resultTexture_theif,
-                &resultImageWidth,
-                &resultImageHeight);
-            bool resultTextureLoaded_guard = client_logic::LoadTextureFromFile(
-                
-                "../../external/images/result_pic/guard_lose.png",
-                &resultTexture_guard,
-                &resultImageWidth,
-                &resultImageHeight);    
-            #else 
-            bool resultTextureLoaded_thief = client_logic::LoadTextureFromFile(                
-                "../external/images/result_pic/thief_win.png",
-                &resultTexture_theif,
-                &resultImageWidth,
-                &resultImageHeight);
-            bool resultTextureLoaded_guard = client_logic::LoadTextureFromFile(                
-                "../external/images/result_pic/guard_lose.png",
-                &resultTexture_guard,
-                &resultImageWidth,
-                &resultImageHeight);
-            #endif
+            if(!texturesLoaded)
+            {
+                #ifdef _WIN32
+                bool resultTextureLoaded_thief = client_logic::LoadTextureFromFile(
+                    
+                    "../../external/images/result_pic/thief_win.png",
+                    &resultTexture_theif,
+                    &resultImageWidth,
+                    &resultImageHeight);
+                bool resultTextureLoaded_guard = client_logic::LoadTextureFromFile(
+                    
+                    "../../external/images/result_pic/guard_lose.png",
+                    &resultTexture_guard,
+                    &resultImageWidth,
+                    &resultImageHeight);    
+                texturesLoaded = true;
+                #else 
+                bool resultTextureLoaded_thief = client_logic::LoadTextureFromFile(                
+                    "../external/images/result_pic/thief_win.png",
+                    &resultTexture_theif,
+                    &resultImageWidth,
+                    &resultImageHeight);
+                bool resultTextureLoaded_guard = client_logic::LoadTextureFromFile(                
+                    "../external/images/result_pic/guard_lose.png",
+                    &resultTexture_guard,
+                    &resultImageWidth,
+                    &resultImageHeight);
+                texturesLoaded = true;
+                #endif
+            }
+            
             if(resultTextureLoaded_thief && resultTextureLoaded_guard)
             {
-                if (playerRole == CharacterType::CHARACTER_4)
+
                 ImGui::SetNextWindowPos(ImVec2(0, 0));
                 ImGui::SetNextWindowSize(io->DisplaySize);
 
@@ -676,7 +685,7 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
 
                 float maxDisplayWidth = io->DisplaySize.x;
                 float maxDisplayHeight = io->DisplaySize.y;
-                float scale = std::min(maxDisplayWidth / resultImageWidth, maxDisplayHeight / resultImageHeight);
+                float scale = (std::max)(maxDisplayWidth / resultImageWidth, maxDisplayHeight / resultImageHeight);
                 float displayWidth = resultImageWidth * scale;
                 float displayHeight = resultImageHeight * scale;
 
@@ -691,20 +700,16 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
                 {
                     ImGui::Image((ImTextureID)(intptr_t)resultTexture_theif, ImVec2(displayWidth, displayHeight));
                 }
+
+                ImGui::Text("Game End!!!!!");
+                ImGui::End();
             }
 
         }
        
 
-        // ImGui::Begin("Game End", nullptr,
-        // ImGuiWindowFlags_NoTitleBar |
-        // ImGuiWindowFlags_AlwaysAutoResize |
-        // ImGuiWindowFlags_NoMove |
-        // ImGuiWindowFlags_NoBackground);
+        
 
-        ImGui::Text("Game End!!!!!");
-
-        ImGui::End();
     }
 
 
