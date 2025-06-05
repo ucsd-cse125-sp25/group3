@@ -4,6 +4,7 @@
 #include <cstdlib>
 
 const char *ip = nullptr;
+// std::map<unsigned int, bool> ServerNetwork::clientRunning;
 
 ServerNetwork::ServerNetwork(void)
 {
@@ -152,6 +153,7 @@ bool ServerNetwork::acceptNewClient(unsigned int & id)
             setsockopt( ClientSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof( value ) );
             // insert new client into session id table
             sessions.insert( pair<unsigned int, SOCKET>(id, ClientSocket) );
+            clientRunning.insert(pair<unsigned int, bool>(id, true));
             return true;
         }
     #else
@@ -162,6 +164,7 @@ bool ServerNetwork::acceptNewClient(unsigned int & id)
         setsockopt( ClientSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof( value ) );
         // insert new client into session id table
         sessions.insert( pair<unsigned int, int>(id, ClientSocket) );
+        clientRunning.insert(pair<unsigned int, bool>(id, true));
         return true;
     }
     #endif
@@ -183,16 +186,19 @@ int ServerNetwork::receiveData(unsigned int client_id, char * recvbuf, int bufLe
         // if (currentSocket < 1) return 0;
         #endif
 
+        if (!clientRunning[client_id]) return 0;
+
         while (totalRead != bufLength) {
             iResult = NetworkServices::receiveMessage(currentSocket, recvbuf + totalRead, bufLength - totalRead);
             
             if (iResult == 0) {
                 printf("Connection closed\n");
                 #ifdef _WIN32
-                closesocket(currentSocket);
+                // closesocket(currentSocket);
                 #else
-                close(currentSocket);
+                // close(currentSocket);
                 #endif
+                clientRunning[client_id] = false;
                 return 0;
             } else if (iResult < 0 && totalRead == 0) { //nothing to read
                 return -1;
@@ -202,7 +208,6 @@ int ServerNetwork::receiveData(unsigned int client_id, char * recvbuf, int bufLe
             
         }
     }
-
     return totalRead;
 } 
 
@@ -220,6 +225,8 @@ void ServerNetwork::sendToAll(char * packets, int totalSize)
 
     for (iter = sessions.begin(); iter != sessions.end(); iter++)
     {
+        if (!clientRunning[iter->first]) break;
+
         int totSent = 0;
         currentSocket = iter->second;
 
@@ -229,18 +236,22 @@ void ServerNetwork::sendToAll(char * packets, int totalSize)
             #ifdef _WIN32
             if (iSendResult == SOCKET_ERROR) {
                 printf("send failed with error: %d\n", WSAGetLastError());
-                closesocket(currentSocket);
+                clientRunning[iter->first] = false;
+                break;
+                // closesocket(currentSocket);
                 // sessions[iter->first] = INVALID_SOCKET;
                 // break;
-                exit(1);
+                // exit(1);
             }
             #else
             if (iSendResult < 0) {
                 printf("sendToAll failed");
-                close(currentSocket);
+                clientRunning[iter->first] = false;
+                break;
+                // close(currentSocket);
                 // sessions[iter->first] = 0;
                 // break;
-                exit(1);
+                // exit(1);
             }
             #endif
             totSent += iSendResult;
@@ -257,6 +268,8 @@ void ServerNetwork::sendToOne(unsigned int client_id, char* packets, int totalSi
     std::map<unsigned int, int>::iterator iter;
     #endif
     int iSendResult;
+
+    if (!clientRunning[client_id]) return;
     currentSocket = sessions[client_id];
     int totSent = 0;
 
@@ -266,20 +279,23 @@ void ServerNetwork::sendToOne(unsigned int client_id, char* packets, int totalSi
         #ifdef _WIN32
         if (iSendResult == SOCKET_ERROR) {
             printf("send failed with error: %d\n", WSAGetLastError());
+            clientRunning[client_id] = false;
+            return;
             // return client_id;
-            closesocket(currentSocket);
+            // closesocket(currentSocket);
             // sessions[client_id] = INVALID_SOCKET;
             // return;
-            exit(1);
+            // exit(1);
         }
         #else
         if (iSendResult < 0) {
             printf("sendToAll failed");
-           
-            close(currentSocket);
+            clientRunning[client_id] = false;
+            return;
+            // close(currentSocket);
             // sessions[client_id] = 0;
             // return;
-            exit(1);
+            // exit(1);
         }
         #endif
         totSent+=iSendResult;

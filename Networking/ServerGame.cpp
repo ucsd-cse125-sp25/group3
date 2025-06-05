@@ -77,7 +77,7 @@ void ServerGame::receiveFromClients() {
         std::map<unsigned int, int>::iterator iter;
     #endif
     
-    for(iter = network->sessions.begin(); iter != network->sessions.end();) {
+    for(iter = network->sessions.begin(); iter != network->sessions.end(); iter++) {
         ClientStatus packetsDone = ONGOING;
         std::set<KeyType> recievedMovementKeys;
 
@@ -102,8 +102,8 @@ void ServerGame::receiveFromClients() {
             if (data_length == 0) {
                 printf("trying to disconnect client %u\n", iter->first);
                 // printf("Client %d has disconnected\n", iter->first);
-                playersData.erase(iter->first);
-                iter = network->sessions.erase(iter);
+                // playersData.erase(iter->first);
+                // iter = network->sessions.erase(iter);
                 packetsDone = DISCONNECT;
                 break;
             } else if (data_length == -1) { //no packets left
@@ -211,9 +211,9 @@ void ServerGame::receiveFromClients() {
             }
         }
         if (packetsDone == DISCONNECT)  {
-            disconnectClient(iter->first);
-            printf("Client %d has disconnected\n", iter->first);
-            iter = network->sessions.erase(iter);
+            // disconnectClient(iter->first);
+            // printf("Client %d has disconnected\n", iter->first);
+            // iter = network->sessions.erase(iter);
         } else {
             // player->calculateNewPos(recievedKeys, &artifact);
             player->update();
@@ -221,9 +221,11 @@ void ServerGame::receiveFromClients() {
             // player.camera.Update(player.cube.getPosition()); 
             // player.cube.update();
             // playersData[iter->first] = player;
-            iter++;
+            // iter++;
         }
     }
+
+    checkForDisconnects();
 
     if(artifact.holder != nullptr)
     {
@@ -367,6 +369,20 @@ void ServerGame::receiveFromClients() {
     }
 }
 
+void ServerGame::checkForDisconnects() {
+    std::map<unsigned int, bool>::iterator iter;
+
+    for (iter=network->clientRunning.begin(); iter!=network->clientRunning.end(); ) {
+
+        if (!network->clientRunning[iter->first]) {
+            disconnectClient(iter->first);
+            iter = network->clientRunning.erase(iter);
+        } else {
+            iter++;
+        }
+    }
+}
+
 //should specify id of who's disconnecting so other clients know to remove that client's data
 void ServerGame::disconnectClient(unsigned int client_id) {
     EndGamePacket packet;
@@ -378,6 +394,12 @@ void ServerGame::disconnectClient(unsigned int client_id) {
     network->sendToAll(packet_data.data(), packet_size);
     ServerLogic::availableChars[playersData[client_id]->cube.type] = true;
     playersData.erase(client_id);
+    #ifdef _WIN32
+    closesocket(network->sessions[client_id]);
+    #else 
+    close(network->sessions[client_id]);
+    #endif
+    network->sessions.erase(client_id);
 }
 
 void ServerGame::sendActionPackets()

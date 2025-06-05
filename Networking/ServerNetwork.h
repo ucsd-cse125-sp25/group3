@@ -45,6 +45,7 @@ public:
 
     // for error checking return values
     int iResult;
+    std::map<unsigned int, bool> clientRunning;
 
     // accept new connections
     bool acceptNewClient(unsigned int & id);

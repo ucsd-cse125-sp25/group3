@@ -42,6 +42,5 @@ class ClientNetwork {
 
         // ctor/dtor
         ClientNetwork(void);
-       
         int receivePackets(char *, int bufLength);
 };
