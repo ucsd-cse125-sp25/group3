@@ -429,7 +429,8 @@ void client_logic::setCharacterSelectPage(GameState currState) {
         ImGui::BeginDisabled(!availableChars[i]);
         if (ImGui::Button(label.c_str(), ImVec2(64, 64))) {
             selectedSlot = i;
-            selCharacter = static_cast<CharacterType>(i); // your own enum
+            selCharacter = static_cast<CharacterType>(i);
+            playerRole = selCharacter;// your own enum
         }
         ImGui::EndDisabled();
         ImGui::PopStyleColor();
@@ -692,8 +693,9 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
                 // float posX = (io->DisplaySize.x - displayWidth) * 0.5f;
                 // float posY = (io->DisplaySize.y - displayHeight) * 0.5f;
                 ImGui::SetCursorPos(ImVec2(0, 0));
-                std::cout << "characterrrrrr type :  " << client_logic::playerRole << std::endl;
-                if (client_logic::playerRole == 4)
+                std::cout << "characterrrrrr type :  " << playerRole << std::endl;
+                 //std::cout << "characterrrrrr type :  " << client_logic::playerRole << std::endl;
+                if (playerRole == 4)
                 {
                     std::cout << "security guard lose "<< std::endl;
                     ImGui::Image((ImTextureID)(intptr_t)resultTexture_guard, ImVec2(displayWidth, displayHeight));
@@ -763,8 +765,8 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
                     // float posX = (io->DisplaySize.x - displayWidth) * 0.5f;
                     // float posY = (io->DisplaySize.y - displayHeight) * 0.5f;
                     ImGui::SetCursorPos(ImVec2(0, 0));
-                    std::cout << "characterrrrrr type :  " << client_logic::playerRole << std::endl;
-                    if (client_logic::playerRole == 4)
+                    std::cout << "characterrrrrr type :  " << playerRole << std::endl;
+                    if (playerRole == 4)
                     {
                         std::cout << "security guard win "<< std::endl;
                         ImGui::Image((ImTextureID)(intptr_t)resultTexture_guard, ImVec2(displayWidth, displayHeight));
