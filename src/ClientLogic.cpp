@@ -695,7 +695,7 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
                 ImGui::SetCursorPos(ImVec2(0, 0));
                 std::cout << "characterrrrrr type :  " << playerRole << std::endl;
                  //std::cout << "characterrrrrr type :  " << client_logic::playerRole << std::endl;
-                if (playerRole == 4)
+                if (playerRole == 3)
                 {
                     std::cout << "security guard lose "<< std::endl;
                     ImGui::Image((ImTextureID)(intptr_t)resultTexture_guard, ImVec2(displayWidth, displayHeight));
@@ -766,7 +766,7 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
                     // float posY = (io->DisplaySize.y - displayHeight) * 0.5f;
                     ImGui::SetCursorPos(ImVec2(0, 0));
                     std::cout << "characterrrrrr type :  " << playerRole << std::endl;
-                    if (playerRole == 4)
+                    if (playerRole == 3)
                     {
                         std::cout << "security guard win "<< std::endl;
                         ImGui::Image((ImTextureID)(intptr_t)resultTexture_guard, ImVec2(displayWidth, displayHeight));
