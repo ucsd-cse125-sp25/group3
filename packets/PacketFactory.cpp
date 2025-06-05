@@ -34,6 +34,10 @@ std::unique_ptr<Packet> PacketFactory::createFromBuffer(char* data) {
         case GUI_UPDATE:
             packet = std::make_unique<GuiUpdatePacket>();
             break;
+        case TIME_UPDATE:
+            std::cout << "in case time_update" << std::endl;
+            packet = std::make_unique<TimeUpdate>();
+            break;
         default:
             printf("Unknown packet type passed to PacketFactory: %d \n", packet->packet_type);
             return nullptr;

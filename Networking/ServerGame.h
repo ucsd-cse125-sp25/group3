@@ -22,6 +22,11 @@ public:
     void disconnectClient(unsigned int client_id);
     void sendGuiUpdate(unsigned int client_id, bool sendAll);
 
+    std::chrono::time_point<std::chrono::steady_clock> gameStartTime;
+    const int GAME_DURATION_SECONDS = 300; // 5 minutes
+    std::string getCurrentTimeString() ;
+
+
 private:
 
    // IDs for the clients connecting for table in ServerNetwork 

@@ -38,6 +38,22 @@ void ServerGame::update()
         client_id++;
    }
    receiveFromClients();
+
+    // if (ServerLogic::gameStarted && gameStartTime.time_since_epoch().count() == 0) {
+    //     std::cout<< "yes in update set initial game start time " << std::endl;
+    //     gameStartTime = std::chrono::steady_clock::now();
+    // }
+
+    std::string timeStr = getCurrentTimeString();
+
+    TimeUpdate timePacket;
+    strncpy(timePacket.timeString, timeStr.c_str(), sizeof(timePacket.timeString));
+
+    char timeData[timePacket.getSize()];
+    timePacket.serialize(timeData);
+
+    network->sendToAll(timeData, timePacket.getSize());
+
 }
 
 void ServerGame::receiveFromClients() {
@@ -117,6 +133,7 @@ void ServerGame::receiveFromClients() {
                     } else {
                         sendGuiUpdate(iter->first, true);
                     }
+                    ServerGame::gameStartTime = std::chrono::steady_clock::now();
                     ServerLogic::attemptGameStart(playersData);
                     // if (player->initialized) {
                     //     ServerLogic::attemptGameStart(playersData);
@@ -241,6 +258,32 @@ void ServerGame::receiveFromClients() {
     // }
     if (ServerLogic::gameStarted) {
         sendStateUpdate();
+
+        static auto lastTimeBroadcast = std::chrono::steady_clock::now();
+        auto now = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - lastTimeBroadcast);
+
+        if (elapsed.count() >= 1) {
+
+            lastTimeBroadcast = now;
+
+            TimeUpdate timePacket;
+            // std::string current = getCurrentTimeString();  
+            // strncpy(timePacket.timeString, current.c_str(), sizeof(timePacket.timeString));
+            std::string current = getCurrentTimeString();  
+            std::cout << "current time  " << getCurrentTimeString() << std::endl;
+
+            strncpy(timePacket.timeString, current.c_str(), sizeof(timePacket.timeString) - 1); 
+            timePacket.timeString[sizeof(timePacket.timeString) - 1] = '\0'; 
+            std::cout << "[Server] Sending time: " << timePacket.timeString << std::endl;
+
+            const unsigned int packet_size = timePacket.getSize();
+            std::vector<char> packet_data(packet_size);
+            timePacket.serialize(packet_data.data());
+
+            network->sendToAll(packet_data.data(), packet_size);
+        }
+
     }
     
     auto orig_diff = std::chrono::steady_clock::now() - start;
@@ -411,4 +454,18 @@ void ServerGame::sendGuiUpdate(unsigned int client_id, bool sendAll) {
         // printf("sending state: %d\n", player->currentState);
         network->sendToOne(playerIter->first, packet_data.data(), packet_size);
     }
+}
+
+std::string ServerGame::getCurrentTimeString() {
+    using namespace std::chrono;
+    auto now = steady_clock::now();
+    int elapsed = duration_cast<seconds>(now - gameStartTime).count();
+    int remaining = std::max(GAME_DURATION_SECONDS - elapsed, 0);
+
+    int minutes = remaining / 60;
+    int seconds = remaining % 60;
+
+    char buffer[8];
+    snprintf(buffer, sizeof(buffer), "%02d:%02d", minutes, seconds);
+    return std::string(buffer);
 }
