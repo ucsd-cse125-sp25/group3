@@ -25,7 +25,10 @@ std::map<unsigned int, Cube*> Window::cubes;
 NPCs* Window::NPC;
 std::map<unsigned int, NPCs*> Window::npcs;
 Character* Window::character;
+Character* Window::character_preview;
 std::map<unsigned int, Character*> Window::characters;
+// std::map<unsigned int, Character*> Window::characters_preview;
+
 
 Scene* Window::scene;
 
@@ -230,6 +233,7 @@ bool Window::initializeObjects() {
     model->setState(AnimState::Walk);
 
     character = new Character(model);
+
     // cube = new Cube(glm::vec3(-1, 0, -2), glm::vec3(1, 1, 1));
     // floor = new Cube(glm::vec3(-8, -2.03, -8), glm::vec3(8, -2.01, 8));
     
@@ -246,6 +250,8 @@ void Window::cleanUp() {
     delete MiniMapCam;
     delete scene;
     delete character;
+    delete character_preview;
+
     
     delete textureManager;
     delete animationPlayer;
@@ -771,6 +777,64 @@ void Window::render(GLFWwindow* window) {
     Cam->Update(cube->getPosition()); */
 }
 
+
+void Window::renderCharacterPreview(GLFWwindow* window) {
+
+    // Clear the color and depth buffers.
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Render the object.
+    #ifdef __APPLE__
+        int fbWidth, fbHeight;
+        glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+        glViewport(0, 0, fbWidth, fbHeight);
+    #else
+        glViewport(0, 0, Window::width, Window::height);
+    #endif
+
+    
+    AnInstance* model = new AnInstance(modelManager->getModel(ModelType::SecurityGuard));
+    //currently no idle state for the security guard
+    model->setState(AnimState::Walk);
+
+    character = new Character(model);
+    character->model->update(animationPlayer);
+    character->draw(Cam->GetViewProjectMtx(),shaderManager);
+
+//    cube->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false), true);
+    floor->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false), true);
+    artifact->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false),false);
+    scene->draw(Cam->GetViewProjectMtx(), shaderManager);
+
+
+
+    // Gets events, including input such as keyboard and mouse or window resizing.
+    glfwPollEvents();
+    // // Swap buffers.
+    glfwSwapBuffers(window);
+
+    // Get the character's position
+    glm::vec3 characterPos = character->getPosition();
+
+    // Define the camera's offset (e.g., 5 units in front of the character)
+    glm::vec3 facingDirection = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 cameraOffset = - facingDirection * 10.0f; // Move 5 units in front of the character
+
+    // Calculate the camera's position
+    glm::vec3 cameraPos = characterPos + cameraOffset;
+
+    // Set the camera's target (look directly at the character)
+    glm::vec3 cameraTarget = characterPos;
+
+    // Define the up vector (typically pointing upwards in world space)
+    glm::vec3 upVector = glm::vec3(0.0f, 1.0f, 0.0f);
+
+    // Update the camera's view matrix using SetLookAt
+    Cam->SetLookAt(cameraPos, cameraTarget, upVector);
+
+}
+
+
 void Window::setClientID(const InitPlayerPacket& packet) {
     client_id = packet.clientID;
     
@@ -834,3 +898,5 @@ void Window::applyGuiUpdate(const GuiUpdatePacket& guiPacket) {
         initialized = true;
     }
 }
+
+
