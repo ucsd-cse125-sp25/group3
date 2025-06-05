@@ -60,7 +60,7 @@ class CubeState {
         CubeState(glm::vec3 cubeMin = glm::vec3(-1, -1, -1), glm::vec3 cubeMax = glm::vec3(1, 1, 1));
         void update();
         void printState();
-        glm::vec3 getPosition();
+        glm::vec3 getPosition()const ;
 
         void updateFromPacket(const InitPlayerPacket& packet);
         void saveToPacket(InitPlayerPacket& packet);
@@ -147,7 +147,10 @@ class PlayerData {
         // ~PlayerData();
         bool init(InitPacket* packet, unsigned int client_id);
         void calculateNewPos(KeyType key, ArtifactState* artifact, 
-                const std::map<std::string, AABB> museumAABBs, std::map<unsigned int, PlayerData*> playersData);
+                const std::map<std::string, AABB> museumAABBs, 
+                std::map<unsigned int, PlayerData*> playersData,
+                const std::map<unsigned int, NPCState>& npcData);
+
         void handleCursor(double currX, double currY);
         void resetCamera();
         void saveToPacket(unsigned int client_id, InitPlayerPacket& packet);

@@ -86,13 +86,19 @@ void Character::draw(const glm::mat4& viewProjMtx, ShaderManager* shaderManager)
     }
 }
 
-void Character::handleInput(GLFWwindow* window, const glm::vec3& forwardDir, const glm::vec3& rightDir,
-    const std::map<std::string, AABB> museumAABBs){
+void Character::handleInput(GLFWwindow* window,
+                 const glm::vec3& forwardDir,
+                 const glm::vec3& rightDir,
+                 const std::map<std::string, AABB>& museumAABBs,
+                 const std::map<unsigned int, Character*>& otherPlayers,
+                 const std::map<unsigned int, Character*> npcs) {
     // if (useModel) {
     //     model->handleInput(window, forwardDir, rightDir);
     // } else {
     //     cube->handleContinuousInput(window, forwardDir, rightDir);
     // }
+
+    std::cout<< "yes inside handle input character  " <<std::endl;
     glm::vec3 movement(0.0f);
     float speed = 0.04f;
 
@@ -128,10 +134,43 @@ void Character::handleInput(GLFWwindow* window, const glm::vec3& forwardDir, con
         for (const auto& [name, box] : museumAABBs) {
             if (box.intersects(characterBox)) {
                 collided = true;
+                std::cout<< "yes collide with museum " <<std::endl;
                 break;
             }
         }
-    
+
+        // other player AABB
+        for (const auto& [id, other] : otherPlayers) {
+            if (other == this) continue; 
+            glm::vec3 otherPos = other->getPosition();
+            AABB otherBox(
+                otherPos - glm::vec3(characterHalfSize),
+                otherPos + glm::vec3(characterHalfSize)
+            );
+            if (characterBox.intersects(otherBox)) {
+                std::cout<< "yes collide with other player  " <<std::endl;
+                collided = true;
+                break;
+            }
+        }
+
+        // NPC AABB 
+        if (!collided) {
+            for (const auto& [id, npc] : npcs) {
+                glm::vec3 npcPos = npc->getPosition();
+                AABB npcBox(
+                    npcPos - glm::vec3(characterHalfSize),
+                    npcPos + glm::vec3(characterHalfSize)
+                );
+                if (characterBox.intersects(npcBox)) {
+                    std::cout<< "yes collide with npc  " <<std::endl;
+                    collided = true;
+                    break;
+                }
+            }
+        }
+
+            
         if (!collided) {
             baseModel = glm::translate(baseModel, movement);
             lastMoveDir = glm::normalize(movement);

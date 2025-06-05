@@ -153,7 +153,7 @@ void CubeState::update() {
 
 }
 
-glm::vec3 CubeState::getPosition() {
+glm::vec3 CubeState::getPosition()const {
     return glm::vec3(model[3]);  // extract translation from matrix
 }
 
@@ -206,7 +206,10 @@ void PlayerData::handleGuiInput(KeyType key) {
 }
 
 void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact, 
-    const std::map<std::string, AABB> museumAABBs,std::map<unsigned int, PlayerData*> playersData) {
+                const std::map<std::string, AABB> museumAABBs,
+                std::map<unsigned int, PlayerData*> playersData,
+                const std::map<unsigned int, NPCState>& npcData) {
+
     glm::vec3 forwardDir = camera.GetForwardVector();
     forwardDir.y = 0.0f;  
     forwardDir = glm::normalize(forwardDir);
@@ -249,6 +252,38 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact,
                 break;
             }
         }
+
+        // other player AABB
+        for (const auto& [id, data] : playersData) {
+            if (data == this) continue;
+            glm::vec3 otherPos = data->cube.getPosition();
+            AABB otherBox(
+                otherPos - glm::vec3(characterHalfSize),
+                otherPos + glm::vec3(characterHalfSize)
+            );
+            if (characterBox.intersects(otherBox)) {
+                std::cout<< "yes collide with other player  " <<std::endl;
+                collided = true;
+                break;
+            }
+        }
+
+        // NPC AABB 
+        if (!collided) {
+        for (const auto& [id, npc] : npcData) {
+            glm::vec3 npcPos = npc.npcModel.getPosition();
+                AABB npcBox(
+                    npcPos - glm::vec3(characterHalfSize),
+                    npcPos + glm::vec3(characterHalfSize)
+                );
+                if (characterBox.intersects(npcBox)) {
+                    std::cout<< "yes collide with npc  " <<std::endl;
+                    collided = true;
+                    break;
+                }
+            }
+        }
+
     
         if (!collided) {
             cube.baseModel = glm::translate(cube.baseModel, movement);
