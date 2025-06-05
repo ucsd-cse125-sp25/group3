@@ -59,7 +59,9 @@ ClientGame::ClientGame()
     client_logic::s_font_bold = io.Fonts->AddFontFromFileTTF("../external/style/fonts/Junicode-Bold.ttf", 36.0f);
     #endif
 
+
      #ifdef _WIN32
+    bool file_success, overall_success;
     // Load background
     file_success = client_logic::LoadTextureFromFile("../../external/images/start_menu_background.png", 
                                       &client_logic::background_texture, 
