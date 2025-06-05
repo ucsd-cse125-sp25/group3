@@ -625,35 +625,91 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
     ImGui::End();
 
     if (gameResult != WinState::NONE) {
-        // // std::cout << "yes game endddddddddd" << std::endl;
-        // GLuint textureToShow = 0;
 
-        // if (playerRole == CharacterType::CHARACTER_4) {
-        //     textureToShow = (gameResult == WinState::GUARD_WIN) ? img_guard_win : img_guard_lose;
-        // } else {
-        //     textureToShow = (gameResult == WinState::THIEF_WIN) ? img_thief_win : img_thief_lose;
-        // }
+        GLuint resultTexture_theif = 0;
+        GLuint resultTexture_guard = 0;
+        int resultImageWidth = 0;
+        int resultImageHeight = 0;
+        static bool texturesLoaded = false;
+        bool resultTextureLoaded_thief = false;
+        bool resultTextureLoaded_guard = false;
 
-        // ImVec2 imageSize((float)img_width, (float)img_height);
-        // ImVec2 centerPos((screenSize.x - img_width) * 0.5f, (screenSize.y - img_height) * 0.5f);
-        // ImGui::SetNextWindowPos(centerPos, ImGuiCond_Always);
-        // ImGui::SetNextWindowSize(imageSize);
-        // ImGui::Begin("GameResult", nullptr,
-        //     ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
-        //     ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground);
+        if((int)gameResult == 1)
+        {
+            
+            if(!texturesLoaded)
+            {
+                #ifdef _WIN32
+                bool resultTextureLoaded_thief = client_logic::LoadTextureFromFile(
+                    
+                    "../../external/images/result_pic/thief_win.png",
+                    &resultTexture_theif,
+                    &resultImageWidth,
+                    &resultImageHeight);
+                bool resultTextureLoaded_guard = client_logic::LoadTextureFromFile(
+                    
+                    "../../external/images/result_pic/guard_lose.png",
+                    &resultTexture_guard,
+                    &resultImageWidth,
+                    &resultImageHeight);    
+                texturesLoaded = true;
+                #else 
+                bool resultTextureLoaded_thief = client_logic::LoadTextureFromFile(                
+                    "../external/images/result_pic/thief_win.png",
+                    &resultTexture_theif,
+                    &resultImageWidth,
+                    &resultImageHeight);
+                bool resultTextureLoaded_guard = client_logic::LoadTextureFromFile(                
+                    "../external/images/result_pic/guard_lose.png",
+                    &resultTexture_guard,
+                    &resultImageWidth,
+                    &resultImageHeight);
+                texturesLoaded = true;
+                #endif
+            }
+            
+            if(resultTextureLoaded_thief && resultTextureLoaded_guard)
+            {
 
-        // // ImGui::Image((void*)(intptr_t)textureToShow, imageSize);
+                ImGui::SetNextWindowPos(ImVec2(0, 0));
+                ImGui::SetNextWindowSize(io->DisplaySize);
 
-        // ImGui::End();
-        ImGui::Begin("Game End", nullptr,
-        ImGuiWindowFlags_NoTitleBar |
-        ImGuiWindowFlags_AlwaysAutoResize |
-        ImGuiWindowFlags_NoMove |
-        ImGuiWindowFlags_NoBackground);
+                ImGui::Begin("Game End Screen", nullptr,
+                    ImGuiWindowFlags_NoTitleBar |
+                    ImGuiWindowFlags_NoResize |
+                    ImGuiWindowFlags_NoMove |
+                    ImGuiWindowFlags_NoCollapse |
+                    ImGuiWindowFlags_NoScrollbar |
+                    ImGuiWindowFlags_NoBringToFrontOnFocus |
+                    ImGuiWindowFlags_NoBackground);
 
-        ImGui::Text("Game End!!!!!");
+                float maxDisplayWidth = io->DisplaySize.x;
+                float maxDisplayHeight = io->DisplaySize.y;
+                float scale = (std::max)(maxDisplayWidth / resultImageWidth, maxDisplayHeight / resultImageHeight);
+                float displayWidth = resultImageWidth * scale;
+                float displayHeight = resultImageHeight * scale;
 
-        ImGui::End();
+                float posX = (io->DisplaySize.x - displayWidth) * 0.5f;
+                float posY = (io->DisplaySize.y - displayHeight) * 0.5f;
+                ImGui::SetCursorPos(ImVec2(0, 0));
+                if (client_logic::playerRole == CharacterType::CHARACTER_4)
+                {
+                    ImGui::Image((ImTextureID)(intptr_t)resultTexture_guard, ImVec2(displayWidth, displayHeight));
+                }
+                else
+                {
+                    ImGui::Image((ImTextureID)(intptr_t)resultTexture_theif, ImVec2(displayWidth, displayHeight));
+                }
+
+                ImGui::Text("Game End!!!!!");
+                ImGui::End();
+            }
+
+        }
+       
+
+        
+
     }
 
 

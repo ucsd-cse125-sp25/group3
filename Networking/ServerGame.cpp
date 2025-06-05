@@ -238,6 +238,7 @@ void ServerGame::receiveFromClients() {
                 WinPacket packet;
                 packet.packet_type = WIN_STATE;
                 packet.winningClientID = artifact.holder->client_id;
+                packet.winnerType = WinnerType::THIEF;
                 const unsigned int packet_size = packet.getSize();
                 std::vector<char> packet_data(packet_size);
                 packet.serialize(packet_data.data());

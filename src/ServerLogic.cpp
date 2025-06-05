@@ -676,20 +676,19 @@ void ServerLogic::attemptGameStart(std::map<unsigned int, PlayerData*>& playersD
     int numPlayers = 0;
 
     if (!gameStarted) {
-        printf("trying to start game\n");
+        // printf("trying to start game\n");
         for (playerIter=playersData.begin(); playerIter!=playersData.end(); playerIter++) {
 
-            if (playerIter->second->currentState != WAITING) {
-                return;
+            if (playerIter->second->currentState == WAITING) {
+                numPlayers++;
             }
-            numPlayers++;
         }
 
-        if (numPlayers != TOTAL_PLAYERS) {
+        if (numPlayers < TOTAL_PLAYERS) {
             return;
         }
     }
-    printf("starting\n");
+    // printf("starting\n");
     for (playerIter=playersData.begin(); playerIter!=playersData.end(); playerIter++) {
         
         if (playerIter->second->currentState == WAITING) {
