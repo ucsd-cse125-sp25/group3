@@ -29,6 +29,8 @@ enum class AbilityType {
 
 #include "AABB_loader.h"
 
+#include "Artifact.h"
+
 class Window {
 public:
     static unsigned int client_id;
@@ -50,7 +52,9 @@ public:
     static Cube* floor;
     static NPCs* NPC;
     static std::map<unsigned int, NPCs*> npcs;
-    static Cube* artifact;
+
+    static unsigned int artifact_id;
+    static Artifact* artifact;
 
     static Character* character;
     static std::map<unsigned int, Character*> characters;

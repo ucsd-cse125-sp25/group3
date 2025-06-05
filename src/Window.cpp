@@ -2,6 +2,7 @@
 #include "Mesh.h"
 #include "TextureManager.h"
 #include "AnInstance.h"
+#include "Artifact.h"
 // #include <assimp/cimport.h>
 // #include <assimp/scene.h>
 // #include <assimp/postprocess.h>
@@ -17,10 +18,12 @@ int Window::width;
 int Window::height;
 const char* Window::windowTitle = "Model Environment";
 
+unsigned int Window::artifact_id;
+
 // Objects to render
 Cube* Window::cube;
 Cube* Window::floor;
-Cube* Window::artifact;
+Artifact* Window::artifact;
 std::map<unsigned int, Cube*> Window::cubes;
 NPCs* Window::NPC;
 std::map<unsigned int, NPCs*> Window::npcs;
@@ -61,7 +64,6 @@ AbilityType Window::currentAbility = AbilityType::NONE;
 
 // collision 
 std::map<std::string, AABB> Window::museumAABBs;
-
 
 // Constructors and desctructors
 bool Window::initializeProgram() {
@@ -122,9 +124,7 @@ bool Window::initializeObjects() {
 
     // Create a cube
     cube = new Cube();
-    artifact = new Cube(glm::vec3(-0.5, 0, -1), glm::vec3(0, 0.5, 1));
-    artifact->setColor(glm::vec3(0.0f, 0.6f, 1.0f));
-    artifact->setBaseModel(glm::translate(glm::mat4(1.0f), glm::vec3(7.0f, 0.0f, 2.0f)));
+
     cube->setCarriedArtifact(artifact);
     floor = new Cube(glm::vec3(-8, -2.03, -8), glm::vec3(8, -2.01, 8));
     // NPC = new NPCs(new Cube(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1)));
@@ -174,39 +174,77 @@ bool Window::initializeObjects() {
     // std::cout << "instance" << std::endl;
 
     // AnInstance* bro2 = new AnInstance(modelManager->getModel(ModelType::FemaleThief));
-    // bro2->setMMat(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 1.0f)));
+    // bro2->setMMat(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 0.0f)));
     // bro2->setState(AnimState::Run);
     // scene->addInstance(bro2);
 
     // std::cout << "instance2" << std::endl;
+    artifact = new Artifact();
 
-    // Model* museum = new Model(ModelType::Museum, "../models/map_bb/museum_nofloor_bb_large.obj", textureManager);
-    Model* museum = new Model(ModelType::Museum, "../models/map/Museum Map_Without Artifacts.fbx", textureManager);
-    museum->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
-    modelManager->addModel(museum);
-    AnInstance* museumInstance = new AnInstance(museum);
-    scene->addInstance(museumInstance);
-
-    std::map<ModelType, std::string> artifacts_toload = {
-        {ModelType::Artefact_AsianPainting, "../models/map/artefacts/AsianPainting.fbx"},
-        {ModelType::Artefact_BuddhaStatue, "../models/map/artefacts/BudahStatue.fbx"},
-        {ModelType::Artefact_DogSkeleton, "../models/map/artefacts/DogSkeleton.fbx"},
-        {ModelType::Artefact_LionStatue, "../models/map/artefacts/LionStatue.fbx"},
-        {ModelType::Artefact_Michelangelo, "../models/map/artefacts/Michelangelo.fbx"},
-        {ModelType::Artefact_Mondrian, "../models/map/artefacts/Modorian.fbx"},
-        {ModelType::Artefact_MonaLisa, "../models/map/artefacts/MonaLisa.fbx"},
-        {ModelType::Artefact_SittingSkeleton, "../models/map/artefacts/SittingSkeleton.fbx"},
-        {ModelType::Artefact_Skull, "../models/map/artefacts/Skull.fbx"},
-        {ModelType::Artefact_StarryNight, "../models/map/artefacts/StarryNight.fbx"},
-        {ModelType::Artefact_Torso, "../models/map/artefacts/TorsoStatue.fbx"}
+    std::map<ModelType, std::string> artifacts_picked_up_state_toload = {
+        {ModelType::Artefact_AsianPainting_Moving, "../models/items/artifacts/asianPainting_item.fbx"},
+        {ModelType::Artefact_DogSkeleton_Moving, "../models/items/artifacts/dogSkeleton_item.fbx"},
+        {ModelType::Artefact_LionStatue_Moving, "../models/items/artifacts/lionStatue_item.fbx"},
     };
 
-    for (auto it = artifacts_toload.begin(); it != artifacts_toload.end(); ++it) {
+    for (auto it = artifacts_picked_up_state_toload.begin(); it != artifacts_picked_up_state_toload.end(); ++it) {
         Model* temp = new Model(it->first, it->second, textureManager);
         temp->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
         modelManager->addModel(temp);
         AnInstance* artifact_instance = new AnInstance(temp);
-        scene->addInstance(artifact_instance);
+        artifact->addMovingInstance(artifact_instance);
+    }
+
+    std::map<ModelType, std::string> artifacts_put_down_state_toload = {
+        {ModelType::Artefact_AsianPainting, "../models/map/artefacts/AsianPainting.fbx"},
+        {ModelType::Artefact_DogSkeleton, "../models/map/artefacts/DogSkeleton.fbx"},
+        {ModelType::Artefact_LionStatue, "../models/map/artefacts/LionStatue.fbx"},
+    };
+
+    for (auto it = artifacts_put_down_state_toload.begin(); it != artifacts_put_down_state_toload.end(); ++it) {
+        Model* temp = new Model(it->first, it->second, textureManager);
+        temp->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
+        modelManager->addModel(temp);
+        AnInstance* artifact_instance = new AnInstance(temp);
+        artifact->addInitInstance(artifact_instance);
+    }
+
+    if (false) {
+        // This loads in the museum and the artefacts as a single model. pick for performance if on mac (seems to buffer if don't)
+        Model* museumOnly = new Model(ModelType::Cube, "../models/map/museum_everything.fbx", textureManager);
+        museumOnly->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
+        modelManager->addModel(museumOnly);
+        AnInstance* museumOnlyInstance = new AnInstance(museumOnly);
+        scene->addInstance(museumOnlyInstance);
+    } else {
+        // Model* museum = new Model(ModelType::Museum, "../models/map_bb/museum_nofloor_bb_large.obj", textureManager);
+        Model* museum = new Model(ModelType::Museum, "../models/map/Museum Map_Without Artifacts.fbx", textureManager);
+        museum->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
+        modelManager->addModel(museum);
+        AnInstance* museumInstance = new AnInstance(museum);
+        scene->addInstance(museumInstance);
+
+        std::map<ModelType, std::string> artifacts_toload = {
+            // {ModelType::Artefact_AsianPainting, "../models/map/artefacts/AsianPainting.fbx"},
+            {ModelType::Artefact_BuddhaStatue, "../models/map/artefacts/BudahStatue.fbx"},
+            // {ModelType::Artefact_DogSkeleton, "../models/map/artefacts/DogSkeleton.fbx"},
+            // {ModelType::Artefact_LionStatue, "../models/map/artefacts/LionStatue.fbx"},
+            {ModelType::Artefact_Michelangelo, "../models/map/artefacts/Michelangelo.fbx"},
+            {ModelType::Artefact_Mondrian, "../models/map/artefacts/Modorian.fbx"},
+            {ModelType::Artefact_MonaLisa, "../models/map/artefacts/MonaLisa.fbx"},
+            {ModelType::Artefact_SittingSkeleton, "../models/map/artefacts/SittingSkeleton.fbx"},
+            {ModelType::Artefact_Skull, "../models/map/artefacts/Skull.fbx"},
+            {ModelType::Artefact_StarryNight, "../models/map/artefacts/StarryNight.fbx"},
+            {ModelType::Artefact_Torso, "../models/map/artefacts/TorsoStatue.fbx"}
+        };
+
+        for (auto it = artifacts_toload.begin(); it != artifacts_toload.end(); ++it) {
+            Model* temp = new Model(it->first, it->second, textureManager);
+            temp->setMMat(glm::scale(glm::mat4(1.0f), glm::vec3(0.01f)));
+            modelManager->addModel(temp);
+            AnInstance* artifact_instance = new AnInstance(temp);
+            scene->addInstance(artifact_instance);
+        }
     }
 
     std::map<ModelType, std::string> items_toload = {
@@ -376,6 +414,8 @@ void Window::idleCallback() {
 
         character->update(animationPlayer);
     }
+
+    artifact->update(animationPlayer);
     // Cam->Update(cube->getPosition());
 
     // cube->update();
@@ -473,6 +513,7 @@ void Window::displayCallback(GLFWwindow* window) {
 
     // floor->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false), true);
 
+    artifact->draw(Cam->GetViewProjectMtx(), shaderManager);
     scene->draw(Cam->GetViewProjectMtx(), shaderManager);
     // scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram_anim);
     // scene->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
@@ -673,6 +714,9 @@ void Window::applyServerState(const StateUpdatePacket& packet) {
     glm::mat4 artifactModel;
     memcpy(glm::value_ptr(artifactModel), packet.artifactModel, sizeof(packet.artifactModel));
     artifact->setBaseModel(artifactModel);
+    // std::cout << glm::to_string(artifactModel) << std::endl;
+    artifact->setArtifactState(packet.artifact_state);
+    artifact->update(animationPlayer);
 }
 
 void Window::render(GLFWwindow* window) {
@@ -707,7 +751,8 @@ void Window::render(GLFWwindow* window) {
 
    //cube->draw(Cam->GetViewProjectMtx(), Window::shaderProgram,false);
     floor->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false), true);
-    artifact->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false),false);
+    // artifact->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false),false);
+    artifact->draw(Cam->GetViewProjectMtx(), shaderManager);
     scene->draw(Cam->GetViewProjectMtx(), shaderManager);
 
     int miniMapSize = 256;
@@ -724,8 +769,8 @@ void Window::render(GLFWwindow* window) {
     //     playerIter->second->draw(viewProj_miniMap, shaderManager->getShader(RenderMode::BASE, false), false);
     // }
     floor->draw(viewProj_miniMap, shaderManager->getShader(RenderMode::BASE, false), true);
-    artifact->draw(viewProj_miniMap, shaderManager->getShader(RenderMode::BASE, false), false);
     scene->draw(viewProj_miniMap, shaderManager);
+    artifact->draw(viewProj_miniMap, shaderManager);
 
     for (playerIter = characters.begin(); playerIter != characters.end(); playerIter++) {
         //printf("rendering cube for client %u\n", iter->first);
@@ -799,6 +844,7 @@ void Window::removeClient(unsigned int client) {
     }
 }
 
+// artifact_id assumes this is called before initialize objects
 void Window::setInitState(const InitPlayerPacket& packet) {
     client_id = packet.clientID;
     printf("client id init as %d\n", client_id);
@@ -813,6 +859,9 @@ void Window::setInitState(const InitPlayerPacket& packet) {
     // if (currentState == WAITING) {
     //     initialized = true;
     // }
+    artifact_id = packet.artifact_id;
+    std::cout << "SET ARTIFACT ID" << std::endl;
+    artifact->artifact_id = artifact_id;
 }
 
 void Window::applyGuiUpdate(const GuiUpdatePacket& guiPacket) {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include "Cube.h"
 #include "core.h"
 #include <assimp/scene.h>
 #include "utils.h"
@@ -16,7 +15,6 @@ private:
     glm::mat4 origMat;
     glm::mat4 worldMat, localMat;
     // glm::mat4 bindMat;
-    Cube *cube;
     std::vector<Joint *> children;
     Joint *parent;
 

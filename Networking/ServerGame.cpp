@@ -7,6 +7,7 @@
 #include <cassert>
 #include <set>
 #include <vector>
+#include <ctime>
 #define TICK 30 //in ms
 
 unsigned int ServerGame::client_id; 
@@ -25,6 +26,14 @@ ServerGame::ServerGame(void)
     }
 
     ServerLogic::loadAABBs();
+
+    std::string movingArtifacts[3] = {"horse", "skeleton", "lion"};
+    srand(time(NULL));
+    unsigned int choice = (unsigned int) (rand() % 3);
+    std::cout << "check" << std::endl;
+    std::cout << choice << std::endl;
+    AABB artifact_bb = ServerLogic::museumAABBs[movingArtifacts[choice]];
+    artifact.init(artifact_bb.min, artifact_bb.max, artifact_bb.getCenter(), choice);
 }
 
 void ServerGame::update()
@@ -398,7 +407,6 @@ void ServerGame::sendEchoPackets(std::string response) {
 //cube baseModel, model
 //then camera floats
 void ServerGame::sendInitPlayerState(unsigned int client_id) {
-    printf("Sending initial player state");
     PlayerData* player = playersData[client_id];
 
     InitPlayerPacket packet;
@@ -408,6 +416,8 @@ void ServerGame::sendInitPlayerState(unsigned int client_id) {
     packet.currentState = player->currentState;
     packet.altDown = player->altDown;
     packet.radarActive = player->radarActive;
+
+    packet.artifact_id = artifact.id;
 
     player->cube.saveToPacket(packet);
     player->camera.saveToPacket(packet, false);

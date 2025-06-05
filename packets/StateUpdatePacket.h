@@ -14,6 +14,7 @@ public:
     std::vector<std::unique_ptr<NPCPacket>> npcPackets;
 
     float artifactModel[4][4];
+    unsigned int artifact_state;
 
     StateUpdatePacket();
 

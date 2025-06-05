@@ -10,6 +10,8 @@
 #include <string>
 #include "ServerLogic.h"
 
+#include "glm/gtx/string_cast.hpp"
+
 bool ServerLogic::gameStarted = false;
 bool ServerLogic::availableChars[4] = {true, true, true, true};
 std::map<std::string, AABB> ServerLogic::museumAABBs;
@@ -576,9 +578,25 @@ void NPCState::saveToPacket(NPCPacket& packet) {
 }
 
 ArtifactState::ArtifactState() {
+    init_state = 0;
     holder = nullptr;
-    artifactModel = CubeState(glm::vec3(-0.5, 0, -1), glm::vec3(0, 0.5, 1));
+    glm::vec3 min = glm::vec3(-0.5, 0, -1);
+    glm::vec3 max = glm::vec3(0, 0.5, 1);
+    calcRadius(min, max);
+    artifactModel = CubeState(min, max);
     artifactModel.model = glm::translate(glm::mat4(1.0f), glm::vec3(7.0f, 0.0f, 2.0f));
+}
+
+void ArtifactState::init(glm::vec3 minCube, glm::vec3 maxCube, glm::vec3 position, unsigned int artifact_id) {
+    init_state = 0;
+    calcRadius(minCube, maxCube);
+    artifactModel = CubeState(minCube, maxCube);
+    artifactModel.model = glm::translate(glm::mat4(1.0f), position);
+    id = artifact_id;
+}
+
+void ArtifactState::calcRadius(glm::vec3 min, glm::vec3 max){
+    radius = glm::distance(min, max)/2.0f;
 }
 
 void ArtifactState::update(bool putDown) {
@@ -588,6 +606,7 @@ void ArtifactState::update(bool putDown) {
         glm::mat4 newBaseModel = glm::translate(holder->baseModel, offset);
         artifactModel.model = newBaseModel;
     } else if (holder != nullptr) {
+        init_state = 2;
         glm::vec3 offset(1.0f, 0.0f, 0.0f);
         glm::mat4 newBaseModel = glm::translate(holder->baseModel, offset);
         artifactModel.model = newBaseModel;
@@ -603,8 +622,11 @@ void ArtifactState::attemptGrab(CubeState * player) {
         float distance = glm::length(playerPos - artifactPos);
         // std::cout << "Distance = " << distance << std::endl;
         // printf("distance: %f\n", distance);
-        if (distance < 1.5f) {
+        std::cout << "dist: " << distance << std::endl;
+        std::cout << "radius: " << radius << std::endl;
+        if (distance < radius + 2.0f) {
             holder = player;
+            init_state = 1;
             // player->animState = AnimState::FT_Pick_Up;
             player->isCarrying = true;
             printf("artifact picked up\n");
@@ -623,6 +645,8 @@ void ArtifactState::saveToPacket(StateUpdatePacket& packet) {
             packet.artifactModel[i][j] = artifactModel.model[i][j];
         }
     }
+
+    packet.artifact_state = init_state;
 }
 
 bool ServerLogic::processMovement(std::set<KeyType>& recievedMovementKeys, KeyType key) {
@@ -659,6 +683,7 @@ void ServerLogic::attemptGameStart(std::map<unsigned int, PlayerData*>& playersD
             playerIter->second->currentState = PLAYING;
         }
     }
+
     gameStarted = true;
 }
 

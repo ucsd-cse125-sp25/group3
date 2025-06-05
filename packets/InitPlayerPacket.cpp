@@ -1,7 +1,7 @@
 #include "InitPlayerPacket.h"
 
 InitPlayerPacket::InitPlayerPacket(){
-    length = sizeof(clientID) + sizeof(currentState) + sizeof(type) + sizeof(animState) + sizeof(uint8_t) + sizeof(uint8_t) + sizeof(model) + sizeof(viewProjectMtx) + sizeof(eye) + sizeof(center) + sizeof(azimuth) + sizeof(incline) + sizeof(aspect) + sizeof(miniViewProjectMtx) + sizeof(miniEye) + sizeof(miniCenter) + sizeof(miniAzimuth) + sizeof(miniIncline) + sizeof(miniAspect) + sizeof(uint8_t);
+    length = sizeof(artifact_id) + sizeof(clientID) + sizeof(currentState) + sizeof(type) + sizeof(animState) + sizeof(uint8_t) + sizeof(uint8_t) + sizeof(model) + sizeof(viewProjectMtx) + sizeof(eye) + sizeof(center) + sizeof(azimuth) + sizeof(incline) + sizeof(aspect) + sizeof(miniViewProjectMtx) + sizeof(miniEye) + sizeof(miniCenter) + sizeof(miniAzimuth) + sizeof(miniIncline) + sizeof(miniAspect) + sizeof(uint8_t);
 }
 
 unsigned int InitPlayerPacket::getSize() {
@@ -10,6 +10,9 @@ unsigned int InitPlayerPacket::getSize() {
 
 int InitPlayerPacket::serializePayload(char* data) {
     unsigned int offset = getHeaderSize();
+
+    std::memcpy(data + offset, &artifact_id, sizeof(artifact_id));
+    offset += sizeof(artifact_id);
 
     std::memcpy(data + offset, &clientID, sizeof(clientID));
     offset += sizeof(clientID);
@@ -79,6 +82,9 @@ int InitPlayerPacket::serializePayload(char* data) {
 
 int InitPlayerPacket::deserializePayload(char* data) {
     unsigned int offset = getHeaderSize();
+
+    std::memcpy(&artifact_id, data + offset, sizeof(artifact_id));
+    offset += sizeof(artifact_id);
 
     std::memcpy(&clientID, data + offset, sizeof(clientID));
     offset += sizeof(clientID);
