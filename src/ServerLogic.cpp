@@ -378,7 +378,8 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact,
     }
 
     if (key == KeyType::KEY_C) {
-        std::cout <<"C is pressed " << std::endl;
+        ServerLogic::processCapture(this, playersData, npcData);
+                std::cout <<"C is pressed " << std::endl;
         if (skillOnCooldown) {
             auto now = std::chrono::steady_clock::now();
             auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - skillCooldownStart);
@@ -389,7 +390,6 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact,
                 skillOnCooldown = false;
             }
         }
-        ServerLogic::processCapture(this, playersData, npcData);
     }
 }
 
