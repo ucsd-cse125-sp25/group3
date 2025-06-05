@@ -417,6 +417,7 @@ bool PlayerData::init(InitPacket* packet, unsigned int client_id) {
         miniMapCam.SetOrtho(-10, 10, -10, 10, 0.1f, 100.0f); 
         miniMapCam.SetLookAt(glm::vec3(0, 20, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, -1));
         cube.type = packet->character;
+        minigame.init();
 
         if (cube.type == CharacterType::CHARACTER_4) {
             cube.animState = AnimState::SG_Shooting_Gun;
@@ -792,9 +793,9 @@ bool ServerLogic::winCondition(CubeState * player)
 void ServerLogic::processCapture(PlayerData* capturer, std::map<unsigned int, PlayerData*>& playersData,std::map<unsigned int, NPCState>& npcData) {
     // std::cout << "enter process Capture function " << std::endl;
     if (capturer->cube.type != CHARACTER_4) return;
-    // std::cout << "yes character_4 " << std::endl;
+    std::cout << "yes character_4 " << std::endl;
     glm::vec3 capturerPos = capturer->cube.getPosition();
-    float captureRange = 0.3f;
+    float captureRange = 1.5f;
     bool capturedSomeone = false;
 
     for (auto& [id, player] : playersData) {
@@ -804,18 +805,20 @@ void ServerLogic::processCapture(PlayerData* capturer, std::map<unsigned int, Pl
         CharacterType otherType = player->cube.type;
 
         if (otherType == CHARACTER_1 || otherType == CHARACTER_2 || otherType == CHARACTER_3) {
-            // std::cout << "yes inside for loop: " << otherType << std::endl;
+            std::cout << "yes inside for loop: " << otherType << std::endl;
             glm::vec3 otherPos = player->cube.getPosition();
             float distance = glm::length(capturerPos - otherPos);
-            // std::cout << "distance: " << distance;
-            // std::cout << " captureRange : " << captureRange << std::endl;
-            // if (player->cube.isCaptured){
-            //     std::cout <<  "isCapture is true" << std::endl;
-            // }else{
-            //     std::cout <<  "isCapture is false"  << std::endl;
-            // }
+            std::cout << "distance: " << distance;
+            std::cout << " captureRange : " << captureRange << std::endl;
+            if (player->cube.isCaptured){
+                std::cout <<  "isCapture is true" << std::endl;
+            }else{
+                std::cout <<  "isCapture is false"  << std::endl;
+            }
             if (distance < captureRange && !player->cube.isCaptured) {
                 player->cube.isCaptured = true;
+                player->currentState = IN_MINIGAME;
+                player->cube.isInvisible = true;
                 capturedSomeone = true;
                 std::cout << "Player " << id << " captured by hunter!" << std::endl;
                 
@@ -864,3 +867,19 @@ std::string ServerLogic::getCurrentTimeString() {
 //     std::string timeStr = getCurrentTimeString();
 //     send(clientSocket, timeStr.c_str(), timeStr.length(), 0);
 // }
+
+void MinigameState::init() {
+    float refW = 2880.0f;
+    float refH = 1800.0f;
+
+    platforms.emplace_back((330.0f / refW), (1700.0f / refH), (200.0f / refW), (27.0f / refH), 0);
+    platforms.emplace_back((0.0f   / refW), (1475.0f / refH), (270.0f / refW), (27.0f / refH), 0);
+    platforms.emplace_back((0.0f   / refW), (1595.0f / refH), (360.0f / refW), (32.0f / refH), 0);
+    platforms.emplace_back((468.0f / refW), (1212.0f / refH), (360.0f / refW), (43.0f / refH), 0);
+    platforms.emplace_back((1205.0f / refW), (1060.0f / refH), (520.0f / refW), (62.0f / refH), 0);
+    platforms.emplace_back((1890.0f / refW), (1268.0f / refH), (408.0f / refW), (58.0f / refH), 0);
+    platforms.emplace_back((2570.0f / refW), (930.0f / refH), (320.0f / refW), (55.0f / refH), 0);
+    platforms.emplace_back((520.0f / refW), (750.0f / refH), (410.0f / refW), (54.0f / refH), 0);
+    platforms.emplace_back((1400.0f / refW), (555.0f / refH), (480.0f / refW), (55.0f / refH), 0);
+    platforms.emplace_back((2270.0f / refW), (510.0f / refH), (480.0f / refW), (37.0f / refH), 0);
+}

@@ -148,7 +148,23 @@ void ClientGame::update()
         // }
 
         client_logic::setMainGameWindow(window);
-    } 
+    } else if (Window::currentState == IN_MINIGAME) {
+        if (!client_logic::miniGameInitialized) {
+            client_logic::miniGame.init(window, client_logic::miniGamePlatformsServer);
+            client_logic::miniGameInitialized = true;
+            std::cout << "minigame initialized" << std::endl;
+        }
+        client_logic::miniGame.updateMinigamePlatforms();
+        client_logic::miniGame.update(window);
+        client_logic::miniGame.render();
+
+        if (client_logic::miniGame.isFinished()) {
+            std::cout << "minigame finished" << std::endl;
+            client_logic::miniGame.cleanup();
+            Window::currentState = PLAYING; 
+            client_logic::miniGameInitialized = false;
+        }
+    }
     
     sendPendingPackets();
 
@@ -257,6 +273,20 @@ void ClientGame::update()
                 }
                 break;
             }
+            /* case MINIGAME_SETUP: {
+                MinigamePacket* packet = dynamic_cast<MinigamePacket*>(packet.get());
+
+                if (Window::currentState != IN_MINIGAME) {
+                    Window::currentState = IN_MINIGAME;
+                    Window::miniGame.init(window, packet->platforms);
+                } */
+            // }
+            case INIT_MINIGAME: {
+                InitMinigamePacket* initMinigamePacket = dynamic_cast<InitMinigamePacket*>(packet.get());
+                printf("recieved init minigame packet from server\n");
+                client_logic::setMinigamePlatformsServer(*initMinigamePacket);
+                break;
+            }
 
             default:
                 printf("client received unknown packet type from server\n");
@@ -267,7 +297,9 @@ void ClientGame::update()
     if (Window::currentState != IN_MINIGAME){
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    }
+    } /* else if (Window::currentState == IN_MINIGAME) {
+        Window::miniGame.render();
+    } */
     
     // Window::render(window);
     glfwSwapBuffers(window);

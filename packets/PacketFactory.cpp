@@ -38,6 +38,9 @@ std::unique_ptr<Packet> PacketFactory::createFromBuffer(char* data) {
             // std::cout << "in case time_update" << std::endl;
             packet = std::make_unique<TimeUpdate>();
             break;
+        case INIT_MINIGAME:
+            packet = std::make_unique<InitMinigamePacket>();
+            break;
         default:
             printf("Unknown packet type passed to PacketFactory: %d \n", packet->packet_type);
             return nullptr;

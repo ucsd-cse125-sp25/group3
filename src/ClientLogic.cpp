@@ -14,11 +14,23 @@ ImVec2 client_logic::displaySize;
 ImGuiIO* client_logic::io;
 ImFont* client_logic::handwritingFont;
 bool client_logic::availableChars[4];
+MiniGame client_logic::miniGame;
+bool client_logic::miniGameInitialized = false;
+std::vector<Platform> client_logic::miniGamePlatformsServer;
 // ImGuiIO& client_logic::io;
 std::vector<std::unique_ptr<Packet>> client_logic::pendingPackets;
 
 // timer 
 std::string client_logic::currentTimeString = "05:00";
+
+void client_logic::setMinigamePlatformsServer(const InitMinigamePacket& initMinigamePacket) {
+    miniGamePlatformsServer.clear();
+    for(int i = 0; i < initMinigamePacket.numPlatforms; i++) {
+        Platform plat = Platform(initMinigamePacket.platformX[i], initMinigamePacket.platformY[i], initMinigamePacket.platformWidth[i], initMinigamePacket.platformHeight[i], 0);
+        miniGamePlatformsServer.emplace_back(plat);
+        std::cout << "Received platform: " << initMinigamePacket.platformX[i] << ", " << initMinigamePacket.platformY[i] << ", " << initMinigamePacket.platformWidth[i] << ", " << initMinigamePacket.platformHeight[i] << std::endl;
+    }
+}
 
 
 void client_logic::updateAvailableChars(GuiUpdatePacket& packet) {

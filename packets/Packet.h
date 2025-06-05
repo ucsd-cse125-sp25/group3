@@ -36,6 +36,8 @@ enum PacketTypes {
 
     TIME_UPDATE = 12, 
 
+    INIT_MINIGAME = 13,
+
 }; 
 
 // Packet structure will be type (4 bytes), length (4 bytes), data (N bytes) 
