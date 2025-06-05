@@ -335,7 +335,7 @@ void PlayerData::calculateNewPos(KeyType key, ArtifactState* artifact,
     }
 }
 
-bool PlayerData::init(InitPacket* packet) {
+bool PlayerData::init(InitPacket* packet, unsigned int client_id) {
 
     
     if (packet->character == NONE) {
@@ -344,6 +344,7 @@ bool PlayerData::init(InitPacket* packet) {
         lastX = windowWidth / 2.0f;
         lastY = windowHeight / 2.0f;
         currentState = START_MENU;
+        cube.client_id = client_id;
         return false;
     } else {
 

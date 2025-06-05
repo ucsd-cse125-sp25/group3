@@ -110,7 +110,7 @@ void ServerGame::receiveFromClients() {
                 case INIT_CONNECTION: {
                     InitPacket* initPacket = dynamic_cast<InitPacket*>(packet.get());
                     printf("server received init packet from client\n");
-                    player->init(initPacket);
+                    player->init(initPacket, iter->first);
 
                     if (!player->initialized) {
                         sendInitPlayerState(iter->first);
@@ -208,8 +208,9 @@ void ServerGame::receiveFromClients() {
                 //currentState = WIN_CONDITION;
                 printf("Thieves Win\n");
 
-                Packet packet;
+                WinPacket packet;
                 packet.packet_type = WIN_STATE;
+                packet.winningClientID = artifact.holder->client_id;
                 const unsigned int packet_size = packet.getSize();
                 std::vector<char> packet_data(packet_size);
                 packet.serialize(packet_data.data());

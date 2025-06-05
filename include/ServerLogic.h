@@ -41,6 +41,7 @@ class CubeState {
         CharacterType type = NONE;  // default
         AnimState animState = AnimState::Stop;
         bool eWasPressed = false;
+        unsigned int client_id = 10;
 
         // for invisible ability
         bool isInvisible = false;
@@ -135,7 +136,7 @@ class PlayerData {
 
         // PlayerData();
         // ~PlayerData();
-        bool init(InitPacket* packet);
+        bool init(InitPacket* packet, unsigned int client_id);
         void calculateNewPos(KeyType key, ArtifactState* artifact, 
                 const std::map<std::string, AABB> museumAABBs, std::map<unsigned int, PlayerData*> playersData);
         void handleCursor(double currX, double currY);
