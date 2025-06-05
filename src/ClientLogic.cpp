@@ -631,8 +631,8 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
         int resultImageWidth = 0;
         int resultImageHeight = 0;
         static bool texturesLoaded = false;
-        bool resultTextureLoaded_thief = false;
-        bool resultTextureLoaded_guard = false;
+        static bool resultTextureLoaded_thief = false;
+        static bool resultTextureLoaded_guard = false;
 
         if((int)gameResult == 0)
         {
@@ -640,13 +640,13 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
             if(!texturesLoaded)
             {
                 #ifdef _WIN32
-                bool resultTextureLoaded_thief = client_logic::LoadTextureFromFile(
+                resultTextureLoaded_thief = client_logic::LoadTextureFromFile(
                     
                     "../../external/images/result_pic/thief_win.png",
                     &resultTexture_theif,
                     &resultImageWidth,
                     &resultImageHeight);
-                bool resultTextureLoaded_guard = client_logic::LoadTextureFromFile(
+                resultTextureLoaded_guard = client_logic::LoadTextureFromFile(
                     
                     "../../external/images/result_pic/guard_lose.png",
                     &resultTexture_guard,
@@ -654,12 +654,12 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
                     &resultImageHeight);    
                 texturesLoaded = true;
                 #else 
-                bool resultTextureLoaded_thief = client_logic::LoadTextureFromFile(                
+                resultTextureLoaded_thief = client_logic::LoadTextureFromFile(                
                     "../external/images/result_pic/thief_win.png",
                     &resultTexture_theif,
                     &resultImageWidth,
                     &resultImageHeight);
-                bool resultTextureLoaded_guard = client_logic::LoadTextureFromFile(                
+                resultTextureLoaded_guard = client_logic::LoadTextureFromFile(                
                     "../external/images/result_pic/guard_lose.png",
                     &resultTexture_guard,
                     &resultImageWidth,

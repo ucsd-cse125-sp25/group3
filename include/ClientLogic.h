@@ -34,9 +34,9 @@ enum class OSType: uint8_t {
 #define CLIENT_LOGIC
 
 enum class WinState {
-    NONE,
-    THIEF_WIN,
-    GUARD_WIN
+    NONE = -1,
+    THIEF_WIN = 0,
+    GUARD_WIN = 1
 };
 
 class client_logic {
