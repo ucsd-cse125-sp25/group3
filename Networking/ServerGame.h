@@ -36,4 +36,6 @@ private:
     ArtifactState artifact;
     std::map<unsigned int, PlayerData*> playersData;
     std::map<unsigned int, NPCState> npcData;
+
+    bool winAlreadySent = false;
 };

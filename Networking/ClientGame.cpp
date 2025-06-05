@@ -198,6 +198,11 @@ void ClientGame::update()
                 }
                 break;
             }
+            case WIN_STATE: {
+                WinPacket* winPacket = dynamic_cast<WinPacket*>(packet.get());
+                printf("Client %u wins the game!\n", winPacket->winningClientID);
+                break;
+            }
             default:
                 printf("client received unknown packet type from server\n");
                 break;

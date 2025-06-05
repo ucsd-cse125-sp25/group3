@@ -137,6 +137,7 @@ void CubeState::update() {
 
     // printf("jump height: %f\n", jumpHeight);
     //printState();
+
 }
 
 glm::vec3 CubeState::getPosition() {
@@ -588,11 +589,13 @@ void ArtifactState::attemptGrab(CubeState * player) {
         if (distance < 1.5f) {
             holder = player;
             // player->animState = AnimState::FT_Pick_Up;
+            player->isCarrying = true;
             printf("artifact picked up\n");
         }
     } else if (holder == player) {
         update(true);
         holder = nullptr;
+        player->isCarrying = false;
     }
 }
 
@@ -662,4 +665,27 @@ void ServerLogic::loadAABBs() {
                   << " Min: " << glm::to_string(box.min) 
                   << " Max: " << glm::to_string(box.max) << std::endl;
     }
+}
+
+bool ServerLogic::winCondition(CubeState * player)
+{
+
+    if(player->type!=CharacterType::CHARACTER_4 && player->type != CharacterType::NONE)
+    {
+        
+        if(player->isCarrying)
+        {
+            //std::cout << "enter player carrying check" << std::endl;
+            if(player->getPosition().x < -12.8f)
+            {
+                //std::cout << "enter palyer position check" << std::endl;
+                //std::cout << player->getPosition().x << std::endl;
+                //currentState = WIN_CONDITION;
+                return true;
+            }
+        }
+
+    }
+    return false;
+
 }

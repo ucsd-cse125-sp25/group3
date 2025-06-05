@@ -8,7 +8,7 @@
 #include <map>
 #include "AnimState.h"
 #include "AABB_loader.h"
-#define TOTAL_PLAYERS 2
+#define TOTAL_PLAYERS 1
 #define NUM_TO_STOP 5
 
 enum ClientStatus {
@@ -62,6 +62,8 @@ class CubeState {
 
         void updateFromPacket(const InitPlayerPacket& packet);
         void saveToPacket(InitPlayerPacket& packet);
+
+        bool isCarrying = false;
 };
 
 class NPCState {
@@ -149,4 +151,5 @@ class ServerLogic {
         static void loadAABBs();
         static bool processMovement(std::set<KeyType>& recievedMovementKeys, KeyType key);
         static void attemptGameStart(std::map<unsigned int, PlayerData*>& playersData);
+        static bool winCondition(CubeState * player);
 };

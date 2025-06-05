@@ -7,6 +7,7 @@
 #include "InitPlayerPacket.h"
 #include "NPCPacket.h"
 #include "GuiUpdatePacket.h"
+#include "WinPacket.h"
 
 #ifndef PACKETFACTORY_H // include guard
 #define PACKETFACTORY_H
