@@ -144,7 +144,7 @@ void ServerGame::receiveFromClients() {
                 }
                 case KEY_INPUT: {
                     KeyPacket* keyPacket = dynamic_cast<KeyPacket*>(packet.get());
-                    printf("server recieved key input packet from client\n");
+                    //printf("server recieved key input packet from client\n");
                     if (keyPacket) {
                         
                         if (player->currentState != PLAYING) {
@@ -167,6 +167,9 @@ void ServerGame::receiveFromClients() {
                     // iter = network->sessions.erase(iter);
                     packetsDone = DISCONNECT;
                     break;
+                }
+                case WIN_STATE: {
+                    printf("Someone win the game! ");
                 }
                 case CURSOR_EVENT: {
                     CursorPacket* cursorPacket = dynamic_cast<CursorPacket*>(packet.get());
@@ -194,6 +197,30 @@ void ServerGame::receiveFromClients() {
             iter++;
         }
     }
+
+    if(artifact.holder != nullptr)
+    {
+        //printf("Enter check win conditon!");
+        if(ServerLogic::winCondition(artifact.holder))
+        {
+            if (!winAlreadySent) {
+                winAlreadySent = true;
+                //currentState = WIN_CONDITION;
+                printf("Thieves Win\n");
+
+                Packet packet;
+                packet.packet_type = WIN_STATE;
+                const unsigned int packet_size = packet.getSize();
+                char packet_data[packet_size];
+                packet.serialize(packet_data);
+                network->sendToAll(packet_data, packet_size);
+            }
+
+            
+        }
+
+    }
+
     std::map<unsigned int, NPCState>::iterator npcIter;
 
     for (npcIter=npcData.begin(); npcIter!=npcData.end(); npcIter++) {

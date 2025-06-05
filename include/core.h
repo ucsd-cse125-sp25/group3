@@ -15,7 +15,8 @@ enum GameState {
     CHARACTER_SELECTION,
     WAITING,
     PLAYING,
-    IN_MINIGAME
+    IN_MINIGAME,
+    WIN_CONDITION
 };
 
 extern GameState currentState;

@@ -13,6 +13,9 @@ std::unique_ptr<Packet> PacketFactory::createFromBuffer(char* data) {
         case END_GAME:
             packet = std::make_unique<EndGamePacket>();
             break;
+        case WIN_STATE:
+            packet = std::make_unique<WinPacket>();
+            break;
         case KEY_INPUT:
             packet = std::make_unique<KeyPacket>();
             break;
