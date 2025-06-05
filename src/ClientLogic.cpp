@@ -634,7 +634,7 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
         bool resultTextureLoaded_thief = false;
         bool resultTextureLoaded_guard = false;
 
-        if((int)gameResult == 1)
+        if((int)gameResult == 0)
         {
             
             if(!texturesLoaded)

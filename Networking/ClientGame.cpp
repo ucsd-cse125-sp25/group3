@@ -229,13 +229,18 @@ void ClientGame::update()
 
                     Window::currentState = WIN_CONDITION;
                 }
-                client_logic::gameResult = (winPacket->winningClientID == Window::client_id)
-                                            ? ((client_logic::playerRole == CharacterType::CHARACTER_4) 
-                                                ? WinState::GUARD_WIN 
-                                                : WinState::THIEF_WIN)
-                                            : ((client_logic::playerRole == CharacterType::CHARACTER_4) 
-                                                ? WinState::THIEF_WIN 
-                                                : WinState::GUARD_WIN);
+                // client_logic::gameResult = (winPacket->winningClientID == Window::client_id)
+                //                             ? ((client_logic::playerRole == CharacterType::CHARACTER_4) 
+                //                                 ? WinState::GUARD_WIN 
+                //                                 : WinState::THIEF_WIN)
+                //                             : ((client_logic::playerRole == CharacterType::CHARACTER_4) 
+                //                                 ? WinState::THIEF_WIN 
+                //                                 : WinState::GUARD_WIN);
+                if (winPacket->winnerType == WinnerType::THIEF) {
+                    client_logic::gameResult = WinState::THIEF_WIN;
+                } else {
+                    client_logic::gameResult = WinState::GUARD_WIN;
+                }
 
                 std::cout << "[Client] Received WIN_STATE, gameResult = " << (int)client_logic::gameResult << std::endl;
 
