@@ -14,11 +14,17 @@ ImVec2 client_logic::displaySize;
 ImGuiIO* client_logic::io;
 ImFont* client_logic::handwritingFont;
 bool client_logic::availableChars[4];
-// ImGuiIO& client_logic::io;
 std::vector<std::unique_ptr<Packet>> client_logic::pendingPackets;
 
 // timer 
 std::string client_logic::currentTimeString = "05:00";
+ ImFont* client_logic::s_font_italic ;
+ ImFont* client_logic::s_font_bold ;
+GLuint client_logic::background_texture;
+int client_logic::background_width, client_logic::background_height;
+GLuint client_logic::title_texture;
+int client_logic::title_width = 0, client_logic::title_height = 0;
+bool client_logic::audio_enabled = true;
 
 
 void client_logic::updateAvailableChars(GuiUpdatePacket& packet) {
@@ -187,6 +193,8 @@ bool client_logic::LoadTextureFromMemory(const void* data, size_t data_size, GLu
     // Load from file
     int image_width = 0;
     int image_height = 0;
+    // stbi_set_flip_vertically_on_load(true);
+
     unsigned char* image_data = stbi_load_from_memory((const unsigned char*)data, (int)data_size, &image_width, &image_height, NULL, 4);
     if (image_data == NULL)
         return false;
@@ -230,294 +238,411 @@ bool client_logic::LoadTextureFromFile(const char* file_name, GLuint* out_textur
     return ret;
 }
 
+
+
+
+static std::map<std::string, float> hoverTime;
+
+void client_logic::RenderFancyTextButton(const char* label, bool& clicked, ImFont* fontNormal, ImFont* fontHover, bool& selected, AudioManager* audio) {
+    std::string labelKey(label);
+
+    ImDrawList* drawList = ImGui::GetWindowDrawList();
+    ImVec2 pos = ImGui::GetCursorScreenPos();
+    ImVec2 textSize = ImGui::CalcTextSize(label);
+
+    float cursorX = (ImGui::GetWindowSize().x - textSize.x) * 0.5f;
+    ImGui::SetCursorPosX(cursorX);
+    pos = ImGui::GetCursorScreenPos();
+
+    ImGui::InvisibleButton(label, textSize);
+    bool hovered = ImGui::IsItemHovered();
+    clicked = ImGui::IsItemClicked();
+    if (clicked && client_logic::audio_enabled) {
+        audio->playSound("button_click");
+    }
+
+    // Hover pulse animation
+    if (hovered) {
+        hoverTime[labelKey] += ImGui::GetIO().DeltaTime;
+    } else {
+        hoverTime[labelKey] = 0.0f;
+    }
+
+    float t = hoverTime[labelKey];
+    float pulse = hovered ? (0.6f + 0.4f * (std::sin(t * 4.0f) + 1.0f) * 0.5f) : 1.0f;
+
+    ImFont* font = hovered ? fontHover : fontNormal;
+    ImGui::PushFont(font);
+
+    ImU32 baseTextColor = ImGui::ColorConvertFloat4ToU32(ImVec4(0.627f, 0.478f, 0.333f, 1.0f));
+    ImU32 glowTextColor = ImGui::ColorConvertFloat4ToU32(ImVec4(1.0f, 0.9f, 0.5f, 1.0f));
+    ImU32 textColor = hovered ? glowTextColor : baseTextColor;
+
+
+    if (selected) {
+        textColor = ImGui::ColorConvertFloat4ToU32(ImVec4(80/255.f, 46/255.f, 9/255.f, 1.0f));
+        font = fontHover;
+        // std::cout << "selected" << std::endl;
+    }
+
+    if (hovered) {
+        for (int i = 1; i <= 3; ++i) {
+            float offset = i * pulse;
+            ImU32 glowColor = IM_COL32(255, 220, 100, static_cast<int>(40 / i));
+            drawList->AddText(ImVec2(pos.x + offset, pos.y + offset), glowColor, label);
+            drawList->AddText(ImVec2(pos.x - offset, pos.y + offset), glowColor, label);
+            drawList->AddText(ImVec2(pos.x + offset, pos.y - offset), glowColor, label);
+            drawList->AddText(ImVec2(pos.x - offset, pos.y - offset), glowColor, label);
+        }
+    }
+
+    drawList->AddText(pos, textColor, label);
+    ImGui::PopFont();
+}
+
+void client_logic::RenderFancyTextButton(const char* label, bool& clicked, ImFont* fontNormal, ImFont* fontHover) {
+    std::string labelKey(label);
+
+    ImDrawList* drawList = ImGui::GetWindowDrawList();
+    ImVec2 pos = ImGui::GetCursorScreenPos();
+    ImVec2 textSize = ImGui::CalcTextSize(label);
+
+    float cursorX = (ImGui::GetWindowSize().x - textSize.x) * 0.5f;
+    ImGui::SetCursorPosX(cursorX);
+    pos = ImGui::GetCursorScreenPos();
+
+    ImGui::InvisibleButton(label, textSize);
+    bool hovered = ImGui::IsItemHovered();
+    clicked = ImGui::IsItemClicked();
+
+    // Hover pulse animation
+    if (hovered) {
+        hoverTime[labelKey] += ImGui::GetIO().DeltaTime;
+    } else {
+        hoverTime[labelKey] = 0.0f;
+    }
+
+    float t = hoverTime[labelKey];
+    float pulse = hovered ? (0.6f + 0.4f * (std::sin(t * 4.0f) + 1.0f) * 0.5f) : 1.0f;
+
+    ImFont* font = hovered ? fontHover : fontNormal;
+    ImGui::PushFont(font);
+    ImU32 baseTextColor = ImGui::ColorConvertFloat4ToU32(ImVec4(0.627f, 0.478f, 0.333f, 1.0f));
+    ImU32 glowTextColor = ImGui::ColorConvertFloat4ToU32(ImVec4(1.0f, 0.9f, 0.5f, 1.0f));
+    ImU32 textColor = hovered ? glowTextColor : baseTextColor;
+
+    if (hovered) {
+        for (int i = 1; i <= 3; ++i) {
+            float offset = i * pulse;
+            ImU32 glowColor = IM_COL32(255, 220, 100, static_cast<int>(40 / i));
+            drawList->AddText(ImVec2(pos.x + offset, pos.y + offset), glowColor, label);
+            drawList->AddText(ImVec2(pos.x - offset, pos.y + offset), glowColor, label);
+            drawList->AddText(ImVec2(pos.x + offset, pos.y - offset), glowColor, label);
+            drawList->AddText(ImVec2(pos.x - offset, pos.y - offset), glowColor, label);
+        }
+    }
+
+    drawList->AddText(pos, textColor, label);
+    ImGui::PopFont();
+}
+
+
+
 void client_logic::setStartPage(GameState currState) {
-    GLuint parchmentTexture;
-    int parchmentWidth, parchmentHeight;
-    #ifdef _WIN32
-    bool ok = LoadTextureFromFile("../../external/images/parchment_scroll.png", &parchmentTexture, &parchmentWidth, &parchmentHeight);
-    #else 
-    bool ok = LoadTextureFromFile("../external/images/parchment_scroll.png", &parchmentTexture, &parchmentWidth, &parchmentHeight);
-    #endif
-    IM_ASSERT(ok);
+    // TODO: Make load textures and fonts somewhere else (outside of the while loop)
+    
 
-    // Load a handwriting-style font
-    // ImFont* handwritingFont = io.Fonts->AddFontFromFileTTF("../external/style/fonts/HomemadeApple-Regular.ttf", 28.0f);
-
-    // In your render loop:
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
+
     if (currState == INIT) return;
 
-    ImVec2 screenSize = ImGui::GetIO().DisplaySize;
 
-    // Target width is 40% of the window width (adjust as needed)
-    float scaleFactor = 0.4f;
-    float parchmentTargetWidth = screenSize.x * scaleFactor;
+    ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImVec2 window_size = viewport->Size;
 
-    // Maintain aspect ratio of the parchment image
-    float aspectRatio = (float)parchmentHeight / (float)parchmentWidth;
-    float parchmentTargetHeight = parchmentTargetWidth * aspectRatio;
+    ImGui::SetNextWindowPos(viewport->Pos);
+    ImGui::SetNextWindowSize(window_size);
 
-    ImVec2 parchmentSize = ImVec2(parchmentTargetWidth, parchmentTargetHeight);
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration |
+                             ImGuiWindowFlags_NoMove |
+                             ImGuiWindowFlags_NoSavedSettings |
+                             ImGuiWindowFlags_NoBackground;
 
-    // Position it aligned to the center of the left half
-    ImVec2 parchmentPos = ImVec2(
-        (screenSize.x * 0.25f) - (parchmentTargetWidth * 0.5f), // left center
-        (screenSize.y - parchmentTargetHeight) * 0.5f           // vertically center
-    );
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+    ImGui::Begin("Start Menu Background", nullptr, flags);
 
-    // Set up the window
-    ImGui::SetNextWindowPos(parchmentPos);
-    ImGui::SetNextWindowSize(parchmentSize);
-    ImGui::Begin("Parchment", nullptr,
-        ImGuiWindowFlags_NoTitleBar |
-        ImGuiWindowFlags_NoResize |
-        ImGuiWindowFlags_NoMove |
-        ImGuiWindowFlags_NoScrollbar |
-        ImGuiWindowFlags_NoBackground);
-
-    // Draw the image
-    ImGui::SetCursorPos(ImVec2(0, 0));
-    ImGui::Image((ImTextureID)(intptr_t)parchmentTexture, parchmentSize);
-
-    // Overlay the buttons
-    ImGui::SetCursorPos(ImVec2(parchmentSize.x * 0.3f, parchmentSize.y * 0.2f));
-    ImGui::PushFont(handwritingFont);
-
-    ImGui::Text("Main Menu");
+    // Draw background image
+    if (client_logic::background_texture) {
+        ImGui::GetWindowDrawList()->AddImage(
+            client_logic::background_texture,
+            viewport->Pos,
+            ImVec2(viewport->Pos.x + window_size.x, viewport->Pos.y + window_size.y),
+            ImVec2(0, 0), ImVec2(1, 1)
+        );
+    }
 
 
-    // Overlay the buttons
-    // ImGui::PushFont(handwritingFont);
+    float title_scale = (window_size.x * 0.5f) / 823.0f;
+    ImVec2 title_size(823.0f * title_scale, 463.0f * title_scale);
 
-    const char* title = "Main Menu";
-    ImVec2 textSize = ImGui::CalcTextSize(title);
+    float spacing = window_size.y * 0.04f;
+    float button_height = ImGui::CalcTextSize("Start").y;  // assuming 1-line height
+    int num_buttons = 3;
 
-    // Get current window width
-    float windowWidth = ImGui::GetWindowSize().x;
+    float total_content_height = title_size.y + spacing + num_buttons * (button_height + spacing);
 
-    // Center the text by moving the cursor
-    ImGui::SetCursorPosX((windowWidth - textSize.x) * 0.5f);
+    // Center the whole block vertically
+    float content_top = (window_size.y - total_content_height) * 0.5f + spacing * 0.5f;
+    ImGui::SetCursorPosY(content_top);
+    // Title image (centered horizontally)
+    ImVec2 title_pos = ImVec2((window_size.x - title_size.x) * 0.5f, ImGui::GetCursorPosY());
+    ImGui::SetCursorPos(title_pos);
+    ImGui::Image(client_logic::title_texture, title_size);
 
-    // Render the text
-    ImGui::Text("%s", title);
+    // Add vertical spacing before buttons
+    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + spacing);
 
-    // Define text colors
-    ImVec4 normalColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f); // black
-    ImVec4 hoverColor  = ImVec4(1.0f, 1.0f, 1.0f, 1.0f); // white
+    // Draw each button, centered
+    bool clicked = false;
 
-    // Get draw list for custom rendering
-    ImDrawList* draw_list = ImGui::GetWindowDrawList();
-
-    // --- Button 1: Start Game ---
-    const char* startLabel = "Start Game";
-    ImVec2 startSize = ImGui::CalcTextSize(startLabel);
-    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - startSize.x) * 0.5f);
-
-    if (ImGui::InvisibleButton("##start", startSize)) {
-        // Handle start game action
-        // currentState = CHARACTER_SELECTION;
+    RenderFancyTextButton("Start", clicked, client_logic::s_font_italic, client_logic::s_font_bold);
+    if (clicked) {
         auto packet = std::make_unique<KeyPacket>();
         packet->packet_type = KEY_INPUT;
         packet->key_type = KeyType::MENU_START;
         pendingPackets.push_back(std::move(packet));
     }
-    ImVec2 startPos = ImGui::GetItemRectMin();
-    ImVec4 startColor = ImGui::IsItemHovered() ? hoverColor : normalColor;
-    draw_list->AddText(startPos, ImGui::ColorConvertFloat4ToU32(startColor), startLabel);
 
-    // --- Spacing ---
-    ImGui::Dummy(ImVec2(0.0f, 20.0f)); // vertical space between buttons
+    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + spacing);
+    RenderFancyTextButton(audio_enabled ? "Audio: On" : "Audio: Off", clicked, client_logic::s_font_italic, client_logic::s_font_bold);
+    if (clicked) audio_enabled = !audio_enabled;
 
-    // --- Button 2: Options ---
-    const char* optionsLabel = "Options";
-    ImVec2 optionsSize = ImGui::CalcTextSize(optionsLabel);
-    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - optionsSize.x) * 0.5f);
-
-    if (ImGui::InvisibleButton("##options", optionsSize)) {
-        // Handle options click
-    }
-    ImVec2 optionsPos = ImGui::GetItemRectMin();
-    ImVec4 optionsColor = ImGui::IsItemHovered() ? hoverColor : normalColor;
-    draw_list->AddText(optionsPos, ImGui::ColorConvertFloat4ToU32(optionsColor), optionsLabel);
-
-    // --- Spacing ---
-    ImGui::Dummy(ImVec2(0.0f, 20.0f));
-
-    // --- Button 3: Quit ---
-    const char* quitLabel = "Quit";
-    ImVec2 quitSize = ImGui::CalcTextSize(quitLabel);
-
-    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - quitSize.x) * 0.5f);
-
-    if (ImGui::InvisibleButton("##quit", quitSize)) {
-        // glfwSetWindowShouldClose(window, true);
-        auto packet = std::make_unique<EndGamePacket>();
-        packet->packet_type = END_GAME;
-        pendingPackets.push_back(std::move(packet));
-    }
-    ImVec2 quitPos = ImGui::GetItemRectMin();
-    ImVec4 quitColor = ImGui::IsItemHovered() ? hoverColor : normalColor;
-    draw_list->AddText(quitPos, ImGui::ColorConvertFloat4ToU32(quitColor), quitLabel);
-
-    ImGui::PopFont();
+    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + spacing);
+    RenderFancyTextButton("Quit", clicked, client_logic::s_font_italic, client_logic::s_font_bold);
+    if (clicked) glfwSetWindowShouldClose(glfwGetCurrentContext(), true);
 
     ImGui::End();
+    ImGui::PopStyleVar();
 
-    // Mandatory ImGui frame termination
-    ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-    ImGui::Text("Current Game State: %s", "START MENU");
-    ImGui::End();
+    // // Mandatory ImGui frame termination
+    // ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    // ImGui::Text("Current Game State: %s", "START MENU");
+    // ImGui::End();
 }
 
-void client_logic::setCharacterSelectPage(GameState currState) {
+void client_logic::setCharacterSelectPage(GameState currState, GLFWwindow* window, AudioManager* audio) {
+
+    ImVec2 windowSize = io->DisplaySize;
+    
+    
+    GLuint parchment_texture;
+    int parchmentWidth, parchmentHeight;
+    #ifdef _WIN32
+    bool ok = LoadTextureFromFile("../../external/images/parchment_scroll.png", &parchment_texture, &parchmentWidth, &parchmentHeight);
+    #else 
+    bool ok = LoadTextureFromFile("../external/images/parchment_scroll.png", &parchment_texture, &parchmentWidth, &parchmentHeight);
+    #endif
+    IM_ASSERT(ok);
+   
+    
+
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+    Window::renderCharacterPreview(window);
 
-    ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
-    // ImGui::Begin("CharacterSelect", nullptr,
-    //     ImGuiWindowFlags_NoTitleBar |
-    //     ImGuiWindowFlags_NoResize |
-    //     ImGuiWindowFlags_NoMove);
-    ImGuiWindowFlags sidePanelFlags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
+    if (!window) {
+        std::cerr << "Error: Window is not initialized!" << std::endl;
+        return;
+    }
 
-    ImVec2 windowSize = io->DisplaySize;
-    float panelWidth = 360.0f;  // adjust width to your liking
-    float panelHeight = windowSize.y;
+    // Window::render(window);
+    static bool showInfo[4] = { false, false, false, false };
+    
 
-    // Fix position to right side
-    ImGui::SetNextWindowPos(ImVec2(windowSize.x - panelWidth, 0));
+    const char* names[] = { "Geoffreybella", "Anthonyia", "Curtina", "Voelkernessa" };
+    const char* abilities[] = {
+        "Cloakfade  Become invisible for 3 seconds.",
+        "Ghoststep Double speed for 3 seconds.",
+        "EchoVision See all player positions on map for 5 seconds.",
+        "OmniScan Periodically reveals all player positions."
+    };
+    const char* bios[] = {
+        "Geoffreybella grew up in foggy London, mastering illusions as a magician’s assistant. She now uses her tricks to disappear mid-heist.",
+        "Anthonyia, raised in Marseille, was once a getaway driver. Now she races past cameras and guards for the ultimate adrenaline rush.",
+        "Curtina, a former hacker prodigy, watches from the shadows, guiding teammates through laser fields with her surveillance skills.",
+        "Voelkernessa, a retired military strategist, turned the museum into her fortress. She knows its secrets better than its curators."
+    };
+
+
+    
+
+
+    // Define style and background
+    float panelWidth = windowSize.x * .30f;
+    float panelHeight = windowSize.y * 0.80f;
+
+    ImVec2 centerPos = ImVec2((windowSize.x - panelWidth) * 0.5f, (windowSize.y - panelHeight) * 0.5f);
+    ImVec2 leftCenteredPos = ImVec2(
+        windowSize.x * 0.1f,                                  // 10% from left edge
+        (windowSize.y - panelHeight) * 0.5f                   // vertically centered
+    );
+    ImGui::SetNextWindowPos(leftCenteredPos);
+
     ImGui::SetNextWindowSize(ImVec2(panelWidth, panelHeight));
 
-    ImGui::BeginDisabled(currState == WAITING);
-
-    ImGui::Begin("Toolbar", nullptr,
+    ImGui::Begin("Parchment Panel", nullptr,
         ImGuiWindowFlags_NoTitleBar |
         ImGuiWindowFlags_NoResize |
         ImGuiWindowFlags_NoMove |
         ImGuiWindowFlags_NoCollapse |
         ImGuiWindowFlags_NoScrollbar |
-        ImGuiWindowFlags_NoBackground);
+        ImGuiWindowFlags_NoSavedSettings |
+        ImGuiWindowFlags_NoBackground
+    );
 
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
-    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
+
+    if (parchment_texture) {
+        ImGui::GetWindowDrawList()->AddImage(
+            parchment_texture,
+            ImGui::GetWindowPos(),
+            ImVec2(ImGui::GetWindowPos().x + panelWidth, ImGui::GetWindowPos().y + panelHeight),
+            ImVec2(0, 0), ImVec2(1, 1));
+    }
+
+
+    // Apply warm vintage style
+    ImGui::PushStyleColor(ImGuiCol_Button,        ImVec4(0.50f, 0.38f, 0.24f, 1.0f));  // tan
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.70f, 0.55f, 0.30f, 1.0f));  // lighter brown
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive,  ImVec4(0.60f, 0.45f, 0.25f, 1.0f));  // deeper brown
+    ImGui::PushStyleColor(ImGuiCol_Text,          ImVec4(0.98f, 0.92f, 0.84f, 1.0f));  // parchment cream
+
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(16, 12));
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(16, 14));
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 6.0f);
+
+    // Optional: Vintage font
+    if (s_font_italic) ImGui::PushFont(s_font_italic);
+
+    // Character selection
+    bool clicked = false;
+    bool isSelected = true;
 
     static int selectedSlot = -1;
+    const char* roles[] = { "Geoffreybella", "Anthonyia", "Curtina", "Voelkernessa" };
+
+    // abilities and info (birthdays?)
+
+    int roleCount = IM_ARRAYSIZE(roles);
 
     if (selectedSlot != -1 && !availableChars[selectedSlot]) {
         selectedSlot = -1;
     }
-    const char* abilities[] = { "Thief 1", "Thief 2", "Thief 3", "Security Guard" };
-    int slotCount = IM_ARRAYSIZE(abilities);
+
     static CharacterType selCharacter;
-    // ImGui::EndDisabled();
+    ImGui::Dummy(ImVec2(0.0f, 120.0f));  // smaller vertical space
 
-    for (int i = 0; i < slotCount; ++i) {
-        if (i > 0) ImGui::SameLine();
+    client_logic::RenderFancyTextButton("Select Your Character", clicked, s_font_italic, s_font_bold, isSelected, audio);
+    ImGui::Dummy(ImVec2(0.0f, 50.0f));  // smaller vertical space
+    if (clicked ) {
+            selectedSlot = -1;
+    }
 
-        if (i == selectedSlot) {
-            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.3f, 0.7f, 0.3f, 1.0f)); // highlight
-        } else {
-            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
-        }
 
-        std::string label = "[" + std::string(abilities[i]) + "]";
-        ImGui::BeginDisabled(!availableChars[i]);
-        if (ImGui::Button(label.c_str(), ImVec2(64, 64))) {
+    for (int i = 0; i < roleCount; ++i) {
+        if (i > 0) ImGui::Dummy(ImVec2(0.0f, 20.0f));
+
+        clicked = false;
+        isSelected = (selectedSlot == i);
+        std::string label = roles[i];
+
+        if (!availableChars[i]) ImGui::BeginDisabled();
+
+        client_logic::RenderFancyTextButton(label.c_str(), clicked, s_font_italic, s_font_bold, isSelected, audio);
+
+        if (clicked && availableChars[i]) {
             selectedSlot = i;
             selCharacter = static_cast<CharacterType>(i);
             playerRole = selCharacter;// your own enum
         }
-        ImGui::EndDisabled();
-        ImGui::PopStyleColor();
+
+        if (!availableChars[i]) ImGui::EndDisabled();
     }
-
-    ImGui::PopStyleVar(2);
-    ImGui::End();
+    Window::setCharacterPreview(selCharacter);
     
-    // This window can collapse, but can't be moved or resized
-    // ImGui::Begin("Character Customization", nullptr, sidePanelFlags);
-
-    //             if (ImGui::Button("Confirm", ImVec2(120, 40))) {
-    //         currentState = PLAYING;
-    //         stateChanged = true; // Flag for state transition
-    //         glfwPostEmptyEvent(); // Force frame refresh
-    //     }
-    //             ImGui::End();
 
 
-    // ImGui::Begin("Character Customization", nullptr, ImGuiWindowFlags_NoResize);
-    // ImGui::BeginDisabled(currState == WAITING);
 
-    ImGui::Begin("OPTIONS PLACEHOLDER", nullptr, ImGuiWindowFlags_NoResize);
-    ImGui::Text("🧍 Customize Your Character");
-    ImGui::PushStyleColor(ImGuiCol_Button,        ImVec4(0.43f, 0.35f, 0.27f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.55f, 0.44f, 0.32f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive,  ImVec4(0.37f, 0.29f, 0.21f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.98f, 0.92f, 0.84f, 1.00f));
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 6.0f);
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(14, 10));
-    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(12, 14));
+    ImGui::Spacing();
+    ImGui::Spacing();
 
+    // Options
+    ImVec2 buttonSize(400, 64);
+    float spacing = ImGui::GetStyle().ItemSpacing.x;
+    float totalWidth = buttonSize.x * 2 + spacing;
+    float offsetX = (ImGui::GetWindowSize().x - totalWidth) * 0.5f;
+    ImGui::SetCursorPosX(offsetX);
 
-    // ImGui::Separator();
-    // ImGui::Spacing();
+    float paddingX = 40.0f; // Add horizontal padding
+    float paddingY = 20.0f; // Add vertical padding
 
-    // === Left Column ===
+    ImVec2 backSize = ImGui::CalcTextSize("Back");
+    backSize.x += paddingX;
+    backSize.y += paddingY;
 
+    ImVec2 randSize = ImGui::CalcTextSize("Randomize");
+    randSize.x += paddingX;
+    randSize.y += paddingY;
 
-    // === Right Column ===
-    // ImGui::BeginChild("Options", ImVec2(0, 500), true, ImGuiWindowFlags_AlwaysUseWindowPadding);
+    spacing = ImGui::GetStyle().ItemSpacing.x;
+    totalWidth = backSize.x + randSize.x + spacing;
+    offsetX = (ImGui::GetWindowSize().x - totalWidth) * 0.5f;
+    ImGui::SetCursorPosX(offsetX);
 
-    // const char* tabs[] = { "👔 Outfit", "🎩 Hat", "🎒 Accessory" };
-    // static int tab = 0;
-    // for (int i = 0; i < 3; ++i) {
-    //     if (i > 0) ImGui::SameLine();
-    //     if (ImGui::Selectable(tabs[i], tab == i)) tab = i;
-    // }
-    // ImGui::Separator();
-
-    // const char* outfitOptions[] = { "Casual", "Stealth", "Fancy", "Rugged" };
-    // const char* hatOptions[] = { "None", "Cap", "Hood", "Crown" };
-    // const char* accessoryOptions[] = { "Backpack", "Cape", "Glasses" };
-
-    // const char** options = nullptr;
-    // int count = 0;
-    // if (tab == 0) { options = outfitOptions; count = IM_ARRAYSIZE(outfitOptions); }
-    // else if (tab == 1) { options = hatOptions; count = IM_ARRAYSIZE(hatOptions); }
-    // else { options = accessoryOptions; count = IM_ARRAYSIZE(accessoryOptions); }
-
-    // for (int i = 0; i < count; ++i) {
-    //     if (ImGui::Button(options[i], ImVec2(200, 40))) {
-    //         // Handle selection
-    //     }
-    // }
-
-    // ImGui::EndChild();
-
-    // ImGui::Spacing();
-    
-    
-        
-    if (ImGui::Button("◀ Back")) {
+    if (ImGui::Button("Back", backSize)) {
         auto packet = std::make_unique<KeyPacket>();
         packet->packet_type = KEY_INPUT;
         packet->key_type = KeyType::CHAR_SEL_BACK;
         pendingPackets.push_back(std::move(packet));
     }
+
     ImGui::SameLine();
-    if (ImGui::Button("Randomize")) { /* randomize logic */ }
-    ImGui::SameLine();
-    // if (ImGui::Button("Confirm")) {currentState = PLAYING;}
+
+    if (ImGui::Button("Randomize", randSize)) {
+        // Step 1: Gather indices of available characters
+        std::vector<int> availableIndices;
+        for (int i = 0; i < IM_ARRAYSIZE(roles); ++i) {
+            if (availableChars[i]) {
+                availableIndices.push_back(i);
+            }
+        }
+
+        // Step 2: Pick a random one
+        if (!availableIndices.empty()) {
+            int randomIndex = availableIndices[rand() % availableIndices.size()];
+            selectedSlot = randomIndex;
+            selCharacter = static_cast<CharacterType>(randomIndex);
+        }
+    }
+    ImVec2 confirmSize = ImGui::CalcTextSize("Confirm");
+    confirmSize.x += paddingX;
+    confirmSize.y += paddingY;
+
+    ImVec2 storySize = ImGui::CalcTextSize("Story");
+    storySize.x += paddingX;
+    storySize.y += paddingY;
+
+    spacing = ImGui::GetStyle().ItemSpacing.x;
+    float totalConfirmRowWidth = confirmSize.x + storySize.x + spacing;
+    float rowOffsetX = (ImGui::GetWindowSize().x - totalConfirmRowWidth) * 0.5f;
+    ImGui::SetCursorPosX(rowOffsetX);
+
     ImGui::BeginDisabled(selectedSlot == -1);
-    if (ImGui::Button("Confirm", ImVec2(120, 40))) {
-        // currentState = PLAYING;
-        // stateChanged = true; // Flag for state transition
-        // glfwPostEmptyEvent(); // Force frame refresh
+    if (ImGui::Button("Confirm", confirmSize)) {
         auto packet = std::make_unique<InitPacket>();
         packet->packet_type = INIT_CONNECTION;
         packet->character = selCharacter;
@@ -526,16 +651,106 @@ void client_logic::setCharacterSelectPage(GameState currState) {
         pendingPackets.push_back(std::move(packet));
     }
     ImGui::EndDisabled();
+
+    ImGui::SameLine();
+
+    if (ImGui::Button(("Story##" + std::to_string(selectedSlot)).c_str(), storySize)) {
+        showInfo[selectedSlot] = true;
+    }
+
+
+    if (s_font_italic) ImGui::PopFont();
     ImGui::PopStyleVar(3);
     ImGui::PopStyleColor(4);
+    ImGui::End();
 
+    // Right-side panel for 3D model or placeholder
+    ImVec2 modelPanelSize = ImVec2(windowSize.x * 0.5f, panelHeight);
+    ImVec2 modelPanelPos = ImVec2(windowSize.x * 0.5f + windowSize.x * 0.1f, (windowSize.y - panelHeight) * 0.5f);
+
+    ImGui::SetNextWindowPos(modelPanelPos);
+    ImGui::SetNextWindowSize(modelPanelSize);
+
+    ImGui::Begin("CharacterModelPreview", nullptr,
+        ImGuiWindowFlags_NoTitleBar |
+        ImGuiWindowFlags_NoResize |
+        ImGuiWindowFlags_NoMove |
+        ImGuiWindowFlags_NoCollapse |
+        ImGuiWindowFlags_NoScrollbar |
+        ImGuiWindowFlags_NoBackground);
+
+    ImGui::SetCursorPosY(modelPanelSize.y * 0.45f);
+ImGui::SetCursorPosX((modelPanelSize.x - ImGui::CalcTextSize("How to Play").x) * 0.5f);
+ImGui::Text("How to Play");
+
+ImGui::Dummy(ImVec2(0.0f, 12.0f));
+ImGui::SetCursorPosX(modelPanelSize.x * 0.15f);
+ImGui::Text("- Use WASD or arrow keys to move");
+ImGui::SetCursorPosX(modelPanelSize.x * 0.15f);
+ImGui::Text("- Use mouse to adjust camera");
+ImGui::SetCursorPosX(modelPanelSize.x * 0.15f);
+ImGui::Text("- Press E to use ability");
+ImGui::SetCursorPosX(modelPanelSize.x * 0.15f);
+ImGui::Text("- Press F to pick up items");
+ImGui::SetCursorPosX(modelPanelSize.x * 0.15f);
+ImGui::Text("- Press C to catch the thief");
+
+
+    ImGui::End();
+    // ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    // ImGui::Text("Current Game State: %s", "START MENU");
     // ImGui::End();
-    ImGui::End();
-    ImGui::EndDisabled();
-    // Mandatory ImGui frame termination
-    ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-    ImGui::Text("Current Game State: %s", "Character Select");
-    ImGui::End();
+
+
+    for (int i = 0; i < 4; ++i) {
+        if (showInfo[i]) {
+            ImGui::OpenPopup(("Bio##" + std::to_string(i)).c_str());
+        }
+        ImGui::SetNextWindowSize(ImVec2(panelWidth, panelHeight));
+ImGui::SetNextWindowPos(leftCenteredPos);
+
+if (ImGui::BeginPopupModal(("Bio##" + std::to_string(i)).c_str(), &showInfo[i],
+    ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove)) {
+
+
+    // Overall styling
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));  // black background
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.8f, 0.8f, 0.8f, 1.0f));      // default text color (light gray)
+    ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(80 / 255.f, 46 / 255.f, 9 / 255.f, 1.0f));  // dark brown
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(30, 20));
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(14, 8));
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(20, 12));
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(1550, 0));  // wider
+
+    // Header (name) with tan color
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.627f, 0.478f, 0.333f, 1.0f));  // tan
+    ImGui::Text("%s", names[i]);
+    ImGui::PopStyleColor();
+
+    ImGui::Separator();
+    ImGui::TextWrapped("Ability: %s", abilities[i]);
+    ImGui::Spacing();
+    ImGui::TextWrapped("%s", bios[i]);
+
+    ImGui::Spacing();
+    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 100) * 0.5f);  // Center button
+    if (ImGui::Button("Close", ImVec2(100, 40))) {
+        showInfo[i] = false;
+        ImGui::CloseCurrentPopup();
+    }
+
+    // Cleanup
+    ImGui::PopStyleVar(4);
+    ImGui::PopStyleColor(3);
+
+    ImGui::EndPopup();
+    }
+    
+    }
+
+
+
+
 }
 
 void client_logic::setMainGameWindow(GLFWwindow* window) {
@@ -544,50 +759,18 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
     Window::render(window);
-    // Window::displayCallback(window);
 
     ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x / 2 - 200, ImGui::GetIO().DisplaySize.y - 100));
     ImGui::SetNextWindowSize(ImVec2(400, 80));
 
-    // ImGui::Begin("Toolbar", nullptr,
-    //     ImGuiWindowFlags_NoTitleBar |
-    //     ImGuiWindowFlags_NoResize |
-    //     ImGuiWindowFlags_NoMove |
-    //     ImGuiWindowFlags_NoCollapse |
-    //     ImGuiWindowFlags_NoScrollbar |
-    //     ImGuiWindowFlags_NoBackground);
 
-    // ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 12));
-    // ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
-
-    // static int selectedSlot = 0;
-    // const char* abilities[] = { "None", "Invisibility", "Speed", "Trap", "Scan" };
-    // int slotCount = IM_ARRAYSIZE(abilities);
-
-    // for (int i = 0; i < slotCount; ++i) {
-    //     if (i > 0) ImGui::SameLine();
-
-    //     if (i == selectedSlot) {
-    //         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.3f, 0.7f, 0.3f, 1.0f)); // highlight
-    //     } else {
-    //         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
-    //     }
-
-    //     std::string label = "[" + std::string(abilities[i]) + "]";
-    //     if (ImGui::Button(label.c_str(), ImVec2(64, 64))) {
-    //         selectedSlot = i;
-    //         Window::currentAbility = static_cast<AbilityType>(i); // your own enum
-    //     }
-
-    //     ImGui::PopStyleColor();
-    // }
-
-    // ImGui::PopStyleVar(2);
+    // ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    // ImGui::Text("Current Game State: %s", "Playing");
     // ImGui::End();
 
-    ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-    ImGui::Text("Current Game State: %s", "Playing");
-    ImGui::End();
+    // ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    // ImGui::Text("Current Game State: %s", "Playing");
+    // ImGui::End();
 
     // ImGui::Begin("MINIGAME PLACEHOLDER", nullptr, ImGuiWindowFlags_NoResize);
     
@@ -624,6 +807,7 @@ void client_logic::setMainGameWindow(GLFWwindow* window) {
 
 
     ImGui::End();
+    std::cout << (int)gameResult << std::endl;
 
     if (gameResult != WinState::NONE) {
 

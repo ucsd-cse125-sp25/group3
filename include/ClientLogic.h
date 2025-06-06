@@ -3,6 +3,9 @@
 #include "Window.h"
 #include "Cube.h"
 #include "core.h"
+#include <map>
+#include <cmath>
+#include <string>
 #include <vector>
 #include "../packets/PacketFactory.h"
 #include "imgui.h"
@@ -18,9 +21,13 @@
     // #else 
 //     #include <sys/socket.h>
 // #endif
+#include "AudioManager.h"
 // #include "../minigame/minigame.h"
 // #include <GL/glew.h>
 // #include "../minigame/include/stb_image.h"
+
+#include "AudioManager.h"
+
 
 #ifndef OS_TYPES
 #define OS_TYPES
@@ -46,6 +53,17 @@ class client_logic {
         static ImFont* handwritingFont;
         static bool availableChars[4];
 
+        static ImFont* s_font_italic ;
+        static ImFont* s_font_bold ;
+        static GLuint background_texture;
+        static int background_width;
+        static int background_height;
+        static GLuint title_texture;
+        static int title_width;
+        static int title_height;
+        static bool audio_enabled;
+
+
         static std::vector<std::unique_ptr<Packet>> pendingPackets;
 
         static void updateAvailableChars(GuiUpdatePacket& packet);
@@ -66,9 +84,13 @@ class client_logic {
 
         static bool LoadTextureFromFile(const char* file_name, GLuint* out_texture, int* out_width, int* out_height);
 
+        static void RenderFancyTextButton(const char* label, bool& clicked, ImFont* fontNormal, ImFont* fontHover, bool& selected, AudioManager* audio);
+
+        static void RenderFancyTextButton(const char* label, bool& clicked, ImFont* fontNormal, ImFont* fontHover);
+
         static void setStartPage(GameState currState);
 
-        static void setCharacterSelectPage(GameState currState);
+        static void setCharacterSelectPage(GameState currState, GLFWwindow* window, AudioManager* audio);
 
         static void setMainGameWindow(GLFWwindow* window);
 

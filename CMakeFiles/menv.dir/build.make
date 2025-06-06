@@ -69,24 +69,346 @@ include CMakeFiles/menv.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/menv.dir/flags.make
 
-CMakeFiles/menv.dir/main.cpp.o: CMakeFiles/menv.dir/flags.make
-CMakeFiles/menv.dir/main.cpp.o: main.cpp
-CMakeFiles/menv.dir/main.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/menv.dir/main.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/main.cpp.o -MF CMakeFiles/menv.dir/main.cpp.o.d -o CMakeFiles/menv.dir/main.cpp.o -c /Users/jessieouyang/group3/main.cpp
+CMakeFiles/menv.dir/Networking/ClientGame.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/Networking/ClientGame.cpp.o: Networking/ClientGame.cpp
+CMakeFiles/menv.dir/Networking/ClientGame.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/menv.dir/Networking/ClientGame.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/Networking/ClientGame.cpp.o -MF CMakeFiles/menv.dir/Networking/ClientGame.cpp.o.d -o CMakeFiles/menv.dir/Networking/ClientGame.cpp.o -c /Users/jessieouyang/group3/Networking/ClientGame.cpp
 
-CMakeFiles/menv.dir/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/main.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/main.cpp > CMakeFiles/menv.dir/main.cpp.i
+CMakeFiles/menv.dir/Networking/ClientGame.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/Networking/ClientGame.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/Networking/ClientGame.cpp > CMakeFiles/menv.dir/Networking/ClientGame.cpp.i
 
-CMakeFiles/menv.dir/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/main.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/main.cpp -o CMakeFiles/menv.dir/main.cpp.s
+CMakeFiles/menv.dir/Networking/ClientGame.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/Networking/ClientGame.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/Networking/ClientGame.cpp -o CMakeFiles/menv.dir/Networking/ClientGame.cpp.s
+
+CMakeFiles/menv.dir/Networking/ClientNetwork.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/Networking/ClientNetwork.cpp.o: Networking/ClientNetwork.cpp
+CMakeFiles/menv.dir/Networking/ClientNetwork.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/menv.dir/Networking/ClientNetwork.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/Networking/ClientNetwork.cpp.o -MF CMakeFiles/menv.dir/Networking/ClientNetwork.cpp.o.d -o CMakeFiles/menv.dir/Networking/ClientNetwork.cpp.o -c /Users/jessieouyang/group3/Networking/ClientNetwork.cpp
+
+CMakeFiles/menv.dir/Networking/ClientNetwork.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/Networking/ClientNetwork.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/Networking/ClientNetwork.cpp > CMakeFiles/menv.dir/Networking/ClientNetwork.cpp.i
+
+CMakeFiles/menv.dir/Networking/ClientNetwork.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/Networking/ClientNetwork.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/Networking/ClientNetwork.cpp -o CMakeFiles/menv.dir/Networking/ClientNetwork.cpp.s
+
+CMakeFiles/menv.dir/Networking/NetworkServices.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/Networking/NetworkServices.cpp.o: Networking/NetworkServices.cpp
+CMakeFiles/menv.dir/Networking/NetworkServices.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/menv.dir/Networking/NetworkServices.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/Networking/NetworkServices.cpp.o -MF CMakeFiles/menv.dir/Networking/NetworkServices.cpp.o.d -o CMakeFiles/menv.dir/Networking/NetworkServices.cpp.o -c /Users/jessieouyang/group3/Networking/NetworkServices.cpp
+
+CMakeFiles/menv.dir/Networking/NetworkServices.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/Networking/NetworkServices.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/Networking/NetworkServices.cpp > CMakeFiles/menv.dir/Networking/NetworkServices.cpp.i
+
+CMakeFiles/menv.dir/Networking/NetworkServices.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/Networking/NetworkServices.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/Networking/NetworkServices.cpp -o CMakeFiles/menv.dir/Networking/NetworkServices.cpp.s
+
+CMakeFiles/menv.dir/Networking/ServerGame.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/Networking/ServerGame.cpp.o: Networking/ServerGame.cpp
+CMakeFiles/menv.dir/Networking/ServerGame.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/menv.dir/Networking/ServerGame.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/Networking/ServerGame.cpp.o -MF CMakeFiles/menv.dir/Networking/ServerGame.cpp.o.d -o CMakeFiles/menv.dir/Networking/ServerGame.cpp.o -c /Users/jessieouyang/group3/Networking/ServerGame.cpp
+
+CMakeFiles/menv.dir/Networking/ServerGame.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/Networking/ServerGame.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/Networking/ServerGame.cpp > CMakeFiles/menv.dir/Networking/ServerGame.cpp.i
+
+CMakeFiles/menv.dir/Networking/ServerGame.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/Networking/ServerGame.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/Networking/ServerGame.cpp -o CMakeFiles/menv.dir/Networking/ServerGame.cpp.s
+
+CMakeFiles/menv.dir/Networking/ServerNetwork.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/Networking/ServerNetwork.cpp.o: Networking/ServerNetwork.cpp
+CMakeFiles/menv.dir/Networking/ServerNetwork.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/menv.dir/Networking/ServerNetwork.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/Networking/ServerNetwork.cpp.o -MF CMakeFiles/menv.dir/Networking/ServerNetwork.cpp.o.d -o CMakeFiles/menv.dir/Networking/ServerNetwork.cpp.o -c /Users/jessieouyang/group3/Networking/ServerNetwork.cpp
+
+CMakeFiles/menv.dir/Networking/ServerNetwork.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/Networking/ServerNetwork.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/Networking/ServerNetwork.cpp > CMakeFiles/menv.dir/Networking/ServerNetwork.cpp.i
+
+CMakeFiles/menv.dir/Networking/ServerNetwork.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/Networking/ServerNetwork.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/Networking/ServerNetwork.cpp -o CMakeFiles/menv.dir/Networking/ServerNetwork.cpp.s
+
+CMakeFiles/menv.dir/packets/CursorPacket.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/packets/CursorPacket.cpp.o: packets/CursorPacket.cpp
+CMakeFiles/menv.dir/packets/CursorPacket.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/menv.dir/packets/CursorPacket.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/packets/CursorPacket.cpp.o -MF CMakeFiles/menv.dir/packets/CursorPacket.cpp.o.d -o CMakeFiles/menv.dir/packets/CursorPacket.cpp.o -c /Users/jessieouyang/group3/packets/CursorPacket.cpp
+
+CMakeFiles/menv.dir/packets/CursorPacket.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/packets/CursorPacket.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/packets/CursorPacket.cpp > CMakeFiles/menv.dir/packets/CursorPacket.cpp.i
+
+CMakeFiles/menv.dir/packets/CursorPacket.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/packets/CursorPacket.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/packets/CursorPacket.cpp -o CMakeFiles/menv.dir/packets/CursorPacket.cpp.s
+
+CMakeFiles/menv.dir/packets/EndGamePacket.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/packets/EndGamePacket.cpp.o: packets/EndGamePacket.cpp
+CMakeFiles/menv.dir/packets/EndGamePacket.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/menv.dir/packets/EndGamePacket.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/packets/EndGamePacket.cpp.o -MF CMakeFiles/menv.dir/packets/EndGamePacket.cpp.o.d -o CMakeFiles/menv.dir/packets/EndGamePacket.cpp.o -c /Users/jessieouyang/group3/packets/EndGamePacket.cpp
+
+CMakeFiles/menv.dir/packets/EndGamePacket.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/packets/EndGamePacket.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/packets/EndGamePacket.cpp > CMakeFiles/menv.dir/packets/EndGamePacket.cpp.i
+
+CMakeFiles/menv.dir/packets/EndGamePacket.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/packets/EndGamePacket.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/packets/EndGamePacket.cpp -o CMakeFiles/menv.dir/packets/EndGamePacket.cpp.s
+
+CMakeFiles/menv.dir/packets/GuiUpdatePacket.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/packets/GuiUpdatePacket.cpp.o: packets/GuiUpdatePacket.cpp
+CMakeFiles/menv.dir/packets/GuiUpdatePacket.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/menv.dir/packets/GuiUpdatePacket.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/packets/GuiUpdatePacket.cpp.o -MF CMakeFiles/menv.dir/packets/GuiUpdatePacket.cpp.o.d -o CMakeFiles/menv.dir/packets/GuiUpdatePacket.cpp.o -c /Users/jessieouyang/group3/packets/GuiUpdatePacket.cpp
+
+CMakeFiles/menv.dir/packets/GuiUpdatePacket.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/packets/GuiUpdatePacket.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/packets/GuiUpdatePacket.cpp > CMakeFiles/menv.dir/packets/GuiUpdatePacket.cpp.i
+
+CMakeFiles/menv.dir/packets/GuiUpdatePacket.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/packets/GuiUpdatePacket.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/packets/GuiUpdatePacket.cpp -o CMakeFiles/menv.dir/packets/GuiUpdatePacket.cpp.s
+
+CMakeFiles/menv.dir/packets/InitPacket.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/packets/InitPacket.cpp.o: packets/InitPacket.cpp
+CMakeFiles/menv.dir/packets/InitPacket.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/menv.dir/packets/InitPacket.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/packets/InitPacket.cpp.o -MF CMakeFiles/menv.dir/packets/InitPacket.cpp.o.d -o CMakeFiles/menv.dir/packets/InitPacket.cpp.o -c /Users/jessieouyang/group3/packets/InitPacket.cpp
+
+CMakeFiles/menv.dir/packets/InitPacket.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/packets/InitPacket.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/packets/InitPacket.cpp > CMakeFiles/menv.dir/packets/InitPacket.cpp.i
+
+CMakeFiles/menv.dir/packets/InitPacket.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/packets/InitPacket.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/packets/InitPacket.cpp -o CMakeFiles/menv.dir/packets/InitPacket.cpp.s
+
+CMakeFiles/menv.dir/packets/InitPlayerPacket.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/packets/InitPlayerPacket.cpp.o: packets/InitPlayerPacket.cpp
+CMakeFiles/menv.dir/packets/InitPlayerPacket.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/menv.dir/packets/InitPlayerPacket.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/packets/InitPlayerPacket.cpp.o -MF CMakeFiles/menv.dir/packets/InitPlayerPacket.cpp.o.d -o CMakeFiles/menv.dir/packets/InitPlayerPacket.cpp.o -c /Users/jessieouyang/group3/packets/InitPlayerPacket.cpp
+
+CMakeFiles/menv.dir/packets/InitPlayerPacket.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/packets/InitPlayerPacket.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/packets/InitPlayerPacket.cpp > CMakeFiles/menv.dir/packets/InitPlayerPacket.cpp.i
+
+CMakeFiles/menv.dir/packets/InitPlayerPacket.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/packets/InitPlayerPacket.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/packets/InitPlayerPacket.cpp -o CMakeFiles/menv.dir/packets/InitPlayerPacket.cpp.s
+
+CMakeFiles/menv.dir/packets/KeyPacket.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/packets/KeyPacket.cpp.o: packets/KeyPacket.cpp
+CMakeFiles/menv.dir/packets/KeyPacket.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/menv.dir/packets/KeyPacket.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/packets/KeyPacket.cpp.o -MF CMakeFiles/menv.dir/packets/KeyPacket.cpp.o.d -o CMakeFiles/menv.dir/packets/KeyPacket.cpp.o -c /Users/jessieouyang/group3/packets/KeyPacket.cpp
+
+CMakeFiles/menv.dir/packets/KeyPacket.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/packets/KeyPacket.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/packets/KeyPacket.cpp > CMakeFiles/menv.dir/packets/KeyPacket.cpp.i
+
+CMakeFiles/menv.dir/packets/KeyPacket.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/packets/KeyPacket.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/packets/KeyPacket.cpp -o CMakeFiles/menv.dir/packets/KeyPacket.cpp.s
+
+CMakeFiles/menv.dir/packets/NPCPacket.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/packets/NPCPacket.cpp.o: packets/NPCPacket.cpp
+CMakeFiles/menv.dir/packets/NPCPacket.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/menv.dir/packets/NPCPacket.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/packets/NPCPacket.cpp.o -MF CMakeFiles/menv.dir/packets/NPCPacket.cpp.o.d -o CMakeFiles/menv.dir/packets/NPCPacket.cpp.o -c /Users/jessieouyang/group3/packets/NPCPacket.cpp
+
+CMakeFiles/menv.dir/packets/NPCPacket.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/packets/NPCPacket.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/packets/NPCPacket.cpp > CMakeFiles/menv.dir/packets/NPCPacket.cpp.i
+
+CMakeFiles/menv.dir/packets/NPCPacket.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/packets/NPCPacket.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/packets/NPCPacket.cpp -o CMakeFiles/menv.dir/packets/NPCPacket.cpp.s
+
+CMakeFiles/menv.dir/packets/Packet.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/packets/Packet.cpp.o: packets/Packet.cpp
+CMakeFiles/menv.dir/packets/Packet.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/menv.dir/packets/Packet.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/packets/Packet.cpp.o -MF CMakeFiles/menv.dir/packets/Packet.cpp.o.d -o CMakeFiles/menv.dir/packets/Packet.cpp.o -c /Users/jessieouyang/group3/packets/Packet.cpp
+
+CMakeFiles/menv.dir/packets/Packet.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/packets/Packet.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/packets/Packet.cpp > CMakeFiles/menv.dir/packets/Packet.cpp.i
+
+CMakeFiles/menv.dir/packets/Packet.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/packets/Packet.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/packets/Packet.cpp -o CMakeFiles/menv.dir/packets/Packet.cpp.s
+
+CMakeFiles/menv.dir/packets/PacketFactory.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/packets/PacketFactory.cpp.o: packets/PacketFactory.cpp
+CMakeFiles/menv.dir/packets/PacketFactory.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/menv.dir/packets/PacketFactory.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/packets/PacketFactory.cpp.o -MF CMakeFiles/menv.dir/packets/PacketFactory.cpp.o.d -o CMakeFiles/menv.dir/packets/PacketFactory.cpp.o -c /Users/jessieouyang/group3/packets/PacketFactory.cpp
+
+CMakeFiles/menv.dir/packets/PacketFactory.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/packets/PacketFactory.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/packets/PacketFactory.cpp > CMakeFiles/menv.dir/packets/PacketFactory.cpp.i
+
+CMakeFiles/menv.dir/packets/PacketFactory.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/packets/PacketFactory.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/packets/PacketFactory.cpp -o CMakeFiles/menv.dir/packets/PacketFactory.cpp.s
+
+CMakeFiles/menv.dir/packets/StateUpdatePacket.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/packets/StateUpdatePacket.cpp.o: packets/StateUpdatePacket.cpp
+CMakeFiles/menv.dir/packets/StateUpdatePacket.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/menv.dir/packets/StateUpdatePacket.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/packets/StateUpdatePacket.cpp.o -MF CMakeFiles/menv.dir/packets/StateUpdatePacket.cpp.o.d -o CMakeFiles/menv.dir/packets/StateUpdatePacket.cpp.o -c /Users/jessieouyang/group3/packets/StateUpdatePacket.cpp
+
+CMakeFiles/menv.dir/packets/StateUpdatePacket.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/packets/StateUpdatePacket.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/packets/StateUpdatePacket.cpp > CMakeFiles/menv.dir/packets/StateUpdatePacket.cpp.i
+
+CMakeFiles/menv.dir/packets/StateUpdatePacket.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/packets/StateUpdatePacket.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/packets/StateUpdatePacket.cpp -o CMakeFiles/menv.dir/packets/StateUpdatePacket.cpp.s
+
+CMakeFiles/menv.dir/packets/TimeUpdate.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/packets/TimeUpdate.cpp.o: packets/TimeUpdate.cpp
+CMakeFiles/menv.dir/packets/TimeUpdate.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/menv.dir/packets/TimeUpdate.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/packets/TimeUpdate.cpp.o -MF CMakeFiles/menv.dir/packets/TimeUpdate.cpp.o.d -o CMakeFiles/menv.dir/packets/TimeUpdate.cpp.o -c /Users/jessieouyang/group3/packets/TimeUpdate.cpp
+
+CMakeFiles/menv.dir/packets/TimeUpdate.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/packets/TimeUpdate.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/packets/TimeUpdate.cpp > CMakeFiles/menv.dir/packets/TimeUpdate.cpp.i
+
+CMakeFiles/menv.dir/packets/TimeUpdate.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/packets/TimeUpdate.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/packets/TimeUpdate.cpp -o CMakeFiles/menv.dir/packets/TimeUpdate.cpp.s
+
+CMakeFiles/menv.dir/packets/WinPacket.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/packets/WinPacket.cpp.o: packets/WinPacket.cpp
+CMakeFiles/menv.dir/packets/WinPacket.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/menv.dir/packets/WinPacket.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/packets/WinPacket.cpp.o -MF CMakeFiles/menv.dir/packets/WinPacket.cpp.o.d -o CMakeFiles/menv.dir/packets/WinPacket.cpp.o -c /Users/jessieouyang/group3/packets/WinPacket.cpp
+
+CMakeFiles/menv.dir/packets/WinPacket.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/packets/WinPacket.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/packets/WinPacket.cpp > CMakeFiles/menv.dir/packets/WinPacket.cpp.i
+
+CMakeFiles/menv.dir/packets/WinPacket.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/packets/WinPacket.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/packets/WinPacket.cpp -o CMakeFiles/menv.dir/packets/WinPacket.cpp.s
+
+CMakeFiles/menv.dir/src/AABB.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/AABB.cpp.o: src/AABB.cpp
+CMakeFiles/menv.dir/src/AABB.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/menv.dir/src/AABB.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/AABB.cpp.o -MF CMakeFiles/menv.dir/src/AABB.cpp.o.d -o CMakeFiles/menv.dir/src/AABB.cpp.o -c /Users/jessieouyang/group3/src/AABB.cpp
+
+CMakeFiles/menv.dir/src/AABB.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/AABB.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/AABB.cpp > CMakeFiles/menv.dir/src/AABB.cpp.i
+
+CMakeFiles/menv.dir/src/AABB.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/AABB.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/AABB.cpp -o CMakeFiles/menv.dir/src/AABB.cpp.s
+
+CMakeFiles/menv.dir/src/AABB_loader.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/AABB_loader.cpp.o: src/AABB_loader.cpp
+CMakeFiles/menv.dir/src/AABB_loader.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/menv.dir/src/AABB_loader.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/AABB_loader.cpp.o -MF CMakeFiles/menv.dir/src/AABB_loader.cpp.o.d -o CMakeFiles/menv.dir/src/AABB_loader.cpp.o -c /Users/jessieouyang/group3/src/AABB_loader.cpp
+
+CMakeFiles/menv.dir/src/AABB_loader.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/AABB_loader.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/AABB_loader.cpp > CMakeFiles/menv.dir/src/AABB_loader.cpp.i
+
+CMakeFiles/menv.dir/src/AABB_loader.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/AABB_loader.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/AABB_loader.cpp -o CMakeFiles/menv.dir/src/AABB_loader.cpp.s
+
+CMakeFiles/menv.dir/src/AnInstance.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/AnInstance.cpp.o: src/AnInstance.cpp
+CMakeFiles/menv.dir/src/AnInstance.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/menv.dir/src/AnInstance.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/AnInstance.cpp.o -MF CMakeFiles/menv.dir/src/AnInstance.cpp.o.d -o CMakeFiles/menv.dir/src/AnInstance.cpp.o -c /Users/jessieouyang/group3/src/AnInstance.cpp
+
+CMakeFiles/menv.dir/src/AnInstance.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/AnInstance.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/AnInstance.cpp > CMakeFiles/menv.dir/src/AnInstance.cpp.i
+
+CMakeFiles/menv.dir/src/AnInstance.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/AnInstance.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/AnInstance.cpp -o CMakeFiles/menv.dir/src/AnInstance.cpp.s
+
+CMakeFiles/menv.dir/src/Animation.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/Animation.cpp.o: src/Animation.cpp
+CMakeFiles/menv.dir/src/Animation.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/menv.dir/src/Animation.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/Animation.cpp.o -MF CMakeFiles/menv.dir/src/Animation.cpp.o.d -o CMakeFiles/menv.dir/src/Animation.cpp.o -c /Users/jessieouyang/group3/src/Animation.cpp
+
+CMakeFiles/menv.dir/src/Animation.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/Animation.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/Animation.cpp > CMakeFiles/menv.dir/src/Animation.cpp.i
+
+CMakeFiles/menv.dir/src/Animation.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/Animation.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/Animation.cpp -o CMakeFiles/menv.dir/src/Animation.cpp.s
+
+CMakeFiles/menv.dir/src/AnimationPlayer.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/AnimationPlayer.cpp.o: src/AnimationPlayer.cpp
+CMakeFiles/menv.dir/src/AnimationPlayer.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/menv.dir/src/AnimationPlayer.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/AnimationPlayer.cpp.o -MF CMakeFiles/menv.dir/src/AnimationPlayer.cpp.o.d -o CMakeFiles/menv.dir/src/AnimationPlayer.cpp.o -c /Users/jessieouyang/group3/src/AnimationPlayer.cpp
+
+CMakeFiles/menv.dir/src/AnimationPlayer.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/AnimationPlayer.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/AnimationPlayer.cpp > CMakeFiles/menv.dir/src/AnimationPlayer.cpp.i
+
+CMakeFiles/menv.dir/src/AnimationPlayer.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/AnimationPlayer.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/AnimationPlayer.cpp -o CMakeFiles/menv.dir/src/AnimationPlayer.cpp.s
+
+CMakeFiles/menv.dir/src/Artifact.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/Artifact.cpp.o: src/Artifact.cpp
+CMakeFiles/menv.dir/src/Artifact.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/menv.dir/src/Artifact.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/Artifact.cpp.o -MF CMakeFiles/menv.dir/src/Artifact.cpp.o.d -o CMakeFiles/menv.dir/src/Artifact.cpp.o -c /Users/jessieouyang/group3/src/Artifact.cpp
+
+CMakeFiles/menv.dir/src/Artifact.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/Artifact.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/Artifact.cpp > CMakeFiles/menv.dir/src/Artifact.cpp.i
+
+CMakeFiles/menv.dir/src/Artifact.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/Artifact.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/Artifact.cpp -o CMakeFiles/menv.dir/src/Artifact.cpp.s
+
+CMakeFiles/menv.dir/src/AudioManager.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/AudioManager.cpp.o: src/AudioManager.cpp
+CMakeFiles/menv.dir/src/AudioManager.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/menv.dir/src/AudioManager.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/AudioManager.cpp.o -MF CMakeFiles/menv.dir/src/AudioManager.cpp.o.d -o CMakeFiles/menv.dir/src/AudioManager.cpp.o -c /Users/jessieouyang/group3/src/AudioManager.cpp
+
+CMakeFiles/menv.dir/src/AudioManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/AudioManager.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/AudioManager.cpp > CMakeFiles/menv.dir/src/AudioManager.cpp.i
+
+CMakeFiles/menv.dir/src/AudioManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/AudioManager.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/AudioManager.cpp -o CMakeFiles/menv.dir/src/AudioManager.cpp.s
 
 CMakeFiles/menv.dir/src/Camera.cpp.o: CMakeFiles/menv.dir/flags.make
 CMakeFiles/menv.dir/src/Camera.cpp.o: src/Camera.cpp
 CMakeFiles/menv.dir/src/Camera.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/menv.dir/src/Camera.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/menv.dir/src/Camera.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/Camera.cpp.o -MF CMakeFiles/menv.dir/src/Camera.cpp.o.d -o CMakeFiles/menv.dir/src/Camera.cpp.o -c /Users/jessieouyang/group3/src/Camera.cpp
 
 CMakeFiles/menv.dir/src/Camera.cpp.i: cmake_force
@@ -97,10 +419,52 @@ CMakeFiles/menv.dir/src/Camera.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/Camera.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/Camera.cpp -o CMakeFiles/menv.dir/src/Camera.cpp.s
 
+CMakeFiles/menv.dir/src/Channel.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/Channel.cpp.o: src/Channel.cpp
+CMakeFiles/menv.dir/src/Channel.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/menv.dir/src/Channel.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/Channel.cpp.o -MF CMakeFiles/menv.dir/src/Channel.cpp.o.d -o CMakeFiles/menv.dir/src/Channel.cpp.o -c /Users/jessieouyang/group3/src/Channel.cpp
+
+CMakeFiles/menv.dir/src/Channel.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/Channel.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/Channel.cpp > CMakeFiles/menv.dir/src/Channel.cpp.i
+
+CMakeFiles/menv.dir/src/Channel.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/Channel.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/Channel.cpp -o CMakeFiles/menv.dir/src/Channel.cpp.s
+
+CMakeFiles/menv.dir/src/Character.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/Character.cpp.o: src/Character.cpp
+CMakeFiles/menv.dir/src/Character.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/menv.dir/src/Character.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/Character.cpp.o -MF CMakeFiles/menv.dir/src/Character.cpp.o.d -o CMakeFiles/menv.dir/src/Character.cpp.o -c /Users/jessieouyang/group3/src/Character.cpp
+
+CMakeFiles/menv.dir/src/Character.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/Character.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/Character.cpp > CMakeFiles/menv.dir/src/Character.cpp.i
+
+CMakeFiles/menv.dir/src/Character.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/Character.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/Character.cpp -o CMakeFiles/menv.dir/src/Character.cpp.s
+
+CMakeFiles/menv.dir/src/ClientLogic.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/ClientLogic.cpp.o: src/ClientLogic.cpp
+CMakeFiles/menv.dir/src/ClientLogic.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/menv.dir/src/ClientLogic.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/ClientLogic.cpp.o -MF CMakeFiles/menv.dir/src/ClientLogic.cpp.o.d -o CMakeFiles/menv.dir/src/ClientLogic.cpp.o -c /Users/jessieouyang/group3/src/ClientLogic.cpp
+
+CMakeFiles/menv.dir/src/ClientLogic.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/ClientLogic.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/ClientLogic.cpp > CMakeFiles/menv.dir/src/ClientLogic.cpp.i
+
+CMakeFiles/menv.dir/src/ClientLogic.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/ClientLogic.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/ClientLogic.cpp -o CMakeFiles/menv.dir/src/ClientLogic.cpp.s
+
 CMakeFiles/menv.dir/src/Cube.cpp.o: CMakeFiles/menv.dir/flags.make
 CMakeFiles/menv.dir/src/Cube.cpp.o: src/Cube.cpp
 CMakeFiles/menv.dir/src/Cube.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/menv.dir/src/Cube.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/menv.dir/src/Cube.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/Cube.cpp.o -MF CMakeFiles/menv.dir/src/Cube.cpp.o.d -o CMakeFiles/menv.dir/src/Cube.cpp.o -c /Users/jessieouyang/group3/src/Cube.cpp
 
 CMakeFiles/menv.dir/src/Cube.cpp.i: cmake_force
@@ -111,10 +475,136 @@ CMakeFiles/menv.dir/src/Cube.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/Cube.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/Cube.cpp -o CMakeFiles/menv.dir/src/Cube.cpp.s
 
+CMakeFiles/menv.dir/src/Joint.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/Joint.cpp.o: src/Joint.cpp
+CMakeFiles/menv.dir/src/Joint.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object CMakeFiles/menv.dir/src/Joint.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/Joint.cpp.o -MF CMakeFiles/menv.dir/src/Joint.cpp.o.d -o CMakeFiles/menv.dir/src/Joint.cpp.o -c /Users/jessieouyang/group3/src/Joint.cpp
+
+CMakeFiles/menv.dir/src/Joint.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/Joint.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/Joint.cpp > CMakeFiles/menv.dir/src/Joint.cpp.i
+
+CMakeFiles/menv.dir/src/Joint.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/Joint.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/Joint.cpp -o CMakeFiles/menv.dir/src/Joint.cpp.s
+
+CMakeFiles/menv.dir/src/Mesh.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/Mesh.cpp.o: src/Mesh.cpp
+CMakeFiles/menv.dir/src/Mesh.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building CXX object CMakeFiles/menv.dir/src/Mesh.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/Mesh.cpp.o -MF CMakeFiles/menv.dir/src/Mesh.cpp.o.d -o CMakeFiles/menv.dir/src/Mesh.cpp.o -c /Users/jessieouyang/group3/src/Mesh.cpp
+
+CMakeFiles/menv.dir/src/Mesh.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/Mesh.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/Mesh.cpp > CMakeFiles/menv.dir/src/Mesh.cpp.i
+
+CMakeFiles/menv.dir/src/Mesh.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/Mesh.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/Mesh.cpp -o CMakeFiles/menv.dir/src/Mesh.cpp.s
+
+CMakeFiles/menv.dir/src/MeshInstance.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/MeshInstance.cpp.o: src/MeshInstance.cpp
+CMakeFiles/menv.dir/src/MeshInstance.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building CXX object CMakeFiles/menv.dir/src/MeshInstance.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/MeshInstance.cpp.o -MF CMakeFiles/menv.dir/src/MeshInstance.cpp.o.d -o CMakeFiles/menv.dir/src/MeshInstance.cpp.o -c /Users/jessieouyang/group3/src/MeshInstance.cpp
+
+CMakeFiles/menv.dir/src/MeshInstance.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/MeshInstance.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/MeshInstance.cpp > CMakeFiles/menv.dir/src/MeshInstance.cpp.i
+
+CMakeFiles/menv.dir/src/MeshInstance.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/MeshInstance.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/MeshInstance.cpp -o CMakeFiles/menv.dir/src/MeshInstance.cpp.s
+
+CMakeFiles/menv.dir/src/Model.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/Model.cpp.o: src/Model.cpp
+CMakeFiles/menv.dir/src/Model.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Building CXX object CMakeFiles/menv.dir/src/Model.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/Model.cpp.o -MF CMakeFiles/menv.dir/src/Model.cpp.o.d -o CMakeFiles/menv.dir/src/Model.cpp.o -c /Users/jessieouyang/group3/src/Model.cpp
+
+CMakeFiles/menv.dir/src/Model.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/Model.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/Model.cpp > CMakeFiles/menv.dir/src/Model.cpp.i
+
+CMakeFiles/menv.dir/src/Model.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/Model.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/Model.cpp -o CMakeFiles/menv.dir/src/Model.cpp.s
+
+CMakeFiles/menv.dir/src/ModelManager.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/ModelManager.cpp.o: src/ModelManager.cpp
+CMakeFiles/menv.dir/src/ModelManager.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Building CXX object CMakeFiles/menv.dir/src/ModelManager.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/ModelManager.cpp.o -MF CMakeFiles/menv.dir/src/ModelManager.cpp.o.d -o CMakeFiles/menv.dir/src/ModelManager.cpp.o -c /Users/jessieouyang/group3/src/ModelManager.cpp
+
+CMakeFiles/menv.dir/src/ModelManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/ModelManager.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/ModelManager.cpp > CMakeFiles/menv.dir/src/ModelManager.cpp.i
+
+CMakeFiles/menv.dir/src/ModelManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/ModelManager.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/ModelManager.cpp -o CMakeFiles/menv.dir/src/ModelManager.cpp.s
+
+CMakeFiles/menv.dir/src/ModelTypes.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/ModelTypes.cpp.o: src/ModelTypes.cpp
+CMakeFiles/menv.dir/src/ModelTypes.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_35) "Building CXX object CMakeFiles/menv.dir/src/ModelTypes.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/ModelTypes.cpp.o -MF CMakeFiles/menv.dir/src/ModelTypes.cpp.o.d -o CMakeFiles/menv.dir/src/ModelTypes.cpp.o -c /Users/jessieouyang/group3/src/ModelTypes.cpp
+
+CMakeFiles/menv.dir/src/ModelTypes.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/ModelTypes.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/ModelTypes.cpp > CMakeFiles/menv.dir/src/ModelTypes.cpp.i
+
+CMakeFiles/menv.dir/src/ModelTypes.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/ModelTypes.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/ModelTypes.cpp -o CMakeFiles/menv.dir/src/ModelTypes.cpp.s
+
+CMakeFiles/menv.dir/src/NPCs.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/NPCs.cpp.o: src/NPCs.cpp
+CMakeFiles/menv.dir/src/NPCs.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_36) "Building CXX object CMakeFiles/menv.dir/src/NPCs.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/NPCs.cpp.o -MF CMakeFiles/menv.dir/src/NPCs.cpp.o.d -o CMakeFiles/menv.dir/src/NPCs.cpp.o -c /Users/jessieouyang/group3/src/NPCs.cpp
+
+CMakeFiles/menv.dir/src/NPCs.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/NPCs.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/NPCs.cpp > CMakeFiles/menv.dir/src/NPCs.cpp.i
+
+CMakeFiles/menv.dir/src/NPCs.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/NPCs.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/NPCs.cpp -o CMakeFiles/menv.dir/src/NPCs.cpp.s
+
+CMakeFiles/menv.dir/src/Scene.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/Scene.cpp.o: src/Scene.cpp
+CMakeFiles/menv.dir/src/Scene.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_37) "Building CXX object CMakeFiles/menv.dir/src/Scene.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/Scene.cpp.o -MF CMakeFiles/menv.dir/src/Scene.cpp.o.d -o CMakeFiles/menv.dir/src/Scene.cpp.o -c /Users/jessieouyang/group3/src/Scene.cpp
+
+CMakeFiles/menv.dir/src/Scene.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/Scene.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/Scene.cpp > CMakeFiles/menv.dir/src/Scene.cpp.i
+
+CMakeFiles/menv.dir/src/Scene.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/Scene.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/Scene.cpp -o CMakeFiles/menv.dir/src/Scene.cpp.s
+
+CMakeFiles/menv.dir/src/ServerLogic.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/ServerLogic.cpp.o: src/ServerLogic.cpp
+CMakeFiles/menv.dir/src/ServerLogic.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_38) "Building CXX object CMakeFiles/menv.dir/src/ServerLogic.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/ServerLogic.cpp.o -MF CMakeFiles/menv.dir/src/ServerLogic.cpp.o.d -o CMakeFiles/menv.dir/src/ServerLogic.cpp.o -c /Users/jessieouyang/group3/src/ServerLogic.cpp
+
+CMakeFiles/menv.dir/src/ServerLogic.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/ServerLogic.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/ServerLogic.cpp > CMakeFiles/menv.dir/src/ServerLogic.cpp.i
+
+CMakeFiles/menv.dir/src/ServerLogic.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/ServerLogic.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/ServerLogic.cpp -o CMakeFiles/menv.dir/src/ServerLogic.cpp.s
+
 CMakeFiles/menv.dir/src/Shader.cpp.o: CMakeFiles/menv.dir/flags.make
 CMakeFiles/menv.dir/src/Shader.cpp.o: src/Shader.cpp
 CMakeFiles/menv.dir/src/Shader.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/menv.dir/src/Shader.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_39) "Building CXX object CMakeFiles/menv.dir/src/Shader.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/Shader.cpp.o -MF CMakeFiles/menv.dir/src/Shader.cpp.o.d -o CMakeFiles/menv.dir/src/Shader.cpp.o -c /Users/jessieouyang/group3/src/Shader.cpp
 
 CMakeFiles/menv.dir/src/Shader.cpp.i: cmake_force
@@ -125,10 +615,52 @@ CMakeFiles/menv.dir/src/Shader.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/Shader.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/Shader.cpp -o CMakeFiles/menv.dir/src/Shader.cpp.s
 
+CMakeFiles/menv.dir/src/ShaderManager.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/ShaderManager.cpp.o: src/ShaderManager.cpp
+CMakeFiles/menv.dir/src/ShaderManager.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_40) "Building CXX object CMakeFiles/menv.dir/src/ShaderManager.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/ShaderManager.cpp.o -MF CMakeFiles/menv.dir/src/ShaderManager.cpp.o.d -o CMakeFiles/menv.dir/src/ShaderManager.cpp.o -c /Users/jessieouyang/group3/src/ShaderManager.cpp
+
+CMakeFiles/menv.dir/src/ShaderManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/ShaderManager.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/ShaderManager.cpp > CMakeFiles/menv.dir/src/ShaderManager.cpp.i
+
+CMakeFiles/menv.dir/src/ShaderManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/ShaderManager.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/ShaderManager.cpp -o CMakeFiles/menv.dir/src/ShaderManager.cpp.s
+
+CMakeFiles/menv.dir/src/Skeleton.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/Skeleton.cpp.o: src/Skeleton.cpp
+CMakeFiles/menv.dir/src/Skeleton.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_41) "Building CXX object CMakeFiles/menv.dir/src/Skeleton.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/Skeleton.cpp.o -MF CMakeFiles/menv.dir/src/Skeleton.cpp.o.d -o CMakeFiles/menv.dir/src/Skeleton.cpp.o -c /Users/jessieouyang/group3/src/Skeleton.cpp
+
+CMakeFiles/menv.dir/src/Skeleton.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/Skeleton.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/Skeleton.cpp > CMakeFiles/menv.dir/src/Skeleton.cpp.i
+
+CMakeFiles/menv.dir/src/Skeleton.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/Skeleton.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/Skeleton.cpp -o CMakeFiles/menv.dir/src/Skeleton.cpp.s
+
+CMakeFiles/menv.dir/src/TextureManager.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/TextureManager.cpp.o: src/TextureManager.cpp
+CMakeFiles/menv.dir/src/TextureManager.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_42) "Building CXX object CMakeFiles/menv.dir/src/TextureManager.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/TextureManager.cpp.o -MF CMakeFiles/menv.dir/src/TextureManager.cpp.o.d -o CMakeFiles/menv.dir/src/TextureManager.cpp.o -c /Users/jessieouyang/group3/src/TextureManager.cpp
+
+CMakeFiles/menv.dir/src/TextureManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/TextureManager.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/TextureManager.cpp > CMakeFiles/menv.dir/src/TextureManager.cpp.i
+
+CMakeFiles/menv.dir/src/TextureManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/TextureManager.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/TextureManager.cpp -o CMakeFiles/menv.dir/src/TextureManager.cpp.s
+
 CMakeFiles/menv.dir/src/Tokenizer.cpp.o: CMakeFiles/menv.dir/flags.make
 CMakeFiles/menv.dir/src/Tokenizer.cpp.o: src/Tokenizer.cpp
 CMakeFiles/menv.dir/src/Tokenizer.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/menv.dir/src/Tokenizer.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_43) "Building CXX object CMakeFiles/menv.dir/src/Tokenizer.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/Tokenizer.cpp.o -MF CMakeFiles/menv.dir/src/Tokenizer.cpp.o.d -o CMakeFiles/menv.dir/src/Tokenizer.cpp.o -c /Users/jessieouyang/group3/src/Tokenizer.cpp
 
 CMakeFiles/menv.dir/src/Tokenizer.cpp.i: cmake_force
@@ -142,7 +674,7 @@ CMakeFiles/menv.dir/src/Tokenizer.cpp.s: cmake_force
 CMakeFiles/menv.dir/src/Window.cpp.o: CMakeFiles/menv.dir/flags.make
 CMakeFiles/menv.dir/src/Window.cpp.o: src/Window.cpp
 CMakeFiles/menv.dir/src/Window.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/menv.dir/src/Window.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_44) "Building CXX object CMakeFiles/menv.dir/src/Window.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/Window.cpp.o -MF CMakeFiles/menv.dir/src/Window.cpp.o.d -o CMakeFiles/menv.dir/src/Window.cpp.o -c /Users/jessieouyang/group3/src/Window.cpp
 
 CMakeFiles/menv.dir/src/Window.cpp.i: cmake_force
@@ -153,10 +685,38 @@ CMakeFiles/menv.dir/src/Window.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/Window.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/Window.cpp -o CMakeFiles/menv.dir/src/Window.cpp.s
 
+CMakeFiles/menv.dir/src/std_image.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/std_image.cpp.o: src/std_image.cpp
+CMakeFiles/menv.dir/src/std_image.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_45) "Building CXX object CMakeFiles/menv.dir/src/std_image.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/std_image.cpp.o -MF CMakeFiles/menv.dir/src/std_image.cpp.o.d -o CMakeFiles/menv.dir/src/std_image.cpp.o -c /Users/jessieouyang/group3/src/std_image.cpp
+
+CMakeFiles/menv.dir/src/std_image.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/std_image.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/std_image.cpp > CMakeFiles/menv.dir/src/std_image.cpp.i
+
+CMakeFiles/menv.dir/src/std_image.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/std_image.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/std_image.cpp -o CMakeFiles/menv.dir/src/std_image.cpp.s
+
+CMakeFiles/menv.dir/src/utils.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/src/utils.cpp.o: src/utils.cpp
+CMakeFiles/menv.dir/src/utils.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_46) "Building CXX object CMakeFiles/menv.dir/src/utils.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/src/utils.cpp.o -MF CMakeFiles/menv.dir/src/utils.cpp.o.d -o CMakeFiles/menv.dir/src/utils.cpp.o -c /Users/jessieouyang/group3/src/utils.cpp
+
+CMakeFiles/menv.dir/src/utils.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/src/utils.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/src/utils.cpp > CMakeFiles/menv.dir/src/utils.cpp.i
+
+CMakeFiles/menv.dir/src/utils.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/src/utils.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/src/utils.cpp -o CMakeFiles/menv.dir/src/utils.cpp.s
+
 CMakeFiles/menv.dir/external/imgui/imgui.cpp.o: CMakeFiles/menv.dir/flags.make
 CMakeFiles/menv.dir/external/imgui/imgui.cpp.o: external/imgui/imgui.cpp
 CMakeFiles/menv.dir/external/imgui/imgui.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/menv.dir/external/imgui/imgui.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Building CXX object CMakeFiles/menv.dir/external/imgui/imgui.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/external/imgui/imgui.cpp.o -MF CMakeFiles/menv.dir/external/imgui/imgui.cpp.o.d -o CMakeFiles/menv.dir/external/imgui/imgui.cpp.o -c /Users/jessieouyang/group3/external/imgui/imgui.cpp
 
 CMakeFiles/menv.dir/external/imgui/imgui.cpp.i: cmake_force
@@ -170,7 +730,7 @@ CMakeFiles/menv.dir/external/imgui/imgui.cpp.s: cmake_force
 CMakeFiles/menv.dir/external/imgui/imgui_demo.cpp.o: CMakeFiles/menv.dir/flags.make
 CMakeFiles/menv.dir/external/imgui/imgui_demo.cpp.o: external/imgui/imgui_demo.cpp
 CMakeFiles/menv.dir/external/imgui/imgui_demo.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/menv.dir/external/imgui/imgui_demo.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_48) "Building CXX object CMakeFiles/menv.dir/external/imgui/imgui_demo.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/external/imgui/imgui_demo.cpp.o -MF CMakeFiles/menv.dir/external/imgui/imgui_demo.cpp.o.d -o CMakeFiles/menv.dir/external/imgui/imgui_demo.cpp.o -c /Users/jessieouyang/group3/external/imgui/imgui_demo.cpp
 
 CMakeFiles/menv.dir/external/imgui/imgui_demo.cpp.i: cmake_force
@@ -184,7 +744,7 @@ CMakeFiles/menv.dir/external/imgui/imgui_demo.cpp.s: cmake_force
 CMakeFiles/menv.dir/external/imgui/imgui_draw.cpp.o: CMakeFiles/menv.dir/flags.make
 CMakeFiles/menv.dir/external/imgui/imgui_draw.cpp.o: external/imgui/imgui_draw.cpp
 CMakeFiles/menv.dir/external/imgui/imgui_draw.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/menv.dir/external/imgui/imgui_draw.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_49) "Building CXX object CMakeFiles/menv.dir/external/imgui/imgui_draw.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/external/imgui/imgui_draw.cpp.o -MF CMakeFiles/menv.dir/external/imgui/imgui_draw.cpp.o.d -o CMakeFiles/menv.dir/external/imgui/imgui_draw.cpp.o -c /Users/jessieouyang/group3/external/imgui/imgui_draw.cpp
 
 CMakeFiles/menv.dir/external/imgui/imgui_draw.cpp.i: cmake_force
@@ -198,7 +758,7 @@ CMakeFiles/menv.dir/external/imgui/imgui_draw.cpp.s: cmake_force
 CMakeFiles/menv.dir/external/imgui/imgui_tables.cpp.o: CMakeFiles/menv.dir/flags.make
 CMakeFiles/menv.dir/external/imgui/imgui_tables.cpp.o: external/imgui/imgui_tables.cpp
 CMakeFiles/menv.dir/external/imgui/imgui_tables.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/menv.dir/external/imgui/imgui_tables.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_50) "Building CXX object CMakeFiles/menv.dir/external/imgui/imgui_tables.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/external/imgui/imgui_tables.cpp.o -MF CMakeFiles/menv.dir/external/imgui/imgui_tables.cpp.o.d -o CMakeFiles/menv.dir/external/imgui/imgui_tables.cpp.o -c /Users/jessieouyang/group3/external/imgui/imgui_tables.cpp
 
 CMakeFiles/menv.dir/external/imgui/imgui_tables.cpp.i: cmake_force
@@ -212,7 +772,7 @@ CMakeFiles/menv.dir/external/imgui/imgui_tables.cpp.s: cmake_force
 CMakeFiles/menv.dir/external/imgui/imgui_widgets.cpp.o: CMakeFiles/menv.dir/flags.make
 CMakeFiles/menv.dir/external/imgui/imgui_widgets.cpp.o: external/imgui/imgui_widgets.cpp
 CMakeFiles/menv.dir/external/imgui/imgui_widgets.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/menv.dir/external/imgui/imgui_widgets.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_51) "Building CXX object CMakeFiles/menv.dir/external/imgui/imgui_widgets.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/external/imgui/imgui_widgets.cpp.o -MF CMakeFiles/menv.dir/external/imgui/imgui_widgets.cpp.o.d -o CMakeFiles/menv.dir/external/imgui/imgui_widgets.cpp.o -c /Users/jessieouyang/group3/external/imgui/imgui_widgets.cpp
 
 CMakeFiles/menv.dir/external/imgui/imgui_widgets.cpp.i: cmake_force
@@ -226,7 +786,7 @@ CMakeFiles/menv.dir/external/imgui/imgui_widgets.cpp.s: cmake_force
 CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_glfw.cpp.o: CMakeFiles/menv.dir/flags.make
 CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_glfw.cpp.o: external/imgui/backends/imgui_impl_glfw.cpp
 CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_glfw.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_glfw.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_52) "Building CXX object CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_glfw.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_glfw.cpp.o -MF CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_glfw.cpp.o.d -o CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_glfw.cpp.o -c /Users/jessieouyang/group3/external/imgui/backends/imgui_impl_glfw.cpp
 
 CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_glfw.cpp.i: cmake_force
@@ -240,7 +800,7 @@ CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_glfw.cpp.s: cmake_force
 CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_opengl3.cpp.o: CMakeFiles/menv.dir/flags.make
 CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_opengl3.cpp.o: external/imgui/backends/imgui_impl_opengl3.cpp
 CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_opengl3.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_opengl3.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_53) "Building CXX object CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_opengl3.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_opengl3.cpp.o -MF CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_opengl3.cpp.o.d -o CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_opengl3.cpp.o -c /Users/jessieouyang/group3/external/imgui/backends/imgui_impl_opengl3.cpp
 
 CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_opengl3.cpp.i: cmake_force
@@ -251,84 +811,68 @@ CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_opengl3.cpp.s: cmake_forc
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_opengl3.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/external/imgui/backends/imgui_impl_opengl3.cpp -o CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_opengl3.cpp.s
 
-CMakeFiles/menv.dir/minigame/minigame.cpp.o: CMakeFiles/menv.dir/flags.make
-CMakeFiles/menv.dir/minigame/minigame.cpp.o: minigame/minigame.cpp
-CMakeFiles/menv.dir/minigame/minigame.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/menv.dir/minigame/minigame.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/minigame/minigame.cpp.o -MF CMakeFiles/menv.dir/minigame/minigame.cpp.o.d -o CMakeFiles/menv.dir/minigame/minigame.cpp.o -c /Users/jessieouyang/group3/minigame/minigame.cpp
+CMakeFiles/menv.dir/main.cpp.o: CMakeFiles/menv.dir/flags.make
+CMakeFiles/menv.dir/main.cpp.o: main.cpp
+CMakeFiles/menv.dir/main.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_54) "Building CXX object CMakeFiles/menv.dir/main.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/main.cpp.o -MF CMakeFiles/menv.dir/main.cpp.o.d -o CMakeFiles/menv.dir/main.cpp.o -c /Users/jessieouyang/group3/main.cpp
 
-CMakeFiles/menv.dir/minigame/minigame.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/minigame/minigame.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/minigame/minigame.cpp > CMakeFiles/menv.dir/minigame/minigame.cpp.i
+CMakeFiles/menv.dir/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/main.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/main.cpp > CMakeFiles/menv.dir/main.cpp.i
 
-CMakeFiles/menv.dir/minigame/minigame.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/minigame/minigame.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/minigame/minigame.cpp -o CMakeFiles/menv.dir/minigame/minigame.cpp.s
-
-CMakeFiles/menv.dir/minigame/src/character.cpp.o: CMakeFiles/menv.dir/flags.make
-CMakeFiles/menv.dir/minigame/src/character.cpp.o: minigame/src/character.cpp
-CMakeFiles/menv.dir/minigame/src/character.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/menv.dir/minigame/src/character.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/minigame/src/character.cpp.o -MF CMakeFiles/menv.dir/minigame/src/character.cpp.o.d -o CMakeFiles/menv.dir/minigame/src/character.cpp.o -c /Users/jessieouyang/group3/minigame/src/character.cpp
-
-CMakeFiles/menv.dir/minigame/src/character.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/minigame/src/character.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/minigame/src/character.cpp > CMakeFiles/menv.dir/minigame/src/character.cpp.i
-
-CMakeFiles/menv.dir/minigame/src/character.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/minigame/src/character.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/minigame/src/character.cpp -o CMakeFiles/menv.dir/minigame/src/character.cpp.s
-
-CMakeFiles/menv.dir/minigame/src/platform.cpp.o: CMakeFiles/menv.dir/flags.make
-CMakeFiles/menv.dir/minigame/src/platform.cpp.o: minigame/src/platform.cpp
-CMakeFiles/menv.dir/minigame/src/platform.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/menv.dir/minigame/src/platform.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/minigame/src/platform.cpp.o -MF CMakeFiles/menv.dir/minigame/src/platform.cpp.o.d -o CMakeFiles/menv.dir/minigame/src/platform.cpp.o -c /Users/jessieouyang/group3/minigame/src/platform.cpp
-
-CMakeFiles/menv.dir/minigame/src/platform.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/minigame/src/platform.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/minigame/src/platform.cpp > CMakeFiles/menv.dir/minigame/src/platform.cpp.i
-
-CMakeFiles/menv.dir/minigame/src/platform.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/minigame/src/platform.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/minigame/src/platform.cpp -o CMakeFiles/menv.dir/minigame/src/platform.cpp.s
-
-CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o: CMakeFiles/menv.dir/flags.make
-CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o: minigame/src/shader_utils.cpp
-CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o -MF CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o.d -o CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o -c /Users/jessieouyang/group3/minigame/src/shader_utils.cpp
-
-CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/minigame/src/shader_utils.cpp > CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.i
-
-CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/minigame/src/shader_utils.cpp -o CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.s
-
-CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o: CMakeFiles/menv.dir/flags.make
-CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o: minigame/src/stb_image_impl.cpp
-CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o: CMakeFiles/menv.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o -MF CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o.d -o CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o -c /Users/jessieouyang/group3/minigame/src/stb_image_impl.cpp
-
-CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jessieouyang/group3/minigame/src/stb_image_impl.cpp > CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.i
-
-CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/minigame/src/stb_image_impl.cpp -o CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.s
+CMakeFiles/menv.dir/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/menv.dir/main.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jessieouyang/group3/main.cpp -o CMakeFiles/menv.dir/main.cpp.s
 
 # Object files for target menv
 menv_OBJECTS = \
-"CMakeFiles/menv.dir/main.cpp.o" \
+"CMakeFiles/menv.dir/Networking/ClientGame.cpp.o" \
+"CMakeFiles/menv.dir/Networking/ClientNetwork.cpp.o" \
+"CMakeFiles/menv.dir/Networking/NetworkServices.cpp.o" \
+"CMakeFiles/menv.dir/Networking/ServerGame.cpp.o" \
+"CMakeFiles/menv.dir/Networking/ServerNetwork.cpp.o" \
+"CMakeFiles/menv.dir/packets/CursorPacket.cpp.o" \
+"CMakeFiles/menv.dir/packets/EndGamePacket.cpp.o" \
+"CMakeFiles/menv.dir/packets/GuiUpdatePacket.cpp.o" \
+"CMakeFiles/menv.dir/packets/InitPacket.cpp.o" \
+"CMakeFiles/menv.dir/packets/InitPlayerPacket.cpp.o" \
+"CMakeFiles/menv.dir/packets/KeyPacket.cpp.o" \
+"CMakeFiles/menv.dir/packets/NPCPacket.cpp.o" \
+"CMakeFiles/menv.dir/packets/Packet.cpp.o" \
+"CMakeFiles/menv.dir/packets/PacketFactory.cpp.o" \
+"CMakeFiles/menv.dir/packets/StateUpdatePacket.cpp.o" \
+"CMakeFiles/menv.dir/packets/TimeUpdate.cpp.o" \
+"CMakeFiles/menv.dir/packets/WinPacket.cpp.o" \
+"CMakeFiles/menv.dir/src/AABB.cpp.o" \
+"CMakeFiles/menv.dir/src/AABB_loader.cpp.o" \
+"CMakeFiles/menv.dir/src/AnInstance.cpp.o" \
+"CMakeFiles/menv.dir/src/Animation.cpp.o" \
+"CMakeFiles/menv.dir/src/AnimationPlayer.cpp.o" \
+"CMakeFiles/menv.dir/src/Artifact.cpp.o" \
+"CMakeFiles/menv.dir/src/AudioManager.cpp.o" \
 "CMakeFiles/menv.dir/src/Camera.cpp.o" \
+"CMakeFiles/menv.dir/src/Channel.cpp.o" \
+"CMakeFiles/menv.dir/src/Character.cpp.o" \
+"CMakeFiles/menv.dir/src/ClientLogic.cpp.o" \
 "CMakeFiles/menv.dir/src/Cube.cpp.o" \
+"CMakeFiles/menv.dir/src/Joint.cpp.o" \
+"CMakeFiles/menv.dir/src/Mesh.cpp.o" \
+"CMakeFiles/menv.dir/src/MeshInstance.cpp.o" \
+"CMakeFiles/menv.dir/src/Model.cpp.o" \
+"CMakeFiles/menv.dir/src/ModelManager.cpp.o" \
+"CMakeFiles/menv.dir/src/ModelTypes.cpp.o" \
+"CMakeFiles/menv.dir/src/NPCs.cpp.o" \
+"CMakeFiles/menv.dir/src/Scene.cpp.o" \
+"CMakeFiles/menv.dir/src/ServerLogic.cpp.o" \
 "CMakeFiles/menv.dir/src/Shader.cpp.o" \
+"CMakeFiles/menv.dir/src/ShaderManager.cpp.o" \
+"CMakeFiles/menv.dir/src/Skeleton.cpp.o" \
+"CMakeFiles/menv.dir/src/TextureManager.cpp.o" \
 "CMakeFiles/menv.dir/src/Tokenizer.cpp.o" \
 "CMakeFiles/menv.dir/src/Window.cpp.o" \
+"CMakeFiles/menv.dir/src/std_image.cpp.o" \
+"CMakeFiles/menv.dir/src/utils.cpp.o" \
 "CMakeFiles/menv.dir/external/imgui/imgui.cpp.o" \
 "CMakeFiles/menv.dir/external/imgui/imgui_demo.cpp.o" \
 "CMakeFiles/menv.dir/external/imgui/imgui_draw.cpp.o" \
@@ -336,21 +880,57 @@ menv_OBJECTS = \
 "CMakeFiles/menv.dir/external/imgui/imgui_widgets.cpp.o" \
 "CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_glfw.cpp.o" \
 "CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_opengl3.cpp.o" \
-"CMakeFiles/menv.dir/minigame/minigame.cpp.o" \
-"CMakeFiles/menv.dir/minigame/src/character.cpp.o" \
-"CMakeFiles/menv.dir/minigame/src/platform.cpp.o" \
-"CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o" \
-"CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o"
+"CMakeFiles/menv.dir/main.cpp.o"
 
 # External object files for target menv
 menv_EXTERNAL_OBJECTS =
 
-menv: CMakeFiles/menv.dir/main.cpp.o
+menv: CMakeFiles/menv.dir/Networking/ClientGame.cpp.o
+menv: CMakeFiles/menv.dir/Networking/ClientNetwork.cpp.o
+menv: CMakeFiles/menv.dir/Networking/NetworkServices.cpp.o
+menv: CMakeFiles/menv.dir/Networking/ServerGame.cpp.o
+menv: CMakeFiles/menv.dir/Networking/ServerNetwork.cpp.o
+menv: CMakeFiles/menv.dir/packets/CursorPacket.cpp.o
+menv: CMakeFiles/menv.dir/packets/EndGamePacket.cpp.o
+menv: CMakeFiles/menv.dir/packets/GuiUpdatePacket.cpp.o
+menv: CMakeFiles/menv.dir/packets/InitPacket.cpp.o
+menv: CMakeFiles/menv.dir/packets/InitPlayerPacket.cpp.o
+menv: CMakeFiles/menv.dir/packets/KeyPacket.cpp.o
+menv: CMakeFiles/menv.dir/packets/NPCPacket.cpp.o
+menv: CMakeFiles/menv.dir/packets/Packet.cpp.o
+menv: CMakeFiles/menv.dir/packets/PacketFactory.cpp.o
+menv: CMakeFiles/menv.dir/packets/StateUpdatePacket.cpp.o
+menv: CMakeFiles/menv.dir/packets/TimeUpdate.cpp.o
+menv: CMakeFiles/menv.dir/packets/WinPacket.cpp.o
+menv: CMakeFiles/menv.dir/src/AABB.cpp.o
+menv: CMakeFiles/menv.dir/src/AABB_loader.cpp.o
+menv: CMakeFiles/menv.dir/src/AnInstance.cpp.o
+menv: CMakeFiles/menv.dir/src/Animation.cpp.o
+menv: CMakeFiles/menv.dir/src/AnimationPlayer.cpp.o
+menv: CMakeFiles/menv.dir/src/Artifact.cpp.o
+menv: CMakeFiles/menv.dir/src/AudioManager.cpp.o
 menv: CMakeFiles/menv.dir/src/Camera.cpp.o
+menv: CMakeFiles/menv.dir/src/Channel.cpp.o
+menv: CMakeFiles/menv.dir/src/Character.cpp.o
+menv: CMakeFiles/menv.dir/src/ClientLogic.cpp.o
 menv: CMakeFiles/menv.dir/src/Cube.cpp.o
+menv: CMakeFiles/menv.dir/src/Joint.cpp.o
+menv: CMakeFiles/menv.dir/src/Mesh.cpp.o
+menv: CMakeFiles/menv.dir/src/MeshInstance.cpp.o
+menv: CMakeFiles/menv.dir/src/Model.cpp.o
+menv: CMakeFiles/menv.dir/src/ModelManager.cpp.o
+menv: CMakeFiles/menv.dir/src/ModelTypes.cpp.o
+menv: CMakeFiles/menv.dir/src/NPCs.cpp.o
+menv: CMakeFiles/menv.dir/src/Scene.cpp.o
+menv: CMakeFiles/menv.dir/src/ServerLogic.cpp.o
 menv: CMakeFiles/menv.dir/src/Shader.cpp.o
+menv: CMakeFiles/menv.dir/src/ShaderManager.cpp.o
+menv: CMakeFiles/menv.dir/src/Skeleton.cpp.o
+menv: CMakeFiles/menv.dir/src/TextureManager.cpp.o
 menv: CMakeFiles/menv.dir/src/Tokenizer.cpp.o
 menv: CMakeFiles/menv.dir/src/Window.cpp.o
+menv: CMakeFiles/menv.dir/src/std_image.cpp.o
+menv: CMakeFiles/menv.dir/src/utils.cpp.o
 menv: CMakeFiles/menv.dir/external/imgui/imgui.cpp.o
 menv: CMakeFiles/menv.dir/external/imgui/imgui_demo.cpp.o
 menv: CMakeFiles/menv.dir/external/imgui/imgui_draw.cpp.o
@@ -358,16 +938,15 @@ menv: CMakeFiles/menv.dir/external/imgui/imgui_tables.cpp.o
 menv: CMakeFiles/menv.dir/external/imgui/imgui_widgets.cpp.o
 menv: CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_glfw.cpp.o
 menv: CMakeFiles/menv.dir/external/imgui/backends/imgui_impl_opengl3.cpp.o
-menv: CMakeFiles/menv.dir/minigame/minigame.cpp.o
-menv: CMakeFiles/menv.dir/minigame/src/character.cpp.o
-menv: CMakeFiles/menv.dir/minigame/src/platform.cpp.o
-menv: CMakeFiles/menv.dir/minigame/src/shader_utils.cpp.o
-menv: CMakeFiles/menv.dir/minigame/src/stb_image_impl.cpp.o
+menv: CMakeFiles/menv.dir/main.cpp.o
 menv: CMakeFiles/menv.dir/build.make
+menv: libsoloud.a
 menv: /usr/local/lib/libGLEW.dylib
 menv: /usr/local/lib/libglfw.dylib
+menv: assimp/bin/libassimp.5.4.3.dylib
+menv: /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/lib/libz.tbd
 menv: CMakeFiles/menv.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Linking CXX executable menv"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/jessieouyang/group3/CMakeFiles --progress-num=$(CMAKE_PROGRESS_55) "Linking CXX executable menv"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/menv.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

@@ -775,11 +775,13 @@ bool ServerLogic::winCondition(CubeState * player)
         if(player->isCarrying)
         {
             //std::cout << "enter player carrying check" << std::endl;
+            // std::cout << "printing carry condition" << std::endl;
             if(player->getPosition().x < -12.8f)
             {
                 //std::cout << "enter palyer position check" << std::endl;
                 //std::cout << player->getPosition().x << std::endl;
-                //currentState = WIN_CONDITION;
+                // currentState = WIN_CONDITION;
+                // std::cout << "printing win condition" << std::endl;
                 return true;
             }
         }

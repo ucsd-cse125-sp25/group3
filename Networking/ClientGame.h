@@ -8,6 +8,7 @@
 #include "core.h"
 #include "ClientLogic.h"
 #include "../packets/PacketFactory.h"
+#include "AudioManager.h"
 
 
 class ClientGame
@@ -18,6 +19,8 @@ public:
     ClientGame();
     GLFWwindow* window;
     ClientNetwork* network; 
+    AudioManager audio;
+    bool musicStarted = false;
     void sendPendingPackets();
     void sendPacket(Packet& packet);
     void sendInitPacket();

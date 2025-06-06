@@ -28,7 +28,10 @@ std::map<unsigned int, Cube*> Window::cubes;
 NPCs* Window::NPC;
 std::map<unsigned int, NPCs*> Window::npcs;
 Character* Window::character;
+Character* Window::character_preview;
 std::map<unsigned int, Character*> Window::characters;
+// std::map<unsigned int, Character*> Window::characters_preview;
+
 
 Scene* Window::scene;
 
@@ -268,6 +271,7 @@ bool Window::initializeObjects() {
     model->setState(AnimState::Walk);
 
     character = new Character(model);
+
     // cube = new Cube(glm::vec3(-1, 0, -2), glm::vec3(1, 1, 1));
     // floor = new Cube(glm::vec3(-8, -2.03, -8), glm::vec3(8, -2.01, 8));
     
@@ -284,6 +288,8 @@ void Window::cleanUp() {
     delete MiniMapCam;
     delete scene;
     delete character;
+    delete character_preview;
+
     
     delete textureManager;
     delete animationPlayer;
@@ -317,6 +323,18 @@ GLFWwindow* Window::createWindow(int width, int height) {
     #endif
 
     GLFWwindow* window = glfwCreateWindow(width, height, windowTitle, NULL, NULL);
+
+    // Set to full screen
+    // GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    // const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+ 
+    // glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+    // glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+    // glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+    // glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
+    // GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "Heist at the Museum", monitor, NULL);
+
 
     #ifdef __APPLE__
         int fbWidth, fbHeight;
@@ -672,6 +690,8 @@ void Window::applyServerState(char * data) {
 }
 */
 
+
+
 void Window::applyServerState(const StateUpdatePacket& packet) {
     int numClients = packet.numClients;
     
@@ -726,8 +746,40 @@ void Window::applyServerState(const StateUpdatePacket& packet) {
     artifact->update(animationPlayer);
 }
 
+void Window::setCharacterPreview(CharacterType selCharacter) {
+    ModelType modelType;
+
+    switch (selCharacter) {
+        case CHARACTER_4:
+            modelType = ModelType::SecurityGuard;
+            break;
+        case CHARACTER_1:
+        case CHARACTER_2:
+        case CHARACTER_3:
+        default:
+            modelType = ModelType::FemaleThief;
+            break;
+    }
+
+    AnInstance* previewModel = new AnInstance(modelManager->getModel(modelType));
+    previewModel->setState(AnimState::Walk);
+
+    // Set a fixed position for the preview character
+    glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    previewModel->setMMat(modelMatrix);
+
+    // Delete any existing preview to avoid memory leaks
+    if (character_preview) {
+        delete character_preview;
+        character_preview = nullptr;
+    }
+
+    character_preview = new Character(previewModel);
+}
+
+
 void Window::render(GLFWwindow* window) {
-    if (!initialized) return;
+
 
     // Clear the color and depth buffers.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -811,6 +863,135 @@ void Window::render(GLFWwindow* window) {
     Cam->Update(cube->getPosition()); */
 }
 
+
+// void Window::renderCharacterPreview(GLFWwindow* window) {
+
+//     // Clear the color and depth buffers.
+//     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+//     // Render the object.
+//     #ifdef __APPLE__
+//         int fbWidth, fbHeight;
+//         glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+//         glViewport(0, 0, fbWidth, fbHeight);
+//     #else
+//         glViewport(0, 0, Window::width, Window::height);
+//     #endif
+
+    
+//     AnInstance* model = new AnInstance(modelManager->getModel(ModelType::SecurityGuard));
+//     //currently no idle state for the security guard
+//     model->setState(AnimState::Walk);
+
+//     character = new Character(model);
+//     character->model->update(animationPlayer);
+//     character->draw(Cam->GetViewProjectMtx(),shaderManager);
+
+// //    cube->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false), true);
+//     floor->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false), true);
+//     artifact->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false),false);
+//     scene->draw(Cam->GetViewProjectMtx(), shaderManager);
+
+
+
+//     // Gets events, including input such as keyboard and mouse or window resizing.
+//     glfwPollEvents();
+//     // // Swap buffers.
+//     glfwSwapBuffers(window);
+
+//     // Get the character's position
+//     glm::vec3 characterPos = character->getPosition();
+
+//     // Define the camera's offset (e.g., 5 units in front of the character)
+//     glm::vec3 facingDirection = glm::vec3(0.0f, 0.0f, -1.0f);
+//     glm::vec3 cameraOffset = - facingDirection * 10.0f; // Move 5 units in front of the character
+
+//     // Calculate the camera's position
+//     glm::vec3 cameraPos = characterPos + cameraOffset;
+
+//     // Set the camera's target (look directly at the character)
+//     glm::vec3 cameraTarget = characterPos;
+
+//     // Define the up vector (typically pointing upwards in world space)
+//     glm::vec3 upVector = glm::vec3(0.0f, 1.0f, 0.0f);
+
+//     // Update the camera's view matrix using SetLookAt
+//     Cam->SetLookAt(cameraPos, cameraTarget, upVector);
+
+// }
+
+// void Window::renderCharacterPreview(GLFWwindow* window) {
+//     // Clear screen
+//     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+//     // Set correct viewport
+//     #ifdef __APPLE__
+//         int fbWidth, fbHeight;
+//         glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+//         glViewport(0, 0, fbWidth, fbHeight);
+//     #else
+//         glViewport(0, 0, Window::width, Window::height);
+//     #endif
+
+//     // Only render the preview model if it's available
+//     if (character_preview) {
+//         character_preview->update(animationPlayer);
+//         character_preview->draw(Cam->GetViewProjectMtx(), shaderManager);
+//     }
+
+//     floor->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false), true);
+//     scene->draw(Cam->GetViewProjectMtx(), shaderManager);
+
+//     // Set static camera
+//     if (character_preview) {
+//         glm::vec3 pos = character_preview->getPosition();
+//         glm::vec3 camPos = pos + glm::vec3(0.0f, 2.0f, 4.0f); // Over-the-shoulder
+//         Cam->SetLookAt(camPos, pos, glm::vec3(0.0f, 1.0f, 0.0f));
+//     }
+
+//     // Update ImGui input
+//     glfwPollEvents();
+//     glfwSwapBuffers(window);
+// }
+
+void Window::renderCharacterPreview(GLFWwindow* window) {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+#ifdef __APPLE__
+    int fbWidth, fbHeight;
+    glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+    glViewport(0, 0, fbWidth, fbHeight);
+#else
+    glViewport(0, 0, Window::width, Window::height);
+#endif
+
+    // Preview camera setup
+    if (character_preview) {
+        character_preview->update(animationPlayer);
+        character_preview->draw(Cam->GetViewProjectMtx(), shaderManager);
+
+        glm::vec3 charPos = character_preview->getPosition();
+        
+        // Camera in front and a little elevated
+        glm::vec3 camPos = charPos + glm::vec3(0.0f, 2.2f, 4.0f);  // adjust Y and Z for better framing
+        glm::vec3 lookAt = charPos + glm::vec3(0.0f, 1.2f, 0.0f);  // aim near chest/head level
+
+        Cam->SetLookAt(camPos, lookAt, glm::vec3(0.0f, 1.0f, 0.0f));
+    }
+
+    // Optional: Render floor or scene around preview
+    if (floor) {
+        floor->draw(Cam->GetViewProjectMtx(), shaderManager->getShader(RenderMode::BASE, false), true);
+    }
+    if (scene) {
+        scene->draw(Cam->GetViewProjectMtx(), shaderManager);
+    }
+
+    // glfwPollEvents();
+    // glfwSwapBuffers(window);
+}
+
+
 void Window::setClientID(const InitPlayerPacket& packet) {
     client_id = packet.clientID;
     
@@ -878,3 +1059,5 @@ void Window::applyGuiUpdate(const GuiUpdatePacket& guiPacket) {
         initialized = true;
     }
 }
+
+
