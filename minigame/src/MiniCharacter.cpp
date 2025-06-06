@@ -66,8 +66,8 @@ void MiniCharacter::initRenderer() {
 
     glBindVertexArray(0);
 
-    GLuint vs = compileShader("minigame/shaders/quad.vert", GL_VERTEX_SHADER);
-    GLuint fs = compileShader("minigame/shaders/quad.frag", GL_FRAGMENT_SHADER);
+    GLuint vs = compileShader("../../minigame/shaders/quad.vert", GL_VERTEX_SHADER);
+    GLuint fs = compileShader("../../minigame/shaders/quad.frag", GL_FRAGMENT_SHADER);
     characterShader = glCreateProgram();
     glAttachShader(characterShader, vs);
     glAttachShader(characterShader, fs);

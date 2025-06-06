@@ -31,7 +31,7 @@ void MiniGame::init(GLFWwindow* window, std::vector<Platform> platformsToInit) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    backgroundTex = loadTexture("../minigame/assets/background.png");
+    backgroundTex = loadTexture("../../minigame/assets/background.png");
     if (backgroundTex == 0) {
         std::cerr << "[MiniGame] Failed to load background!" << std::endl;
         finished = true;
@@ -42,7 +42,7 @@ void MiniGame::init(GLFWwindow* window, std::vector<Platform> platformsToInit) {
     characterShader = quadShader;
 
     int charW, charH, ch;
-    unsigned char* data = stbi_load("../minigame/assets/thief1_right.png", &charW, &charH, &ch, 4);
+    unsigned char* data = stbi_load("../../minigame/assets/thief1_right.png", &charW, &charH, &ch, 4);
     if (!data) {
         std::cerr << "Failed to load character texture!\n";
         finished = true;
@@ -54,7 +54,7 @@ void MiniGame::init(GLFWwindow* window, std::vector<Platform> platformsToInit) {
     float refH = 1800.0f;
 
 
-    float scale = 1.0f / 4.0f;
+    float scale = 1.0f;
     float drawW = charW / refW * windowWidth * scale;
     float drawH = charH /refH * windowHeight * scale;
 
@@ -62,8 +62,8 @@ void MiniGame::init(GLFWwindow* window, std::vector<Platform> platformsToInit) {
     float posY = windowHeight - drawH;
 
     player = new MiniCharacter(posX, posY, 
-        "../minigame/assets/thief1_right.png", 
-        "../minigame/assets/thief1_left.png");
+        "../../minigame/assets/thief1_right.png", 
+        "../../minigame/assets/thief1_left.png");
 
     for (int i = 0; i < platformsToInit.size(); i++) {
         serverPlatforms.emplace_back(platformsToInit[i]);
@@ -78,7 +78,7 @@ void MiniGame::update(GLFWwindow* window) {
 
     player->handleInput(window);
     player->update(1.0f / 60.0f, windowHeight, windowWidth, platforms);
-
+std::cout << "player " << player->getY() << std::endl;
 
     Platform& lastPlatform = platforms.back();
 
@@ -127,11 +127,11 @@ void MiniGame::render() {
 
 void MiniGame::updateMinigamePlatforms() {
     platforms.clear();
-    std::cout << "Window width: " << windowWidth << ", Window height: " << windowHeight << std::endl;
+    // std::cout << "Window width: " << windowWidth << ", Window height: " << windowHeight << std::endl;
     for(int i = 0; i < serverPlatforms.size(); i++) {
         Platform plat = Platform(serverPlatforms[i].x * windowWidth, serverPlatforms[i].y * windowHeight, serverPlatforms[i].width * windowWidth, serverPlatforms[i].height * windowHeight, 0);
         platforms.emplace_back(plat);
-        std::cout << "Added platform: " << plat.x  << ", " << plat.y << ", " << plat.width << ", " << plat.height << std::endl;
+        // std::cout << "Added platform: " << plat.x  << ", " << plat.y << ", " << plat.width << ", " << plat.height << std::endl;
     }
 }
 
@@ -216,8 +216,8 @@ void MiniGame::initQuadRenderer() {
     glEnableVertexAttribArray(1);
     glBindVertexArray(0);
 
-    GLuint vs = compileShader("minigame/shaders/quad.vert", GL_VERTEX_SHADER);
-    GLuint fs = compileShader("minigame/shaders/quad.frag", GL_FRAGMENT_SHADER);
+    GLuint vs = compileShader("../../minigame/shaders/quad.vert", GL_VERTEX_SHADER);
+    GLuint fs = compileShader("../../minigame/shaders/quad.frag", GL_FRAGMENT_SHADER);
     quadShader = glCreateProgram();
     glAttachShader(quadShader, vs);
     glAttachShader(quadShader, fs);
