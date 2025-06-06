@@ -39,24 +39,13 @@ include_directories(
 link_directories(lib)
 
 # ======================== FIXED SOLOUD SECTION =========================
-# Get all necessary SoLoud sources
-file(GLOB SOLOUD_CORE_SOURCES
-    external/soloud/src/core/*.cpp
-)
+file(GLOB SOLOUD_CORE_SOURCES external/soloud/src/core/*.cpp)
+file(GLOB SOLOUD_BACKEND_SOURCES external/soloud/src/backend/miniaudio/*.cpp)
+file(GLOB SOLOUD_WAV_SOURCES external/soloud/src/audiosource/wav/*.cpp)
 
-file(GLOB SOLOUD_BACKEND_SOURCES
-    external/soloud/src/backend/miniaudio/*.cpp
-)
-
-file(GLOB SOLOUD_WAV_SOURCES
-    external/soloud/src/audiosource/wav/*.cpp
-)
-
-# Add miniaudio implementation and stb_vorbis
 set(MINIAUDIO_SOURCE ${CMAKE_SOURCE_DIR}/external/soloud/src/backend/miniaudio/soloud_miniaudio.cpp)
 set(STB_VORBIS_SOURCE ${CMAKE_SOURCE_DIR}/external/stb_vorbis.c)
 
-# Create soloud static library
 add_library(soloud STATIC
     ${SOLOUD_CORE_SOURCES}
     ${SOLOUD_BACKEND_SOURCES}
@@ -65,20 +54,20 @@ add_library(soloud STATIC
     ${STB_VORBIS_SOURCE}
 )
 
-# Critical definitions for miniaudio backend
 target_compile_definitions(soloud PRIVATE 
     WITH_MINIAUDIO
     MA_NO_RUNTIME_LINKING
     MA_NO_NULL
+    MA_NO_JACK
 )
+
 
 target_include_directories(soloud PUBLIC
     ${CMAKE_SOURCE_DIR}/external/soloud/include
     ${CMAKE_SOURCE_DIR}/external/miniaudio
-    ${CMAKE_SOURCE_DIR}/external/soloud/src/core  # For internal includes
+    ${CMAKE_SOURCE_DIR}/external/soloud/src/core
 )
 
-# Platform-specific dependencies
 if(WIN32)
     target_link_libraries(soloud PRIVATE winmm)
 elseif(APPLE)
@@ -112,7 +101,6 @@ if (APPLE)
     find_library(GLEW_LIBRARY GLEW PATHS ${CUSTOM_PATHS} PATH_SUFFIXES lib NO_DEFAULT_PATH)
     find_library(GLFW_LIBRARY glfw PATHS ${CUSTOM_PATHS} PATH_SUFFIXES lib NO_DEFAULT_PATH)
 
-    # Additional macOS frameworks
     find_library(COCOA_LIBRARY Cocoa)
     find_library(IOKIT_LIBRARY IOKit)
     find_library(CORE_VIDEO CoreVideo)
@@ -135,7 +123,6 @@ if (APPLE)
         target_link_libraries(client PRIVATE ${GLFW_LIBRARY})
     endif()
 
-    # Add macOS-specific frameworks
     target_link_libraries(${PROJECT_NAME} PRIVATE 
         assimp 
         ${OPENGL_LIBRARIES}
@@ -161,9 +148,12 @@ if (APPLE)
 elseif (WIN32)
     message(STATUS "Building on Windows")
     link_directories(lib)
-    target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glew32s.lib glfw3 assimp)
-    target_link_libraries(server ${OPENGL_LIBRARIES} glew32s.lib glfw3 assimp)
-    target_link_libraries(client ${OPENGL_LIBRARIES} glew32s.lib glfw3 assimp)
+
+    set(WINDOWS_LIBS PRIVATE ${OPENGL_LIBRARIES} glew32s.lib glfw3 assimp)
+
+    target_link_libraries(${PROJECT_NAME} ${WINDOWS_LIBS})
+    target_link_libraries(server ${WINDOWS_LIBS})
+    target_link_libraries(client ${WINDOWS_LIBS})
 endif()
 
 add_custom_target(CopyShaders ALL

@@ -380,6 +380,7 @@ void ServerGame::receiveFromClients() {
     }
 }
 
+
 //should specify id of who's disconnecting so other clients know to remove that client's data
 void ServerGame::disconnectClient(unsigned int client_id) {
     EndGamePacket packet;
