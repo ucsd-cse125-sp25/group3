@@ -334,10 +334,10 @@ void ClientGame::update()
 
                 
                 if (winPacket->winnerType == WinnerType::THIEF) {
-                    client_logic::gameResult = WinState::GUARD_WIN;
+                    client_logic::gameResult = WinState::THIEF_WIN;
                     std::cout << "printing win Guard" << std::endl;
                 } else {
-                    client_logic::gameResult = WinState::THIEF_WIN;
+                    client_logic::gameResult = WinState::GUARD_WIN;
                     std::cout << "printing win theif" << std::endl;
 
                 }
