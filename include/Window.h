@@ -11,6 +11,7 @@
 #include "../packets/StateUpdatePacket.h"
 #include "../packets/InitPlayerPacket.h"
 #include "../packets/GuiUpdatePacket.h"
+#include "../minigame/minigame.h"
 
 enum class AbilityType {
     NONE,
@@ -53,6 +54,7 @@ public:
     static NPCs* NPC;
     static std::map<unsigned int, NPCs*> npcs;
 
+    static MiniGame miniGame;
     static unsigned int artifact_id;
     static Artifact* artifact;
 

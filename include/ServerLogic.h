@@ -9,6 +9,7 @@
 #include <map>
 #include "AnimState.h"
 #include "AABB_loader.h"
+#include "../minigame/include/platform.h"
 #define TOTAL_PLAYERS 1
 #define NUM_TO_STOP 5
 
@@ -124,6 +125,12 @@ class ArtifactState {
         void resetPos();
 };
 
+class MinigameState {
+    public:
+        std::vector<Platform> platforms;
+        void init();
+};
+
 class PlayerData {
     public:
         std::string captureMessage = "";
@@ -138,6 +145,7 @@ class PlayerData {
         CubeState cube;
         Camera camera;
         Camera miniMapCam;
+        MinigameState minigame;
         int iterationsStopped = 0;
         int windowWidth;
         int windowHeight;
@@ -185,3 +193,5 @@ class ServerLogic {
         static void sendTimeToClient(int clientSocket) ;
 
 };
+
+

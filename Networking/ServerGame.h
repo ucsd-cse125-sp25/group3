@@ -21,6 +21,7 @@ public:
     void sendStateUpdate();
     void disconnectClient(unsigned int client_id);
     void sendGuiUpdate(unsigned int client_id, bool sendAll);
+    void sendInitMinigamePacket(unsigned int client_id);
 
     std::chrono::time_point<std::chrono::steady_clock> gameStartTime;
     const int GAME_DURATION_SECONDS = 300; // 5 minutes
@@ -44,4 +45,6 @@ private:
     std::map<unsigned int, NPCState> npcData;
 
     bool winAlreadySent = false;
+
+     std::vector<Platform> minigamePlatforms;
 };

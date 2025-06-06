@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 #include "../packets/PacketFactory.h"
+#include "../minigame/minigame.h"
+#include "../minigame/include/platform.h"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -52,6 +54,9 @@ class client_logic {
         static ImVec2 displaySize;
         static ImFont* handwritingFont;
         static bool availableChars[4];
+        static MiniGame miniGame;
+        static bool miniGameInitialized;  
+        static std::vector<Platform> miniGamePlatformsServer;
 
         static ImFont* s_font_italic ;
         static ImFont* s_font_bold ;
@@ -95,6 +100,8 @@ class client_logic {
         static void setMainGameWindow(GLFWwindow* window);
 
         static void receiveTimeFromServer(int serverSocket);
+
+        static void setMinigamePlatformsServer(const InitMinigamePacket& initMinigamePacket);
 
         // timer
         static std::string currentTimeString;

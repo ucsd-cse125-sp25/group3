@@ -9,6 +9,8 @@
 #include "GuiUpdatePacket.h"
 #include "WinPacket.h"
 #include "TimeUpdate.h"
+#include "InitMinigamePacket.h"
+#include "MinigameFinishedPacket.h"
 
 #ifndef PACKETFACTORY_H // include guard
 #define PACKETFACTORY_H

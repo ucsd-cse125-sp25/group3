@@ -73,6 +73,10 @@ void Character::updateFromPacket(const InitPlayerPacket& packet, AnimationPlayer
     
     model->update(animationPlayer);
     isInvisible = packet.isInvisible;
+
+    if (packet.currentState == IN_MINIGAME) {
+        isInvisible = true;
+    }
 }
 
 void Character::draw(const glm::mat4& viewProjMtx, ShaderManager* shaderManager) {

@@ -3,11 +3,10 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-// #include "minigame/minigame.h"
+#include "minigame/minigame.h"
 #include <GL/glew.h>
-// #include "minigame/include/stb_image.h"
+#include "include/stb_image.h"
 #include <iostream>
-// #include "minigame/include/window.h"
 
 #include <chrono>
 

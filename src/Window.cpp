@@ -12,6 +12,7 @@ unsigned int Window::client_id;
 bool Window::initialized = false;
 GameState Window::currentState = INIT;
 bool Window::stateChanged = false;
+MiniGame Window::miniGame;
 
 // Window Properties
 int Window::width;

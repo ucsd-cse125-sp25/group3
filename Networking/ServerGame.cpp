@@ -19,12 +19,12 @@ ServerGame::ServerGame(void)
     
     // set up the server network to listen 
     network = new ServerNetwork(); 
-
+    
     for (unsigned int i=0; i<NUM_NPC; i++) {
         NPCState npc = NPCState();
         npcData.insert(pair<unsigned int, NPCState>(i, npc));
     }
-
+printf("ehre\n");
     ServerLogic::loadAABBs();
 
     // std::string movingArtifacts[3] = {"horse", "skeleton", "lion"};
@@ -34,6 +34,24 @@ ServerGame::ServerGame(void)
     std::cout << choice << std::endl;
     AABB artifact_bb = ServerLogic::museumAABBs[ServerLogic::movingArtifacts[choice]];
     artifact.init(artifact_bb.min, artifact_bb.max, artifact_bb.getCenter(), choice);
+
+    ServerGame::minigamePlatforms.clear();
+    // texture is not sent by server; client determines this.
+
+    float refW = 2880.0f;
+    float refH = 1800.0f;
+
+    minigamePlatforms.emplace_back((330.0f / refW), (1700.0f / refH), (200.0f / refW), (27.0f / refH), 0);//1
+    minigamePlatforms.emplace_back((0.0f   / refW), (1475.0f / refH), (270.0f / refW), (27.0f / refH), 0); // 2
+    minigamePlatforms.emplace_back((0.0f   / refW), (1595.0f / refH), (360.0f / refW), (32.0f / refH), 0); // 3
+    minigamePlatforms.emplace_back((468.0f / refW), (1212.0f / refH), (360.0f / refW), (43.0f / refH), 0); // 4
+    minigamePlatforms.emplace_back((1205.0f / refW), (1060.0f / refH), (520.0f / refW), (62.0f / refH), 0); // 5
+    minigamePlatforms.emplace_back((1890.0f / refW), (1268.0f / refH), (408.0f / refW), (58.0f / refH), 0); // 6
+    minigamePlatforms.emplace_back((2570.0f / refW), (930.0f / refH), (320.0f / refW), (55.0f / refH), 0); // 7
+    minigamePlatforms.emplace_back((520.0f / refW), (750.0f / refH), (410.0f / refW), (54.0f / refH), 0); // 8
+    minigamePlatforms.emplace_back((1400.0f / refW), (555.0f / refH), (480.0f / refW), (55.0f / refH), 0); // 9
+    minigamePlatforms.emplace_back((2270.0f / refW), (510.0f / refH), (480.0f / refW), (37.0f / refH), 0); // 10
+printf("done\n");
 }
 
 void ServerGame::update()
@@ -143,6 +161,7 @@ void ServerGame::receiveFromClients() {
                     } else {
                         sendGuiUpdate(iter->first, true);
                     }
+                    sendInitMinigamePacket(iter->first);
                     ServerGame::gameStartTime = std::chrono::steady_clock::now();
                     ServerLogic::attemptGameStart(playersData);
                     // if (player->initialized) {
@@ -212,6 +231,12 @@ void ServerGame::receiveFromClients() {
                     CursorPacket* cursorPacket = dynamic_cast<CursorPacket*>(packet.get());
                     // printf("server recieved cursor event packet from client\n");
                     if (player->currentState == PLAYING) player->handleCursor(cursorPacket->currX, cursorPacket->currY);
+                    break;
+                }
+                case MINIGAME_FINISHED: {
+                    MinigameFinishedPacket* finishedPacket = dynamic_cast<MinigameFinishedPacket*>(packet.get());
+                    playersData[finishedPacket->clientID]->currentState = PLAYING;
+                    player->cube.isCaptured = false;
                     break;
                 }
                 default: {
@@ -301,7 +326,12 @@ void ServerGame::receiveFromClients() {
         npc.update(ServerLogic::museumAABBs);
         npcData[npcIter->first] = npc;
     }
-    artifact.update(false);
+    bool putDown = false;
+
+    if (artifact.holder != nullptr) {
+        putDown = artifact.holder->isCaptured;
+    }
+    artifact.update(putDown);
     
     // sendGuiUpdate();
 
@@ -512,6 +542,29 @@ void ServerGame::sendStateUpdate() {
     std::vector<char> packet_data(packet_size);
     packet.serialize(packet_data.data());
     network->sendToAll(packet_data.data(), packet_size);
+}
+
+void ServerGame::sendInitMinigamePacket(unsigned int client_id) {
+    printf("Sending initial minigame state");
+
+    InitMinigamePacket packet;
+    packet.packet_type = INIT_MINIGAME;
+
+    packet.numPlatforms = minigamePlatforms.size();
+
+    for(int i = 0; i < packet.numPlatforms; i++) {
+        std::cout << "Sending platform: " << minigamePlatforms[i].x << ", " << minigamePlatforms[i].y << ", " << minigamePlatforms[i].width << ", " << minigamePlatforms[i].height << std::endl;
+        packet.platformX.push_back(minigamePlatforms[i].x);
+        packet.platformY.push_back(minigamePlatforms[i].y);
+        packet.platformWidth.push_back(minigamePlatforms[i].width);
+        packet.platformHeight.push_back(minigamePlatforms[i].height);
+    }
+
+    const unsigned int packet_size = packet.getSize();
+    std::vector<char> packet_data(packet_size);
+    packet.serialize(packet_data.data());
+
+    network->sendToOne(client_id, packet_data.data(), packet_size);
 }
 
 void ServerGame::sendGuiUpdate(unsigned int client_id, bool sendAll) {

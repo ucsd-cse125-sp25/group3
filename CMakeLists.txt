@@ -12,6 +12,14 @@ list(FILTER SOURCES EXCLUDE REGEX ".*client\\.cpp$")
 
 file(GLOB HEADERS *.h include/*.h Networking/*.h packets/*.h)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+file(GLOB MINIGAME_SOURCES
+    "minigame/*.cpp"
+    "minigame/src/*.cpp"
+)
+
 set(IMGUI_DIR ${CMAKE_SOURCE_DIR}/external/imgui)
 set(IMGUI_SOURCES
     ${IMGUI_DIR}/imgui.cpp
