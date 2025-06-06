@@ -10,7 +10,7 @@
 #include "AnimState.h"
 #include "AABB_loader.h"
 #include "../minigame/include/platform.h"
-#define TOTAL_PLAYERS 1
+#define TOTAL_PLAYERS 4
 #define NUM_TO_STOP 5
 
 enum ClientStatus {

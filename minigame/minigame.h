@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "include/MiniCharacter.h"
-// #include "include/platform.h"
+ #include "include/platform.h"
 // #include "stb_image.h"
 #include <vector>
 

@@ -90,9 +90,10 @@ elseif(APPLE)
 endif()
 # =======================================================================
 
-add_executable(server Networking/server.cpp ${SOURCES} ${HEADERS} ${IMGUI_SOURCES})
-add_executable(client Networking/client.cpp ${SOURCES} ${HEADERS} ${IMGUI_SOURCES})
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${IMGUI_SOURCES} main.cpp)
+add_executable(server Networking/server.cpp ${SOURCES} ${MINIGAME_SOURCES} ${HEADERS} ${IMGUI_SOURCES})
+add_executable(client Networking/client.cpp ${SOURCES} ${MINIGAME_SOURCES} ${HEADERS} ${IMGUI_SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES} ${MINIGAME_SOURCES} ${HEADERS} ${IMGUI_SOURCES} main.cpp)
+
 
 target_link_libraries(${PROJECT_NAME} PRIVATE soloud)
 target_link_libraries(server PRIVATE soloud)
@@ -181,6 +182,7 @@ if (WIN32)
         COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/assimp/bin/${my_build_type}/assimp-vc143-mtd.dll ${CMAKE_BINARY_DIR}/${my_build_type})
 endif()
 
+add_dependencies(menv CopyShaders CopyModels CopyTextures)
 add_dependencies(menv CopyShaders CopyModels CopyTextures)
 
 find_package(Doxygen)
